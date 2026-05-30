@@ -17,6 +17,7 @@
       "n": 0,
       "hits": 0
     },
-    "hit_rate": null
+    "hit_rate": null,
+    "by_signal": {}
   }
 }

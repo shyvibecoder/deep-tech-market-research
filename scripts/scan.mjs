@@ -23,7 +23,7 @@ import { getForwardPEs } from "./lib/fundamentals.mjs";
 import { computeRegime } from "./lib/regime.mjs";
 import { updateScarcityHistory, applySeenState } from "./lib/history.mjs";
 import { writeDcaPlan } from "./lib/dca.mjs";
-import { makeForecasts, resolveDue, updateScorecard } from "./lib/forecast.mjs";
+import { makeForecasts, resolveDue, updateScorecard, makeScarcityForecasts } from "./lib/forecast.mjs";
 import { relativeStrength, deRatingSignal } from "./lib/derating.mjs";
 import { newsForQuery } from "./lib/news.mjs";
 import { chokepointHeat } from "./lib/chokepoints.mjs";
@@ -351,7 +351,14 @@ let scorecard = null;
   catch { store = { schema_version: SCHEMA_VERSION, open: [], scorecard: updateScorecard(null, []) }; }
   const { resolved, stillOpen } = resolveDue(store.open, enriched, TODAY);
   store.scorecard = updateScorecard(store.scorecard, resolved);
-  const fresh = makeForecasts({ regime, quotes: enriched }, TODAY);
+  // The AI-capex "complex" = the diversified theme ETFs we hold; the de-rating/inflecting
+  // alpha calls are graded RELATIVE to it (does the flagged basket really under/out-perform?).
+  const complexTickers = portfolio.holdings
+    .filter((h) => securities[h.ticker]?.type === "etf").map((h) => h.ticker);
+  const fresh = [
+    ...makeForecasts({ regime, quotes: enriched }, TODAY),
+    ...makeScarcityForecasts(scarcities.scarcities, { quotes: enriched, scarcity_signals }, TODAY, 42, complexTickers),
+  ];
   const openIds = new Set(stillOpen.map((f) => f.id));
   store.open = [...stillOpen, ...fresh.filter((f) => !openIds.has(f.id))];
   store.updated = TODAY;

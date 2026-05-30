@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "scanned_at": "2026-05-30T19:08:32.555Z",
+  "scanned_at": "2026-05-30T19:38:57.652Z",
   "source": "offline run",
   "universe_count": 52,
   "quotes": {
@@ -397,6 +397,8 @@
     "macro_available": false,
     "macro_stressed": false,
     "fast_reentry": false,
+    "confidence": "low",
+    "confidence_note": "no usable price history",
     "action": "Insufficient price history — fall back to the DCA calendar.",
     "note": "timing layer needs live quotes (runs in GitHub Actions)"
   },
@@ -416,7 +418,8 @@
       "n": 0,
       "hits": 0
     },
-    "hit_rate": null
+    "hit_rate": null,
+    "by_signal": {}
   },
   "scarcity_signals": {
     "electrons": {
@@ -516,6 +519,131 @@
       "rs": null
     }
   },
+  "chokepoints": [
+    {
+      "id": "euv-litho",
+      "name": "EUV lithography (ASML monopoly)",
+      "gates": "all leading-edge logic/memory",
+      "access": "foreign",
+      "proxies": [
+        "ASML"
+      ],
+      "how_to_access": "ASML is listed (NL/US ADR) — the rare accessible chokepoint; size it.",
+      "discovered": [],
+      "top_headline": null,
+      "heat": 0,
+      "rel": null,
+      "news_count": 0
+    },
+    {
+      "id": "adv-packaging",
+      "name": "Advanced packaging (TSMC CoWoS/SoIC)",
+      "gates": "every AI accelerator",
+      "access": "foreign",
+      "proxies": [
+        "TSM"
+      ],
+      "how_to_access": "TSM ADR; OSAT names (ASE) as secondary.",
+      "discovered": [],
+      "top_headline": null,
+      "heat": 0,
+      "rel": null,
+      "news_count": 0
+    },
+    {
+      "id": "re-separation",
+      "name": "Heavy rare-earth separation & NdFeB magnets",
+      "gates": "motors, defense, EVs",
+      "access": "impaired",
+      "proxies": [
+        "MP",
+        "LYC"
+      ],
+      "how_to_access": "MP/Lynas are subsidy-floor proxies; the true chokepoint (China separation) is un-investable.",
+      "discovered": [],
+      "top_headline": null,
+      "heat": 0,
+      "rel": null,
+      "news_count": 0
+    },
+    {
+      "id": "abf-substrate",
+      "name": "ABF substrate (Ajinomoto near-monopoly)",
+      "gates": "high-end chip packaging",
+      "access": "foreign",
+      "proxies": [
+        "4185.T"
+      ],
+      "how_to_access": "Ajinomoto (Tokyo); Ibiden/Shinko secondary — all foreign-listed.",
+      "discovered": [],
+      "top_headline": null,
+      "heat": 0,
+      "rel": null,
+      "news_count": 0
+    },
+    {
+      "id": "precision-reducers",
+      "name": "Precision reducers (Harmonic Drive)",
+      "gates": "humanoid/robot actuators",
+      "access": "foreign",
+      "proxies": [
+        "6324.T"
+      ],
+      "how_to_access": "Harmonic Drive (Tokyo); eroding moat (Schaeffler, China entrants).",
+      "discovered": [],
+      "top_headline": null,
+      "heat": 0,
+      "rel": null,
+      "news_count": 0
+    },
+    {
+      "id": "manipulation-data",
+      "name": "Real-world manipulation data",
+      "gates": "useful humanoids",
+      "access": "private",
+      "proxies": [
+        "ROBO"
+      ],
+      "how_to_access": "Private (Physical Intelligence, Skild, Tesla). No clean proxy; ROBO/NVDA are picks-and-shovels.",
+      "discovered": [],
+      "top_headline": null,
+      "heat": 0,
+      "rel": null,
+      "news_count": 0
+    },
+    {
+      "id": "launch-space-power",
+      "name": "Launch + space-grade power (SpaceX, GaAs cells)",
+      "gates": "orbital infrastructure",
+      "access": "private",
+      "proxies": [
+        "RKLB"
+      ],
+      "how_to_access": "SpaceX private; RKLB is the closest listed launch proxy.",
+      "discovered": [],
+      "top_headline": null,
+      "heat": 0,
+      "rel": null,
+      "news_count": 0
+    },
+    {
+      "id": "gallium-gan",
+      "name": "Gallium / GaN (radar, EW, RF)",
+      "gates": "defense radar, fast chargers",
+      "access": "impaired",
+      "proxies": [
+        "WOLF",
+        "NVTS",
+        "QRVO"
+      ],
+      "how_to_access": "WOLF impaired (chokepoint != rent); NVTS/QRVO partial GaN exposure.",
+      "discovered": [],
+      "top_headline": null,
+      "heat": 0,
+      "rel": null,
+      "news_count": 0
+    }
+  ],
   "data_quality": {
     "ok": false,
     "ok_quotes": 0,

@@ -33,12 +33,17 @@ export function makeForecasts(signals, today, horizon = 21) {
 export function resolveDue(open, currentPrices, today) {
   const resolved = [], stillOpen = [];
   for (const f of open || []) {
-    const q = currentPrices?.[f.subject];
-    const price = q && !q.error ? q.price : null;
-    if (today >= f.resolve_on && price > 0 && f.price_at > 0) {
-      const ret = price / f.price_at - 1;
-      resolved.push({ ...f, resolved_on: today, realized_return: +ret.toFixed(4), correct: f.claim === "up" ? ret > 0 : ret < 0 });
-    } else stillOpen.push(f);
+    if (today < f.resolve_on) { stillOpen.push(f); continue; }
+    if (f.type === "scarcity_rel") {
+      const bNow = meanPrice(currentPrices, f.proxies), cNow = meanPrice(currentPrices, f.complex_tickers);
+      if (bNow == null || cNow == null || !f.basket_at || !f.complex_at) { stillOpen.push(f); continue; }
+      const rel = (bNow / f.basket_at - 1) - (cNow / f.complex_at - 1);
+      resolved.push({ ...f, resolved_on: today, rel: +rel.toFixed(4), correct: f.claim === "underperform" ? rel < 0 : rel > 0 });
+    } else {
+      const q = currentPrices?.[f.subject]; const price = q && !q.error ? q.price : null;
+      if (price > 0 && f.price_at > 0) resolved.push({ ...f, resolved_on: today, realized_return: +(price / f.price_at - 1).toFixed(4), correct: f.claim === "up" ? price / f.price_at - 1 > 0 : price / f.price_at - 1 < 0 });
+      else stillOpen.push(f);
+    }
   }
   return { resolved, stillOpen };
 }
@@ -46,11 +51,42 @@ export function resolveDue(open, currentPrices, today) {
 export function updateScorecard(sc, resolved) {
   const s = sc && sc.by_tilt ? JSON.parse(JSON.stringify(sc))
     : { by_tilt: { overweight: { n: 0, hits: 0 }, underweight: { n: 0, hits: 0 } }, total: { n: 0, hits: 0 } };
+  if (!s.by_signal) s.by_signal = {};
   for (const r of resolved || []) {
-    const k = r.claim === "up" ? "overweight" : "underweight";
-    s.by_tilt[k].n++; s.total.n++;
-    if (r.correct) { s.by_tilt[k].hits++; s.total.hits++; }
+    s.total.n++; if (r.correct) s.total.hits++;
+    if (r.type === "scarcity_rel") {
+      (s.by_signal[r.claim] ||= { n: 0, hits: 0 }); s.by_signal[r.claim].n++; if (r.correct) s.by_signal[r.claim].hits++;
+    } else {
+      const k = r.claim === "up" ? "overweight" : "underweight"; s.by_tilt[k].n++; if (r.correct) s.by_tilt[k].hits++;
+    }
   }
   s.hit_rate = s.total.n ? +(s.total.hits / s.total.n).toFixed(3) : null;
   return s;
+}
+
+// --- Grade the ALPHA signal (de-rating/inflecting) on a RELATIVE basis: does a
+// flagged scarcity basket under/out-perform the AI-capex complex over the horizon? ---
+export function meanPrice(quotes, tickers) {
+  const ps = (tickers || []).map((t) => quotes?.[t]).filter((q) => q && !q.error && q.price > 0).map((q) => q.price);
+  return ps.length ? ps.reduce((a, b) => a + b, 0) / ps.length : null;
+}
+
+export function makeScarcityForecasts(scarcities, signals, today, horizon = 42, complexTickers = []) {
+  const quotes = signals?.quotes || {}, sigs = signals?.scarcity_signals || {};
+  const complex_at = meanPrice(quotes, complexTickers);
+  if (complex_at == null) return [];
+  const out = [];
+  for (const s of scarcities || []) {
+    const flag = sigs[s.id]?.flag;
+    if (flag !== "de-rating" && flag !== "inflecting") continue;
+    const basket_at = meanPrice(quotes, s.tickers);
+    if (basket_at == null) continue;
+    out.push({
+      id: `${today}:scarcity_rel:${s.id}`, date: today, type: "scarcity_rel", subject: s.id,
+      claim: flag === "de-rating" ? "underperform" : "outperform",
+      proxies: s.tickers, complex_tickers: complexTickers, basket_at, complex_at,
+      horizon_days: horizon, resolve_on: addDays(today, horizon),
+    });
+  }
+  return out;
 }

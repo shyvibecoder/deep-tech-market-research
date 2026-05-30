@@ -175,7 +175,9 @@ volatility (IV)** from its market price (Black-Scholes) and compares it to the u
 3. Click **Evaluate**.
 
 **What you get:** IV, realized vol, **IV ÷ realized**, the **fair value at realized vol**, the **edge
-vs fair**, a **verdict**, and the greeks (delta/vega/theta).
+vs fair**, a **verdict**, and the greeks (delta/vega/theta). When the scan has it, the result also shows
+the underlying's **market ATM implied vol** (from the free Yahoo options chain) next to your option's IV —
+a quick check of whether your contract is priced rich/cheap vs the at-the-money market.
 
 | Verdict | Meaning |
 |---|---|

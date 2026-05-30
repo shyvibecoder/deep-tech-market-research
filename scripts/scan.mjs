@@ -12,6 +12,7 @@ import { getQuotes, providerKeys } from "./lib/marketdata.mjs";
 import { macroStress } from "./lib/macro.mjs";
 import { toUsd, fetchRates } from "./lib/fx.mjs";
 import { newlyFired, confirmFired } from "./lib/alerts.mjs";
+import { fetchAtmIv } from "./lib/iv.mjs";
 import { analystRedteamDigest, llmAvailable } from "./lib/llm.mjs";
 import { validateInputs, validateSignals, validatePositions, assertValid, SCHEMA_VERSION } from "./lib/schema.mjs";
 import { watchFilings } from "./lib/edgar.mjs";
@@ -133,6 +134,18 @@ if (!OFFLINE) {
     }
     console.log(`Forward P/E: ${got}/${holdTickers.length} resolved`);
   } catch (e) { errors.push(`fwdpe: ${e.message}`); }
+}
+
+// --- Real ATM implied vol (free, keyless Yahoo options endpoint) for holdings ---
+if (!OFFLINE) {
+  const ivTickers = portfolio.holdings.map((h) => h.ticker).filter(isTradeable);
+  let got = 0;
+  for (const t of ivTickers) {
+    const iv = await fetchAtmIv(t);
+    if (iv != null && enriched[t] && !enriched[t].error) { enriched[t].atm_iv = iv; got++; }
+    await new Promise((r) => setTimeout(r, 150));
+  }
+  console.log(`ATM IV: ${got}/${ivTickers.length} resolved`);
 }
 
 // --- Optional local positions (gitignored): real cost basis + shares ---

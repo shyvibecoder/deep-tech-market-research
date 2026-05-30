@@ -36,6 +36,8 @@ function evaluate() {
   }
   const e = evaluateOption({ type, S, K, daysToExpiry, r, marketPrice, refVol: refVol > 0 ? refVol : undefined });
   const g = e.greeks || {};
+  const atmIv = SIG.quotes?.[($("#oTicker").value || "").toUpperCase()]?.atm_iv;
+  const atmRow = atmIv ? `<tr><td>Market ATM IV (Yahoo)</td><td>${(atmIv * 100).toFixed(1)}%</td><td>your option IV</td><td>${e.implied_vol == null ? "—" : e.implied_vol + "%"}</td></tr>` : "";
   const posture = SIG.regime?.posture;
   const sug = suggestOptionStructure(posture, { macroStressed: !!SIG.regime?.macro_stressed });
   const suggest = sug.stance === "none" ? "" :
@@ -45,6 +47,7 @@ function evaluate() {
       <p class="verdict ${e.verdict}">Verdict: ${e.verdict.toUpperCase()} — <span style="font-weight:400">${e.reason}</span></p>
       <table class="kv">
         <tr><td>Implied vol</td><td>${e.implied_vol == null ? "—" : e.implied_vol + "%"}</td><td>Realized vol</td><td>${e.realized_vol == null ? "—" : e.realized_vol + "%"}</td></tr>
+        ${atmRow}
         <tr><td>IV ÷ realized</td><td>${e.iv_to_realized ?? "—"}×</td><td>Intrinsic</td><td>$${e.intrinsic}</td></tr>
         <tr><td>Fair value @ realized vol</td><td>$${e.fair_value_at_realized ?? "—"}</td><td>Edge vs fair</td><td>${e.edge_vs_fair == null ? "—" : (e.edge_vs_fair >= 0 ? "+" : "") + "$" + e.edge_vs_fair}</td></tr>
         <tr><td>Delta</td><td>${pctG(g.delta)}</td><td>Vega (per 1%)</td><td>${pctG(g.vega)}</td></tr>

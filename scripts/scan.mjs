@@ -228,7 +228,7 @@ if (!OFFLINE) {
 }
 
 // --- Timing layer: trend/momentum/vol/drawdown + 20-DMA re-entry + macro overlay ---
-const regime = computeRegime(enriched, portfolio.holdings, { macro });
+const regime = computeRegime(enriched, portfolio.holdings, { macro, securities });
 console.log(`Regime: ${regime.posture}${regime.risk_score != null ? ` (risk ${regime.risk_score}/100)` : ""}`);
 
 // --- F4: append scarcity history + surface drift; F7: mark new filings/news ---

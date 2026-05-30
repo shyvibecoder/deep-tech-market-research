@@ -26,9 +26,47 @@ const mean = (a) => (a.length ? a.reduce((x, y) => x + y, 0) / a.length : null);
 import { suggestOptionStructure } from "./options.mjs";
 
 const LADDER = ["defensive", "caution", "neutral", "risk-on"]; // for one-step nudges
+export const REGIME_VERSION = 2;
 
-export function computeRegime(quotes, holdings, { macro } = {}) {
-  const qs = holdings.map((h) => quotes[h.ticker]).filter((q) => q && !q.error);
+// Clean-composite: aggregate the regime signal over the theme ETFs (themselves
+// diversified composites) instead of 19 noisy single names. Falls back to all
+// holdings when there aren't enough ETFs.
+export function compositeHoldings(holdings, securities = {}) {
+  const etfs = holdings.filter((h) => securities[h.ticker]?.type === "etf");
+  return etfs.length >= 3 ? etfs : holdings;
+}
+
+// Per-name signed time-series-momentum tilt (Moskowitz-Ooi-Pedersen): which names to
+// lean into vs. trim, from the 12m momentum sign + the 200-DMA trend.
+export function perNameTilt(quotes, holdings) {
+  return holdings.map((h) => {
+    const q = quotes[h.ticker];
+    if (!q || q.error || q.mom_12m == null) return { ticker: h.ticker, account: h.account || null, tsmom: 0, above_200: null, tilt: "n/a" };
+    const tsmom = q.mom_12m > 0 ? 1 : q.mom_12m < 0 ? -1 : 0;
+    let tilt = "neutral";
+    if (tsmom > 0 && q.above_ma200) tilt = "overweight";
+    else if (tsmom < 0 && q.above_ma200 === false) tilt = "underweight";
+    return { ticker: h.ticker, account: h.account || null, tsmom, above_200: q.above_ma200, tilt };
+  });
+}
+
+function accountPolicy(posture) {
+  const brakes = posture === "defensive" || posture === "caution";
+  return {
+    ira: brakes
+      ? "Tactical sleeve — apply the brakes here: slow/stop deploys, raise cash (tax-free turnover)."
+      : "Tactical sleeve — deploy/accelerate per the posture (tax-free turnover).",
+    taxable: brakes
+      ? "Buy-and-hold anchors — don't sell (tax); hedge with defined-risk options if desired."
+      : "Buy-and-hold anchors — stay invested; ignore the timing dial here.",
+  };
+}
+
+export function computeRegime(quotes, holdings, { macro, securities = {} } = {}) {
+  const sigHoldings = compositeHoldings(holdings, securities);
+  const composite_basis = sigHoldings.map((h) => h.ticker);
+  const per_name = perNameTilt(quotes, holdings);
+  const qs = sigHoldings.map((h) => quotes[h.ticker]).filter((q) => q && !q.error);
 
   // Per-name signal components, then portfolio-aggregate them.
   const vsMa200 = qs.map((q) => q.pct_vs_ma200).filter((x) => x != null);
@@ -48,7 +86,8 @@ export function computeRegime(quotes, holdings, { macro } = {}) {
   const volState = volRatios.length ? volRatios.slice().sort((a, b) => a - b)[Math.floor(volRatios.length / 2)] : null;
 
   if (avgVsMa200 == null && avgMom == null && avgOffHigh == null) {
-    return { posture: "unknown", risk_score: null, components: {},
+    return { version: REGIME_VERSION, posture: "unknown", risk_score: null, components: {},
+      composite_basis, per_name, account_policy: accountPolicy("unknown"),
       action: "Insufficient price history — fall back to the DCA calendar.",
       note: "timing layer needs live quotes (runs in GitHub Actions)" };
   }
@@ -86,7 +125,9 @@ export function computeRegime(quotes, holdings, { macro } = {}) {
 
   const pct = (x) => (x == null ? "n/a" : (x * 100).toFixed(0) + "%");
   return {
+    version: REGIME_VERSION,
     posture, risk_score: risk, fast_reentry, macro_stressed: macroStressed,
+    composite_basis, per_name, account_policy: accountPolicy(posture),
     components: {
       trend_vs_200dma: round1(avgVsMa200), momentum_12m: round1(avgMom),
       avg_off_high: round1(avgOffHigh), vol_state: volState == null ? null : +volState.toFixed(2),

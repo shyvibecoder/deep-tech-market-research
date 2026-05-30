@@ -93,6 +93,11 @@ It's a **risk dial that paces your DCA**, not an all-in/all-out switch. It's bui
 replicated* research (Faber 200-DMA trend; Moskowitz-Ooi-Pedersen time-series momentum; Moreira-Muir
 volatility; Hurst-Ooi-Pedersen trend) — **not** a curve-fit backtest. Full detail: `REGIME.md`.
 
+**v2 refinements:** the score is computed on the **theme ETFs** (a cleaner composite than averaging 19
+noisy single names); it's **account-aware** — the posture drives your **IRA/Roth** sleeve (tactical,
+tax-free turnover) while **taxable** stays buy-and-hold anchors (shown under the posture); and it carries
+a **per-name TSMOM tilt** (which names to lean into vs. trim).
+
 **Two overlays (Timing v2):**
 - **Macro-stress brake (exit-only).** Forces *defensive* only when **two leading risk signals fire
   together** — the **VIX term-structure inverts** (front VIX ≥ VIX3M) **AND high-yield credit widens

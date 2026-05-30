@@ -114,9 +114,12 @@ function renderRegime() {
   }
   const [, lbl] = POSTURE[r.posture] || POSTURE.unknown;
   box.className = `regime ${r.posture}`;
-  box.innerHTML = `<div><strong>Timing posture: ${lbl}${r.risk_score != null ? ` · risk ${r.risk_score}/100` : ""} <button class="help" data-help="regime">?</button></strong>
+  const ap = r.account_policy;
+  const apHtml = ap ? `<div class="acctpol"><span><strong>IRA/Roth:</strong> ${ap.ira}</span><span><strong>Taxable:</strong> ${ap.taxable}</span></div>` : "";
+  box.innerHTML = `<div><strong>Timing posture: ${lbl}${r.risk_score != null ? ` · risk ${r.risk_score}/100` : ""}${r.version ? ` · v${r.version}` : ""} <button class="help" data-help="regime">?</button></strong>
       <span>${r.action || ""}</span></div>
-    <div class="rnote">${r.note || ""}<br><em>Alpha = scarcity thesis · timing = trend(200-DMA)+12m momentum+vol+drawdown. ${r.basis || ""}. Not advice.</em></div>`;
+    ${apHtml}
+    <div class="rnote">${r.note || ""}<br><em>Alpha = scarcity thesis · timing = trend+momentum+vol+drawdown+macro overlay, on the ETF composite${r.composite_basis?.length ? ` (${r.composite_basis.join(", ")})` : ""}. ${r.basis || ""}. Not advice.</em></div>`;
 }
 
 function renderPortfolio() {
@@ -577,6 +580,7 @@ const HELP = {
     <li>🟠 <strong>caution</strong> — tap the brakes, build dry powder.</li>
     <li>🔴 <strong>defensive</strong> — favor cash; deploy only into the drawdown trigger.</li></ul>
     <p>Two overlays sit on top (Timing v2): a <strong>macro-stress brake</strong> that forces defensive only when the <strong>VIX term-structure is inverted AND high-yield credit is widening fast</strong> (a rare, leading combined signal — exit-only, it can only de-risk), and a <strong>20-DMA fast re-entry</strong> that re-risks one notch when most names reclaim their 20-day average (so you don't stay defensive too long after a bottom).</p>
+    <p><strong>v2</strong> refinements: the signal is computed on the <em>theme ETFs</em> (a cleaner composite than averaging 19 noisy single names); it's <strong>account-aware</strong> — the posture drives your <strong>IRA/Roth</strong> (tactical, tax-free turnover) while <strong>taxable</strong> stays buy-and-hold anchors; and it carries a <strong>per-name TSMOM tilt</strong> (which names to lean into vs. trim).</p>
     <p>It's a risk dial that paces your DCA, not an all-in/all-out switch. Full detail: REGIME.md.</p>` },
   myholdings: { title: "Your holdings (live)", body: `
     <p>Computed from the positions you entered in ⚙ Settings × the latest scan prices — stored only in your browser. Shows market value, gain vs cost, % of target, per-account subtotals, and your sleeve value vs the ~$1.72mm cap. The <strong>Rebalance</strong> column flags any holding &gt;±25% from its target weight (⚖ trim/add). Foreign lots are FX-converted to USD. Export to <code>positions.local.json</code> to also enable the server-side trim/sleeve triggers.</p>` },

@@ -30,7 +30,7 @@ import { chokepointHeat } from "./lib/chokepoints.mjs";
 import { rankOpportunities, opportunityScore } from "./lib/opportunity.mjs";
 import { forcedFlowSignal, reconcileWithTiming } from "./lib/forced-flow.mjs";
 import { v23State, dislocationEntryWindow, compositeStress } from "./lib/v23.mjs";
-import { supabaseConfigured, seriesToRows, upsertPriceHistory } from "./lib/supabase.mjs";
+import { supabaseConfigured, seriesToRows, upsertPriceHistory, sanitizePriceRows } from "./lib/supabase.mjs";
 import { discoverProxies, rankProxies, proxyGraph } from "./lib/edgar-fts.mjs";
 
 const OFFLINE = process.argv.includes("--offline");
@@ -475,7 +475,8 @@ const out = {
 if (!OFFLINE && supabaseConfigured()) {
   try {
     for (const [t, q] of Object.entries(enriched)) {
-      if (q && !q.error && q.price > 0) priceRows.push({ ticker: t, d: TODAY, close: q.price, source: "yahoo" });
+      // Only REAL, corroborated prints — carry the actual source so the anti-synthetic guard applies.
+      if (q && !q.error && q.price > 0 && q.source) priceRows.push({ ticker: t, d: TODAY, close: q.price, source: q.source });
     }
     if (BACKFILL) {
       console.log("Backfill: fetching deep history (range=max) for the full universe…");
@@ -487,8 +488,10 @@ if (!OFFLINE && supabaseConfigured()) {
     // De-dupe (ticker,d) so a backfill row doesn't collide with a same-day fetched row.
     const seen = new Set(), dedup = [];
     for (const r of priceRows) { const k = `${r.ticker}|${r.d}`; if (!seen.has(k)) { seen.add(k); dedup.push(r); } }
-    const { written, skipped } = await upsertPriceHistory(dedup);
-    console.log(`Supabase: ${skipped ? "skipped" : `upserted ${written}`} price-history rows (${dedup.length} candidates)`);
+    const clean = sanitizePriceRows(dedup); // anti-synthetic guard: only real, trusted, valid prints
+    const dropped = dedup.length - clean.length;
+    const { written, skipped } = await upsertPriceHistory(clean);
+    console.log(`Supabase: ${skipped ? "skipped" : `upserted ${written}`} price-history rows (${dedup.length} candidates${dropped ? `, ${dropped} dropped by anti-synthetic guard` : ""})`);
   } catch (e) { errors.push(`supabase: ${e.message}`); console.error(`Supabase upsert failed (non-fatal): ${e.message}`); }
 } else if (!OFFLINE) {
   console.log("Supabase: not configured (set SUPABASE_URL + SUPABASE_SERVICE_KEY to persist history)");

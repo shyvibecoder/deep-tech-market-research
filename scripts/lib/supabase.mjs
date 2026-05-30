@@ -61,6 +61,22 @@ export async function selectRows(table, { select = "*", filters = "", limit, env
 }
 
 // Convenience: persist price history from any number of fetchSeries results + ad-hoc rows.
+// Runs the anti-synthetic guard first (defense in depth): only REAL, validated prints persist.
 export async function upsertPriceHistory(rows, opts = {}) {
-  return upsertRows("price_history", rows, { onConflict: "ticker,d", ...opts });
+  return upsertRows("price_history", sanitizePriceRows(rows), { onConflict: "ticker,d", ...opts });
+}
+
+// ── STANDING DATA-INTEGRITY INVARIANT: NEVER PERSIST SYNTHETIC DATA ──────────────────────────
+// The app degrades by SKIPPING, never by fabricating. Only real prints from a trusted LIVE
+// market-data provider, with a finite positive close and a valid date, may enter the database.
+// This guard makes that structural: offline/synthetic/placeholder/zero/unknown-source rows are
+// dropped, not written. (Mirrors the V2.3 overlay's "refuses to act on fake data" rule.)
+export const TRUSTED_PRICE_SOURCES = new Set(["yahoo", "stooq", "finnhub", "twelvedata", "alphavantage", "consensus"]);
+
+export function sanitizePriceRows(rows) {
+  return (rows || []).filter((r) =>
+    r && typeof r.ticker === "string" && r.ticker.length > 0 &&
+    typeof r.d === "string" && /^\d{4}-\d{2}-\d{2}$/.test(r.d) &&
+    Number.isFinite(r.close) && r.close > 0 &&
+    TRUSTED_PRICE_SOURCES.has(r.source));
 }

@@ -37,6 +37,15 @@ sound for the roadmap (v3 thesis-versioning + auto-research, v4 tracking + alert
 (which stays diffable JSON for F9 human review). Never let a generator
 hand-edit a source-of-truth field without human approval, and never commit local-private data.
 
+**No-synthetic-data invariant (standing rule):** the app degrades by **skipping and marking
+unavailable, never by fabricating**. No interpolation, forward-fill, random, mock, or
+placeholder values ever enter signals, the DB, or any signal/decision. Real prints only —
+cross-source-corroborated, plausibility-checked (finite, >0), and from a *trusted live provider*.
+Enforced structurally: market quotes go through corroboration + plausibility guards
+(`marketdata.mjs`/`quotes.mjs`); DB writes pass `sanitizePriceRows` (trusted-source allowlist +
+valid date + positive finite close — `supabase.mjs`); and the V2.3 overlay suppresses itself on
+missing/synthetic inputs rather than guessing. When in doubt, the system shows "unavailable."
+
 **Ownership / bot-proposable fields (F9):** when v3 auto-research opens a PR against
 `scarcities.json`, it may propose **only** `priced_in`, `bind_window`, `non_consensus`,
 `confidence`, `last_reviewed`. It must **never** touch `thesis`, `tickers`, `id`, `sector`,

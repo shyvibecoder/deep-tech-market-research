@@ -5,7 +5,12 @@ name: scan
 on:
   schedule:
     - cron: "0 13 * * 1-5"   # weekdays 13:00 UTC (after US pre-market)
-  workflow_dispatch: {}       # manual "Run workflow" button
+  workflow_dispatch:          # manual "Run workflow" button
+    inputs:
+      backfill:
+        description: "Deep-backfill full price history into Supabase (one-time seed)"
+        type: boolean
+        default: false
   repository_dispatch:        # lets the dashboard's Refresh button trigger via a token
     types: [scan]
 
@@ -42,7 +47,8 @@ jobs:
           # When unset, the scanner runs exactly as before (history persistence skipped).
           SUPABASE_URL: ${{ vars.SUPABASE_URL }}
           SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
-        run: node scripts/scan.mjs
+        # `--backfill` (one-time deep history seed) when the manual run requests it.
+        run: node scripts/scan.mjs ${{ (github.event_name == 'workflow_dispatch' && inputs.backfill) && '--backfill' || '' }}
       - name: Commit refreshed signals
         run: |
           git config user.name "puck-bot"

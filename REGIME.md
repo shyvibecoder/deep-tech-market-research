@@ -66,6 +66,38 @@ no optimizer chose them.
   cross-asset trend (bonds, USD) per the trend-following papers.
 - **No transaction-cost / whipsaw dampening** — intentionally, since this paces DCA rather than trades.
 
+## Lessons from an adjacent system (the "V2.3 F+C Thrust on QLD" strategy)
+
+A separate, more mature tactical strategy (Faber 200-DMA trend + Daniel-Moskowitz crash break +
+20-DMA fast re-entry, plus an *exit-only* composite-stress overlay, trading QLD in the tax-advantaged
+sleeve and buy-and-hold VGT in taxable) shares our evidence base and suggests four upgrades — and two
+cautions about what does **not** port to a thematic single-stock basket.
+
+**Architecture worth adopting (→ Timing v2 in TODO):**
+1. **Exit-only, AND-gated macro-stress overlay.** It flips defensive only when *two independent* stress
+   signals fire together — **VIX term-structure** (backwardation: VIX > VIX3M) **AND high-yield credit
+   velocity** (HY spreads widening fast). Requiring a conjunction makes false positives rare; making it
+   exit-only makes the asymmetry safe (it can only de-risk, never lever up). This is the cleanest fix for
+   our "no rates/credit/USD regime" gap — credit + vol-term-structure are *leading* risk signals, unlike
+   our price-derived ones which are coincident.
+2. **Fast re-entry override (20-DMA).** A faster signal used *only to re-risk* directly counters the
+   Daniel-Moskowitz momentum-crash problem (trend rules re-enter too slowly after V-bottoms) — our biggest
+   acknowledged weakness. Slow signal to get defensive, fast signal to come back.
+3. **Compute the signal on a clean underlying, apply to the vehicle.** They run the state on QQQ, not on
+   the leveraged QLD. Analogue for us: derive the regime from a clean composite (e.g., an equal-weight
+   proxy of the basket / the AI-capex complex) rather than averaging 19 noisy single-name series.
+4. **Account-aware execution.** Tactical turnover sits in the IRA/Roth (tax-free); taxable stays buy-and-
+   hold anchors. This is already our asset-location rule — so the timing posture should drive **IRA-sleeve
+   deploy/brake** actions while taxable holds. Make `regime` account-aware.
+
+**What does NOT port (skeptic's note):**
+- **It trades one liquid, deeply-researched index with decades of history; we hold ~19 short-history,
+  policy-driven, idiosyncratic names.** Parameters/overlays validated on QQQ should *not* be assumed to
+  transfer — reinforces our bounded-look-back and newly-listed caveats.
+- **No leverage for us.** The basket is already high-beta and cyclical; 2× (QLD) adds volatility decay and
+  path-dependency that punish whipsaw. We take their *risk-control architecture*, not the leverage. The
+  overlay thresholds ("elevated") are also where overfit hides — keep them coarse and economically motivated.
+
 ## References
 
 - Faber, M. (2007, rev. 2013). *A Quantitative Approach to Tactical Asset Allocation.* J. Wealth Mgmt.
@@ -73,3 +105,5 @@ no optimizer chose them.
 - Hurst, B., Ooi, Y. H., Pedersen, L. H. (2017). *A Century of Evidence on Trend-Following Investing.* AQR.
 - Moreira, A., Muir, T. (2017). *Volatility-Managed Portfolios.* Journal of Finance.
 - Daniel, K., Moskowitz, T. (2016). *Momentum Crashes.* J. Financial Economics.
+- On credit/vol as leading risk: HY OAS & the VIX term structure are standard risk-off leads (e.g.,
+  FRED `BAMLH0A0HYM2`; CBOE VIX vs VIX3M). Use coarse, economically-motivated thresholds — not fitted ones.

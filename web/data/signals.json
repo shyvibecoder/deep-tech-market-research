@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "scanned_at": "2026-05-30T20:00:42.599Z",
+  "scanned_at": "2026-05-30T20:12:17.026Z",
   "source": "offline run",
   "universe_count": 52,
   "quotes": {
@@ -427,6 +427,8 @@
       "rs": null,
       "score": 38,
       "gate": 0.33,
+      "static_gate": 0.33,
+      "live_gate": null,
       "quality": 1,
       "contrarian": true,
       "components": {
@@ -440,6 +442,8 @@
       "rs": null,
       "score": 33,
       "gate": 0.33,
+      "static_gate": 0.33,
+      "live_gate": null,
       "quality": 1,
       "contrarian": false,
       "components": {
@@ -453,6 +457,8 @@
       "rs": null,
       "score": 0,
       "gate": 0,
+      "static_gate": 0,
+      "live_gate": null,
       "quality": 0.91,
       "contrarian": false,
       "components": {
@@ -466,6 +472,8 @@
       "rs": null,
       "score": 38,
       "gate": 0.33,
+      "static_gate": 0.33,
+      "live_gate": null,
       "quality": 1,
       "contrarian": true,
       "components": {
@@ -479,6 +487,8 @@
       "rs": null,
       "score": 69,
       "gate": 0.66,
+      "static_gate": 0.66,
+      "live_gate": null,
       "quality": 0.91,
       "contrarian": true,
       "components": {
@@ -492,6 +502,8 @@
       "rs": null,
       "score": 0,
       "gate": 0,
+      "static_gate": 0,
+      "live_gate": null,
       "quality": 0.86,
       "contrarian": true,
       "components": {
@@ -505,6 +517,8 @@
       "rs": null,
       "score": 0,
       "gate": 0,
+      "static_gate": 0,
+      "live_gate": null,
       "quality": 0.79,
       "contrarian": false,
       "components": {
@@ -518,6 +532,8 @@
       "rs": null,
       "score": 22,
       "gate": 0.33,
+      "static_gate": 0.33,
+      "live_gate": null,
       "quality": 0.66,
       "contrarian": false,
       "components": {
@@ -531,6 +547,8 @@
       "rs": null,
       "score": 0,
       "gate": 0,
+      "static_gate": 0,
+      "live_gate": null,
       "quality": 0.88,
       "contrarian": true,
       "components": {
@@ -544,6 +562,8 @@
       "rs": null,
       "score": 100,
       "gate": 1,
+      "static_gate": 1,
+      "live_gate": null,
       "quality": 1,
       "contrarian": true,
       "components": {
@@ -557,6 +577,8 @@
       "rs": null,
       "score": 84,
       "gate": 1,
+      "static_gate": 1,
+      "live_gate": null,
       "quality": 0.73,
       "contrarian": true,
       "components": {
@@ -570,6 +592,8 @@
       "rs": null,
       "score": 44,
       "gate": 0.66,
+      "static_gate": 0.66,
+      "live_gate": null,
       "quality": 0.57,
       "contrarian": true,
       "components": {
@@ -583,6 +607,8 @@
       "rs": null,
       "score": 22,
       "gate": 0.33,
+      "static_gate": 0.33,
+      "live_gate": null,
       "quality": 0.66,
       "contrarian": false,
       "components": {
@@ -596,6 +622,8 @@
       "rs": null,
       "score": 33,
       "gate": 0.33,
+      "static_gate": 0.33,
+      "live_gate": null,
       "quality": 1,
       "contrarian": false,
       "components": {
@@ -609,6 +637,8 @@
       "rs": null,
       "score": 0,
       "gate": 0,
+      "static_gate": 0,
+      "live_gate": null,
       "quality": 0.6,
       "contrarian": false,
       "components": {
@@ -622,6 +652,8 @@
       "rs": null,
       "score": 100,
       "gate": 1,
+      "static_gate": 1,
+      "live_gate": null,
       "quality": 1,
       "contrarian": true,
       "components": {
@@ -635,6 +667,8 @@
       "rs": null,
       "score": 27,
       "gate": 0.33,
+      "static_gate": 0.33,
+      "live_gate": null,
       "quality": 0.7,
       "contrarian": true,
       "components": {
@@ -648,6 +682,8 @@
       "rs": null,
       "score": 84,
       "gate": 1,
+      "static_gate": 1,
+      "live_gate": null,
       "quality": 0.73,
       "contrarian": true,
       "components": {
@@ -661,6 +697,8 @@
       "rs": null,
       "score": 34,
       "gate": 0.66,
+      "static_gate": 0.66,
+      "live_gate": null,
       "quality": 0.52,
       "contrarian": false,
       "components": {
@@ -674,6 +712,8 @@
       "rs": null,
       "score": 74,
       "gate": 1,
+      "static_gate": 1,
+      "live_gate": null,
       "quality": 0.65,
       "contrarian": true,
       "components": {
@@ -687,6 +727,8 @@
       "rs": null,
       "score": 97,
       "gate": 1,
+      "static_gate": 1,
+      "live_gate": null,
       "quality": 0.84,
       "contrarian": true,
       "components": {
@@ -700,6 +742,8 @@
       "rs": null,
       "score": 99,
       "gate": 1,
+      "static_gate": 1,
+      "live_gate": null,
       "quality": 0.86,
       "contrarian": true,
       "components": {
@@ -713,6 +757,8 @@
       "rs": null,
       "score": 69,
       "gate": 0.66,
+      "static_gate": 0.66,
+      "live_gate": null,
       "quality": 0.91,
       "contrarian": true,
       "components": {
@@ -726,6 +772,8 @@
       "rs": null,
       "score": 84,
       "gate": 1,
+      "static_gate": 1,
+      "live_gate": null,
       "quality": 0.73,
       "contrarian": true,
       "components": {
@@ -742,6 +790,8 @@
       "sector": "Minerals",
       "score": 100,
       "gate": 1,
+      "static_gate": 1,
+      "live_gate": null,
       "quality": 1,
       "contrarian": true,
       "components": {
@@ -756,6 +806,8 @@
       "sector": "Compute",
       "score": 100,
       "gate": 1,
+      "static_gate": 1,
+      "live_gate": null,
       "quality": 1,
       "contrarian": true,
       "components": {
@@ -770,6 +822,8 @@
       "sector": "Quantum",
       "score": 99,
       "gate": 1,
+      "static_gate": 1,
+      "live_gate": null,
       "quality": 0.86,
       "contrarian": true,
       "components": {
@@ -784,6 +838,8 @@
       "sector": "Space",
       "score": 97,
       "gate": 1,
+      "static_gate": 1,
+      "live_gate": null,
       "quality": 0.84,
       "contrarian": true,
       "components": {
@@ -798,6 +854,8 @@
       "sector": "Minerals",
       "score": 84,
       "gate": 1,
+      "static_gate": 1,
+      "live_gate": null,
       "quality": 0.73,
       "contrarian": true,
       "components": {
@@ -812,6 +870,8 @@
       "sector": "Robotics",
       "score": 84,
       "gate": 1,
+      "static_gate": 1,
+      "live_gate": null,
       "quality": 0.73,
       "contrarian": true,
       "components": {
@@ -826,6 +886,8 @@
       "sector": "AI-software",
       "score": 84,
       "gate": 1,
+      "static_gate": 1,
+      "live_gate": null,
       "quality": 0.73,
       "contrarian": true,
       "components": {
@@ -840,6 +902,8 @@
       "sector": "Space",
       "score": 74,
       "gate": 1,
+      "static_gate": 1,
+      "live_gate": null,
       "quality": 0.65,
       "contrarian": true,
       "components": {
@@ -854,6 +918,8 @@
       "sector": "Energy",
       "score": 69,
       "gate": 0.66,
+      "static_gate": 0.66,
+      "live_gate": null,
       "quality": 0.91,
       "contrarian": true,
       "components": {
@@ -868,6 +934,8 @@
       "sector": "Biotech",
       "score": 69,
       "gate": 0.66,
+      "static_gate": 0.66,
+      "live_gate": null,
       "quality": 0.91,
       "contrarian": true,
       "components": {
@@ -882,6 +950,8 @@
       "sector": "Compute",
       "score": 44,
       "gate": 0.66,
+      "static_gate": 0.66,
+      "live_gate": null,
       "quality": 0.57,
       "contrarian": true,
       "components": {
@@ -896,6 +966,8 @@
       "sector": "Energy",
       "score": 38,
       "gate": 0.33,
+      "static_gate": 0.33,
+      "live_gate": null,
       "quality": 1,
       "contrarian": true,
       "components": {
@@ -910,6 +982,8 @@
       "sector": "Energy",
       "score": 38,
       "gate": 0.33,
+      "static_gate": 0.33,
+      "live_gate": null,
       "quality": 1,
       "contrarian": true,
       "components": {
@@ -924,6 +998,8 @@
       "sector": "Robotics",
       "score": 34,
       "gate": 0.66,
+      "static_gate": 0.66,
+      "live_gate": null,
       "quality": 0.52,
       "contrarian": false,
       "components": {
@@ -938,6 +1014,8 @@
       "sector": "Energy",
       "score": 33,
       "gate": 0.33,
+      "static_gate": 0.33,
+      "live_gate": null,
       "quality": 1,
       "contrarian": false,
       "components": {
@@ -952,6 +1030,8 @@
       "sector": "Compute",
       "score": 33,
       "gate": 0.33,
+      "static_gate": 0.33,
+      "live_gate": null,
       "quality": 1,
       "contrarian": false,
       "components": {
@@ -966,6 +1046,8 @@
       "sector": "Compute",
       "score": 27,
       "gate": 0.33,
+      "static_gate": 0.33,
+      "live_gate": null,
       "quality": 0.7,
       "contrarian": true,
       "components": {
@@ -980,6 +1062,8 @@
       "sector": "Minerals",
       "score": 22,
       "gate": 0.33,
+      "static_gate": 0.33,
+      "live_gate": null,
       "quality": 0.66,
       "contrarian": false,
       "components": {
@@ -994,6 +1078,8 @@
       "sector": "Compute",
       "score": 22,
       "gate": 0.33,
+      "static_gate": 0.33,
+      "live_gate": null,
       "quality": 0.66,
       "contrarian": false,
       "components": {
@@ -1008,6 +1094,8 @@
       "sector": "Energy",
       "score": 0,
       "gate": 0,
+      "static_gate": 0,
+      "live_gate": null,
       "quality": 0.91,
       "contrarian": false,
       "components": {
@@ -1022,6 +1110,8 @@
       "sector": "Minerals",
       "score": 0,
       "gate": 0,
+      "static_gate": 0,
+      "live_gate": null,
       "quality": 0.86,
       "contrarian": true,
       "components": {
@@ -1036,6 +1126,8 @@
       "sector": "Minerals",
       "score": 0,
       "gate": 0,
+      "static_gate": 0,
+      "live_gate": null,
       "quality": 0.79,
       "contrarian": false,
       "components": {
@@ -1050,6 +1142,8 @@
       "sector": "Minerals",
       "score": 0,
       "gate": 0,
+      "static_gate": 0,
+      "live_gate": null,
       "quality": 0.88,
       "contrarian": true,
       "components": {
@@ -1064,6 +1158,8 @@
       "sector": "Compute",
       "score": 0,
       "gate": 0,
+      "static_gate": 0,
+      "live_gate": null,
       "quality": 0.6,
       "contrarian": false,
       "components": {

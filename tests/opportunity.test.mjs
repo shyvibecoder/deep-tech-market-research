@@ -1,6 +1,30 @@
 import { describe, it } from "node:test";
 import assert from "node:assert/strict";
-import { opportunityScore, rankOpportunities } from "../scripts/lib/opportunity.mjs";
+import { opportunityScore, rankOpportunities, liveGate } from "../scripts/lib/opportunity.mjs";
+
+describe("opportunity: live priced-in proxy refines the gate with the tape", () => {
+  it("maps crowding 0..100 to a gate (high crowding = more priced = lower)", () => {
+    assert.equal(liveGate(0), 1); assert.equal(liveGate(100), 0); assert.equal(liveGate(50), 0.5);
+    assert.equal(liveGate(null), null);
+  });
+  it("no live crowding → identical to the static-label behavior (backward compatible)", () => {
+    const s = { priced_in: "low", bind_window: "now", durability: "high", substitution_risk: "low" };
+    assert.equal(opportunityScore(s).score, opportunityScore(s, { liveCrowding: null }).score);
+  });
+  it("a 'low' label the tape shows as already crowded gets marked down", () => {
+    const s = { priced_in: "low", bind_window: "now", durability: "high", substitution_risk: "low" };
+    const fresh = opportunityScore(s, { liveCrowding: 5 });   // tape agrees: not crowded
+    const hot = opportunityScore(s, { liveCrowding: 95 });    // tape disagrees: already run up
+    assert.ok(hot.score < fresh.score);
+    assert.ok(hot.live_gate < hot.static_gate); // divergence is visible
+  });
+  it("rankOpportunities threads per-scarcity live crowding", () => {
+    const list = [{ id: "a", priced_in: "low", bind_window: "now", durability: "high", substitution_risk: "low" }];
+    const cold = rankOpportunities(list, { a: 10 })[0].score;
+    const hot = rankOpportunities(list, { a: 90 })[0].score;
+    assert.ok(cold > hot);
+  });
+});
 
 // The model encodes ALPHA.md Edge 1: alpha lives in what binds soon, is durable + defensible,
 // and is NOT yet priced. priced_in is the multiplicative GATE — no edge in what's priced.

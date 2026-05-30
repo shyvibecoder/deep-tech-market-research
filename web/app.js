@@ -106,8 +106,11 @@ function renderRadar() {
         const [cls, lbl] = WIN[s.bind_window] || ["", s.bind_window];
         const sig = DATA.sig?.scarcity_signals?.[s.id];
         const opp = sig?.score;
+        // Flag where the live tape materially disagrees with the human priced-in label (informative).
+        const diverge = sig && sig.live_gate != null && Math.abs(sig.live_gate - sig.static_gate) >= 0.3
+          ? `<span class="diverge" title="tape disagrees with the priced-in label: live gate ${sig.live_gate} vs label ${sig.static_gate}">${sig.live_gate > sig.static_gate ? "↑tape" : "↓tape"}</span>` : "";
         const oppCell = opp == null ? "—"
-          : `<span class="oppbar" title="gate(not-priced) ${sig.gate} × quality ${sig.quality}${sig.contrarian ? " · contrarian +" : ""}"><span style="width:${opp}%"></span></span> <strong>${opp}</strong>`;
+          : `<span class="oppbar" title="gate(not-priced) ${sig.gate} [label ${sig.static_gate}${sig.live_gate != null ? ` · live ${sig.live_gate}` : ""}] × quality ${sig.quality}${sig.contrarian ? " · contrarian +" : ""}"><span style="width:${opp}%"></span></span> <strong>${opp}</strong>${diverge}`;
         const alphaMark = sig && sig.flag !== "none"
           ? `<span class="alpha ${sig.flag}" title="relative strength vs complex ${sig.rs}">${sig.flag === "de-rating" ? "↓ de-rating" : "↑ inflecting"}</span>` : "";
         const dr = DATA.sig?.scarcity_drift?.[s.id];
@@ -659,7 +662,7 @@ const HELP = {
     <p>Not financial advice. Every name is cyclical and would fall together in a shock.</p>` },
   radar: { title: "Scarcity radar", body: `
     <p>Each row is a structural scarcity, <strong>ranked by Opportunity Score</strong> — where the retail alpha is. Columns:</p>
-    <ul><li><strong>Opportunity† (0–100)</strong> — the structural edge <em>before</em> the tape confirms it: <em>binds soon × durable × defensible × <strong>not yet priced</strong></em>. Priced-in is a multiplicative <strong>gate</strong> — a <code>crowded</code> thesis scores ~0 however good the business, because there's no alpha left in what's priced. Built from the source fields only (no curve-fitting); see <strong>ALPHA.md</strong>. Top opportunities are recorded as relative-outperformance forecasts and graded.</li>
+    <ul><li><strong>Opportunity† (0–100)</strong> — the structural edge <em>before</em> the tape confirms it: <em>binds soon × durable × defensible × <strong>not yet priced</strong></em>. Priced-in is a multiplicative <strong>gate</strong> — a <code>crowded</code> thesis scores ~0 however good the business, because there's no alpha left in what's priced. The gate blends the human label (60%) with a <strong>live price-derived crowding proxy</strong> (40%), so it updates with the tape; a <strong>↑tape / ↓tape</strong> chip flags where the market disagrees with the label. Built from the source fields only (no curve-fitting); see <strong>ALPHA.md</strong>. Top opportunities are recorded as relative-outperformance forecasts and graded.</li>
     <li><strong>Binds</strong> — when the chokepoint starts biting (now → 2030+ → physics floor).</li>
     <li><strong>Priced-in</strong> — how much the market already reflects it (low → crowded). High/crowded = less edge left.</li>
     <li><strong>Durability</strong> — how long the moat lasts; <strong>Subst. risk</strong> — chance a substitute relieves it.</li>

@@ -303,6 +303,12 @@ writeDcaPlan(dataUrl("dca.json"), portfolio, TODAY);
 
 // --- Alpha signal: per-scarcity relative strength vs the AI-capex complex →
 // de-rating (crowded rolling over) / inflecting (under-priced gaining) flags ---
+// Mean live crowding per scarcity (price-derived priced-in proxy) → refines the Opportunity gate.
+const crowdingById = {};
+for (const s of scarcities.scarcities) {
+  const cz = s.tickers.map((t) => enriched[t]?.crowding).filter((x) => typeof x === "number");
+  crowdingById[s.id] = cz.length ? cz.reduce((a, b) => a + b, 0) / cz.length : null;
+}
 const scarcity_signals = {};
 {
   const etfMoms = portfolio.holdings
@@ -312,7 +318,7 @@ const scarcity_signals = {};
   for (const s of scarcities.scarcities) {
     const moms = s.tickers.map((t) => enriched[t]?.mom_1m).filter((x) => typeof x === "number");
     const rs = relativeStrength(moms, complexMom);
-    scarcity_signals[s.id] = { ...deRatingSignal(s.priced_in, rs), ...opportunityScore(s) };
+    scarcity_signals[s.id] = { ...deRatingSignal(s.priced_in, rs), ...opportunityScore(s, { liveCrowding: crowdingById[s.id] ?? null }) };
   }
   const flagged = Object.values(scarcity_signals).filter((x) => x.flag !== "none").length;
   if (!OFFLINE) console.log(`Alpha signals: ${flagged} scarcities flagged (de-rating/inflecting)`);
@@ -320,8 +326,8 @@ const scarcity_signals = {};
 
 // --- Opportunity Score: rank the scarcity universe by ALPHA.md Edge 1 (duration mispricing).
 // Where the structural edge is BEFORE the tape moves: binds soon + durable + defensible + NOT
-// yet priced. From human-owned source fields only — a ranked opportunity set, not a backtest. ---
-const opportunities = rankOpportunities(scarcities.scarcities);
+// yet priced (the human label refined by LIVE crowding). From source fields, not a backtest. ---
+const opportunities = rankOpportunities(scarcities.scarcities, crowdingById);
 if (!OFFLINE) console.log(`Opportunity Score: top = ${opportunities.slice(0, 3).map((o) => `${o.id} ${o.score}`).join(", ")}`);
 
 // --- Inaccessible-chokepoint tracker: DISCOVER public proxies (EDGAR full-text

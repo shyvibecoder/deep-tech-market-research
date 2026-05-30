@@ -18,8 +18,20 @@ export const DEFENSIBILITY = { low: 1.0, medium: 0.5, high: 0.0 };
 
 const get = (map, k, dflt = 0.5) => (k in map ? map[k] : dflt);
 
-export function opportunityScore(s = {}) {
-  const gate = get(PRICED_GATE, s.priced_in);
+// Price-derived "priced-in" proxy: live crowding (0–100, from YTD + distance-to-52w-high) →
+// a gate (high crowding = more already priced = less edge left). Lets the score update with
+// the TAPE, not only the (slower) human label — and exposes where the two disagree (the
+// informative case: a stale "crowded" label the market has since de-rated, or vice-versa).
+export function liveGate(crowding) {
+  if (crowding == null || Number.isNaN(crowding)) return null;
+  return Math.max(0, Math.min(1, 1 - crowding / 100));
+}
+
+export function opportunityScore(s = {}, { liveCrowding = null } = {}) {
+  const staticGate = get(PRICED_GATE, s.priced_in);
+  const lg = liveGate(liveCrowding);
+  // Blend: the human review is authoritative (0.6) but the live tape refines it (0.4).
+  const gate = lg == null ? staticGate : 0.6 * staticGate + 0.4 * lg;
   const bind = get(BIND_PROXIMITY, s.bind_window);
   const dur = get(DURABILITY, s.durability);
   const def = get(DEFENSIBILITY, s.substitution_risk);
@@ -30,14 +42,16 @@ export function opportunityScore(s = {}) {
   return {
     score: Math.round(score),
     gate: +gate.toFixed(2),
+    static_gate: +staticGate.toFixed(2),
+    live_gate: lg == null ? null : +lg.toFixed(2),
     quality: +quality.toFixed(2),
     contrarian,
     components: { bind_proximity: +bind.toFixed(2), durability: +dur.toFixed(2), defensibility: +def.toFixed(2) },
   };
 }
 
-export function rankOpportunities(scarcities) {
+export function rankOpportunities(scarcities, crowdingById = {}) {
   return (scarcities || [])
-    .map((s) => ({ id: s.id, scarcity: s.scarcity, sector: s.sector, ...opportunityScore(s) }))
+    .map((s) => ({ id: s.id, scarcity: s.scarcity, sector: s.sector, ...opportunityScore(s, { liveCrowding: crowdingById[s.id] ?? null }) }))
     .sort((a, b) => b.score - a.score);
 }

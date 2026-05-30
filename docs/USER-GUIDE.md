@@ -56,7 +56,7 @@ Each row is a structural scarcity, **ranked by Opportunity Score — where the r
 | Column | Meaning | How to use it |
 |---|---|---|
 | **Scarcity** | The chokepoint + a one-line thesis. `◆ non-consensus` = under-appreciated. `▲ drift` = its priced-in level has changed since first tracked. | Hunt for non-consensus + low priced-in. |
-| **Opportunity†** | **0–100 structural-alpha score** = *binds soon × durable × defensible × **not yet priced***. Priced-in is a multiplicative **gate**: a `crowded` thesis scores ~0 however good the business, because there's no alpha left in what's priced. Built from the source fields only — no curve-fitting. | **Top of the list = the best structural setups.** Top scores are graded as relative-outperformance forecasts. |
+| **Opportunity†** | **0–100 structural-alpha score** = *binds soon × durable × defensible × **not yet priced***. Priced-in is a multiplicative **gate**: a `crowded` thesis scores ~0 however good the business, because there's no alpha left in what's priced. The gate blends the **human label (60%)** with a **live price-derived crowding proxy (40%)**, so it tracks the tape; a **↑tape / ↓tape** chip flags where the market disagrees with the label. Built from the source fields only — no curve-fitting. | **Top of the list = the best structural setups.** Top scores are graded as relative-outperformance forecasts. |
 | **Binds** | When it starts biting: `now → 2027 → 2028-29 → 2030+ → physics floor`. | Earlier = more urgent. |
 | **Priced-in** | How much the market already reflects it: `low → medium → high → crowded`. | High/crowded = less edge left; low = more opportunity. |
 | **Durability** | How long the moat lasts (`low → very-high`). | Favor very-high. |

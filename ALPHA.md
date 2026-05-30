@@ -113,6 +113,10 @@ quality = 0.40·bind_proximity             (binds now→1.0 … 2030+→0.45)
         + 0.25·defensibility              (substitution_risk: low→1.0 … high→0.0)
 score   = 100 · gate · quality · contrarian_bonus   (non_consensus → ×1.15, capped 100)
 ```
+The `gate` itself blends the **human `priced_in` label (60%)** with a **live, price-derived crowding
+proxy (40%)** — YTD return + distance to the 52-week high — so the score updates with the tape and
+flags where the market has *already* de-rated (or run up) a thesis the label hasn't caught up to.
+
 **Reading it:** a high score means *"binds soon, durable rent, hard to substitute, genuinely
 non-consensus — and the market has not yet priced it."* The `gate` is multiplicative on purpose:
 if a thesis is already `crowded`, the score is ~0 no matter how good the business — **there is no

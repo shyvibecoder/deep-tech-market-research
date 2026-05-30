@@ -388,6 +388,10 @@ function renderMyHoldings() {
   if (!entries.length) { box.innerHTML = ""; return; }
   const targets = Object.fromEntries((DATA.port?.holdings || []).map((h) => [h.ticker, h.target_usd]));
   const cap = DATA.trig?.triggers?.find((t) => t.id === "sleeve_cap")?.threshold || 1720000;
+  // Rebalance flags: actual vs target weight, ±25% band (shared web/rebalance.mjs).
+  const posForRebal = Object.fromEntries(entries.map(([t, h]) => [t, { shares: h.shares, price: DATA.sig?.quotes?.[t]?.error ? null : DATA.sig?.quotes?.[t]?.price }]));
+  const rebal = (typeof window.rebalanceFlags === "function" ? window.rebalanceFlags(posForRebal, targets, 0.25) : []);
+  const rebalMap = Object.fromEntries(rebal.map((r) => [r.ticker, r]));
   let total = 0; const acc = { ira: 0, taxable: 0 }; const rows = [];
   for (const [t, h] of entries) {
     const Q = DATA.sig?.quotes?.[t];
@@ -396,10 +400,12 @@ function renderMyHoldings() {
     if (mv) { total += mv; if (acc[h.account] != null) acc[h.account] += mv; }
     const gain = price && h.cost_basis ? price / h.cost_basis - 1 : null;
     const tgt = targets[t];
+    const rb = rebalMap[t];
+    const rbCell = rb?.flagged ? `<span class="${rb.action==='trim'?'neg':'pos'}">⚖ ${rb.action} (${rb.drift>0?'+':''}${rb.drift}%)</span>` : (rb ? "in band" : "—");
     rows.push(`<tr><td><strong>${t}</strong></td><td>${h.account}</td><td>${h.shares ?? "—"}</td>
       <td>${price ? "$" + price.toFixed(2) : "—"}</td><td>${mv ? fmtUsd(mv) : "—"}</td>
       <td class="${gain>=0?'pos':'neg'}">${gain==null?"—":(gain*100).toFixed(0)+"%"}</td>
-      <td>${tgt ? Math.round((mv||0)/tgt*100)+"% of target" : "—"}</td></tr>`);
+      <td>${tgt ? Math.round((mv||0)/tgt*100)+"% of target" : "—"}</td><td>${rbCell}</td></tr>`);
   }
   const capPct = Math.round(total / cap * 100);
   box.innerHTML = `<h3>Your holdings (live) <button class="help" data-help="myholdings">?</button> <span class="foot">— from your browser-stored positions × latest scan prices</span></h3>
@@ -409,7 +415,7 @@ function renderMyHoldings() {
       <div class="card"><b>${fmtUsd(acc.taxable)}</b><span>taxable</span></div>
       ${pos.cash_usd?`<div class="card"><b>${fmtUsd(pos.cash_usd)}</b><span>dry powder</span></div>`:""}
     </div>
-    <table class="mine"><thead><tr><th>Ticker</th><th>Acct</th><th>Shares</th><th>Price</th><th>Mkt value</th><th>Gain</th><th>vs target</th></tr></thead>
+    <table class="mine"><thead><tr><th>Ticker</th><th>Acct</th><th>Shares</th><th>Price</th><th>Mkt value</th><th>Gain</th><th>vs target</th><th>Rebalance</th></tr></thead>
       <tbody>${rows.join("")}</tbody></table>`;
 }
 
@@ -505,7 +511,7 @@ const HELP = {
     <p>Two overlays sit on top (Timing v2): a <strong>macro-stress brake</strong> that forces defensive only when the <strong>VIX term-structure is inverted AND high-yield credit is widening fast</strong> (a rare, leading combined signal — exit-only, it can only de-risk), and a <strong>20-DMA fast re-entry</strong> that re-risks one notch when most names reclaim their 20-day average (so you don't stay defensive too long after a bottom).</p>
     <p>It's a risk dial that paces your DCA, not an all-in/all-out switch. Full detail: REGIME.md.</p>` },
   myholdings: { title: "Your holdings (live)", body: `
-    <p>Computed from the positions you entered in ⚙ Settings × the latest scan prices — stored only in your browser. Shows market value, gain vs cost, % of target, per-account subtotals, and your sleeve value vs the ~$1.72mm cap. Export to <code>positions.local.json</code> to also enable the server-side trim/sleeve triggers.</p>` },
+    <p>Computed from the positions you entered in ⚙ Settings × the latest scan prices — stored only in your browser. Shows market value, gain vs cost, % of target, per-account subtotals, and your sleeve value vs the ~$1.72mm cap. The <strong>Rebalance</strong> column flags any holding &gt;±25% from its target weight (⚖ trim/add). Foreign lots are FX-converted to USD. Export to <code>positions.local.json</code> to also enable the server-side trim/sleeve triggers.</p>` },
   filings: { title: "Filings &amp; news", body: `
     <p>Free, keyless. <strong>SEC EDGAR</strong> lists each holding's recent material filings (8-K/10-Q/10-K/6-K/20-F); 8-K <em>items</em> are decoded into topics (Results/guidance, Material agreement, etc.). <strong>NEW</strong> = unseen since the last scan. <strong>News</strong> is Google-News RSS keyed to each scarcity's thesis terms, deduped. Both feed the Agent digest.</p>` },
   options: { title: "Options fair-value check", body: `

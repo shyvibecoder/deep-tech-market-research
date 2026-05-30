@@ -23,6 +23,8 @@
 
 const mean = (a) => (a.length ? a.reduce((x, y) => x + y, 0) / a.length : null);
 
+import { suggestOptionStructure } from "./options.mjs";
+
 const LADDER = ["defensive", "caution", "neutral", "risk-on"]; // for one-step nudges
 
 export function computeRegime(quotes, holdings, { macro } = {}) {
@@ -92,6 +94,7 @@ export function computeRegime(quotes, holdings, { macro } = {}) {
       breadth_above_20dma: breadth20 == null ? null : +(breadth20 * 100).toFixed(0),
     },
     macro: macro || null,
+    options_suggestion: suggestOptionStructure(posture, { macroStressed }),
     action,
     basis: "trend(200-DMA)+abs-momentum(12m)+vol-state+drawdown, +20-DMA fast re-entry +VIX/HY macro overlay; see REGIME.md",
     note: `trend ${pct(avgVsMa200)} vs 200-DMA · 12m mom ${pct(avgMom)} · ${pct(avgOffHigh)} from highs · vol ${volState == null ? "n/a" : volState.toFixed(2) + "x"} · breadth200 ${pct(breadth)} · breadth20 ${pct(breadth20)}${macroStressed ? " · MACRO-STRESS" : ""}`,

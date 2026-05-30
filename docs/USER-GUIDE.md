@@ -130,7 +130,9 @@ sleeve · DRY = cash held for triggers.
 ### 5.5 Your holdings (live)
 Once you add positions in Settings, this panel shows **market value, gain vs cost, % of target,
 per-account subtotals, and your sleeve value vs the cap** — computed from your browser-stored positions
-× the latest scan prices.
+× the latest scan prices. The **Rebalance** column flags any holding whose actual weight has drifted
+**>±25% from its target weight** (⚖ *trim* if overweight, *add* if underweight). Foreign-currency lots
+are **FX-converted to USD** for the sleeve total (a lot with no available FX rate is excluded and noted).
 
 ---
 

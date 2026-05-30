@@ -89,3 +89,27 @@ export function evaluateOption({ type, S, K, daysToExpiry, r = 0.04, marketPrice
     verdict, reason, greeks, notes,
   };
 }
+
+// Regime-driven, DEFINED-RISK options suggestion (no naked options, both accounts).
+// Maps the timing posture (+ macro brake) to a structure with delta/DTE bands.
+export function suggestOptionStructure(posture, { macroStressed = false } = {}) {
+  if (macroStressed || posture === "defensive") return {
+    stance: "hedge",
+    structures: ["protective put or debit put spread, ~5-10% OTM", "collar if you already hold the shares"],
+    rationale: "cut the left tail without selling the thesis",
+    dte: "30-90d", delta: "put ~0.20-0.35",
+  };
+  if (posture === "caution") return {
+    stance: "protect",
+    structures: ["partial protective put / debit put spread on the most correlated cyclicals"],
+    rationale: "tap the brakes, keep upside",
+    dte: "30-90d", delta: "put ~0.15-0.25",
+  };
+  if (posture === "risk-on") return {
+    stance: "accelerate",
+    structures: ["long call / LEAPS for capped-downside leverage"],
+    rationale: "leveraged upside vs. buying more shares, with defined risk",
+    dte: "90-365d", delta: "call ~0.25-0.40",
+  };
+  return { stance: "none", structures: ["no options action — follow the DCA calendar"], rationale: "neutral regime", dte: "-", delta: "-" };
+}

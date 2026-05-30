@@ -17,7 +17,7 @@ all-in vs. apply the brakes into cash. See `REGIME.md` for the evidence base.
   - [ ] Compute regime on a **clean composite underlying**, not an average of 19 noisy names.
   - [ ] **Account-aware posture**: timing drives the IRA/Roth sleeve; taxable = buy-and-hold anchors.
   - [x] **Options fair-value module** — Black-Scholes IV vs realized-vol "cheap/fair/rich" verdict + greeks (`web/options.mjs`, **Options check** tab; CI-tested via parity + IV round-trip).
-  - [~] **Options-based action suggestions** — Options tab already suggests a defined-risk structure from the live regime (defensive→put/put-spread; risk-on→LEAPS call). *Full Timing-v2: have the regime engine emit the suggestion + a suggested strike/expiry band.*
+  - [x] **Options-based action suggestions** — `suggestOptionStructure(posture,{macroStressed})` (shared `web/options.mjs`, TDD-tested) emits a defined-risk structure + delta/DTE band; carried in `regime.options_suggestion` and shown on the Options tab. No naked options.
   - [ ] **Options execution rules (DEFINED-RISK ONLY — assume NO naked options, both accounts)** — risk-on → long LEAPS calls (GEV/ASML/index); defensive/macro-stress → protective puts / debit put spreads / collars on correlated cyclicals. Active rolling in IRA (tax-free); long-dated catastrophe hedges in taxable (mind holding-period/constructive-sale/wash-sale). See POSITION-SIZING §3a.
   - [ ] Version the regime engine (v1→v2) + keep thresholds coarse/economically-motivated (anti-overfit); do NOT port QQQ-tuned params onto short-history single names; no leverage.
 
@@ -35,7 +35,7 @@ all-in vs. apply the brakes into cash. See `REGIME.md` for the evidence base.
 - [x] **`docs/USER-GUIDE.md`** — deeply detailed, per-feature guide (what it is, what it means, how to use).
 - [x] **Auto-update hook** — `docs.yml` regenerates screenshots (Playwright) + Word `.docx` (pandoc) on any `web/**` or guide change; `.githooks/pre-commit` blocks UI commits that skip the guide.
 - [x] Screenshots wired (`tests/e2e-browser/screenshots.mjs`); placeholder PNGs committed until CI generates real ones.
-- [ ] First CI run of `docs.yml` to replace placeholders with real screenshots + build the `.docx`.
+- [x] First CI run of `docs.yml` done (commit a2244a6): real screenshots + `USER-GUIDE.docx` (1.8MB) committed.
 
 ## ⚠ Data integrity / anti-injection hardening (next priority)
 Current guards: HTTPS-only sources, fail-loud schema validation (in+out), every ticker "resolved or
@@ -70,11 +70,11 @@ Build a provider abstraction (like the LLM one) that tries keyless first, option
 - [x] **F9** — ownership model documented (ARCHITECTURE §1: bot-proposable vs human-only fields)
 - [x] **F10** — `signals.json` kept snapshot-only; time-series live in `scarcity-history.json` / `seen.state.json`
 - [ ] **F11** — (later) key manual policy triggers to news/filing signals
-- [ ] **F2b** — full FX conversion (fetch `${CUR}USD=X`) so foreign lots count in the sleeve value
+- [x] **F2b** — FX conversion (`scripts/lib/fx.mjs`, `toUsd` TDD-tested): foreign lots converted to USD in the sleeve; no-rate lots skipped+flagged
 
 ### Remaining audit/back-fill (next)
 - [ ] **F6 view** — DCA planned-vs-deployed dashboard (pairs with v4; data layer done)
-- [ ] **F2b** FX conversion for foreign lots
+- [x] **F2b** FX conversion for foreign lots — done
 - [ ] **F11** wire manual policy triggers to news/filings
 
 ## UX / onboarding (shipped)
@@ -98,7 +98,7 @@ Build a provider abstraction (like the LLM one) that tries keyless first, option
 ## v4 — tracking & alerts
 - [ ] DCA planned-vs-deployed view (uses F6)
 - [ ] Push alerts (ntfy.sh / Telegram) on trigger fire (uses F7 for dedupe across channels)
-- [ ] Rebalance helper: flag any holding >±25% from target weight
+- [x] Rebalance helper: flag any holding >±25% from target weight (`web/rebalance.mjs`, TDD-tested; ⚖ column in Your holdings)
 
 ## Nice-to-haves
 - [ ] Private/foreign chokepoint watchlist (SpaceX, Anduril, ASML, Lynas, Harmonic Drive) + "how to access" notes

@@ -1,6 +1,6 @@
 // Options tab UI (ES module). Uses the shared fair-value math in options.mjs and
 // auto-fills the underlying price + realized vol from the latest scan.
-import { evaluateOption } from "./options.mjs";
+import { evaluateOption, suggestOptionStructure } from "./options.mjs";
 
 const $ = (s) => document.querySelector(s);
 let SIG = {};
@@ -37,9 +37,9 @@ function evaluate() {
   const e = evaluateOption({ type, S, K, daysToExpiry, r, marketPrice, refVol: refVol > 0 ? refVol : undefined });
   const g = e.greeks || {};
   const posture = SIG.regime?.posture;
-  let suggest = "";
-  if (posture === "defensive" || posture === "caution") suggest = "Timing posture is defensive — a long <strong>put</strong> or <strong>put spread</strong> (debit) on the most correlated cyclicals fits the brakes. Defined-risk only.";
-  else if (posture === "risk-on") suggest = "Timing posture is risk-on — a long <strong>call / LEAPS</strong> gives capped-downside leverage vs. buying more shares. Defined-risk only.";
+  const sug = suggestOptionStructure(posture, { macroStressed: !!SIG.regime?.macro_stressed });
+  const suggest = sug.stance === "none" ? "" :
+    `Timing posture <strong>${posture}</strong> → <strong>${sug.stance}</strong>: ${sug.structures.join("; ")} (${sug.dte}, ${sug.delta}) — ${sug.rationale}. Defined-risk only.`;
   out.innerHTML = `
     <div class="optcard">
       <p class="verdict ${e.verdict}">Verdict: ${e.verdict.toUpperCase()} — <span style="font-weight:400">${e.reason}</span></p>

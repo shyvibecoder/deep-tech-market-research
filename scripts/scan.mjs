@@ -10,6 +10,7 @@ import { readFileSync, writeFileSync } from "node:fs";
 import { isTradeable, fetchYahoo } from "./lib/quotes.mjs";
 import { getQuotes, providerKeys } from "./lib/marketdata.mjs";
 import { macroStress } from "./lib/macro.mjs";
+import { toUsd, fetchRates } from "./lib/fx.mjs";
 import { analystRedteamDigest, llmAvailable } from "./lib/llm.mjs";
 import { validateInputs, validateSignals, validatePositions, assertValid, SCHEMA_VERSION } from "./lib/schema.mjs";
 import { watchFilings } from "./lib/edgar.mjs";
@@ -154,15 +155,22 @@ let sleeveValue = null, sleeveFired = false;
 let sleeveNote = "add web/data/positions.local.json (gitignored) for the live sleeve value";
 let trimHits = [], trimNote = "add positions.local.json with cost basis to evaluate";
 
+// F2b: fetch FX rates (free, keyless) for any non-USD position currencies.
+let fxRates = { USD: 1 };
+if (!OFFLINE && positions?.positions) {
+  const curs = Object.keys(positions.positions).map((t) => enriched[t]?.currency).filter((c) => c && c !== "USD");
+  if (curs.length) { try { fxRates = await fetchRates(curs); } catch (e) { errors.push(`fx: ${e.message}`); } }
+}
+
 if (positions?.positions) {
-  let sum = 0, priced = 0; const missing = [], nonUsd = [];
+  let sum = 0, priced = 0; const missing = [], noFx = [];
   for (const [t, p] of Object.entries(positions.positions)) {
     const q = enriched[t];
     const price = q?.price;
     if (price && p.shares) {
-      // F2: don't sum non-USD-denominated quotes into a USD cap (no FX yet).
-      if (q.currency && q.currency !== "USD") { nonUsd.push(`${t}(${q.currency})`); continue; }
-      sum += price * p.shares; priced++;
+      const usd = toUsd(price * p.shares, q.currency, fxRates); // converts foreign lots to USD
+      if (usd == null) { noFx.push(`${t}(${q.currency})`); continue; } // no rate → skip + flag
+      sum += usd; priced++;
     } else if (p.shares) missing.push(t);
   }
   if (typeof positions.cash_usd === "number") sum += positions.cash_usd;
@@ -171,7 +179,7 @@ if (positions?.positions) {
     sleeveFired = !degraded && sleeveValue >= sleeveCapUsd;
     sleeveNote = `sleeve ≈ $${(sleeveValue / 1e6).toFixed(2)}mm vs $${(sleeveCapUsd / 1e6).toFixed(2)}mm cap` +
       (missing.length ? ` (no price for ${missing.join(", ")})` : "") +
-      (nonUsd.length ? ` (excluded non-USD: ${nonUsd.join(", ")} — FX conversion not yet implemented)` : "");
+      (noFx.length ? ` (no FX rate for ${noFx.join(", ")} — excluded)` : "");
   }
   for (const h of portfolio.holdings) {
     const p = positions.positions[h.ticker];

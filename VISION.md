@@ -11,6 +11,24 @@ options + cash layer exists to **keep maxDD < 35% while preserving compounding**
 +54% to recover — drawdown control *is* return over 10 years). You cannot optimize what you don't
 measure → measurement is the foundation.
 
+## ⚡ TRUE ALPHA (the hard part — a standing, first-class need)
+Risk control, timing, metrics, accountability, and UX are **scaffolding around** alpha — they protect
+compounding but do not, by themselves, beat the market. The app must keep pushing on the *actual edge*,
+and must keep itself honest that durable selection alpha is rare. Where Puck's alpha can legitimately come from:
+1. **Thesis alpha** — the researched, non-consensus view that under-priced slow-to-build chokepoints
+   outperform. *Must be PROVEN, not assumed* → the forecast **scorecard** grades it; the **de-rating /
+   inflecting** signal trades it (crowded de-rates first, under-priced inflects).
+2. **Inaccessible-chokepoint alpha** — the non-commoditizable layer: discover public proxies (SEC-filing
+   mentions) for private/foreign/impaired bottlenecks nobody else tracks. **Shipped; keep deepening** (rank
+   proxy quality, add supplier/customer graphs, score discovered proxies' forward returns).
+3. **Early-thesis alpha** — v3 auto-research surfaces *new* scarcities before consensus prices them.
+4. **Behavioral alpha** — discipline to deploy into drawdowns, not chase, and avoid the −35% ruin.
+
+**Standing rule:** every round must advance at least one *alpha* item (1–3), not only scaffolding — and
+the scorecard is the referee. If the de-rating/tilt calls don't beat ~50% out-of-sample, the app must say
+so and the "alpha" is just factor/beta. Open alpha work: prove de-rating vs outcomes; rank/score discovered
+proxies; ensemble-gated v3; wire de-rating + per-name TSMOM into a target-weight vector (analysis → allocation).
+
 ## The single biggest lever (Visionary)
 **Turn Puck from a snapshot renderer into an accountable, self-grading forecasting record.** It already
 commits dated JSON to git every scan — an immutable, free, longitudinal claim ledger by accident. Record

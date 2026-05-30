@@ -93,6 +93,15 @@ It's a **risk dial that paces your DCA**, not an all-in/all-out switch. It's bui
 replicated* research (Faber 200-DMA trend; Moskowitz-Ooi-Pedersen time-series momentum; Moreira-Muir
 volatility; Hurst-Ooi-Pedersen trend) — **not** a curve-fit backtest. Full detail: `REGIME.md`.
 
+**Two overlays (Timing v2):**
+- **Macro-stress brake (exit-only).** Forces *defensive* only when **two leading risk signals fire
+  together** — the **VIX term-structure inverts** (front VIX ≥ VIX3M) **AND high-yield credit widens
+  fast** (HYG ~1-month return ≤ −3%). Requiring both makes false alarms rare; being exit-only means it
+  can only de-risk, never add. When it's on, the posture note shows **MACRO-STRESS**.
+- **20-DMA fast re-entry.** When ≥60% of holdings reclaim their 20-day average, the posture **re-risks
+  one notch** — so you don't stay in cash too long after a V-shaped bottom (the momentum-crash fix). The
+  macro brake always wins over re-entry.
+
 ### 5.2 Summary cards
 Sleeve size, IRA vs taxable split, holding count, and a **data-quality** card (✓ OK or ⚠ degraded —
 see §11).

@@ -7,8 +7,9 @@
 // Usage: node scripts/scan.mjs [--offline]
 
 import { readFileSync, writeFileSync } from "node:fs";
-import { isTradeable } from "./lib/quotes.mjs";
+import { isTradeable, fetchYahoo } from "./lib/quotes.mjs";
 import { getQuotes, providerKeys } from "./lib/marketdata.mjs";
+import { macroStress } from "./lib/macro.mjs";
 import { analystRedteamDigest, llmAvailable } from "./lib/llm.mjs";
 import { validateInputs, validateSignals, validatePositions, assertValid, SCHEMA_VERSION } from "./lib/schema.mjs";
 import { watchFilings } from "./lib/edgar.mjs";
@@ -195,8 +196,22 @@ const trigger_status = {
   trim_rule: { fired: trimHits.length > 0, hits: trimHits, note: trimNote },
 };
 
-// --- Timing layer: trend/breadth/drawdown -> risk posture (when to deploy vs. brake) ---
-const regime = computeRegime(enriched, portfolio.holdings);
+// --- Macro-stress overlay inputs (free, keyless): VIX term-structure + HY credit velocity ---
+let macro = null;
+if (!OFFLINE) {
+  try {
+    const [vix, vix3m, hyg] = await Promise.all([
+      fetchYahoo("^VIX").catch(() => null),
+      fetchYahoo("^VIX3M").catch(() => null),
+      fetchYahoo("HYG").catch(() => null),
+    ]);
+    macro = macroStress({ vix: vix?.price, vix3m: vix3m?.price, hygMom1m: hyg?.mom_1m });
+    console.log(`Macro: ${macro.stressed ? "STRESSED" : "calm"} (vix_term ${macro.vix_term}, hy_1m ${macro.hy_mom_1m})`);
+  } catch (e) { errors.push(`macro: ${e.message}`); }
+}
+
+// --- Timing layer: trend/momentum/vol/drawdown + 20-DMA re-entry + macro overlay ---
+const regime = computeRegime(enriched, portfolio.holdings, { macro });
 console.log(`Regime: ${regime.posture}${regime.risk_score != null ? ` (risk ${regime.risk_score}/100)` : ""}`);
 
 // --- F4: append scarcity history + surface drift; F7: mark new filings/news ---

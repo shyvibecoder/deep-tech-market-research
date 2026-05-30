@@ -502,6 +502,7 @@ const HELP = {
     <li>⚪ <strong>neutral</strong> — stick to the DCA calendar.</li>
     <li>🟠 <strong>caution</strong> — tap the brakes, build dry powder.</li>
     <li>🔴 <strong>defensive</strong> — favor cash; deploy only into the drawdown trigger.</li></ul>
+    <p>Two overlays sit on top (Timing v2): a <strong>macro-stress brake</strong> that forces defensive only when the <strong>VIX term-structure is inverted AND high-yield credit is widening fast</strong> (a rare, leading combined signal — exit-only, it can only de-risk), and a <strong>20-DMA fast re-entry</strong> that re-risks one notch when most names reclaim their 20-day average (so you don't stay defensive too long after a bottom).</p>
     <p>It's a risk dial that paces your DCA, not an all-in/all-out switch. Full detail: REGIME.md.</p>` },
   myholdings: { title: "Your holdings (live)", body: `
     <p>Computed from the positions you entered in ⚙ Settings × the latest scan prices — stored only in your browser. Shows market value, gain vs cost, % of target, per-account subtotals, and your sleeve value vs the ~$1.72mm cap. Export to <code>positions.local.json</code> to also enable the server-side trim/sleeve triggers.</p>` },

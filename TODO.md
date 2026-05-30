@@ -12,8 +12,8 @@ all-in vs. apply the brakes into cash. See `REGIME.md` for the evidence base.
 - [ ] **Timing v2** — per-name signed TSMOM sizing (not just one portfolio posture); cross-asset
   trend (rates/USD); longer look-back history store; whipsaw dampening. (See REGIME.md "limitations".)
 - [ ] **Timing v2 — lessons from the V2.3 QLD strategy** (see REGIME.md "Lessons from an adjacent system"):
-  - [ ] Exit-only, **AND-gated macro-stress overlay**: VIX term-structure (VIX>VIX3M) **and** HY credit velocity → force defensive (independent of the price-based score). Free data: `^VIX`/`^VIX3M`/`HYG` (Yahoo) or FRED `BAMLH0A0HYM2`.
-  - [ ] **Fast re-entry override** (e.g., 20-DMA reclaim / breadth thrust) — re-risk quickly after defensive (Daniel-Moskowitz fix).
+  - [x] Exit-only, **AND-gated macro-stress overlay**: VIX/VIX3M ≥1.0 **and** HYG 1m ≤ −3% → force defensive. Keyless Yahoo `^VIX`/`^VIX3M`/`HYG`. (`scripts/lib/macro.mjs`; TDD-tested.)
+  - [x] **Fast re-entry override** — ≥60% of names above 20-DMA → re-risk one notch (macro brake wins). TDD-tested.
   - [ ] Compute regime on a **clean composite underlying**, not an average of 19 noisy names.
   - [ ] **Account-aware posture**: timing drives the IRA/Roth sleeve; taxable = buy-and-hold anchors.
   - [x] **Options fair-value module** — Black-Scholes IV vs realized-vol "cheap/fair/rich" verdict + greeks (`web/options.mjs`, **Options check** tab; CI-tested via parity + IV round-trip).

@@ -73,6 +73,12 @@ A separate, more mature tactical strategy (Faber 200-DMA trend + Daniel-Moskowit
 sleeve and buy-and-hold VGT in taxable) shares our evidence base and suggests four upgrades — and two
 cautions about what does **not** port to a thematic single-stock basket.
 
+**Status:** items 1–2 below are **implemented** (Timing v2, `scripts/lib/macro.mjs` + the overlays in
+`computeRegime`, TDD-tested). Concrete thresholds (coarse, economically-motivated, *not* fitted):
+macro-stress = **VIX/VIX3M ≥ 1.0** (inverted) **AND HYG 1-month ≤ −3%**; fast re-entry = **≥60% of
+holdings above their 20-DMA** (re-risk one posture notch). The macro brake is exit-only and always wins
+over re-entry. Items 3–4 (clean-composite signal, per-name TSMOM sizing) remain queued.
+
 **Architecture worth adopting (→ Timing v2 in TODO):**
 1. **Exit-only, AND-gated macro-stress overlay.** It flips defensive only when *two independent* stress
    signals fire together — **VIX term-structure** (backwardation: VIX > VIX3M) **AND high-yield credit

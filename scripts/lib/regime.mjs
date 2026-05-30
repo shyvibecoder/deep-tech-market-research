@@ -23,7 +23,9 @@
 
 const mean = (a) => (a.length ? a.reduce((x, y) => x + y, 0) / a.length : null);
 
-export function computeRegime(quotes, holdings) {
+const LADDER = ["defensive", "caution", "neutral", "risk-on"]; // for one-step nudges
+
+export function computeRegime(quotes, holdings, { macro } = {}) {
   const qs = holdings.map((h) => quotes[h.ticker]).filter((q) => q && !q.error);
 
   // Per-name signal components, then portfolio-aggregate them.
@@ -31,6 +33,9 @@ export function computeRegime(quotes, holdings) {
   const mom = qs.map((q) => q.mom_12m).filter((x) => x != null);
   const offs = qs.map((q) => q.pct_off_high).filter((x) => x != null);
   const breadthArr = qs.map((q) => q.above_ma200).filter((x) => x != null);
+  // Fast re-entry breadth: % of names that have reclaimed their 20-DMA (Daniel-Moskowitz fix).
+  const ma20Arr = qs.map((q) => q.above_ma20).filter((x) => x != null);
+  const breadth20 = ma20Arr.length ? ma20Arr.filter(Boolean).length / ma20Arr.length : null;
   // Volatility state: median(3m vol / 1y vol) across names; >1 = vol rising (de-risk).
   const volRatios = qs.map((q) => (q.vol_3m && q.vol_1y ? q.vol_3m / q.vol_1y : null)).filter((x) => x != null);
 
@@ -64,17 +69,32 @@ export function computeRegime(quotes, holdings) {
   else if (risk < 25) { posture = "defensive"; action = "Brakes on — favor cash/dry powder; deploy only into the drawdown trigger."; }
   else if (risk < 45) { posture = "caution"; action = "Tap the brakes — slow deploys, build dry powder, wait for trend/vol to confirm."; }
 
+  // --- Overlays (order matters): fast re-entry can RE-RISK one notch; macro stress
+  // is exit-only and ALWAYS wins (forces defensive). ---
+  const fast_reentry = breadth20 != null && breadth20 >= 0.6;
+  if (fast_reentry && (posture === "defensive" || posture === "caution")) {
+    posture = LADDER[Math.min(LADDER.indexOf(posture) + 1, LADDER.length - 1)];
+    action = `Fast re-entry: ≥60% of names reclaimed their 20-DMA — re-risk one notch. ${action}`;
+  }
+  const macroStressed = !!macro?.stressed;
+  if (macroStressed) {
+    posture = "defensive";
+    action = `Macro-stress overlay ON (${(macro.reasons || []).join("; ")}) — brakes: raise cash, deploy only into the drawdown trigger.`;
+  }
+
   const pct = (x) => (x == null ? "n/a" : (x * 100).toFixed(0) + "%");
   return {
-    posture, risk_score: risk,
+    posture, risk_score: risk, fast_reentry, macro_stressed: macroStressed,
     components: {
       trend_vs_200dma: round1(avgVsMa200), momentum_12m: round1(avgMom),
       avg_off_high: round1(avgOffHigh), vol_state: volState == null ? null : +volState.toFixed(2),
       breadth_above_200dma: breadth == null ? null : +(breadth * 100).toFixed(0),
+      breadth_above_20dma: breadth20 == null ? null : +(breadth20 * 100).toFixed(0),
     },
+    macro: macro || null,
     action,
-    basis: "trend(200-DMA)+abs-momentum(12m)+vol-state+drawdown; see REGIME.md",
-    note: `trend ${pct(avgVsMa200)} vs 200-DMA · 12m mom ${pct(avgMom)} · ${pct(avgOffHigh)} from highs · vol ${volState == null ? "n/a" : volState.toFixed(2) + "x"} · breadth ${pct(breadth)}`,
+    basis: "trend(200-DMA)+abs-momentum(12m)+vol-state+drawdown, +20-DMA fast re-entry +VIX/HY macro overlay; see REGIME.md",
+    note: `trend ${pct(avgVsMa200)} vs 200-DMA · 12m mom ${pct(avgMom)} · ${pct(avgOffHigh)} from highs · vol ${volState == null ? "n/a" : volState.toFixed(2) + "x"} · breadth200 ${pct(breadth)} · breadth20 ${pct(breadth20)}${macroStressed ? " · MACRO-STRESS" : ""}`,
   };
 }
 

@@ -59,17 +59,20 @@ export async function fetchYahoo(ticker) {
   // volatility for vol-state scaling (Moreira-Muir 2017).
   const ma50 = sma(closes, 50);
   const ma200 = sma(closes, 200);
+  const ma20 = sma(closes, 20);
   const mom_12m = closes.length >= 200 ? price / closes[0] - 1 : null; // ~1y total return
+  const mom_1m = closes.length >= 22 ? price / closes[closes.length - 22] - 1 : null; // ~21 sessions (fast)
   return {
     ticker, price, high52,
     pct_off_high: high52 ? (price - high52) / high52 : null,
     ytd: ytdBase ? (price - ytdBase) / ytdBase : null,
-    ma50, ma200,
+    ma50, ma200, ma20,
     pct_vs_ma50: ma50 ? (price - ma50) / ma50 : null,
     pct_vs_ma200: ma200 ? (price - ma200) / ma200 : null,
     above_ma200: ma200 != null ? price >= ma200 : null,
+    above_ma20: ma20 != null ? price >= ma20 : null,
     asof,
-    mom_12m,
+    mom_12m, mom_1m,
     vol_3m: realizedVol(closes, 63),
     vol_1y: realizedVol(closes, 252),
     currency: res?.meta?.currency || null,

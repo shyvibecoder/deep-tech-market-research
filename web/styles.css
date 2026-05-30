@@ -42,4 +42,6 @@ footer a{color:var(--y30)}code{background:#0d1117;padding:1px 5px;border-radius:
 .regime.risk-on{border-left-color:var(--good)}.regime.caution{border-left-color:var(--y27)}.regime.defensive{border-left-color:var(--now)}.regime.neutral{border-left-color:var(--y30)}
 .regime strong{display:block}.regime span{color:var(--mut);font-size:13px}
 .regime .rnote{color:var(--mut);font-size:11px;text-align:right;max-width:48%}
+.drift{color:var(--y27);font-size:11px;margin-left:6px;font-weight:600}
+.newbadge{background:var(--good);color:#0b0e14;font-size:10px;font-weight:700;padding:0 5px;border-radius:4px}
 @media(max-width:800px){.tcol{grid-template-columns:1fr}}

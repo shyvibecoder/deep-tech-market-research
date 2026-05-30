@@ -14,13 +14,17 @@ import { watchFilings } from "./lib/edgar.mjs";
 import { watchNews } from "./lib/news.mjs";
 import { getForwardPEs } from "./lib/fundamentals.mjs";
 import { computeRegime } from "./lib/regime.mjs";
+import { updateScarcityHistory, applySeenState } from "./lib/history.mjs";
 
 const OFFLINE = process.argv.includes("--offline");
 const read = (p) => JSON.parse(readFileSync(new URL(`../web/data/${p}`, import.meta.url)));
 
+const dataUrl = (p) => new URL(`../web/data/${p}`, import.meta.url);
 const portfolio = read("portfolio.json");
 const scarcities = read("scarcities.json");
 const triggers = read("triggers.json");
+const securities = (() => { try { return read("securities.json").securities || {}; } catch { return {}; } })();
+const TODAY = new Date().toISOString().slice(0, 10);
 
 // Fail loudly on malformed input data before doing any work.
 assertValid("input data", validateInputs({ portfolio, scarcities, triggers }));
@@ -84,7 +88,9 @@ if (!OFFLINE) {
 
 // --- Forward P/E (best-effort, free) for holdings: "went up a lot" != "expensive" ---
 if (!OFFLINE) {
-  const holdTickers = portfolio.holdings.map((h) => h.ticker).filter(isTradeable);
+  // F3: forward P/E is meaningless for ETFs — only fetch for single stocks/ADRs.
+  const holdTickers = portfolio.holdings.map((h) => h.ticker)
+    .filter((t) => isTradeable(t) && securities[t]?.type !== "etf");
   try {
     const fpes = await getForwardPEs(holdTickers);
     let got = 0;
@@ -161,6 +167,11 @@ const trigger_status = {
 const regime = computeRegime(enriched, portfolio.holdings);
 console.log(`Regime: ${regime.posture}${regime.risk_score != null ? ` (risk ${regime.risk_score}/100)` : ""}`);
 
+// --- F4: append scarcity history + surface drift; F7: mark new filings/news ---
+const { drift: scarcity_drift } = updateScarcityHistory(dataUrl("scarcity-history.json"), scarcities.scarcities, TODAY);
+const { newFilings, newNews } = applySeenState(dataUrl("seen.state.json"), { filings, news, triggerStatus: trigger_status, today: TODAY });
+console.log(`History: ${Object.keys(scarcity_drift).length} scarcities drifted; ${newFilings} new filings, ${newNews} new headlines`);
+
 // --- Optional free-LLM analyst + red-team digest ---
 let digest = "(no LLM key set — set GEMINI_API_KEY or GROQ_API_KEY in repo secrets to enable the agent digest)";
 if (llmAvailable() && !OFFLINE) {
@@ -183,6 +194,7 @@ const out = {
   news,
   trigger_status,
   regime,
+  scarcity_drift,
   digest,
   errors,
 };

@@ -1,0 +1,198 @@
+{
+  "schema_version": 1,
+  "updated": "2026-05-30",
+  "history": {
+    "electrons": [
+      {
+        "date": "2026-05-30",
+        "priced_in": "high",
+        "bind_window": "now",
+        "non_consensus": true
+      }
+    ],
+    "transformers": [
+      {
+        "date": "2026-05-30",
+        "priced_in": "high",
+        "bind_window": "now",
+        "non_consensus": false
+      }
+    ],
+    "turbines": [
+      {
+        "date": "2026-05-30",
+        "priced_in": "crowded",
+        "bind_window": "now",
+        "non_consensus": false
+      }
+    ],
+    "electricians": [
+      {
+        "date": "2026-05-30",
+        "priced_in": "high",
+        "bind_window": "now",
+        "non_consensus": true
+      }
+    ],
+    "hvdc": [
+      {
+        "date": "2026-05-30",
+        "priced_in": "medium",
+        "bind_window": "now",
+        "non_consensus": true
+      }
+    ],
+    "enrichment": [
+      {
+        "date": "2026-05-30",
+        "priced_in": "crowded",
+        "bind_window": "2028-29",
+        "non_consensus": true
+      }
+    ],
+    "uranium": [
+      {
+        "date": "2026-05-30",
+        "priced_in": "crowded",
+        "bind_window": "now",
+        "non_consensus": false
+      }
+    ],
+    "copper": [
+      {
+        "date": "2026-05-30",
+        "priced_in": "high",
+        "bind_window": "2030+",
+        "non_consensus": false
+      }
+    ],
+    "rare-earth-magnets": [
+      {
+        "date": "2026-05-30",
+        "priced_in": "crowded",
+        "bind_window": "now",
+        "non_consensus": true
+      }
+    ],
+    "gallium": [
+      {
+        "date": "2026-05-30",
+        "priced_in": "low",
+        "bind_window": "now",
+        "non_consensus": true
+      }
+    ],
+    "graphite": [
+      {
+        "date": "2026-05-30",
+        "priced_in": "low",
+        "bind_window": "2027",
+        "non_consensus": true
+      }
+    ],
+    "hbm": [
+      {
+        "date": "2026-05-30",
+        "priced_in": "medium",
+        "bind_window": "now",
+        "non_consensus": true
+      }
+    ],
+    "advanced-packaging": [
+      {
+        "date": "2026-05-30",
+        "priced_in": "high",
+        "bind_window": "now",
+        "non_consensus": false
+      }
+    ],
+    "semicap": [
+      {
+        "date": "2026-05-30",
+        "priced_in": "high",
+        "bind_window": "now",
+        "non_consensus": false
+      }
+    ],
+    "optical": [
+      {
+        "date": "2026-05-30",
+        "priced_in": "crowded",
+        "bind_window": "2027",
+        "non_consensus": false
+      }
+    ],
+    "specialty-materials": [
+      {
+        "date": "2026-05-30",
+        "priced_in": "low",
+        "bind_window": "now",
+        "non_consensus": true
+      }
+    ],
+    "cooling": [
+      {
+        "date": "2026-05-30",
+        "priced_in": "high",
+        "bind_window": "now",
+        "non_consensus": true
+      }
+    ],
+    "manipulation-data": [
+      {
+        "date": "2026-05-30",
+        "priced_in": "low",
+        "bind_window": "2027",
+        "non_consensus": true
+      }
+    ],
+    "reducers": [
+      {
+        "date": "2026-05-30",
+        "priced_in": "medium",
+        "bind_window": "2027",
+        "non_consensus": false
+      }
+    ],
+    "space-power": [
+      {
+        "date": "2026-05-30",
+        "priced_in": "low",
+        "bind_window": "2028-29",
+        "non_consensus": true
+      }
+    ],
+    "thermal-rejection": [
+      {
+        "date": "2026-05-30",
+        "priced_in": "low",
+        "bind_window": "physics-floor",
+        "non_consensus": true
+      }
+    ],
+    "cryogenics": [
+      {
+        "date": "2026-05-30",
+        "priced_in": "low",
+        "bind_window": "2028-29",
+        "non_consensus": true
+      }
+    ],
+    "bio-data": [
+      {
+        "date": "2026-05-30",
+        "priced_in": "medium",
+        "bind_window": "now",
+        "non_consensus": true
+      }
+    ],
+    "rl-data": [
+      {
+        "date": "2026-05-30",
+        "priced_in": "low",
+        "bind_window": "2027",
+        "non_consensus": true
+      }
+    ]
+  }
+}

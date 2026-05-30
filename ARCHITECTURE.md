@@ -12,22 +12,27 @@ sound for the roadmap (v3 thesis-versioning + auto-research, v4 tracking + alert
 
 ```
  HAND-EDITED (source of truth, committed)        GENERATED (committed, do not hand-edit)
- ─ web/data/scarcities.json   ─┐                 ─ web/data/signals.json   ← scripts/scan.mjs
- ─ web/data/portfolio.json    ─┤  read by         (quotes, crowding, forward P/E, filings,
- ─ web/data/triggers.json     ─┘  scan.mjs  ───▶   news, trigger_status, digest, errors)
-                                                  
+ ─ web/data/scarcities.json   ─┐                 ─ web/data/signals.json        ← scan.mjs (snapshot)
+ ─ web/data/portfolio.json    ─┤  read by         (quotes+technicals, crowding, forward P/E,
+ ─ web/data/triggers.json     ─┤  scan.mjs  ───▶   filings, news, trigger_status, regime, digest)
+ ─ web/data/securities.json   ─┘                 ─ web/data/scarcity-history.json (append-only, F4)
+                                                  ─ web/data/seen.state.json      (delta state, F7)
  LOCAL-PRIVATE (gitignored, optional)            RENDER
  ─ web/data/positions.local.json                 ─ web/ static dashboard reads ALL of the above
    (real shares / cost_basis / cash)               via fetch(); signals.json is cache-busted.
 
- The scan runs in GitHub Actions (cron + repository_dispatch from the Refresh button),
- commits signals.json, and (deduped) opens an Issue when a trigger fires.
+ The scan runs in GitHub Actions (cron + repository_dispatch from the Refresh button), commits
+ signals.json + scarcity-history.json + seen.state.json, and (deduped) opens an Issue on a fire.
 ```
 
-**Tiering invariant (keep this):** four distinct ownership classes — *hand-edited source of
-truth*, *generated*, *local-private*, and (coming) *append-only history / auto-research*. Never
-let a generator hand-edit a source-of-truth field without human approval (that's what the v3
-auto-PR is for), and never commit local-private data.
+**Tiering invariant (keep this):** four ownership classes — *hand-edited source of truth*,
+*generated* (incl. append-only history), *local-private*, *render*. Never let a generator
+hand-edit a source-of-truth field without human approval, and never commit local-private data.
+
+**Ownership / bot-proposable fields (F9):** when v3 auto-research opens a PR against
+`scarcities.json`, it may propose **only** `priced_in`, `bind_window`, `non_consensus`,
+`confidence`, `last_reviewed`. It must **never** touch `thesis`, `tickers`, `id`, `sector`,
+`scarcity`, or `news_query` — those stay human-edited. The human approves every such PR.
 
 ---
 
@@ -56,11 +61,11 @@ auto-PR is for), and never commit local-private data.
 |---|-----|---------|----------------|-------|
 | F1 | **High (fixed)** | `scan.yml` opened a new Issue **every run** while a trigger stayed fired — alert spam. | **Done:** dedupe — only open if no open "Scarcity trigger fired" issue exists. | now |
 | F2 | **High (partly fixed)** | **Currency mixing in sleeve value.** | **Done:** quotes now carry `currency`; the sleeve calc **excludes + flags** non-USD lots. *Still TODO (F2b): actual FX conversion via `${CUR}USD=X` so foreign lots count.* | now / v4 |
-| F3 | **Med** | **No security registry.** `isTradeable` is a regex; ETF-vs-stock, CIK, exchange, currency are inferred ad hoc (forward P/E is fetched even for ETFs; EDGAR guesses CIK each run). | Add `web/data/securities.json` (or fields on holdings): `{ticker:{type:etf|stock|adr, cik, exchange, currency, foreign}}`. Removes guesswork for EDGAR / forward-P/E / FX. | v3–v4 |
-| F4 | **Med** | **No thesis history / versioning.** `scarcities.json` is a single snapshot (`updated` only). The radar can't show drift ("enrichment: non-consensus→crowded"). | Introduce append-only `web/data/history/scarcities-YYYY-MM-DD.json` snapshots **or** a derived `web/data/scarcity-history.json` (`id → [{date,priced_in,bind_window,non_consensus}]`) the scanner appends each run. Git history already preserves raw edits; this makes drift queryable by the UI. | v3 |
+| F3 | **Med (fixed)** | **No security registry.** `isTradeable` is a regex; ETF-vs-stock, CIK, exchange, currency are inferred ad hoc (forward P/E is fetched even for ETFs; EDGAR guesses CIK each run). | Add `web/data/securities.json` (or fields on holdings): `{ticker:{type:etf|stock|adr, cik, exchange, currency, foreign}}`. Removes guesswork for EDGAR / forward-P/E / FX. | v3–v4 |
+| F4 | **Med (fixed)** | **No thesis history / versioning.** `scarcities.json` is a single snapshot (`updated` only). The radar can't show drift ("enrichment: non-consensus→crowded"). | Introduce append-only `web/data/history/scarcities-YYYY-MM-DD.json` snapshots **or** a derived `web/data/scarcity-history.json` (`id → [{date,priced_in,bind_window,non_consensus}]`) the scanner appends each run. Git history already preserves raw edits; this makes drift queryable by the UI. | v3 |
 | F5 | **Med (fixed)** | **No machine-readable confidence** on scarcities → the v3 auto-PR has nothing to threshold on. | **Done:** `last_reviewed` set on every scarcity; optional `confidence:0..1` now schema-supported (v3 auto-research fills the values — not fabricated now). | now |
 | F6 | **Med** | **DCA calendar is prose only** (`POSITION-SIZING.md`), so v4's "planned vs deployed" view has no data to read. | Add `web/data/dca.json`: per-holding `{month_1..9: planned_usd}` derived from the tiers/calendar; deployed comes from `positions.local.json` over time. | v4 |
-| F7 | **Med** | **No "new since last run" state** for filings/news/triggers. Each scan re-lists a rolling 21-day window, so the digest re-summarizes the same items and alerts can't say "newly fired". | Persist a small `web/data/seen.state.json` (last accession #s / title hashes / last-fired timestamps). Lets the digest and alerts focus on deltas; also powers v4 alert dedupe across channels. | v3–v4 |
+| F7 | **Med (fixed)** | **No "new since last run" state** for filings/news/triggers. Each scan re-lists a rolling 21-day window, so the digest re-summarizes the same items and alerts can't say "newly fired". | Persist a small `web/data/seen.state.json` (last accession #s / title hashes / last-fired timestamps). Lets the digest and alerts focus on deltas; also powers v4 alert dedupe across channels. | v3–v4 |
 | F8 | **Low (fixed)** | **No `schema_version`** on any file → future migrations are implicit. | **Done:** `schema_version:1` on all data files; the validator errors on an unknown version. | now |
 | F9 | **Low** | **Auto-research ↔ source-of-truth ownership** isn't declared. v3 will write to `scarcities.json` via PR — which fields may a bot propose vs. human-only? | Document/enforce: bot may propose `priced_in`,`bind_window`,`non_consensus`,`confidence`; **never** `thesis`/`tickers` without human edit. Keep the human-approves-PR gate. | v3 |
 | F10 | **Low** | **signals.json monolith** will bloat as filings/news/forward-P/E grow. | Keep `signals.json` = *latest snapshot only*; route time-series to `history/` (F4/F7). Don't let history pile into signals.json. | v3+ |

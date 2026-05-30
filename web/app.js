@@ -75,8 +75,12 @@ function renderRadar() {
         const cz = s.tickers.map((t) => q(t)?.crowding).filter((x) => x != null);
         const crowd = cz.length ? Math.round(cz.reduce((a, b) => a + b) / cz.length) : null;
         const [cls, lbl] = WIN[s.bind_window] || ["", s.bind_window];
+        const dr = DATA.sig?.scarcity_drift?.[s.id];
+        const driftMark = dr
+          ? `<span class="drift" title="since ${dr.since}">▲ drift: priced-in ${dr.priced_in[0]}→${dr.priced_in[1]}</span>`
+          : "";
         const tr = document.createElement("tr");
-        tr.innerHTML = `<td><strong>${s.scarcity}</strong>${s.non_consensus ? '<span class="nc">◆ non-consensus</span>' : ""}<br><span style="color:var(--mut)">${s.thesis}</span></td>
+        tr.innerHTML = `<td><strong>${s.scarcity}</strong>${s.non_consensus ? '<span class="nc">◆ non-consensus</span>' : ""}${driftMark}<br><span style="color:var(--mut)">${s.thesis}</span></td>
           <td>${s.sector}</td><td><span class="pill ${cls}">${lbl}</span></td>
           <td class="pi-${s.priced_in}">${s.priced_in}</td><td>${s.durability}</td><td>${s.substitution_risk}</td>
           <td>${crowd == null ? "—" : crowd}</td><td style="font-size:11px">${s.tickers.join(", ")}</td>`;
@@ -165,7 +169,8 @@ function renderCatalysts() {
   filings.forEach((f) => {
     const tr = document.createElement("tr");
     const topic = (f.items && f.items.length) ? f.items.join(", ") : "—";
-    tr.innerHTML = `<td style="white-space:nowrap">${f.date || "—"}</td><td><strong>${f.ticker}</strong></td>
+    const nb = f.is_new ? '<span class="newbadge">NEW</span> ' : "";
+    tr.innerHTML = `<td style="white-space:nowrap">${nb}${f.date || "—"}</td><td><strong>${f.ticker}</strong></td>
       <td><span class="pill y30">${f.form}</span></td><td>${topic}</td>
       <td>${f.url ? `<a href="${f.url}" target="_blank" rel="noopener">open ↗</a>` : ""}</td>`;
     tb.appendChild(tr);
@@ -180,7 +185,7 @@ function renderCatalysts() {
   Object.entries(byScar).forEach(([id, items]) => {
     const d = document.createElement("div"); d.className = "item";
     d.innerHTML = `<strong>${scarcityLabel(id)}</strong><br>` + items.map((n) =>
-      `<span style="color:var(--mut)">${n.date || ""}</span> <a href="${n.link}" target="_blank" rel="noopener">${n.title}</a>`
+      `${n.is_new ? '<span class="newbadge">NEW</span> ' : ""}<span style="color:var(--mut)">${n.date || ""}</span> <a href="${n.link}" target="_blank" rel="noopener">${n.title}</a>`
     ).join("<br>");
     wrap.appendChild(d);
   });

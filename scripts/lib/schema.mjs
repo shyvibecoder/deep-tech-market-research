@@ -116,6 +116,7 @@ export function validateSignals(s, errors = []) {
   if ("news" in s) check(errors, isArr(s.news), `${w}: news must be an array`);
   if ("regime" in s) check(errors, isObj(s.regime), `${w}: regime must be an object`);
   if ("dca" in s) check(errors, isObj(s.dca), `${w}: dca must be an object`);
+  if ("scarcity_drift" in s) check(errors, isObj(s.scarcity_drift), `${w}: scarcity_drift must be an object`);
   for (const [t, q] of Object.entries(isObj(s.quotes) ? s.quotes : {})) {
     if (q == null) continue; // null = intentional non-tradeable placeholder
     if (!isObj(q)) { errors.push(`${w}: quotes[${t}] must be an object or null`); continue; }
@@ -137,6 +138,20 @@ export function validatePositions(p, errors = []) {
     if ("shares" in x) check(errors, isNum(x.shares), `${at}: shares must be a number`);
     if ("cost_basis" in x) check(errors, isNum(x.cost_basis), `${at}: cost_basis must be a number`);
     if ("forward_pe" in x && x.forward_pe != null) check(errors, isNum(x.forward_pe), `${at}: forward_pe must be a number or null`);
+  }
+  return errors;
+}
+
+// Optional security registry (F3): ticker -> {type, foreign?}.
+export function validateSecurities(s, errors = []) {
+  const w = "securities.json";
+  if (!isObj(s)) { errors.push(`${w}: root must be an object`); return errors; }
+  checkVersion(errors, s, w);
+  check(errors, isObj(s.securities), `${w}: securities must be an object`);
+  for (const [t, x] of Object.entries(isObj(s.securities) ? s.securities : {})) {
+    if (!isObj(x)) { errors.push(`${w} ${t}: must be an object`); continue; }
+    oneOf(errors, x.type, ["etf", "stock", "adr"], `${w} ${t}: type`);
+    if ("foreign" in x) check(errors, isBool(x.foreign), `${w} ${t}: foreign must be boolean`);
   }
   return errors;
 }

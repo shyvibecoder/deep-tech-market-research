@@ -14,17 +14,22 @@ all-in vs. apply the brakes into cash. See `REGIME.md` for the evidence base.
 
 ## Audit fixes (ARCHITECTURE.md F1–F11)
 - [x] **F1** — dedupe trigger-alert issues in `scan.yml` (don't reopen while one is open)
-- [x] **F2** — capture per-quote `currency`; **skip + flag** non-USD lots in the sleeve value (full FX conversion = Timing/F-followup, queued below)
-- [ ] **F3** — `securities.json` registry (type/cik/exchange/currency); wire EDGAR + forward-P/E + `isTradeable`
-- [ ] **F4** — `scarcity-history.json`: append a per-run snapshot; radar "drift" indicator
+- [x] **F2** — capture per-quote `currency`; **skip + flag** non-USD lots in the sleeve value
+- [x] **F3** — `securities.json` registry (type/foreign) + validator; wired to skip forward-P/E on ETFs
+- [x] **F4** — `scarcity-history.json` per-run snapshots (change-only) + radar "drift" marker
 - [x] **F5** — `last_reviewed` set on every scarcity + optional `confidence` (0..1) schema support (`confidence` filled by v3)
 - [ ] **F6** — `dca.json` planned schedule + planned-vs-deployed in `signals.json` + dashboard view
-- [ ] **F7** — `seen.state.json` delta tracking (filings/news/triggers "new since last run")
-- [x] **F8** — `schema_version` on all data files + validator warns on unknown version
-- [ ] **F9** — document bot-owned vs human-only fields (ownership model) [doc]
-- [ ] **F10** — keep `signals.json` snapshot-only; route time-series to history files [structural/doc]
+- [x] **F7** — `seen.state.json` delta tracking → filings/news show **NEW** badges; trigger fire-times recorded
+- [x] **F8** — `schema_version` on all data files + validator errors on unknown version
+- [x] **F9** — ownership model documented (ARCHITECTURE §1: bot-proposable vs human-only fields)
+- [x] **F10** — `signals.json` kept snapshot-only; time-series live in `scarcity-history.json` / `seen.state.json`
 - [ ] **F11** — (later) key manual policy triggers to news/filing signals
 - [ ] **F2b** — full FX conversion (fetch `${CUR}USD=X`) so foreign lots count in the sleeve value
+
+### Remaining audit/back-fill (next)
+- [ ] **F6** dca.json + DCA planned-vs-deployed view (pairs with v4)
+- [ ] **F2b** FX conversion for foreign lots
+- [ ] **F11** wire manual policy triggers to news/filings
 
 ## v2 status — complete
 - [x] SEC EDGAR 8-K/10-Q watch

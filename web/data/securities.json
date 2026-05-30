@@ -1,0 +1,28 @@
+{
+  "schema_version": 1,
+  "updated": "2026-05-30",
+  "_comment": "Security registry (F3): classifies tickers so the scanner doesn't guess. type=etf|stock|adr; foreign=true for non-US domiciles. Used to skip forward-P/E on ETFs and to handle foreign/ADR names. Unlisted tickers default to a US common stock.",
+  "securities": {
+    "PAVE": {"type": "etf"}, "GRID": {"type": "etf"}, "FIW": {"type": "etf"},
+    "SHLD": {"type": "etf"}, "SMH": {"type": "etf"}, "COPX": {"type": "etf"},
+    "NUKZ": {"type": "etf"}, "ROBO": {"type": "etf"}, "UFO": {"type": "etf"},
+    "ASML": {"type": "adr", "foreign": true}, "SMNEY": {"type": "adr", "foreign": true},
+    "TSM": {"type": "adr", "foreign": true},
+    "MU": {"type": "stock"}, "GEV": {"type": "stock"}, "CEG": {"type": "stock"},
+    "EME": {"type": "stock"}, "MP": {"type": "stock"}, "LEU": {"type": "stock"},
+    "VST": {"type": "stock"}, "TLN": {"type": "stock"}, "ETN": {"type": "stock"},
+    "PWR": {"type": "stock"}, "FIX": {"type": "stock"}, "MYRG": {"type": "stock"},
+    "CCJ": {"type": "stock", "foreign": true}, "FCX": {"type": "stock"},
+    "TECK": {"type": "stock", "foreign": true}, "IVN": {"type": "stock", "foreign": true},
+    "WOLF": {"type": "stock"}, "NVTS": {"type": "stock"}, "QRVO": {"type": "stock"},
+    "COHR": {"type": "stock"}, "LITE": {"type": "stock"}, "AVGO": {"type": "stock"},
+    "VRT": {"type": "stock"}, "MOD": {"type": "stock"}, "NVT": {"type": "stock"},
+    "RKLB": {"type": "stock"}, "DHR": {"type": "stock"}, "TMO": {"type": "stock"}, "RDDT": {"type": "stock"},
+    "PRY.MI": {"type": "stock", "foreign": true}, "NEX.PA": {"type": "stock", "foreign": true},
+    "U.UN": {"type": "stock", "foreign": true}, "LYC": {"type": "stock", "foreign": true},
+    "SYR.AX": {"type": "stock", "foreign": true}, "NVX": {"type": "stock", "foreign": true},
+    "OXIG.L": {"type": "stock", "foreign": true},
+    "4185.T": {"type": "stock", "foreign": true}, "6988.T": {"type": "stock", "foreign": true},
+    "6324.T": {"type": "stock", "foreign": true}, "6268.T": {"type": "stock", "foreign": true}
+  }
+}

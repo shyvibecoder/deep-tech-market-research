@@ -10,10 +10,11 @@
 import { readFileSync } from "node:fs";
 import { isTradeable } from "./lib/quotes.mjs";
 import {
-  validatePortfolio, validateScarcities, validateTriggers, validateSignals,
+  validatePortfolio, validateScarcities, validateTriggers, validateSignals, validateSecurities,
 } from "./lib/schema.mjs";
 
 const read = (p) => JSON.parse(readFileSync(new URL(`../web/data/${p}`, import.meta.url)));
+const readOpt = (p) => { try { return read(p); } catch { return null; } };
 
 let portfolio, scarcities, triggers, signals;
 try {
@@ -31,6 +32,8 @@ validatePortfolio(portfolio, errors);
 validateScarcities(scarcities, errors);
 validateTriggers(triggers, errors);
 validateSignals(signals, errors);
+const securities = readOpt("securities.json");
+if (securities) validateSecurities(securities, errors);
 
 // Every tradeable holding must appear in signals.quotes, resolved or errored.
 let checked = 0;

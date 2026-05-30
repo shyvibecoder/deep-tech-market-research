@@ -1,0 +1,24 @@
+name: ci
+# Reliability gate on PRs and pushes: runs the scanner in offline mode (no network,
+# pure logic) and asserts the data files + generated signals.json are schema-valid
+# and that every portfolio ticker resolved or errored explicitly. No secrets needed.
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  selfcheck:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 20 }
+      - name: Offline scan (logic check, no network)
+        run: node scripts/scan.mjs --offline
+      - name: Validate data + generated signals
+        run: node scripts/selfcheck.mjs

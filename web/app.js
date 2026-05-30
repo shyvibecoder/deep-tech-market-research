@@ -4,6 +4,10 @@ const fmtPct = (x) => (x == null ? "—" : (x * 100).toFixed(0) + "%");
 const fmtUsd = (x) => "$" + (x / 1000).toFixed(0) + "k";
 const WIN = { now: ["now", "Binding now"], "2027": ["y27", "2027"], "2028-29": ["y28", "2028-29"], "2030+": ["y30", "2030+"], "physics-floor": ["floor", "Physics floor"] };
 
+const REPO = "shyvibecoder/deep-tech-market-research"; // owner/repo the Refresh button dispatches to
+const TOKEN_KEY = "puck_dispatch_token";
+const STALE_DAYS = 3; // show a banner if the last scan is older than this
+
 let DATA = {};
 async function load() {
   const [scar, port, trig, sig] = await Promise.all(
@@ -11,7 +15,25 @@ async function load() {
   );
   DATA = { scar, port, trig, sig };
   $("#scanned").textContent = sig?.scanned_at ? `· last scan ${new Date(sig.scanned_at).toLocaleString()}` : "";
-  renderRadar(); renderTimeline(); renderPortfolio(); renderDigest();
+  renderStale(sig); renderRadar(); renderTimeline(); renderPortfolio(); renderDigest();
+}
+
+// Warn when the committed signals.json is stale (scanner hasn't run recently).
+function renderStale(sig) {
+  const el = $("#staleBanner"); if (!el) return;
+  if (!sig?.scanned_at) {
+    el.className = "banner show stale";
+    el.textContent = "⚠ No scan data yet — run the scanner (Refresh, or the ‘scan’ GitHub Action).";
+    return;
+  }
+  const days = (Date.now() - new Date(sig.scanned_at).getTime()) / 86400000;
+  if (days > STALE_DAYS) {
+    el.className = "banner show stale";
+    el.textContent = `⚠ Stale data — last scan was ${Math.floor(days)} days ago (${new Date(sig.scanned_at).toLocaleString()}). Prices/triggers may be out of date; trigger a refresh.`;
+  } else {
+    el.className = "banner";
+    el.textContent = "";
+  }
 }
 
 function q(ticker) { return DATA.sig?.quotes?.[ticker]; }
@@ -97,6 +119,45 @@ $$(".tabs button").forEach((b) => b.onclick = () => {
   $$(".tab").forEach((x) => x.classList.remove("active"));
   b.classList.add("active"); $("#" + b.dataset.tab).classList.add("active");
 });
-$("#refresh").onclick = () => alert("To run a live scan: trigger the 'scan' GitHub Action (Actions tab → Run workflow), or run `node scripts/scan.mjs` locally. The dashboard reads the committed signals.json.");
+// Refresh: trigger the 'scan' GitHub Action via repository_dispatch. Needs a
+// fine-grained PAT (Contents: Read & write on REPO). The token is NEVER hardcoded
+// — it's stored only in this browser's localStorage and sent straight to GitHub.
+// See SETUP.md → "Wire up the Refresh button". Fallback is the manual Actions run.
+async function triggerScan() {
+  let token = localStorage.getItem(TOKEN_KEY);
+  if (!token) {
+    token = prompt(
+      `Trigger a live scan via GitHub Actions.\n\n` +
+      `Paste a fine-grained Personal Access Token scoped to ${REPO} with "Contents: Read and write". ` +
+      `It is stored ONLY in this browser (localStorage) and sent directly to GitHub — never committed.\n\n` +
+      `Cancel to run it manually instead (repo → Actions → "scan" → Run workflow).`
+    );
+    if (!token) return;
+    token = token.trim();
+    localStorage.setItem(TOKEN_KEY, token);
+  }
+  const btn = $("#refresh"), label = btn.textContent;
+  btn.disabled = true; btn.textContent = "⟳ Dispatching…";
+  try {
+    const r = await fetch(`https://api.github.com/repos/${REPO}/dispatches`, {
+      method: "POST",
+      headers: { accept: "application/vnd.github+json", authorization: `Bearer ${token}`, "content-type": "application/json" },
+      body: JSON.stringify({ event_type: "scan" }),
+    });
+    if (r.status === 204) {
+      alert("Scan dispatched ✓ — the GitHub Action is running. Reload in ~1–2 min for fresh data.");
+    } else if ([401, 403, 404].includes(r.status)) {
+      localStorage.removeItem(TOKEN_KEY);
+      alert(`Dispatch rejected (HTTP ${r.status}). The saved token was cleared — make sure it grants "Contents: Read and write" on ${REPO}, then try Refresh again.`);
+    } else {
+      alert(`Dispatch failed (HTTP ${r.status}).\n${await r.text()}`);
+    }
+  } catch (e) {
+    alert(`Dispatch error: ${e.message}\nManual fallback: repo → Actions → "scan" → Run workflow.`);
+  } finally {
+    btn.disabled = false; btn.textContent = label;
+  }
+}
+$("#refresh").onclick = triggerScan;
 
 load();

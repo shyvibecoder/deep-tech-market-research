@@ -24,6 +24,7 @@ Vercel functions are too short-lived for long agent runs, so the **scan + agent 
 ```bash
 node scripts/scan.mjs            # live data (needs open network)
 node scripts/scan.mjs --offline  # parse/logic check, writes valid signals.json
+npm test                         # offline scan + schema/selfcheck gate (same as CI)
 npm run serve                    # static server at http://localhost:3000
 ```
 

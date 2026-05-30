@@ -3,6 +3,10 @@
 // Runs in GitHub Actions (open network). In a restricted sandbox, fetches fail and
 // the scanner degrades gracefully (errors recorded, prior signals preserved).
 
+// A ticker is tradeable if it isn't a placeholder like "(private: ...)" or cash.
+// Shared by the scanner's universe filter and the CI selfcheck so they stay in sync.
+export const isTradeable = (t) => !!t && !/[()]/.test(t) && !/^CASH/i.test(t);
+
 const stooqSymbol = (t) => {
   // US tickers -> ".us"; keep exchange-suffixed (e.g. PRY.MI, 6324.T) as-is lowercased.
   if (/[.]/.test(t)) return t.toLowerCase();
@@ -47,7 +51,7 @@ export async function fetchYahoo(ticker) {
 // Try Yahoo (richer) first, then Stooq (price only). Returns null on total failure.
 export async function getQuote(ticker) {
   // skip non-tradeable placeholders like "(private: ...)" or cash
-  if (/[()]/.test(ticker) || /^CASH/i.test(ticker)) return null;
+  if (!isTradeable(ticker)) return null;
   try { return await fetchYahoo(ticker); }
   catch (e1) {
     try { const q = await fetchStooq(ticker); return { ...q, pct_off_high: null, ytd: null }; }

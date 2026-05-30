@@ -7,8 +7,9 @@
 // Usage: node scripts/scan.mjs [--offline]
 
 import { readFileSync, writeFileSync } from "node:fs";
-import { getQuotes } from "./lib/quotes.mjs";
+import { getQuotes, isTradeable } from "./lib/quotes.mjs";
 import { analystRedteamDigest, llmAvailable } from "./lib/llm.mjs";
+import { validateInputs, validateSignals, assertValid } from "./lib/schema.mjs";
 
 const OFFLINE = process.argv.includes("--offline");
 const read = (p) => JSON.parse(readFileSync(new URL(`../web/data/${p}`, import.meta.url)));
@@ -17,11 +18,13 @@ const portfolio = read("portfolio.json");
 const scarcities = read("scarcities.json");
 const triggers = read("triggers.json");
 
+// Fail loudly on malformed input data before doing any work.
+assertValid("input data", validateInputs({ portfolio, scarcities, triggers }));
+
 // Build ticker universe from holdings + scarcity tickers (skip placeholders).
 const fromHoldings = portfolio.holdings.map((h) => h.ticker);
 const fromScarcities = scarcities.scarcities.flatMap((s) => s.tickers);
-const universe = [...new Set([...fromHoldings, ...fromScarcities])]
-  .filter((t) => t && !/[()]/.test(t) && !/^CASH/i.test(t));
+const universe = [...new Set([...fromHoldings, ...fromScarcities])].filter(isTradeable);
 
 console.log(`Scanning ${universe.length} tickers (offline=${OFFLINE})...`);
 
@@ -89,6 +92,9 @@ const out = {
   digest,
   errors,
 };
+
+// Validate our own output before writing — never commit a malformed signals.json.
+assertValid("generated signals.json", validateSignals(out));
 
 writeFileSync(new URL("../web/data/signals.json", import.meta.url), JSON.stringify(out, null, 2) + "\n");
 console.log(`Wrote signals.json — ${Object.values(enriched).filter((q) => q && !q.error).length}/${universe.length} quotes OK, ${errors.length} errors, drawdown fired=${drawdownFired}`);

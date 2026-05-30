@@ -34,7 +34,8 @@ jobs:
           git push
       - name: Open alert issue if a trigger fired
         if: success()
-        env: { GH_TOKEN: ${{ github.token }} }
+        env:
+          GH_TOKEN: ${{ github.token }}
         run: |
           fired=$(node -e "const s=require('./web/data/signals.json');const f=Object.entries(s.trigger_status||{}).filter(([k,v])=>v&&v.fired).map(([k])=>k);process.stdout.write(f.join(','))")
           if [ -n "$fired" ]; then

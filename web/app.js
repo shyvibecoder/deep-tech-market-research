@@ -80,12 +80,15 @@ function renderRadar() {
         const cz = s.tickers.map((t) => q(t)?.crowding).filter((x) => x != null);
         const crowd = cz.length ? Math.round(cz.reduce((a, b) => a + b) / cz.length) : null;
         const [cls, lbl] = WIN[s.bind_window] || ["", s.bind_window];
+        const sig = DATA.sig?.scarcity_signals?.[s.id];
+        const alphaMark = sig && sig.flag !== "none"
+          ? `<span class="alpha ${sig.flag}" title="relative strength vs complex ${sig.rs}">${sig.flag === "de-rating" ? "↓ de-rating" : "↑ inflecting"}</span>` : "";
         const dr = DATA.sig?.scarcity_drift?.[s.id];
         const driftMark = dr
           ? `<span class="drift" title="since ${dr.since}">▲ drift: priced-in ${dr.priced_in[0]}→${dr.priced_in[1]}</span>`
           : "";
         const tr = document.createElement("tr");
-        tr.innerHTML = `<td><strong>${esc(s.scarcity)}</strong>${s.non_consensus ? '<span class="nc">◆ non-consensus</span>' : ""}${driftMark}<br><span style="color:var(--mut)">${esc(s.thesis)}</span></td>
+        tr.innerHTML = `<td><strong>${esc(s.scarcity)}</strong>${s.non_consensus ? '<span class="nc">◆ non-consensus</span>' : ""}${alphaMark}${driftMark}<br><span style="color:var(--mut)">${esc(s.thesis)}</span></td>
           <td>${esc(s.sector)}</td><td><span class="pill ${cls}">${lbl}</span></td>
           <td class="pi-${esc(s.priced_in)}">${esc(s.priced_in)}</td><td>${esc(s.durability)}</td><td>${esc(s.substitution_risk)}</td>
           <td>${crowd == null ? "—" : crowd}</td><td style="font-size:11px">${esc(s.tickers.join(", "))}</td>`;
@@ -658,6 +661,7 @@ const HELP = {
   scorecard: { title: "Track record (self-grading)", body: `
     <p>Puck records every dated <strong>per-name TSMOM tilt</strong> it makes (overweight → expect the stock up over ~21 days; underweight → down), anchored to the price at the time. When the horizon matures, a later scan <strong>resolves</strong> each call against the realized price and updates a <strong>hit-rate</strong>. This is the accountability layer: the system is graded on whether its calls actually came true — converting opinions into a verifiable record that compounds over time.</p>
     <p>It starts empty and fills in as calls resolve (~21 days). A hit-rate persistently below ~50% is the system telling you the signal isn't working — which is exactly what you want to know. Not advice.</p>` },
+  alpha: { title: "De-rating / inflecting (alpha signal)", body: `\n    <p>Operationalizes the thesis's core claim: <strong>crowded/already-priced scarcities de-rate first; under-priced ones inflect.</strong> For each scarcity we measure its basket's <strong>relative strength vs the AI-capex complex</strong> (the theme ETFs). A <strong>crowded</strong> thesis losing relative strength is flagged <strong>↓ de-rating</strong> (reduce); an <strong>under-priced</strong> thesis gaining is <strong>↑ inflecting</strong> (accumulate). It's the relative move + the priced-in context — the closest thing here to a tradable edge, and the scorecard grades whether it works. Not advice.</p>` },
   dca: { title: "DCA progress", body: `
     <p>Tracks how much of each holding's <strong>target</strong> you've actually <strong>deployed</strong> (shares × cost basis from your Settings positions), against the 9-month dollar-cost-averaging calendar. The bar + % shows progress to target; the card shows the sleeve total deployed. Helps you stay on the plan and see where dry powder still needs to go.</p>` },
   settings: { title: "Settings &amp; onboarding", body: `

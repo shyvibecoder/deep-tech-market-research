@@ -62,6 +62,8 @@ Each row is a structural scarcity. **How to read the columns:**
 | **Crowding\*** | A **live 0–100** proxy from price action (YTD + distance to 52-week high). | Higher = more already-priced by the market *right now*. |
 | **Tickers** | Investable proxies (some scarcities are private/foreign — no clean ticker). | — |
 
+Each scarcity may also carry an **alpha flag**: **↓ de-rating** (a crowded thesis losing relative strength vs the AI-capex complex → reduce) or **↑ inflecting** (an under-priced thesis gaining → accumulate). This operationalizes the thesis's core claim and is graded by the Track record over time.
+
 **Controls:** filter by **Sector**, or tick **non-consensus only** to see just the under-appreciated
 theses. The durable edge is **low priced-in + high durability + low substitution risk**.
 

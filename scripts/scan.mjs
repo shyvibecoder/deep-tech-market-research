@@ -24,6 +24,7 @@ import { computeRegime } from "./lib/regime.mjs";
 import { updateScarcityHistory, applySeenState } from "./lib/history.mjs";
 import { writeDcaPlan } from "./lib/dca.mjs";
 import { makeForecasts, resolveDue, updateScorecard } from "./lib/forecast.mjs";
+import { relativeStrength, deRatingSignal } from "./lib/derating.mjs";
 
 const OFFLINE = process.argv.includes("--offline");
 const read = (p) => JSON.parse(readFileSync(new URL(`../web/data/${p}`, import.meta.url)));
@@ -296,6 +297,23 @@ console.log(`History: ${Object.keys(scarcity_drift).length} scarcities drifted; 
 // F6: regenerate the machine-readable DCA plan from the tier rules (deterministic).
 writeDcaPlan(dataUrl("dca.json"), portfolio, TODAY);
 
+// --- Alpha signal: per-scarcity relative strength vs the AI-capex complex →
+// de-rating (crowded rolling over) / inflecting (under-priced gaining) flags ---
+const scarcity_signals = {};
+{
+  const etfMoms = portfolio.holdings
+    .filter((h) => securities[h.ticker]?.type === "etf")
+    .map((h) => enriched[h.ticker]?.mom_1m).filter((x) => typeof x === "number");
+  const complexMom = etfMoms.length ? etfMoms.reduce((a, b) => a + b, 0) / etfMoms.length : null;
+  for (const s of scarcities.scarcities) {
+    const moms = s.tickers.map((t) => enriched[t]?.mom_1m).filter((x) => typeof x === "number");
+    const rs = relativeStrength(moms, complexMom);
+    scarcity_signals[s.id] = deRatingSignal(s.priced_in, rs);
+  }
+  const flagged = Object.values(scarcity_signals).filter((x) => x.flag !== "none").length;
+  if (!OFFLINE) console.log(`Alpha signals: ${flagged} scarcities flagged (de-rating/inflecting)`);
+}
+
 // --- Accountability ledger: resolve matured forecasts, score them, record new ones ---
 let scorecard = null;
 {
@@ -339,6 +357,7 @@ const out = {
   regime,
   metrics,
   scorecard,
+  scarcity_signals,
   data_quality,
   scarcity_drift,
   digest,

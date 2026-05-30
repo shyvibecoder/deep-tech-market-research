@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "scanned_at": "2026-05-30T19:45:36.742Z",
+  "scanned_at": "2026-05-30T20:00:42.599Z",
   "source": "offline run",
   "universe_count": 52,
   "quotes": {
@@ -424,101 +424,655 @@
   "scarcity_signals": {
     "electrons": {
       "flag": "none",
-      "rs": null
+      "rs": null,
+      "score": 38,
+      "gate": 0.33,
+      "quality": 1,
+      "contrarian": true,
+      "components": {
+        "bind_proximity": 1,
+        "durability": 1,
+        "defensibility": 1
+      }
     },
     "transformers": {
       "flag": "none",
-      "rs": null
+      "rs": null,
+      "score": 33,
+      "gate": 0.33,
+      "quality": 1,
+      "contrarian": false,
+      "components": {
+        "bind_proximity": 1,
+        "durability": 1,
+        "defensibility": 1
+      }
     },
     "turbines": {
       "flag": "none",
-      "rs": null
+      "rs": null,
+      "score": 0,
+      "gate": 0,
+      "quality": 0.91,
+      "contrarian": false,
+      "components": {
+        "bind_proximity": 1,
+        "durability": 0.75,
+        "defensibility": 1
+      }
     },
     "electricians": {
       "flag": "none",
-      "rs": null
+      "rs": null,
+      "score": 38,
+      "gate": 0.33,
+      "quality": 1,
+      "contrarian": true,
+      "components": {
+        "bind_proximity": 1,
+        "durability": 1,
+        "defensibility": 1
+      }
     },
     "hvdc": {
       "flag": "none",
-      "rs": null
+      "rs": null,
+      "score": 69,
+      "gate": 0.66,
+      "quality": 0.91,
+      "contrarian": true,
+      "components": {
+        "bind_proximity": 1,
+        "durability": 0.75,
+        "defensibility": 1
+      }
     },
     "enrichment": {
       "flag": "none",
-      "rs": null
+      "rs": null,
+      "score": 0,
+      "gate": 0,
+      "quality": 0.86,
+      "contrarian": true,
+      "components": {
+        "bind_proximity": 0.65,
+        "durability": 1,
+        "defensibility": 1
+      }
     },
     "uranium": {
       "flag": "none",
-      "rs": null
+      "rs": null,
+      "score": 0,
+      "gate": 0,
+      "quality": 0.79,
+      "contrarian": false,
+      "components": {
+        "bind_proximity": 1,
+        "durability": 0.75,
+        "defensibility": 0.5
+      }
     },
     "copper": {
       "flag": "none",
-      "rs": null
+      "rs": null,
+      "score": 22,
+      "gate": 0.33,
+      "quality": 0.66,
+      "contrarian": false,
+      "components": {
+        "bind_proximity": 0.45,
+        "durability": 1,
+        "defensibility": 0.5
+      }
     },
     "rare-earth-magnets": {
       "flag": "none",
-      "rs": null
+      "rs": null,
+      "score": 0,
+      "gate": 0,
+      "quality": 0.88,
+      "contrarian": true,
+      "components": {
+        "bind_proximity": 1,
+        "durability": 1,
+        "defensibility": 0.5
+      }
     },
     "gallium": {
       "flag": "none",
-      "rs": null
+      "rs": null,
+      "score": 100,
+      "gate": 1,
+      "quality": 1,
+      "contrarian": true,
+      "components": {
+        "bind_proximity": 1,
+        "durability": 1,
+        "defensibility": 1
+      }
     },
     "graphite": {
       "flag": "none",
-      "rs": null
+      "rs": null,
+      "score": 84,
+      "gate": 1,
+      "quality": 0.73,
+      "contrarian": true,
+      "components": {
+        "bind_proximity": 0.85,
+        "durability": 0.75,
+        "defensibility": 0.5
+      }
     },
     "hbm": {
       "flag": "none",
-      "rs": null
+      "rs": null,
+      "score": 44,
+      "gate": 0.66,
+      "quality": 0.57,
+      "contrarian": true,
+      "components": {
+        "bind_proximity": 1,
+        "durability": 0.5,
+        "defensibility": 0
+      }
     },
     "advanced-packaging": {
       "flag": "none",
-      "rs": null
+      "rs": null,
+      "score": 22,
+      "gate": 0.33,
+      "quality": 0.66,
+      "contrarian": false,
+      "components": {
+        "bind_proximity": 1,
+        "durability": 0.75,
+        "defensibility": 0
+      }
     },
     "semicap": {
       "flag": "none",
-      "rs": null
+      "rs": null,
+      "score": 33,
+      "gate": 0.33,
+      "quality": 1,
+      "contrarian": false,
+      "components": {
+        "bind_proximity": 1,
+        "durability": 1,
+        "defensibility": 1
+      }
     },
     "optical": {
       "flag": "none",
-      "rs": null
+      "rs": null,
+      "score": 0,
+      "gate": 0,
+      "quality": 0.6,
+      "contrarian": false,
+      "components": {
+        "bind_proximity": 0.85,
+        "durability": 0.75,
+        "defensibility": 0
+      }
     },
     "specialty-materials": {
       "flag": "none",
-      "rs": null
+      "rs": null,
+      "score": 100,
+      "gate": 1,
+      "quality": 1,
+      "contrarian": true,
+      "components": {
+        "bind_proximity": 1,
+        "durability": 1,
+        "defensibility": 1
+      }
     },
     "cooling": {
       "flag": "none",
-      "rs": null
+      "rs": null,
+      "score": 27,
+      "gate": 0.33,
+      "quality": 0.7,
+      "contrarian": true,
+      "components": {
+        "bind_proximity": 1,
+        "durability": 0.5,
+        "defensibility": 0.5
+      }
     },
     "manipulation-data": {
       "flag": "none",
-      "rs": null
+      "rs": null,
+      "score": 84,
+      "gate": 1,
+      "quality": 0.73,
+      "contrarian": true,
+      "components": {
+        "bind_proximity": 0.85,
+        "durability": 0.75,
+        "defensibility": 0.5
+      }
     },
     "reducers": {
       "flag": "none",
-      "rs": null
+      "rs": null,
+      "score": 34,
+      "gate": 0.66,
+      "quality": 0.52,
+      "contrarian": false,
+      "components": {
+        "bind_proximity": 0.85,
+        "durability": 0.5,
+        "defensibility": 0
+      }
     },
     "space-power": {
       "flag": "none",
-      "rs": null
+      "rs": null,
+      "score": 74,
+      "gate": 1,
+      "quality": 0.65,
+      "contrarian": true,
+      "components": {
+        "bind_proximity": 0.65,
+        "durability": 0.75,
+        "defensibility": 0.5
+      }
     },
     "thermal-rejection": {
       "flag": "none",
-      "rs": null
+      "rs": null,
+      "score": 97,
+      "gate": 1,
+      "quality": 0.84,
+      "contrarian": true,
+      "components": {
+        "bind_proximity": 0.6,
+        "durability": 1,
+        "defensibility": 1
+      }
     },
     "cryogenics": {
       "flag": "none",
-      "rs": null
+      "rs": null,
+      "score": 99,
+      "gate": 1,
+      "quality": 0.86,
+      "contrarian": true,
+      "components": {
+        "bind_proximity": 0.65,
+        "durability": 1,
+        "defensibility": 1
+      }
     },
     "bio-data": {
       "flag": "none",
-      "rs": null
+      "rs": null,
+      "score": 69,
+      "gate": 0.66,
+      "quality": 0.91,
+      "contrarian": true,
+      "components": {
+        "bind_proximity": 1,
+        "durability": 0.75,
+        "defensibility": 1
+      }
     },
     "rl-data": {
       "flag": "none",
-      "rs": null
+      "rs": null,
+      "score": 84,
+      "gate": 1,
+      "quality": 0.73,
+      "contrarian": true,
+      "components": {
+        "bind_proximity": 0.85,
+        "durability": 0.75,
+        "defensibility": 0.5
+      }
     }
   },
+  "opportunities": [
+    {
+      "id": "gallium",
+      "scarcity": "Gallium / GaN for radar & EW",
+      "sector": "Minerals",
+      "score": 100,
+      "gate": 1,
+      "quality": 1,
+      "contrarian": true,
+      "components": {
+        "bind_proximity": 1,
+        "durability": 1,
+        "defensibility": 1
+      }
+    },
+    {
+      "id": "specialty-materials",
+      "scarcity": "Single-source semi materials (ABF/T-glass/EUV resist)",
+      "sector": "Compute",
+      "score": 100,
+      "gate": 1,
+      "quality": 1,
+      "contrarian": true,
+      "components": {
+        "bind_proximity": 1,
+        "durability": 1,
+        "defensibility": 1
+      }
+    },
+    {
+      "id": "cryogenics",
+      "scarcity": "He-3 + sub-Kelvin cryogenics",
+      "sector": "Quantum",
+      "score": 99,
+      "gate": 1,
+      "quality": 0.86,
+      "contrarian": true,
+      "components": {
+        "bind_proximity": 0.65,
+        "durability": 1,
+        "defensibility": 1
+      }
+    },
+    {
+      "id": "thermal-rejection",
+      "scarcity": "Thermal rejection (orbital radiators)",
+      "sector": "Space",
+      "score": 97,
+      "gate": 1,
+      "quality": 0.84,
+      "contrarian": true,
+      "components": {
+        "bind_proximity": 0.6,
+        "durability": 1,
+        "defensibility": 1
+      }
+    },
+    {
+      "id": "graphite",
+      "scarcity": "Battery-grade graphite anode",
+      "sector": "Minerals",
+      "score": 84,
+      "gate": 1,
+      "quality": 0.73,
+      "contrarian": true,
+      "components": {
+        "bind_proximity": 0.85,
+        "durability": 0.75,
+        "defensibility": 0.5
+      }
+    },
+    {
+      "id": "manipulation-data",
+      "scarcity": "Real-world manipulation data",
+      "sector": "Robotics",
+      "score": 84,
+      "gate": 1,
+      "quality": 0.73,
+      "contrarian": true,
+      "components": {
+        "bind_proximity": 0.85,
+        "durability": 0.75,
+        "defensibility": 0.5
+      }
+    },
+    {
+      "id": "rl-data",
+      "scarcity": "RL environments / agentic training data",
+      "sector": "AI-software",
+      "score": 84,
+      "gate": 1,
+      "quality": 0.73,
+      "contrarian": true,
+      "components": {
+        "bind_proximity": 0.85,
+        "durability": 0.75,
+        "defensibility": 0.5
+      }
+    },
+    {
+      "id": "space-power",
+      "scarcity": "Space-grade power (GaAs cells + gallium)",
+      "sector": "Space",
+      "score": 74,
+      "gate": 1,
+      "quality": 0.65,
+      "contrarian": true,
+      "components": {
+        "bind_proximity": 0.65,
+        "durability": 0.75,
+        "defensibility": 0.5
+      }
+    },
+    {
+      "id": "hvdc",
+      "scarcity": "HVDC & HV cable",
+      "sector": "Energy",
+      "score": 69,
+      "gate": 0.66,
+      "quality": 0.91,
+      "contrarian": true,
+      "components": {
+        "bind_proximity": 1,
+        "durability": 0.75,
+        "defensibility": 1
+      }
+    },
+    {
+      "id": "bio-data",
+      "scarcity": "Proprietary AI-ready bio-data + GMP capacity",
+      "sector": "Biotech",
+      "score": 69,
+      "gate": 0.66,
+      "quality": 0.91,
+      "contrarian": true,
+      "components": {
+        "bind_proximity": 1,
+        "durability": 0.75,
+        "defensibility": 1
+      }
+    },
+    {
+      "id": "hbm",
+      "scarcity": "HBM + TSV / DRAM-wafer opportunity cost",
+      "sector": "Compute",
+      "score": 44,
+      "gate": 0.66,
+      "quality": 0.57,
+      "contrarian": true,
+      "components": {
+        "bind_proximity": 1,
+        "durability": 0.5,
+        "defensibility": 0
+      }
+    },
+    {
+      "id": "electrons",
+      "scarcity": "Electrons / merchant power (IPPs)",
+      "sector": "Energy",
+      "score": 38,
+      "gate": 0.33,
+      "quality": 1,
+      "contrarian": true,
+      "components": {
+        "bind_proximity": 1,
+        "durability": 1,
+        "defensibility": 1
+      }
+    },
+    {
+      "id": "electricians",
+      "scarcity": "Skilled electrical labor / EPC",
+      "sector": "Energy",
+      "score": 38,
+      "gate": 0.33,
+      "quality": 1,
+      "contrarian": true,
+      "components": {
+        "bind_proximity": 1,
+        "durability": 1,
+        "defensibility": 1
+      }
+    },
+    {
+      "id": "reducers",
+      "scarcity": "Precision reducers / roller screws",
+      "sector": "Robotics",
+      "score": 34,
+      "gate": 0.66,
+      "quality": 0.52,
+      "contrarian": false,
+      "components": {
+        "bind_proximity": 0.85,
+        "durability": 0.5,
+        "defensibility": 0
+      }
+    },
+    {
+      "id": "transformers",
+      "scarcity": "Large power transformers & GSUs",
+      "sector": "Energy",
+      "score": 33,
+      "gate": 0.33,
+      "quality": 1,
+      "contrarian": false,
+      "components": {
+        "bind_proximity": 1,
+        "durability": 1,
+        "defensibility": 1
+      }
+    },
+    {
+      "id": "semicap",
+      "scarcity": "Semicap monopoly (EUV)",
+      "sector": "Compute",
+      "score": 33,
+      "gate": 0.33,
+      "quality": 1,
+      "contrarian": false,
+      "components": {
+        "bind_proximity": 1,
+        "durability": 1,
+        "defensibility": 1
+      }
+    },
+    {
+      "id": "cooling",
+      "scarcity": "AI datacenter cooling (CDU)",
+      "sector": "Compute",
+      "score": 27,
+      "gate": 0.33,
+      "quality": 0.7,
+      "contrarian": true,
+      "components": {
+        "bind_proximity": 1,
+        "durability": 0.5,
+        "defensibility": 0.5
+      }
+    },
+    {
+      "id": "copper",
+      "scarcity": "Copper structural deficit",
+      "sector": "Minerals",
+      "score": 22,
+      "gate": 0.33,
+      "quality": 0.66,
+      "contrarian": false,
+      "components": {
+        "bind_proximity": 0.45,
+        "durability": 1,
+        "defensibility": 0.5
+      }
+    },
+    {
+      "id": "advanced-packaging",
+      "scarcity": "Advanced packaging (CoWoS / SoIC)",
+      "sector": "Compute",
+      "score": 22,
+      "gate": 0.33,
+      "quality": 0.66,
+      "contrarian": false,
+      "components": {
+        "bind_proximity": 1,
+        "durability": 0.75,
+        "defensibility": 0
+      }
+    },
+    {
+      "id": "turbines",
+      "scarcity": "Gas turbine slots",
+      "sector": "Energy",
+      "score": 0,
+      "gate": 0,
+      "quality": 0.91,
+      "contrarian": false,
+      "components": {
+        "bind_proximity": 1,
+        "durability": 0.75,
+        "defensibility": 1
+      }
+    },
+    {
+      "id": "enrichment",
+      "scarcity": "Uranium enrichment SWU / HALEU",
+      "sector": "Minerals",
+      "score": 0,
+      "gate": 0,
+      "quality": 0.86,
+      "contrarian": true,
+      "components": {
+        "bind_proximity": 0.65,
+        "durability": 1,
+        "defensibility": 1
+      }
+    },
+    {
+      "id": "uranium",
+      "scarcity": "Uranium (upstream)",
+      "sector": "Minerals",
+      "score": 0,
+      "gate": 0,
+      "quality": 0.79,
+      "contrarian": false,
+      "components": {
+        "bind_proximity": 1,
+        "durability": 0.75,
+        "defensibility": 0.5
+      }
+    },
+    {
+      "id": "rare-earth-magnets",
+      "scarcity": "Heavy-RE (Dy/Tb) separation & NdFeB magnets",
+      "sector": "Minerals",
+      "score": 0,
+      "gate": 0,
+      "quality": 0.88,
+      "contrarian": true,
+      "components": {
+        "bind_proximity": 1,
+        "durability": 1,
+        "defensibility": 0.5
+      }
+    },
+    {
+      "id": "optical",
+      "scarcity": "Optical interconnect / co-packaged optics",
+      "sector": "Compute",
+      "score": 0,
+      "gate": 0,
+      "quality": 0.6,
+      "contrarian": false,
+      "components": {
+        "bind_proximity": 0.85,
+        "durability": 0.75,
+        "defensibility": 0
+      }
+    }
+  ],
   "chokepoints": [
     {
       "id": "euv-litho",

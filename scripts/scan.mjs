@@ -27,6 +27,7 @@ import { makeForecasts, resolveDue, updateScorecard, makeScarcityForecasts } fro
 import { relativeStrength, deRatingSignal } from "./lib/derating.mjs";
 import { newsForQuery } from "./lib/news.mjs";
 import { chokepointHeat } from "./lib/chokepoints.mjs";
+import { rankOpportunities, opportunityScore } from "./lib/opportunity.mjs";
 import { discoverProxies, rankProxies } from "./lib/edgar-fts.mjs";
 
 const OFFLINE = process.argv.includes("--offline");
@@ -311,11 +312,17 @@ const scarcity_signals = {};
   for (const s of scarcities.scarcities) {
     const moms = s.tickers.map((t) => enriched[t]?.mom_1m).filter((x) => typeof x === "number");
     const rs = relativeStrength(moms, complexMom);
-    scarcity_signals[s.id] = deRatingSignal(s.priced_in, rs);
+    scarcity_signals[s.id] = { ...deRatingSignal(s.priced_in, rs), ...opportunityScore(s) };
   }
   const flagged = Object.values(scarcity_signals).filter((x) => x.flag !== "none").length;
   if (!OFFLINE) console.log(`Alpha signals: ${flagged} scarcities flagged (de-rating/inflecting)`);
 }
+
+// --- Opportunity Score: rank the scarcity universe by ALPHA.md Edge 1 (duration mispricing).
+// Where the structural edge is BEFORE the tape moves: binds soon + durable + defensible + NOT
+// yet priced. From human-owned source fields only — a ranked opportunity set, not a backtest. ---
+const opportunities = rankOpportunities(scarcities.scarcities);
+if (!OFFLINE) console.log(`Opportunity Score: top = ${opportunities.slice(0, 3).map((o) => `${o.id} ${o.score}`).join(", ")}`);
 
 // --- Inaccessible-chokepoint tracker: DISCOVER public proxies (EDGAR full-text
 // mentions) + heat (proxy momentum + news) for un-investable bottlenecks ---
@@ -396,6 +403,7 @@ const out = {
   metrics,
   scorecard,
   scarcity_signals,
+  opportunities,
   chokepoints,
   data_quality,
   scarcity_drift,

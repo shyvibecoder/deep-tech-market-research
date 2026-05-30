@@ -50,11 +50,13 @@ Nothing you enter in Settings is ever committed to the repo — it lives in your
 
 ![Scarcity radar](img/radar.png)
 
-Each row is a structural scarcity. **How to read the columns:**
+Each row is a structural scarcity, **ranked by Opportunity Score — where the retail alpha is.**
+**How to read the columns:**
 
 | Column | Meaning | How to use it |
 |---|---|---|
 | **Scarcity** | The chokepoint + a one-line thesis. `◆ non-consensus` = under-appreciated. `▲ drift` = its priced-in level has changed since first tracked. | Hunt for non-consensus + low priced-in. |
+| **Opportunity†** | **0–100 structural-alpha score** = *binds soon × durable × defensible × **not yet priced***. Priced-in is a multiplicative **gate**: a `crowded` thesis scores ~0 however good the business, because there's no alpha left in what's priced. Built from the source fields only — no curve-fitting. | **Top of the list = the best structural setups.** Top scores are graded as relative-outperformance forecasts. |
 | **Binds** | When it starts biting: `now → 2027 → 2028-29 → 2030+ → physics floor`. | Earlier = more urgent. |
 | **Priced-in** | How much the market already reflects it: `low → medium → high → crowded`. | High/crowded = less edge left; low = more opportunity. |
 | **Durability** | How long the moat lasts (`low → very-high`). | Favor very-high. |
@@ -63,6 +65,14 @@ Each row is a structural scarcity. **How to read the columns:**
 | **Tickers** | Investable proxies (some scarcities are private/foreign — no clean ticker). | — |
 
 Each scarcity may also carry an **alpha flag**: **↓ de-rating** (a crowded thesis losing relative strength vs the AI-capex complex → reduce) or **↑ inflecting** (an under-priced thesis gaining → accumulate). This operationalizes the thesis's core claim and is graded by the Track record over time.
+
+> **Where does the alpha actually come from?** See **`ALPHA.md`** — the research foundation. In short, a
+> retail investor can only beat the market where a *structural constraint* stops institutions from
+> doing so: **(1) time-horizon arbitrage** (you can wait 10 years; a quarterly-judged PM can't),
+> **(2) complexity/inaccessibility** (private/foreign/impaired chokepoints with no clean ETF — the
+> chokepoints tab), **(3) forced-flow/neglect** (buying what others are *forced* to sell), and
+> **(4) behavioral discipline**. The Opportunity Score operationalizes #1; the rest are tracked in their
+> own panels. Everything is graded — an ungraded edge is just a story.
 
 **Controls:** filter by **Sector**, or tick **non-consensus only** to see just the under-appreciated
 theses. The durable edge is **low priced-in + high durability + low substitution risk**.

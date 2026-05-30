@@ -71,22 +71,28 @@ export function meanPrice(quotes, tickers) {
   return ps.length ? ps.reduce((a, b) => a + b, 0) / ps.length : null;
 }
 
+// A high Opportunity Score (ALPHA.md Edge 1) is a structural CLAIM — binds soon, durable,
+// not yet priced → it should outperform the complex. Grade it even when the tape is quiet.
+export const OPPORTUNITY_FORECAST_THRESHOLD = 60;
+
 export function makeScarcityForecasts(scarcities, signals, today, horizon = 42, complexTickers = []) {
   const quotes = signals?.quotes || {}, sigs = signals?.scarcity_signals || {};
   const complex_at = meanPrice(quotes, complexTickers);
   if (complex_at == null) return [];
   const out = [];
   for (const s of scarcities || []) {
-    const flag = sigs[s.id]?.flag;
-    if (flag !== "de-rating" && flag !== "inflecting") continue;
+    const sig = sigs[s.id] || {};
     const basket_at = meanPrice(quotes, s.tickers);
     if (basket_at == null) continue;
-    out.push({
-      id: `${today}:scarcity_rel:${s.id}`, date: today, type: "scarcity_rel", subject: s.id,
-      claim: flag === "de-rating" ? "underperform" : "outperform",
-      proxies: s.tickers, complex_tickers: complexTickers, basket_at, complex_at,
-      horizon_days: horizon, resolve_on: addDays(today, horizon),
-    });
+    const base = { date: today, type: "scarcity_rel", subject: s.id, proxies: s.tickers,
+      complex_tickers: complexTickers, basket_at, complex_at, horizon_days: horizon, resolve_on: addDays(today, horizon) };
+    if (sig.flag === "de-rating" || sig.flag === "inflecting") {
+      // The tape is moving: crowded de-rates (underperform), under-priced inflects (outperform).
+      out.push({ ...base, id: `${today}:scarcity_rel:${s.id}`, claim: sig.flag === "de-rating" ? "underperform" : "outperform", source: "de-rating" });
+    } else if (typeof sig.score === "number" && sig.score >= OPPORTUNITY_FORECAST_THRESHOLD) {
+      // Structural opportunity the tape hasn't confirmed yet → predict outperformance, and grade it.
+      out.push({ ...base, id: `${today}:scarcity_rel:opp:${s.id}`, claim: "outperform", source: "opportunity", opportunity: sig.score });
+    }
   }
   return out;
 }

@@ -85,6 +85,24 @@ describe("forecast: scarcity relative-performance claims (alpha grading)", () =>
     assert.equal(makeScarcityForecasts(scarcities, sig, "2026-01-01", 42, ["NOPE"]).length, 0);
   });
 
+  it("grades a high Opportunity Score even when the tape is quiet (flag=none)", () => {
+    const scs = [{ id: "structural", tickers: ["S1"], priced_in: "low" }];
+    const s2 = {
+      quotes: { S1: { price: 40 }, E1: { price: 200 } },
+      scarcity_signals: { structural: { flag: "none", score: 88 } }, // not de-rating/inflecting, but high opportunity
+    };
+    const fc = makeScarcityForecasts(scs, s2, "2026-01-01", 42, ["E1"]);
+    assert.equal(fc.length, 1);
+    assert.equal(fc[0].claim, "outperform"); assert.equal(fc[0].source, "opportunity"); assert.equal(fc[0].opportunity, 88);
+    assert.ok(fc[0].id.includes(":opp:"));
+  });
+  it("does NOT double-forecast: a flagged scarcity is graded by the tape, not the opportunity branch", () => {
+    const scs = [{ id: "both", tickers: ["B1"], priced_in: "low" }];
+    const s3 = { quotes: { B1: { price: 10 }, E1: { price: 100 } }, scarcity_signals: { both: { flag: "inflecting", score: 90 } } };
+    const fc = makeScarcityForecasts(scs, s3, "2026-01-01", 42, ["E1"]);
+    assert.equal(fc.length, 1); assert.equal(fc[0].source, "de-rating");
+  });
+
   it("resolves underperform correctly: basket lags the complex → correct", () => {
     const open = makeScarcityForecasts(scarcities, sig, "2026-01-01", 42, ["E1", "E2"]);
     // basket flat, complex +20% → de-rating basket underperformed → claim correct

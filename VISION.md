@@ -14,7 +14,18 @@ measure → measurement is the foundation.
 ## ⚡ TRUE ALPHA (the hard part — a standing, first-class need)
 Risk control, timing, metrics, accountability, and UX are **scaffolding around** alpha — they protect
 compounding but do not, by themselves, beat the market. The app must keep pushing on the *actual edge*,
-and must keep itself honest that durable selection alpha is rare. Where Puck's alpha can legitimately come from:
+and must keep itself honest that durable selection alpha is rare.
+
+> **Full research foundation: [`ALPHA.md`](ALPHA.md).** The governing principle: *alpha persists only
+> where a **structural constraint** stops sophisticated capital from arbitraging it away.* The four
+> retail-accessible edges are **(1) time-horizon arbitrage** (PM career/redemption risk → you can wait,
+> they can't — now the **Opportunity Score**), **(2) complexity/inaccessibility** (mandate + liquidity
+> limits → the chokepoint tracker), **(3) forced-flow/neglect** (mechanical selling → de-rating/inflecting +
+> drawdown-deploy), and **(4) behavioral discipline** (DCA + regime brake + −35% gate). Everything else is
+> explicitly *not* alpha (liquid mega-caps on news, crowded themes, TA, leverage) and the scorecard is the
+> referee: any "edge" that can't beat ~50%/beta out-of-sample is relabeled factor/beta.
+
+Where Puck's alpha can legitimately come from:
 1. **Thesis alpha** — the researched, non-consensus view that under-priced slow-to-build chokepoints
    outperform. *Must be PROVEN, not assumed* → the forecast **scorecard** grades it; the **de-rating /
    inflecting** signal trades it (crowded de-rates first, under-priced inflects).

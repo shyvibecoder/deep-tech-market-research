@@ -113,5 +113,8 @@ table.cfg code{font-size:11px}#adminStatus a{color:var(--y30)}
 .heatbar{display:inline-block;width:90px;height:8px;background:var(--line);border-radius:4px;overflow:hidden}
 .heatbar span{display:block;height:100%;background:var(--y30)}
 .choke a{color:var(--y30)}
+.oppbar{display:inline-block;width:54px;height:8px;background:var(--line);border-radius:4px;overflow:hidden;vertical-align:middle}
+.oppbar span{display:block;height:100%;background:linear-gradient(90deg,var(--y30),#4ade80)}
+.opp-cell{white-space:nowrap}
 
 .stress-btn{font-size:12px}

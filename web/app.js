@@ -95,14 +95,19 @@ function renderRadar() {
   const draw = () => {
     const f = sel.value, nc = $("#ncOnly").checked;
     const tb = $("#radarTable tbody"); tb.innerHTML = "";
+    const oppOf = (s) => DATA.sig?.scarcity_signals?.[s.id]?.score;
     DATA.scar.scarcities
       .filter((s) => (!f || s.sector === f) && (!nc || s.non_consensus))
-      .sort((a, b) => Object.keys(WIN).indexOf(a.bind_window) - Object.keys(WIN).indexOf(b.bind_window))
+      // Rank by Opportunity Score (where the alpha is, ALPHA.md Edge 1); bind-window breaks ties.
+      .sort((a, b) => (oppOf(b) ?? -1) - (oppOf(a) ?? -1) || Object.keys(WIN).indexOf(a.bind_window) - Object.keys(WIN).indexOf(b.bind_window))
       .forEach((s) => {
         const cz = s.tickers.map((t) => q(t)?.crowding).filter((x) => x != null);
         const crowd = cz.length ? Math.round(cz.reduce((a, b) => a + b) / cz.length) : null;
         const [cls, lbl] = WIN[s.bind_window] || ["", s.bind_window];
         const sig = DATA.sig?.scarcity_signals?.[s.id];
+        const opp = sig?.score;
+        const oppCell = opp == null ? "—"
+          : `<span class="oppbar" title="gate(not-priced) ${sig.gate} × quality ${sig.quality}${sig.contrarian ? " · contrarian +" : ""}"><span style="width:${opp}%"></span></span> <strong>${opp}</strong>`;
         const alphaMark = sig && sig.flag !== "none"
           ? `<span class="alpha ${sig.flag}" title="relative strength vs complex ${sig.rs}">${sig.flag === "de-rating" ? "↓ de-rating" : "↑ inflecting"}</span>` : "";
         const dr = DATA.sig?.scarcity_drift?.[s.id];
@@ -111,6 +116,7 @@ function renderRadar() {
           : "";
         const tr = document.createElement("tr");
         tr.innerHTML = `<td><strong>${esc(s.scarcity)}</strong>${s.non_consensus ? '<span class="nc">◆ non-consensus</span>' : ""}${alphaMark}${driftMark}<br><span style="color:var(--mut)">${esc(s.thesis)}</span></td>
+          <td class="opp-cell">${oppCell}</td>
           <td>${esc(s.sector)}</td><td><span class="pill ${cls}">${lbl}</span></td>
           <td class="pi-${esc(s.priced_in)}">${esc(s.priced_in)}</td><td>${esc(s.durability)}</td><td>${esc(s.substitution_risk)}</td>
           <td>${crowd == null ? "—" : crowd}</td><td style="font-size:11px">${esc(s.tickers.join(", "))}</td>`;
@@ -652,13 +658,14 @@ const HELP = {
     <li><strong>⚙ Settings</strong> — add your holdings per account and free API keys (stored only in your browser).</li></ul>
     <p>Not financial advice. Every name is cyclical and would fall together in a shock.</p>` },
   radar: { title: "Scarcity radar", body: `
-    <p>Each row is a structural scarcity. Columns:</p>
-    <ul><li><strong>Binds</strong> — when the chokepoint starts biting (now → 2030+ → physics floor).</li>
+    <p>Each row is a structural scarcity, <strong>ranked by Opportunity Score</strong> — where the retail alpha is. Columns:</p>
+    <ul><li><strong>Opportunity† (0–100)</strong> — the structural edge <em>before</em> the tape confirms it: <em>binds soon × durable × defensible × <strong>not yet priced</strong></em>. Priced-in is a multiplicative <strong>gate</strong> — a <code>crowded</code> thesis scores ~0 however good the business, because there's no alpha left in what's priced. Built from the source fields only (no curve-fitting); see <strong>ALPHA.md</strong>. Top opportunities are recorded as relative-outperformance forecasts and graded.</li>
+    <li><strong>Binds</strong> — when the chokepoint starts biting (now → 2030+ → physics floor).</li>
     <li><strong>Priced-in</strong> — how much the market already reflects it (low → crowded). High/crowded = less edge left.</li>
     <li><strong>Durability</strong> — how long the moat lasts; <strong>Subst. risk</strong> — chance a substitute relieves it.</li>
     <li><strong>Crowding*</strong> — a <em>live</em> 0–100 proxy from price action (YTD + distance to 52-week high). Higher = more already-priced.</li>
-    <li><strong>◆ non-consensus</strong> = under-appreciated; <strong>▲ drift</strong> = the priced-in level has changed since first tracked.</li></ul>
-    <p>Filter by sector or to non-consensus only. The edge is in <em>low priced-in + high durability</em>.</p>` },
+    <li><strong>◆ non-consensus</strong> = under-appreciated (lifts Opportunity); <strong>↓ de-rating / ↑ inflecting</strong> = the tape confirming/denying; <strong>▲ drift</strong> = priced-in changed since first tracked.</li></ul>
+    <p>Filter by sector or to non-consensus only. The four structural sources of retail alpha — duration mispricing, inaccessibility, forced-flow, and discipline — are documented in <strong>ALPHA.md</strong>.</p>` },
   triggers: { title: "Deploy / exit triggers", body: `
     <p>Rules that tell you to act. Each shows a state: <strong>armed</strong> (active, watching), <strong>monitor</strong> (manual watch), or <strong>fired</strong> (condition met).</p>
     <ul><li><strong>Drawdown</strong> (auto) — complex down ≥20–25% from highs → deploy dry powder.</li>

@@ -25,9 +25,16 @@ describe("e2e: static HTML↔JS contract", () => {
   it("every nav tab has a matching <section> id", () => {
     for (const m of html.matchAll(/data-tab="([\w-]+)"/g)) assert.ok(ids.has(m[1]), `tab ${m[1]} has no section`);
   });
-  it("every help \"?\" has a HELP registry entry", () => {
+  it("every help \"?\" has a HELP registry entry — incl. ones injected dynamically by app.js", () => {
     const keys = new Set([...appjs.matchAll(/^\s{2}(\w+): \{ title:/gm)].map((m) => m[1]));
-    for (const m of html.matchAll(/data-help="(\w+)"/g)) assert.ok(keys.has(m[1]), `no HELP entry for "${m[1]}"`);
+    // Cover BOTH the static HTML buttons AND the data-help="..." strings rendered from app.js,
+    // so a new in-app "?" can never ship without its help page (the guarantee behind "keep the
+    // help pages in sync"). Dynamic refs are template literals: data-help=\"alpha\" etc.
+    const refs = new Set([
+      ...[...html.matchAll(/data-help="(\w+)"/g)].map((m) => m[1]),
+      ...[...appjs.matchAll(/data-help="(\w+)"/g)].map((m) => m[1]),
+    ]);
+    for (const k of refs) assert.ok(keys.has(k), `no HELP entry for "${k}"`);
   });
 });
 

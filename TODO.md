@@ -21,6 +21,16 @@ all-in vs. apply the brakes into cash. See `REGIME.md` for the evidence base.
   - [ ] **Options execution rules (DEFINED-RISK ONLY — assume NO naked options, both accounts)** — risk-on → long LEAPS calls (GEV/ASML/index); defensive/macro-stress → protective puts / debit put spreads / collars on correlated cyclicals. Active rolling in IRA (tax-free); long-dated catastrophe hedges in taxable (mind holding-period/constructive-sale/wash-sale). See POSITION-SIZING §3a.
   - [ ] Version the regime engine (v1→v2) + keep thresholds coarse/economically-motivated (anti-overfit); do NOT port QQQ-tuned params onto short-history single names; no leverage.
 
+## Testing (TDD/BDD) — shipped
+- [x] **Unit** (`tests/*.test.mjs`, `node:test`): options (BS/parity/IV/verdict), regime (postures),
+  marketdata (corroboration/plausibility/isTradeable), schema (valid+negative), dca (sums), history (drift/seen).
+- [x] **Integration** (`tests/integration/`): real offline scan pipeline → asserts sections, degraded
+  data-quality + held triggers, ticker resolution, generated files; runs selfcheck. Non-destructive.
+- [x] **E2E** (`tests/e2e/`): static HTML↔JS selector/tab/help contract + static-serve smoke (page+assets+data).
+- [x] `npm test` runs all three; **CI runs the full suite** on every PR/push (replaced the ad-hoc gate).
+- [ ] **Browser DOM e2e (Playwright)** in CI — exercise the real rendered dashboard (needs browser/install).
+- [ ] Going forward: **red-first** unit test for each new pure function (convention in ARCHITECTURE §6).
+
 ## ⚠ Data integrity / anti-injection hardening (next priority)
 Current guards: HTTPS-only sources, fail-loud schema validation (in+out), every ticker "resolved or
 errored explicitly" (never silently filled), errors captured + graceful degrade, single controlled

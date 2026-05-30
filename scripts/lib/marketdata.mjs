@@ -11,8 +11,20 @@ import { fetchYahoo, fetchStooq, isTradeable } from "./quotes.mjs";
 
 export { isTradeable };
 
-const num = (x) => { const n = parseFloat(x); return isFinite(n) && n > 0 ? n : null; };
+export const num = (x) => { const n = parseFloat(x); return isFinite(n) && n > 0 ? n : null; };
 const t = (ms) => AbortSignal.timeout(ms);
+
+const DIVERGENCE = 0.03;     // >3% spread across sources = corroboration warning
+
+// Pure: cross-check a {sourceName: price} map → median + spread + ok flag. Testable.
+export function corroborate(prices, divergence = DIVERGENCE) {
+  const names = Object.keys(prices).filter((n) => num(prices[n]) != null);
+  if (!names.length) return null;
+  const vals = names.map((n) => prices[n]).sort((a, b) => a - b);
+  const median = vals[Math.floor((vals.length - 1) / 2)];
+  const spread = (Math.max(...vals) - Math.min(...vals)) / median;
+  return { sources: names, n: names.length, median, spread: +spread.toFixed(4), ok: names.length < 2 ? null : spread <= divergence };
+}
 
 // --- Keyed price-only providers (best-effort; return null on any failure) ---
 async function finnhub(sym, key) {
@@ -33,7 +45,6 @@ export function providerKeys(env = process.env) {
 }
 
 const STALE_DAYS = 6;        // a quote whose last bar is older than this is flagged
-const DIVERGENCE = 0.03;     // >3% spread across sources = corroboration warning
 
 // One ticker: rich Yahoo quote + cross-checked price across all available sources.
 export async function getQuote(ticker, { keys = {}, useKeyed = false } = {}) {
@@ -52,19 +63,13 @@ export async function getQuote(ticker, { keys = {}, useKeyed = false } = {}) {
     if (keys.alphavantage) { const p = await alphavantage(ticker, keys.alphavantage); if (p) prices.alphavantage = p; }
   }
 
-  const names = Object.keys(prices);
-  if (!names.length) return rich?.error ? rich : { ticker, error: "no quote from any source" };
-
-  // Corroboration: median + max relative spread across sources.
-  const vals = names.map((n) => prices[n]).sort((a, b) => a - b);
-  const median = vals[Math.floor((vals.length - 1) / 2)];
-  const spread = (Math.max(...vals) - Math.min(...vals)) / median;
-  const corroboration = { sources: names, n: names.length, spread: +spread.toFixed(4), ok: names.length < 2 ? null : spread <= DIVERGENCE };
+  const corroboration = corroborate(prices);
+  if (!corroboration) return rich?.error ? rich : { ticker, error: "no quote from any source" };
 
   // Prefer the rich Yahoo quote (keeps technicals); if Yahoo missing, build a minimal one.
-  const base = rich?.price ? rich : { ticker, price: median, source: names[0], asof: null };
+  const base = rich?.price ? rich : { ticker, price: corroboration.median, source: corroboration.sources[0], asof: null };
   const flags = [];
-  if (corroboration.ok === false) flags.push(`source divergence ${(spread * 100).toFixed(1)}% (${names.join("/")})`);
+  if (corroboration.ok === false) flags.push(`source divergence ${(corroboration.spread * 100).toFixed(1)}% (${corroboration.sources.join("/")})`);
   if (base.asof) { const age = (Date.now() - Date.parse(base.asof)) / 86400000; if (age > STALE_DAYS) flags.push(`stale last bar ${base.asof}`); }
   return { ...base, corroboration, ...(flags.length ? { flags } : {}) };
 }

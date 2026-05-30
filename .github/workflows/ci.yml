@@ -18,7 +18,5 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with: { node-version: 20 }
-      - name: Offline scan (logic check, no network)
-        run: node scripts/scan.mjs --offline
-      - name: Validate data + generated signals
-        run: node scripts/selfcheck.mjs
+      - name: Tests (unit + integration + e2e; offline, no network/keys)
+        run: npm test

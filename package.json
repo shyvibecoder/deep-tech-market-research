@@ -8,7 +8,10 @@
     "scan": "node scripts/scan.mjs",
     "scan:offline": "node scripts/scan.mjs --offline",
     "selfcheck": "node scripts/selfcheck.mjs",
-    "test": "node scripts/scan.mjs --offline && node scripts/selfcheck.mjs",
+    "test:unit": "node --test tests/*.test.mjs",
+    "test:integration": "node --test tests/integration/*.test.mjs",
+    "test:e2e": "node --test tests/e2e/*.test.mjs",
+    "test": "node --test tests/*.test.mjs tests/integration/*.test.mjs tests/e2e/*.test.mjs",
     "serve": "node --watch-path=web -e \"import('node:http').then(({default:h})=>import('node:fs').then(({default:f})=>h.createServer((q,s)=>{let p=q.url==='/'?'/index.html':q.url.split('?')[0];try{const b=f.readFileSync('web'+p);s.writeHead(200,{'content-type':p.endsWith('.js')?'text/javascript':p.endsWith('.json')?'application/json':p.endsWith('.css')?'text/css':'text/html'});s.end(b)}catch(e){s.writeHead(404);s.end('404')}}).listen(3000,()=>console.log('http://localhost:3000')))\")"
   },
   "engines": { "node": ">=20" }

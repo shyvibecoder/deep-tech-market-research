@@ -110,3 +110,9 @@ GitHub-issue channel; resolve currency (F2) before summing foreign lots.
 4. **Free-tier / keyless / degrade-gracefully** for all data + LLM (unchanged).
 5. **Shared math is single-source:** browser-served modules under `web/` (e.g. `web/options.mjs`),
    re-exported for Node/tests via `scripts/lib/*` — don't duplicate.
+6. **Tests (the pyramid, zero-dep `node:test`, BDD `describe/it`):** `tests/*.test.mjs` = unit
+   (options/regime/marketdata/schema/dca/history), `tests/integration/` = the real offline scan
+   pipeline + selfcheck, `tests/e2e/` = static HTML↔JS contract + serve smoke. Run `npm test`; CI
+   runs it on every PR/push. **Convention going forward: new pure logic ships with a unit test
+   written red-first (TDD); behaviour changes update the integration/e2e specs.** Full browser DOM
+   e2e (Playwright) is queued for CI (needs a browser/install, not available in the sandbox).

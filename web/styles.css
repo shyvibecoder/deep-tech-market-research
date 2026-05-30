@@ -105,3 +105,11 @@ table.cfg code{font-size:11px}#adminStatus a{color:var(--y30)}
   .optgrid{gap:8px}.optgrid input,.optgrid select{width:46%}
   table{font-size:12px}
 }
+
+.choke{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:12px 14px;margin:10px 0}
+.choke-h{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.access{font-size:10px;font-weight:700;text-transform:uppercase;padding:1px 6px;border-radius:4px;color:#0b0e14}
+.access.private{background:var(--now)}.access.foreign{background:var(--y27)}.access.impaired{background:var(--y28)}
+.heatbar{display:inline-block;width:90px;height:8px;background:var(--line);border-radius:4px;overflow:hidden}
+.heatbar span{display:block;height:100%;background:var(--y30)}
+.choke a{color:var(--y30)}

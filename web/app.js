@@ -43,7 +43,24 @@ function render() {
     pill.className = `posture ${reg?.posture || "unknown"}`;
     pill.textContent = reg ? `${lbl}${reg.risk_score != null ? ` ${reg.risk_score}/100` : ""}` : "";
   }
-  renderStale(sig); renderRadar(); renderTimeline(); renderPortfolio(); renderCatalysts(); renderDigest();
+  renderStale(sig); renderRadar(); renderTimeline(); renderPortfolio(); renderCatalysts(); renderChokepoints(); renderDigest();
+}
+
+function renderChokepoints() {
+  const box = $("#chokeList"); if (!box) return;
+  const cps = DATA.sig?.chokepoints || [];
+  if (!cps.length) { box.innerHTML = `<p class="foot">No chokepoint data yet — proxies are discovered in the scan (GitHub Actions).</p>`; return; }
+  box.innerHTML = cps.slice().sort((a, b) => (b.heat || 0) - (a.heat || 0)).map((c) => {
+    const disc = (c.discovered || []).slice(0, 6).map((d) => `${esc(d.ticker)}${d.mentions ? ` <span style="color:var(--mut)">(${d.mentions})</span>` : ""}`).join(", ");
+    const news = c.top_headline ? `<a href="${safeUrl(c.top_headline.link)}" target="_blank" rel="noopener">${esc(c.top_headline.title)}</a>` : "";
+    return `<div class="choke">
+      <div class="choke-h"><strong>${esc(c.name)}</strong> <span class="access ${esc(c.access)}">${esc(c.access)}</span>
+        <span class="heatbar"><span style="width:${c.heat || 0}%"></span></span> heat ${c.heat ?? "—"}${c.rel != null ? ` · proxy rel ${(c.rel * 100).toFixed(0)}%` : ""}</div>
+      <div class="foot">Gates: ${esc(c.gates || "")}. ${esc(c.how_to_access || "")}</div>
+      <div class="foot">Seeded proxies: ${(c.proxies || []).map(esc).join(", ") || "—"} · <strong>Discovered (SEC filing mentions):</strong> ${disc || "—"}</div>
+      ${news ? `<div class="foot">📰 ${news}</div>` : ""}
+    </div>`;
+  }).join("");
 }
 
 // Warn when the committed signals.json is stale (scanner hasn't run recently).
@@ -662,6 +679,12 @@ const HELP = {
     <p>Puck records every dated <strong>per-name TSMOM tilt</strong> it makes (overweight → expect the stock up over ~21 days; underweight → down), anchored to the price at the time. When the horizon matures, a later scan <strong>resolves</strong> each call against the realized price and updates a <strong>hit-rate</strong>. This is the accountability layer: the system is graded on whether its calls actually came true — converting opinions into a verifiable record that compounds over time.</p>
     <p>It starts empty and fills in as calls resolve (~21 days). A hit-rate persistently below ~50% is the system telling you the signal isn't working — which is exactly what you want to know. Not advice.</p>` },
   alpha: { title: "De-rating / inflecting (alpha signal)", body: `\n    <p>Operationalizes the thesis's core claim: <strong>crowded/already-priced scarcities de-rate first; under-priced ones inflect.</strong> For each scarcity we measure its basket's <strong>relative strength vs the AI-capex complex</strong> (the theme ETFs). A <strong>crowded</strong> thesis losing relative strength is flagged <strong>↓ de-rating</strong> (reduce); an <strong>under-priced</strong> thesis gaining is <strong>↑ inflecting</strong> (accumulate). It's the relative move + the priced-in context — the closest thing here to a tradable edge, and the scorecard grades whether it works. Not advice.</p>` },
+  chokepoints: { title: "Inaccessible chokepoints", body: `
+    <p>The thesis's sharpest idea: <strong>the best chokepoints are inaccessible</strong> — private (SpaceX, Physical Intelligence), foreign (ASML, Ajinomoto, Harmonic Drive), or impaired (a chokepoint isn't a rent — Wolfspeed went bankrupt owning one). There's no clean ETF, so the app does the next best thing: it <strong>discovers the public proxies</strong> exposed to each bottleneck by searching <strong>SEC filings</strong> for who mentions it (customers/suppliers/partners), ranked by mention count.</p>
+    <ul><li><strong>access</strong> — private / foreign / impaired.</li>
+    <li><strong>heat</strong> — market attention + proxy momentum (0–100); <strong>proxy rel</strong> — the seeded proxies' strength vs the AI-capex complex.</li>
+    <li><strong>Discovered</strong> — public companies whose SEC filings mention the entity (your tradable exposure), with mention counts.</li></ul>
+    <p>This is the differentiated, hard-to-replicate layer — turning "no clean ETF, sorry" into "here's the best obtainable read." Not advice; discovered proxies are leads to research, not recommendations.</p>` },
   dca: { title: "DCA progress", body: `
     <p>Tracks how much of each holding's <strong>target</strong> you've actually <strong>deployed</strong> (shares × cost basis from your Settings positions), against the 9-month dollar-cost-averaging calendar. The bar + % shows progress to target; the card shows the sleeve total deployed. Helps you stay on the plan and see where dry powder still needs to go.</p>` },
   settings: { title: "Settings &amp; onboarding", body: `

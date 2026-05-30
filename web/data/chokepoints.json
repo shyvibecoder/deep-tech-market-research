@@ -1,0 +1,138 @@
+{
+  "schema_version": 1,
+  "updated": "2026-05-30",
+  "_comment": "Inaccessible/impaired chokepoints (the thesis's sharpest idea: the best ones have no clean ETF). Human-owned source file. The scanner attaches live heat from public PROXIES + news. proxies = the closest LISTED exposure; access = private|foreign|impaired.",
+  "chokepoints": [
+    {
+      "id": "euv-litho",
+      "name": "EUV lithography (ASML monopoly)",
+      "gates": "all leading-edge logic/memory",
+      "access": "foreign",
+      "proxies": [
+        "ASML"
+      ],
+      "news_query": "ASML EUV lithography High-NA orders",
+      "how_to_access": "ASML is listed (NL/US ADR) — the rare accessible chokepoint; size it.",
+      "search_terms": [
+        "ASML",
+        "EUV lithography",
+        "High-NA"
+      ]
+    },
+    {
+      "id": "adv-packaging",
+      "name": "Advanced packaging (TSMC CoWoS/SoIC)",
+      "gates": "every AI accelerator",
+      "access": "foreign",
+      "proxies": [
+        "TSM"
+      ],
+      "news_query": "TSMC CoWoS advanced packaging capacity",
+      "how_to_access": "TSM ADR; OSAT names (ASE) as secondary.",
+      "search_terms": [
+        "CoWoS",
+        "advanced packaging",
+        "TSMC"
+      ]
+    },
+    {
+      "id": "re-separation",
+      "name": "Heavy rare-earth separation & NdFeB magnets",
+      "gates": "motors, defense, EVs",
+      "access": "impaired",
+      "proxies": [
+        "MP",
+        "LYC"
+      ],
+      "news_query": "rare earth separation magnet China export control",
+      "how_to_access": "MP/Lynas are subsidy-floor proxies; the true chokepoint (China separation) is un-investable.",
+      "search_terms": [
+        "NdFeB",
+        "dysprosium",
+        "rare earth magnet"
+      ]
+    },
+    {
+      "id": "abf-substrate",
+      "name": "ABF substrate (Ajinomoto near-monopoly)",
+      "gates": "high-end chip packaging",
+      "access": "foreign",
+      "proxies": [
+        "4185.T"
+      ],
+      "news_query": "Ajinomoto ABF substrate shortage",
+      "how_to_access": "Ajinomoto (Tokyo); Ibiden/Shinko secondary — all foreign-listed.",
+      "search_terms": [
+        "Ajinomoto",
+        "ABF substrate",
+        "build-up film"
+      ]
+    },
+    {
+      "id": "precision-reducers",
+      "name": "Precision reducers (Harmonic Drive)",
+      "gates": "humanoid/robot actuators",
+      "access": "foreign",
+      "proxies": [
+        "6324.T"
+      ],
+      "news_query": "harmonic drive precision reducer humanoid robot",
+      "how_to_access": "Harmonic Drive (Tokyo); eroding moat (Schaeffler, China entrants).",
+      "search_terms": [
+        "Harmonic Drive",
+        "strain wave gear",
+        "precision reducer"
+      ]
+    },
+    {
+      "id": "manipulation-data",
+      "name": "Real-world manipulation data",
+      "gates": "useful humanoids",
+      "access": "private",
+      "proxies": [
+        "ROBO"
+      ],
+      "news_query": "humanoid robot manipulation foundation model data Physical Intelligence Skild",
+      "how_to_access": "Private (Physical Intelligence, Skild, Tesla). No clean proxy; ROBO/NVDA are picks-and-shovels.",
+      "search_terms": [
+        "Physical Intelligence",
+        "Skild",
+        "robot foundation model"
+      ]
+    },
+    {
+      "id": "launch-space-power",
+      "name": "Launch + space-grade power (SpaceX, GaAs cells)",
+      "gates": "orbital infrastructure",
+      "access": "private",
+      "proxies": [
+        "RKLB"
+      ],
+      "news_query": "SpaceX Starship launch cadence space solar power",
+      "how_to_access": "SpaceX private; RKLB is the closest listed launch proxy.",
+      "search_terms": [
+        "SpaceX",
+        "Starship",
+        "Starlink"
+      ]
+    },
+    {
+      "id": "gallium-gan",
+      "name": "Gallium / GaN (radar, EW, RF)",
+      "gates": "defense radar, fast chargers",
+      "access": "impaired",
+      "proxies": [
+        "WOLF",
+        "NVTS",
+        "QRVO"
+      ],
+      "news_query": "gallium GaN China export control radar",
+      "how_to_access": "WOLF impaired (chokepoint != rent); NVTS/QRVO partial GaN exposure.",
+      "search_terms": [
+        "gallium nitride",
+        "gallium arsenide",
+        "GaN"
+      ]
+    }
+  ]
+}

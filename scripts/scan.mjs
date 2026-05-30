@@ -25,6 +25,9 @@ import { updateScarcityHistory, applySeenState } from "./lib/history.mjs";
 import { writeDcaPlan } from "./lib/dca.mjs";
 import { makeForecasts, resolveDue, updateScorecard } from "./lib/forecast.mjs";
 import { relativeStrength, deRatingSignal } from "./lib/derating.mjs";
+import { newsForQuery } from "./lib/news.mjs";
+import { chokepointHeat } from "./lib/chokepoints.mjs";
+import { discoverProxies } from "./lib/edgar-fts.mjs";
 
 const OFFLINE = process.argv.includes("--offline");
 const read = (p) => JSON.parse(readFileSync(new URL(`../web/data/${p}`, import.meta.url)));
@@ -314,6 +317,31 @@ const scarcity_signals = {};
   if (!OFFLINE) console.log(`Alpha signals: ${flagged} scarcities flagged (de-rating/inflecting)`);
 }
 
+// --- Inaccessible-chokepoint tracker: DISCOVER public proxies (EDGAR full-text
+// mentions) + heat (proxy momentum + news) for un-investable bottlenecks ---
+let chokepoints = [];
+{
+  let cps = []; try { cps = read("chokepoints.json").chokepoints || []; } catch { /* optional */ }
+  const etfMoms2 = portfolio.holdings.filter((h) => securities[h.ticker]?.type === "etf")
+    .map((h) => enriched[h.ticker]?.mom_1m).filter((x) => typeof x === "number");
+  const complexMom = etfMoms2.length ? etfMoms2.reduce((a, b) => a + b, 0) / etfMoms2.length : null;
+  for (const c of cps) {
+    const moms = (c.proxies || []).map((t) => enriched[t]?.mom_1m).filter((x) => typeof x === "number");
+    const proxyMom = moms.length ? moms.reduce((a, b) => a + b, 0) / moms.length : null;
+    let newsCount = 0, top = null, discovered = [];
+    if (!OFFLINE) {
+      try { const items = await newsForQuery(c.news_query, { limit: 5 }); newsCount = items.length; top = items[0] || null; } catch { /* ignore */ }
+      try { const d = await discoverProxies(c.search_terms, { max: 6 }); discovered = d.proxies; errors.push(...d.errors.map((e) => `fts ${c.id}: ${e}`)); } catch { /* ignore */ }
+    }
+    const h = chokepointHeat({ proxyMom, complexMom, newsCount });
+    chokepoints.push({
+      id: c.id, name: c.name, gates: c.gates, access: c.access, proxies: c.proxies || [],
+      how_to_access: c.how_to_access, discovered, top_headline: top, ...h,
+    });
+  }
+  if (!OFFLINE) console.log(`Chokepoints: ${chokepoints.length} tracked; discovered proxies for ${chokepoints.filter((c) => c.discovered.length).length}`);
+}
+
 // --- Accountability ledger: resolve matured forecasts, score them, record new ones ---
 let scorecard = null;
 {
@@ -358,6 +386,7 @@ const out = {
   metrics,
   scorecard,
   scarcity_signals,
+  chokepoints,
   data_quality,
   scarcity_drift,
   digest,

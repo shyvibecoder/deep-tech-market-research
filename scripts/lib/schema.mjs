@@ -122,6 +122,7 @@ export function validateSignals(s, errors = []) {
   if ("metrics" in s && s.metrics !== null) check(errors, isObj(s.metrics), `${w}: metrics must be an object or null`);
   if ("scorecard" in s && s.scorecard !== null) check(errors, isObj(s.scorecard), `${w}: scorecard must be an object or null`);
   if ("scarcity_signals" in s) check(errors, isObj(s.scarcity_signals), `${w}: scarcity_signals must be an object`);
+  if ("chokepoints" in s) check(errors, isArr(s.chokepoints), `${w}: chokepoints must be an array`);
   for (const [t, q] of Object.entries(isObj(s.quotes) ? s.quotes : {})) {
     if (q == null) continue; // null = intentional non-tradeable placeholder
     if (!isObj(q)) { errors.push(`${w}: quotes[${t}] must be an object or null`); continue; }

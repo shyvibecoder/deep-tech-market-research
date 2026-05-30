@@ -168,6 +168,13 @@ Once you've entered positions, this shows how much of each holding's **target** 
 (shares × cost basis) against the 9-month dollar-cost-averaging calendar — a progress bar + % per
 holding, and the sleeve total deployed. Use it to stay on the plan and see where dry powder still goes.
 
+## 5b. Chokepoints (inaccessible / differentiated alpha)
+The sharpest thesis idea: **the best chokepoints have no clean ETF** — they're private (SpaceX, Physical
+Intelligence), foreign (ASML, Ajinomoto, Harmonic Drive), or impaired. The app **discovers the public
+proxies** exposed to each by searching **SEC filings** for who mentions the entity (customers/suppliers/
+partners), ranked by mention count, and shows a **heat** (attention + proxy momentum) and the proxies'
+relative strength vs the AI-capex complex. Discovered names are research leads, not recommendations.
+
 ## 6. Filings & news
 
 ![Filings and news](img/catalysts.png)

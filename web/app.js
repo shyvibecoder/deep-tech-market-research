@@ -141,10 +141,10 @@ function renderRegime() {
   box.className = `regime ${r.posture}`;
   const ap = r.account_policy;
   const apHtml = ap ? `<div class="acctpol"><span><strong>IRA/Roth:</strong> ${ap.ira}</span><span><strong>Taxable:</strong> ${ap.taxable}</span></div>` : "";
-  box.innerHTML = `<div><strong>Timing posture: ${lbl}${r.risk_score != null ? ` · risk ${r.risk_score}/100` : ""}${r.version ? ` · v${r.version}` : ""} <button class="help" data-help="regime">?</button></strong>
+  box.innerHTML = `<div><strong>Timing posture: ${lbl}${r.risk_score != null ? ` · risk ${r.risk_score}/100${r.confidence ? ` (${r.confidence} conf)` : ""}` : ""}${r.version ? ` · v${r.version}` : ""} <button class="help" data-help="regime">?</button></strong>
       <span>${r.action || ""}</span></div>
     ${apHtml}
-    <div class="rnote">${r.note || ""}<br><em>Alpha = scarcity thesis · timing = trend+momentum+vol+drawdown+macro overlay, on the ETF composite${r.composite_basis?.length ? ` (${r.composite_basis.join(", ")})` : ""}. ${r.basis || ""}. Not advice.</em></div>`;
+    <div class="rnote">${r.note || ""}<br><em>Alpha = scarcity thesis · timing = trend+momentum+vol+drawdown+macro overlay, on the ETF composite${r.composite_basis?.length ? ` (${r.composite_basis.join(", ")})` : ""}. ${r.basis || ""}. ${r.confidence_note ? "⚠ " + r.confidence_note + ". " : ""}Not advice.</em></div>`;
 }
 
 function renderDca() {

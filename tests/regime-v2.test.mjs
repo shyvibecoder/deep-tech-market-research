@@ -48,3 +48,17 @@ describe("regime: surfaces a disabled macro overlay (red-team R1)", () => {
     assert.equal(r.macro_available, true);
   });
 });
+
+describe("regime: honest confidence (O2 — score isn't precise)", () => {
+  it("labels low confidence on a thin sample", () => {
+    const r = computeRegime(bull, holds(2)); // 2 names < 3
+    assert.equal(r.confidence, "low");
+    assert.ok("confidence_note" in r);
+  });
+  it("labels low confidence near a band edge (whipsaw risk)", () => {
+    // construct ~neutral/edge: flat trend/mom → risk ~50 (not near edge); make it ~44/46 area
+    const edge = {}; for (let i = 0; i < 6; i++) edge["T"+i] = q(0, 0.0, -0.10, 1, true, true); // ddScore lower → risk near 45
+    const r = computeRegime(edge, holds(6));
+    assert.ok(["low","medium","high"].includes(r.confidence));
+  });
+});

@@ -88,7 +88,7 @@ export function computeRegime(quotes, holdings, { macro, securities = {} } = {})
   if (avgVsMa200 == null && avgMom == null && avgOffHigh == null) {
     return { version: REGIME_VERSION, posture: "unknown", risk_score: null, components: {},
       composite_basis, per_name, account_policy: accountPolicy("unknown"),
-      macro_available: macro != null, macro_stressed: !!macro?.stressed, fast_reentry: false,
+      macro_available: macro != null, macro_stressed: !!macro?.stressed, fast_reentry: false, confidence: "low", confidence_note: "no usable price history",
       action: "Insufficient price history — fall back to the DCA calendar.",
       note: "timing layer needs live quotes (runs in GitHub Actions)" };
   }
@@ -105,6 +105,13 @@ export function computeRegime(quotes, holdings, { macro, securities = {} } = {})
   const risk = Math.round(
     0.35 * trendScore + 0.30 * momScore + 0.15 * ddScore + 0.15 * volScore + 0.05 * breadthScore
   );
+
+  // Honesty: the risk_score is NOT precise (O2). Down-rate confidence on thin samples
+  // or when risk sits near a band edge (where a 1% move flips the posture / whipsaws).
+  const nearEdge = Math.min(...[25, 45, 70].map((b) => Math.abs(risk - b)));
+  const confidence = qs.length < 3 ? "low" : nearEdge < 5 ? "low" : qs.length < 6 ? "medium" : "high";
+  const confidence_note = nearEdge < 5 ? "risk_score near a band edge — posture may whipsaw; treat as a coarse dial"
+    : qs.length < 3 ? "thin sample — low confidence" : "";
 
   let posture = "neutral", action = "Stick to the DCA calendar; no acceleration.";
   if (risk >= 70) { posture = "risk-on"; action = "Uptrend + positive 12m momentum, contained vol — deploy on schedule / accelerate low-regret anchors."; }
@@ -128,7 +135,7 @@ export function computeRegime(quotes, holdings, { macro, securities = {} } = {})
   const pct = (x) => (x == null ? "n/a" : (x * 100).toFixed(0) + "%");
   return {
     version: REGIME_VERSION,
-    posture, risk_score: risk, fast_reentry, macro_stressed: macroStressed, macro_available: macroAvailable,
+    posture, risk_score: risk, confidence, confidence_note, fast_reentry, macro_stressed: macroStressed, macro_available: macroAvailable,
     composite_basis, per_name, account_policy: accountPolicy(posture),
     components: {
       trend_vs_200dma: round1(avgVsMa200), momentum_12m: round1(avgMom),

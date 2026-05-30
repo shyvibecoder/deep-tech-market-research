@@ -95,7 +95,7 @@ The colored banner at the top is the **timing posture** — the heart of "when t
 
 It's a **risk dial that paces your DCA**, not an all-in/all-out switch. It's built on *independent,
 replicated* research (Faber 200-DMA trend; Moskowitz-Ooi-Pedersen time-series momentum; Moreira-Muir
-volatility; Hurst-Ooi-Pedersen trend) — **not** a curve-fit backtest. Full detail: `REGIME.md`.
+volatility; Hurst-Ooi-Pedersen trend) — **not** a curve-fit backtest. Full detail: `REGIME.md`. The posture shows a **confidence** label (low/medium/high) and warns when the score sits near a band edge — it's a coarse dial, not a precise number.
 
 **v2 refinements:** the score is computed on the **theme ETFs** (a cleaner composite than averaging 19
 noisy single names); it's **account-aware** — the posture drives your **IRA/Roth** sleeve (tactical,

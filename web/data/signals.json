@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "scanned_at": "2026-05-30T20:21:18.255Z",
+  "scanned_at": "2026-05-30T20:39:16.305Z",
   "source": "offline run",
   "universe_count": 52,
   "quotes": {
@@ -1313,6 +1313,17 @@
       }
     }
   ],
+  "v23": {
+    "state": "UNAVAILABLE",
+    "reasons": [
+      "no QQQ trend data this run"
+    ],
+    "basis": "needs live QQQ quote"
+  },
+  "dislocation_entry": {
+    "window": "none",
+    "reason": "nothing dislocated into an intact thesis right now."
+  },
   "chokepoints": [
     {
       "id": "euv-litho",

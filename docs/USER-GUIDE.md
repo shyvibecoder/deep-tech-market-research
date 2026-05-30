@@ -128,6 +128,24 @@ a **per-name TSMOM tilt** (which names to lean into vs. trim).
   one notch** — so you don't stay in cash too long after a V-shaped bottom (the momentum-crash fix). The
   macro brake always wins over re-entry.
 
+### 5.1a Dislocation timing + V2.3 cross-check
+Just under the posture, the **Dislocation timing** card answers a single question: *when should I take
+advantage of a dislocation?* A dislocation is a name mechanically sold off (off highs, below trend)
+**while its structural thesis is intact** (the forced-flow **✚ accumulate** flag). The danger is buying
+one while it's still falling — a falling knife. So the verdict is:
+
+- **✅ ACT NOW** — a thesis-intact dislocation exists **and** timing has turned: the **drawdown trigger**
+  fired, the **V2.3-style trend re-confirmed** (FULL on QQQ), or the **20-DMA fast re-entry** is firing.
+- **⏳ WAIT** — the dislocation is real but timing is still defensive; wait for the turn.
+- **— none** — nothing dislocated into an intact thesis right now.
+
+The **V2.3 cross-check** independently computes a V2.3-style **FULL/DEFENSIVE** state on **QQQ** (Faber
+200-DMA + 20-DMA fast re-entry + the exit-only composite-stress AND-gate) and compares it to Puck's
+regime posture: **✓ agree** = confirmation, **⚠ diverge** = look closer. It is a faithful
+*approximation* for cross-checking your separate V2.3 strategy — **not** the proprietary production
+rule — and **Puck itself adds no leverage** (a 2× QLD sleeve would breach the −35% max-drawdown
+objective unless gated by a full exit to cash).
+
 ### 5.1b Objective scorecard
 The app's goal is **max 10-year return with max drawdown < 35%, and the best Calmar/Sortino.** This card
 measures your **strategy basket** (target-weighted holdings) over the trailing window: **CAGR**, **max

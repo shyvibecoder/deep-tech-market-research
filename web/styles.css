@@ -121,5 +121,12 @@ table.cfg code{font-size:11px}#adminStatus a{color:var(--y30)}
 .ff-go{background:#16331f;color:#4ade80}
 .ff-wait{background:#33270f;color:#fbbf24}
 .ff-broken{background:#331616;color:#f87171}
+.v23-card{border:1px solid var(--line);border-radius:8px;padding:10px 12px;margin:8px 0}
+.de-verdict{font-size:15px;margin:6px 0;padding:6px 10px;border-radius:6px}
+.de-open{background:#16331f;color:#4ade80}
+.de-wait{background:#33270f;color:#fbbf24}
+.de-none{background:var(--line);color:var(--mut)}
+.agree{color:#4ade80}
+.diverge-w{color:#fbbf24}
 
 .stress-btn{font-size:12px}

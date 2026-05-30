@@ -43,7 +43,32 @@ function render() {
     pill.className = `posture ${reg?.posture || "unknown"}`;
     pill.textContent = reg ? `${lbl}${reg.risk_score != null ? ` ${reg.risk_score}/100` : ""}` : "";
   }
-  renderStale(sig); renderRadar(); renderTimeline(); renderPortfolio(); renderCatalysts(); renderChokepoints(); renderDigest();
+  renderStale(sig); renderRadar(); renderTimeline(); renderPortfolio(); renderV23(); renderCatalysts(); renderChokepoints(); renderDigest();
+}
+
+// V2.3 cross-check + the headline "when to act on a dislocation" verdict.
+function renderV23() {
+  const box = $("#v23Box"); if (!box) return;
+  const v = DATA.sig?.v23, de = DATA.sig?.dislocation_entry, reg = DATA.sig?.regime;
+  if (!v && !de) { box.innerHTML = ""; return; }
+  // Dislocation entry verdict — the thing the owner wants to see.
+  const w = de?.window;
+  const verdict = w === "open" ? `<div class="de-verdict de-open">✅ Dislocation entry: <strong>ACT NOW</strong></div>`
+    : w === "wait" ? `<div class="de-verdict de-wait">⏳ Dislocation entry: <strong>WAIT</strong></div>`
+    : w === "none" ? `<div class="de-verdict de-none">— No dislocation to act on</div>` : "";
+  const deReason = de ? `<p class="foot">${esc(de.reason)}</p>` : "";
+  // V2.3 cross-check vs Puck's regime posture.
+  let cross = "";
+  if (v && v.state !== "UNAVAILABLE") {
+    const brakes = reg?.posture === "defensive" || reg?.posture === "caution" || reg?.macro_stressed;
+    const puckRisk = !brakes; // risk-on-ish
+    const v23Risk = v.state === "FULL";
+    const agree = puckRisk === v23Risk;
+    cross = `<p class="foot">V2.3 cross-check (approx., on QQQ): <strong>${esc(v.state)}</strong> vs Puck regime <strong>${esc(reg?.posture || "?")}</strong> — <span class="${agree ? "agree" : "diverge-w"}">${agree ? "✓ agree" : "⚠ diverge"}</span>. <span style="color:var(--mut)">${esc((v.reasons || [])[0] || "")}</span></p>`;
+  } else if (v) {
+    cross = `<p class="foot">V2.3 cross-check: <span style="color:var(--mut)">unavailable (needs live QQQ quote)</span></p>`;
+  }
+  box.innerHTML = `<div class="v23-card"><strong>Dislocation timing <button class="help" data-help="dislocation">?</button></strong>${verdict}${deReason}${cross}</div>`;
 }
 
 function renderChokepoints() {
@@ -741,6 +766,10 @@ const HELP = {
     <p>It starts empty and fills in as calls resolve (~21 days). A hit-rate persistently below ~50% is the system telling you the signal isn't working — which is exactly what you want to know. Not advice.</p>
     <p>The <strong>Alpha edge</strong> line grades the harder claim: each <strong>de-rating/inflecting</strong> flag becomes a 42-day <em>relative</em> forecast — does the flagged basket actually under/out-perform the AI-capex complex? That, not raw direction, is the thesis's real edge, and it's scored separately so you can see whether the alpha signal earns its keep.</p>` },
   alpha: { title: "De-rating / inflecting (alpha signal)", body: `\n    <p>Operationalizes the thesis's core claim: <strong>crowded/already-priced scarcities de-rate first; under-priced ones inflect.</strong> For each scarcity we measure its basket's <strong>relative strength vs the AI-capex complex</strong> (the theme ETFs). A <strong>crowded</strong> thesis losing relative strength is flagged <strong>↓ de-rating</strong> (reduce); an <strong>under-priced</strong> thesis gaining is <strong>↑ inflecting</strong> (accumulate). It's the relative move + the priced-in context — the closest thing here to a tradable edge, and the scorecard grades whether it works. Not advice.</p>` },
+  dislocation: { title: "Dislocation timing — when to act", body: `
+    <p>Answers one question: <strong>when should I take advantage of a dislocation?</strong> A dislocation is a name mechanically sold off (off highs, below trend) <em>while its structural thesis is intact</em> (forced-flow <strong>✚ accumulate</strong>, Edge 3). The danger is buying one while it's still falling — a falling knife.</p>
+    <p>So the verdict is <strong>ACT NOW</strong> only when a thesis-intact dislocation exists <em>and</em> timing has turned constructive — any of: the <strong>drawdown trigger</strong> fired (dry powder release), the <strong>V2.3-style trend re-confirmed</strong> (FULL on QQQ), or Puck's <strong>20-DMA fast re-entry</strong> is firing. Otherwise <strong>WAIT</strong> for the turn.</p>
+    <p>The <strong>V2.3 cross-check</strong> independently computes a V2.3-style FULL/DEFENSIVE state on QQQ (Faber 200-DMA + 20-DMA fast re-entry + exit-only composite-stress) and compares it to Puck's regime posture — <strong>✓ agree</strong> is confirmation, <strong>⚠ diverge</strong> is a flag to look closer. It's a faithful <em>approximation</em> for cross-checking, not the proprietary production rule, and Puck adds no leverage. Not advice.</p>` },
   chokepoints: { title: "Inaccessible chokepoints", body: `
     <p>The thesis's sharpest idea: <strong>the best chokepoints are inaccessible</strong> — private (SpaceX, Physical Intelligence), foreign (ASML, Ajinomoto, Harmonic Drive), or impaired (a chokepoint isn't a rent — Wolfspeed went bankrupt owning one). There's no clean ETF, so the app does the next best thing: it <strong>discovers the public proxies</strong> exposed to each bottleneck by searching <strong>SEC filings</strong> for who mentions it (customers/suppliers/partners). They're ranked by <strong>specificity</strong> (TF-IDF), not raw mention count: a diversified megacap that mentions everything once in boilerplate is a <em>weak</em> proxy and is dimmed + flagged ⚠ generic, while a concentrated pure-play is surfaced first. The <strong>score</strong> (0–1) is how specific the exposure looks — all data-derived, no hand-picked lists.</p>
     <ul><li><strong>access</strong> — private / foreign / impaired.</li>

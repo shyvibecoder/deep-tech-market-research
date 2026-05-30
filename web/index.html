@@ -12,12 +12,56 @@
       <h1>🏒 Puck — Structural-Scarcity Radar</h1>
       <p class="sub">Where the puck is going, not where it has been. <span id="posturePill"></span> <span id="scanned"></span></p>
     </div>
-    <button id="refresh" title="Triggers the GitHub Action scan (needs a configured dispatch token)">⟳ Refresh</button>
+    <div class="hdr-actions">
+      <button id="settingsBtn" title="Manage your holdings per account + API keys (stored only in this browser)">⚙ Settings</button>
+      <button id="refresh" title="Triggers the GitHub Action scan (needs a configured dispatch token)">⟳ Refresh</button>
+    </div>
   </header>
 
   <p class="disclaim">Illustrative research — <strong>not personalized financial advice.</strong> Every name is cyclical and would fall together in a recession or rate shock.</p>
 
+  <div id="onboard" class="banner"></div>
   <div id="staleBanner" class="banner" role="status" aria-live="polite"></div>
+
+  <div id="settingsModal" class="modal hidden" role="dialog" aria-modal="true" aria-label="Settings">
+    <div class="modal-card">
+      <div class="modal-head">
+        <strong>⚙ Settings &amp; onboarding</strong>
+        <button id="settingsClose" aria-label="Close">✕</button>
+      </div>
+      <p class="modal-note">Everything here is stored <strong>only in this browser</strong> (localStorage) and never committed. Use free/restricted keys.</p>
+
+      <h4>1 · Your holdings (per account)</h4>
+      <p class="modal-note">Add what you actually hold. Live price comes from the latest scan; new tickers outside the scan universe won't have a price until added to the plan &amp; scanned.</p>
+      <table id="holdEdit"><thead><tr>
+        <th>Ticker</th><th>Account</th><th>Shares</th><th>Cost basis $</th><th></th>
+      </tr></thead><tbody></tbody></table>
+      <div class="row-add">
+        <input id="hTicker" placeholder="TICKER" maxlength="12" />
+        <select id="hAccount"><option value="ira">IRA/Roth</option><option value="taxable">Taxable</option></select>
+        <input id="hShares" type="number" step="any" placeholder="shares" />
+        <input id="hCost" type="number" step="any" placeholder="cost/sh" />
+        <button id="hAdd">+ Add</button>
+      </div>
+      <label class="cash-row">Dry-powder cash $ <input id="hCash" type="number" step="any" placeholder="0" /></label>
+      <div class="modal-actions">
+        <button id="hExport">⬇ Export positions.local.json</button>
+        <label class="imp">⬆ Import <input id="hImport" type="file" accept="application/json" hidden /></label>
+        <button id="hClear" class="danger">Clear holdings</button>
+      </div>
+
+      <h4>2 · API keys &amp; token</h4>
+      <p class="modal-note">For the <em>automated</em> scanner, set these as GitHub repo secrets (Settings → Secrets → Actions). Keys entered here power the optional <em>in-browser</em> digest and the Refresh button.</p>
+      <label>Gemini API key <input id="kGemini" type="password" placeholder="AIza… (aistudio.google.com)" /></label>
+      <label>Groq API key <input id="kGroq" type="password" placeholder="gsk_… (console.groq.com) — browser CORS-limited" /></label>
+      <label>GitHub dispatch token <input id="kDispatch" type="password" placeholder="fine-grained PAT, Contents: R/W" /></label>
+      <div class="modal-actions">
+        <button id="kSave">Save keys</button>
+        <button id="kDigest">✦ Generate digest in browser (Gemini)</button>
+      </div>
+      <p id="settingsMsg" class="modal-note"></p>
+    </div>
+  </div>
 
   <nav class="tabs">
     <button data-tab="radar" class="active">Scarcity radar</button>
@@ -44,6 +88,7 @@
 
   <section id="portfolio" class="tab">
     <div id="regimeBox"></div>
+    <div id="myHoldings"></div>
     <div id="portSummary" class="cards"></div>
     <h3>Triggers</h3>
     <div id="triggers"></div>

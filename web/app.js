@@ -121,6 +121,7 @@ function renderRegime() {
 
 function renderPortfolio() {
   renderRegime();
+  renderMyHoldings();
   const p = DATA.port;
   $("#portSummary").innerHTML = `
     <div class="card"><b>${fmtUsd(p.sleeve_usd)}</b><span>sleeve (~${Math.round(p.sleeve_usd / p.total_portfolio_usd * 100)}% of ${fmtUsd(p.total_portfolio_usd)})</span></div>
@@ -274,4 +275,163 @@ function showBanner(msg) {
 
 $("#refresh").onclick = triggerScan;
 
+// ---------- Onboarding / Settings (all client-side, localStorage only) ----------
+const POS_KEY = "puck_positions";   // { cash_usd, positions: { TICKER: {account, shares, cost_basis} } }
+const KEYS_KEY = "puck_keys";       // { gemini, groq }
+const getPositions = () => { try { return JSON.parse(localStorage.getItem(POS_KEY)) || { positions: {} }; } catch { return { positions: {} }; } };
+const setPositions = (p) => localStorage.setItem(POS_KEY, JSON.stringify(p));
+const getKeys = () => { try { return JSON.parse(localStorage.getItem(KEYS_KEY)) || {}; } catch { return {}; } };
+const setMsg = (m) => { const e = $("#settingsMsg"); if (e) e.textContent = m || ""; };
+
+function openSettings() { renderHoldEditor(); loadKeyFields(); $("#settingsModal").classList.remove("hidden"); }
+function closeSettings() { $("#settingsModal").classList.add("hidden"); }
+
+function renderHoldEditor() {
+  const pos = getPositions();
+  const tb = $("#holdEdit tbody"); tb.innerHTML = "";
+  Object.entries(pos.positions || {}).forEach(([t, h]) => {
+    const tr = document.createElement("tr");
+    tr.innerHTML = `<td><strong>${t}</strong></td><td>${h.account || "—"}</td><td>${h.shares ?? "—"}</td><td>${h.cost_basis != null ? "$" + h.cost_basis : "—"}</td>
+      <td><button data-rm="${t}" class="danger sm">✕</button></td>`;
+    tb.appendChild(tr);
+  });
+  $("#hCash").value = pos.cash_usd ?? "";
+  $$("#holdEdit [data-rm]").forEach((b) => b.onclick = () => {
+    const p = getPositions(); delete p.positions[b.dataset.rm]; setPositions(p); renderHoldEditor(); render();
+  });
+}
+
+function addHolding() {
+  const t = ($("#hTicker").value || "").trim().toUpperCase();
+  if (!t) return setMsg("Enter a ticker.");
+  const p = getPositions();
+  p.positions = p.positions || {};
+  p.positions[t] = {
+    account: $("#hAccount").value,
+    shares: parseFloat($("#hShares").value) || 0,
+    cost_basis: parseFloat($("#hCost").value) || 0,
+  };
+  setPositions(p);
+  $("#hTicker").value = $("#hShares").value = $("#hCost").value = "";
+  renderHoldEditor(); render(); setMsg(`Saved ${t}.`);
+}
+
+function saveCash() { const p = getPositions(); p.cash_usd = parseFloat($("#hCash").value) || 0; setPositions(p); render(); }
+
+function exportPositions() {
+  const p = getPositions();
+  // shape matches web/data/positions.local.json (scanner reads this for trim/sleeve)
+  const out = { as_of: new Date().toISOString().slice(0, 10), cash_usd: p.cash_usd || 0, positions: {} };
+  for (const [t, h] of Object.entries(p.positions || {})) out.positions[t] = { shares: h.shares, cost_basis: h.cost_basis };
+  const blob = new Blob([JSON.stringify(out, null, 2) + "\n"], { type: "application/json" });
+  const a = document.createElement("a"); a.href = URL.createObjectURL(blob); a.download = "positions.local.json"; a.click();
+  setMsg("Exported positions.local.json — drop it in web/data/ (gitignored) to enable server-side trim/sleeve.");
+}
+
+function importPositions(file) {
+  const r = new FileReader();
+  r.onload = () => {
+    try {
+      const j = JSON.parse(r.result); const p = getPositions(); p.positions = p.positions || {};
+      if (typeof j.cash_usd === "number") p.cash_usd = j.cash_usd;
+      for (const [t, h] of Object.entries(j.positions || {})) p.positions[t] = { account: h.account || p.positions[t]?.account || "ira", shares: h.shares, cost_basis: h.cost_basis };
+      setPositions(p); renderHoldEditor(); render(); setMsg("Imported.");
+    } catch (e) { setMsg("Import failed: " + e.message); }
+  };
+  r.readAsText(file);
+}
+
+function loadKeyFields() { const k = getKeys(); $("#kGemini").value = k.gemini || ""; $("#kGroq").value = k.groq || ""; $("#kDispatch").value = localStorage.getItem(TOKEN_KEY) || ""; }
+function saveKeys() {
+  setMsg("");
+  localStorage.setItem(KEYS_KEY, JSON.stringify({ gemini: $("#kGemini").value.trim(), groq: $("#kGroq").value.trim() }));
+  const tok = $("#kDispatch").value.trim();
+  if (tok) localStorage.setItem(TOKEN_KEY, tok); else localStorage.removeItem(TOKEN_KEY);
+  setMsg("Keys saved to this browser.");
+}
+
+// Your-holdings live panel (Portfolio tab), computed from localStorage + scan quotes.
+function renderMyHoldings() {
+  const box = $("#myHoldings"); if (!box) return;
+  const pos = getPositions(); const entries = Object.entries(pos.positions || {});
+  if (!entries.length) { box.innerHTML = ""; return; }
+  const targets = Object.fromEntries((DATA.port?.holdings || []).map((h) => [h.ticker, h.target_usd]));
+  const cap = DATA.trig?.triggers?.find((t) => t.id === "sleeve_cap")?.threshold || 1720000;
+  let total = 0; const acc = { ira: 0, taxable: 0 }; const rows = [];
+  for (const [t, h] of entries) {
+    const Q = DATA.sig?.quotes?.[t];
+    const price = Q && !Q.error ? Q.price : null;
+    const mv = price && h.shares ? price * h.shares : null;
+    if (mv) { total += mv; if (acc[h.account] != null) acc[h.account] += mv; }
+    const gain = price && h.cost_basis ? price / h.cost_basis - 1 : null;
+    const tgt = targets[t];
+    rows.push(`<tr><td><strong>${t}</strong></td><td>${h.account}</td><td>${h.shares ?? "—"}</td>
+      <td>${price ? "$" + price.toFixed(2) : "—"}</td><td>${mv ? fmtUsd(mv) : "—"}</td>
+      <td class="${gain>=0?'pos':'neg'}">${gain==null?"—":(gain*100).toFixed(0)+"%"}</td>
+      <td>${tgt ? Math.round((mv||0)/tgt*100)+"% of target" : "—"}</td></tr>`);
+  }
+  const capPct = Math.round(total / cap * 100);
+  box.innerHTML = `<h3>Your holdings (live) <span class="foot">— from your browser-stored positions × latest scan prices</span></h3>
+    <div class="cards">
+      <div class="card"><b>${fmtUsd(total)}</b><span>sleeve value (${capPct}% of $${(cap/1e6).toFixed(2)}mm cap)</span></div>
+      <div class="card"><b>${fmtUsd(acc.ira)}</b><span>IRA/Roth</span></div>
+      <div class="card"><b>${fmtUsd(acc.taxable)}</b><span>taxable</span></div>
+      ${pos.cash_usd?`<div class="card"><b>${fmtUsd(pos.cash_usd)}</b><span>dry powder</span></div>`:""}
+    </div>
+    <table class="mine"><thead><tr><th>Ticker</th><th>Acct</th><th>Shares</th><th>Price</th><th>Mkt value</th><th>Gain</th><th>vs target</th></tr></thead>
+      <tbody>${rows.join("")}</tbody></table>`;
+}
+
+// Optional in-browser digest using the stored Gemini key (CORS-friendly). Ephemeral.
+async function browserDigest() {
+  const k = getKeys();
+  if (!k.gemini) return setMsg("Add a Gemini key first (Groq is CORS-blocked in browsers — use it via the Actions scanner).");
+  setMsg("Generating digest with Gemini…");
+  const model = "gemini-2.0-flash";
+  const call = async (prompt) => {
+    const r = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${k.gemini}`, {
+      method: "POST", headers: { "content-type": "application/json" },
+      body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }] }),
+    });
+    if (!r.ok) throw new Error(`Gemini HTTP ${r.status}`);
+    return (await r.json())?.candidates?.[0]?.content?.parts?.[0]?.text || "";
+  };
+  try {
+    const ctx = JSON.stringify({
+      regime: DATA.sig?.regime,
+      quotes: Object.fromEntries(Object.entries(DATA.sig?.quotes || {}).map(([t, q]) => [t, q?.error ? null : { ytd: q.ytd, off_high: q.pct_off_high, vs200: q.pct_vs_ma200, fwd_pe: q.forward_pe }])),
+      filings: (DATA.sig?.filings || []).slice(0, 20),
+      scarcities: (DATA.scar?.scarcities || []).map((s) => ({ id: s.id, priced_in: s.priced_in, bind: s.bind_window })),
+    }).slice(0, 22000);
+    const analyst = await call(`Markets analyst on a structural-tech-scarcity book. From this JSON (regime/quotes/filings/scarcities) write 6-10 terse, cited bullets on what materially changed and whether any deploy/exit trigger is closer. JSON:\n${ctx}`);
+    const redteam = await call(`Skeptical red-team: attack this digest — over-stated, already-priced, or unsupported claims. 4-6 sharp bullets.\n\n${analyst}`);
+    $("#digestBox").textContent = `_Generated in-browser (gemini:${model}); ephemeral, not committed._\n\n## Analyst\n${analyst}\n\n## Red-team\n${redteam}`;
+    setMsg("Digest generated — see the Agent digest tab.");
+    $$(".tabs button").forEach((x) => x.classList.remove("active")); $$(".tab").forEach((x) => x.classList.remove("active"));
+    document.querySelector('.tabs button[data-tab="digest"]').classList.add("active"); $("#digest").classList.add("active");
+  } catch (e) { setMsg("Digest failed: " + e.message); }
+}
+
+function maybeOnboard() {
+  const hasPos = Object.keys(getPositions().positions || {}).length > 0;
+  const hasTok = !!localStorage.getItem(TOKEN_KEY);
+  const el = $("#onboard"); if (!el) return;
+  if (!hasPos && !hasTok) {
+    el.className = "banner show";
+    el.innerHTML = `👋 First time? Open <strong>⚙ Settings</strong> to add your holdings per account and (optionally) your free API keys — all stored only in this browser.`;
+  } else { el.className = "banner"; el.textContent = ""; }
+}
+
+$("#settingsBtn").onclick = openSettings;
+$("#settingsClose").onclick = closeSettings;
+$("#settingsModal").onclick = (e) => { if (e.target.id === "settingsModal") closeSettings(); };
+$("#hAdd").onclick = addHolding;
+$("#hCash").onchange = saveCash;
+$("#hExport").onclick = exportPositions;
+$("#hImport").onchange = (e) => e.target.files[0] && importPositions(e.target.files[0]);
+$("#hClear").onclick = () => { if (confirm("Clear all your stored holdings from this browser?")) { localStorage.removeItem(POS_KEY); renderHoldEditor(); render(); } };
+$("#kSave").onclick = saveKeys;
+$("#kDigest").onclick = browserDigest;
+
+maybeOnboard();
 load();

@@ -62,3 +62,24 @@ export function rankProxies(chokepoints) {
     return { ...c, discovered: scored };
   });
 }
+
+// Proxy exposure GRAPH (ALPHA.md Edge 2, second-order mapping): collapse the per-chokepoint
+// discovered sets into a per-ticker view of HOW MANY bottlenecks each public name touches.
+// A high-degree HUB (≥3 chokepoints) is a diversified "picks-and-shovels" way to play the
+// whole bottleneck complex; a degree-1 PURE PLAY is concentrated exposure to one. This is the
+// supplier/customer structure the market doesn't index — pure, from data already gathered.
+export function proxyGraph(chokepoints) {
+  const nodes = {};
+  for (const c of chokepoints || []) for (const d of c.discovered || []) {
+    const n = (nodes[d.ticker] ||= { ticker: d.ticker, company: d.company, chokepoints: [], scores: [] });
+    n.chokepoints.push(c.id);
+    n.scores.push(d.score ?? 0);
+  }
+  return Object.values(nodes).map((n) => ({
+    ticker: n.ticker, company: n.company,
+    degree: n.chokepoints.length, chokepoints: n.chokepoints,
+    pure_play: n.chokepoints.length === 1,
+    hub: n.chokepoints.length >= 3,
+    avg_specificity: +(n.scores.reduce((a, b) => a + b, 0) / n.scores.length).toFixed(3),
+  })).sort((a, b) => b.degree - a.degree || b.avg_specificity - a.avg_specificity);
+}

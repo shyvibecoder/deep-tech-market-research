@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "scanned_at": "2026-05-30T20:18:30.372Z",
+  "scanned_at": "2026-05-30T20:21:18.255Z",
   "source": "offline run",
   "universe_count": 52,
   "quotes": {
@@ -1438,6 +1438,7 @@
       "news_count": 0
     }
   ],
+  "proxy_hubs": [],
   "data_quality": {
     "ok": false,
     "ok_quotes": 0,

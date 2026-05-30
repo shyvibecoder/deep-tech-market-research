@@ -1,6 +1,28 @@
 import { describe, it } from "node:test";
 import assert from "node:assert/strict";
-import { parseFtsHits, rankProxies } from "../scripts/lib/edgar-fts.mjs";
+import { parseFtsHits, rankProxies, proxyGraph } from "../scripts/lib/edgar-fts.mjs";
+
+describe("edgar-fts: proxy exposure graph (second-order / cross-chokepoint structure)", () => {
+  // HUB is exposed to 3 chokepoints (a diversified bottleneck-complex play); PURE to one.
+  const chokepoints = [
+    { id: "a", discovered: [{ ticker: "HUB", company: "Hub Co", score: 0.4 }, { ticker: "PURE", company: "Pure", score: 0.9 }] },
+    { id: "b", discovered: [{ ticker: "HUB", company: "Hub Co", score: 0.5 }] },
+    { id: "c", discovered: [{ ticker: "HUB", company: "Hub Co", score: 0.3 }, { ticker: "X", company: "X", score: 0.6 }] },
+  ];
+  const g = proxyGraph(chokepoints);
+  it("ranks the cross-chokepoint hub first by degree", () => {
+    assert.equal(g[0].ticker, "HUB"); assert.equal(g[0].degree, 3);
+    assert.deepEqual(g[0].chokepoints, ["a", "b", "c"]); assert.equal(g[0].hub, true); assert.equal(g[0].pure_play, false);
+  });
+  it("marks single-chokepoint names as pure plays", () => {
+    const pure = g.find((n) => n.ticker === "PURE");
+    assert.equal(pure.degree, 1); assert.equal(pure.pure_play, true); assert.equal(pure.hub, false);
+  });
+  it("carries average specificity across the chokepoints it touches", () => {
+    assert.equal(g[0].avg_specificity, +((0.4 + 0.5 + 0.3) / 3).toFixed(3));
+  });
+  it("is safe on empty", () => assert.deepEqual(proxyGraph([]), []));
+});
 
 const fixture = {
   hits: { hits: [

@@ -50,7 +50,14 @@ function renderChokepoints() {
   const box = $("#chokeList"); if (!box) return;
   const cps = DATA.sig?.chokepoints || [];
   if (!cps.length) { box.innerHTML = `<p class="foot">No chokepoint data yet — proxies are discovered in the scan (GitHub Actions).</p>`; return; }
-  box.innerHTML = cps.slice().sort((a, b) => (b.heat || 0) - (a.heat || 0)).map((c) => {
+  // Second-order exposure (Edge 2): public names that sit ACROSS multiple bottlenecks — the
+  // diversified "picks-and-shovels" way to play the complex, vs concentrated single-chokepoint plays.
+  const hubs = DATA.sig?.proxy_hubs || [];
+  const hubHtml = hubs.length ? `<div class="choke hub-panel">
+      <div class="choke-h"><strong>🕸 Cross-chokepoint hubs</strong> <span class="foot">— public names exposed to ≥2 inaccessible bottlenecks (second-order, diversified plays)</span></div>
+      <div class="foot">${hubs.map((h) => `<span title="${esc((h.chokepoints || []).join(", "))}${h.hub ? " · HUB" : ""}">${h.hub ? "<strong>" : ""}${esc(h.ticker)}${h.hub ? "</strong>" : ""} <span style="color:var(--mut)">(×${h.degree})</span></span>`).join(" · ")}</div>
+    </div>` : "";
+  box.innerHTML = hubHtml + cps.slice().sort((a, b) => (b.heat || 0) - (a.heat || 0)).map((c) => {
     // Discovered proxies are ranked by SPECIFICITY (purest play first), not raw mentions.
     // Generic tickers (appear across many chokepoints → diversified, weaker proxy) are dimmed + ⚠.
     const disc = (c.discovered || []).slice(0, 6).map((d) => {
@@ -738,7 +745,8 @@ const HELP = {
     <p>The thesis's sharpest idea: <strong>the best chokepoints are inaccessible</strong> — private (SpaceX, Physical Intelligence), foreign (ASML, Ajinomoto, Harmonic Drive), or impaired (a chokepoint isn't a rent — Wolfspeed went bankrupt owning one). There's no clean ETF, so the app does the next best thing: it <strong>discovers the public proxies</strong> exposed to each bottleneck by searching <strong>SEC filings</strong> for who mentions it (customers/suppliers/partners). They're ranked by <strong>specificity</strong> (TF-IDF), not raw mention count: a diversified megacap that mentions everything once in boilerplate is a <em>weak</em> proxy and is dimmed + flagged ⚠ generic, while a concentrated pure-play is surfaced first. The <strong>score</strong> (0–1) is how specific the exposure looks — all data-derived, no hand-picked lists.</p>
     <ul><li><strong>access</strong> — private / foreign / impaired.</li>
     <li><strong>heat</strong> — market attention + proxy momentum (0–100); <strong>proxy rel</strong> — the seeded proxies' strength vs the AI-capex complex.</li>
-    <li><strong>Discovered</strong> — public companies whose SEC filings mention the entity (your tradable exposure), with mention counts.</li></ul>
+    <li><strong>Discovered</strong> — public companies whose SEC filings mention the entity (your tradable exposure), with mention counts.</li>
+    <li><strong>🕸 Cross-chokepoint hubs</strong> — second-order mapping: public names that show up across <em>multiple</em> bottlenecks (×degree). A <strong>hub</strong> (≥3) is a diversified "picks-and-shovels" way to play the whole complex; a degree-1 name is a concentrated pure play. The exposure structure the market doesn't index.</li></ul>
     <p>This is the differentiated, hard-to-replicate layer — turning "no clean ETF, sorry" into "here's the best obtainable read." Not advice; discovered proxies are leads to research, not recommendations.</p>` },
   sizing: { title: "Suggested IRA tilts", body: `\n    <p>Turns the per-name <strong>TSMOM tilt</strong> (overweight/underweight) and the <strong>regime</strong> into concrete, bounded allocation deltas: <strong>add</strong> overweights only when the regime is risk-on (don't accelerate into weakness), <strong>trim</strong> underweights in any regime, and leave the <strong>taxable</strong> sleeve as buy-and-hold anchors. Deltas are capped at ±25% of target weight. The last mile from analysis to allocation — graded by the Track record. Not advice.</p>` },
   stress: { title: "Stress test", body: `\n    <p>Applies the thesis's named shocks to YOUR sleeve (your positions × latest prices) and shows the drawdown vs the <strong>−35% objective limit</strong>: the 2027–28 AI-capex digestion (the basket's shared failure mode), a 2022-style rate shock, a broad recession, and a China rare-earth 'peace' (subsidy-floor names re-rate). Shock vectors are coarse and documented (high-beta assumptions), not fitted — a feel for tail risk, not a prediction. Runs entirely in your browser. Not advice.</p>` },

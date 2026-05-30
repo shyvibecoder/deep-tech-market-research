@@ -47,9 +47,12 @@ nobody is paid to do.
   exposure is buried in 10-K footnotes, not in an index*. This is a pure **effort/complexity
   premium**: it is available to anyone willing to read filings, and to almost no one because almost
   no one does.
-- **Puck computes this:** the **chokepoint tracker** — discovers proxies from SEC full-text mentions
-  and now **ranks them by specificity (TF-IDF)** so the concentrated pure-play surfaces over the
-  diversified megacap. This is Puck's least-replicable layer.
+- **Puck computes this:** the **chokepoint tracker** — discovers proxies from SEC full-text mentions,
+  **ranks them by specificity (TF-IDF)** so the concentrated pure-play surfaces over the diversified
+  megacap, and builds a **second-order exposure graph** (`proxy_hubs`): public names that sit across
+  *multiple* bottlenecks are **hubs** (a diversified picks-and-shovels play on the whole complex),
+  degree-1 names are **pure plays**. This supplier/customer structure is exactly what no index
+  captures. Puck's least-replicable layer.
 
 ### 3. Forced-flow / neglect — the timing-of-entry edge
 **The constraint it exploits:** mechanical, non-informational selling. Index deletions force index

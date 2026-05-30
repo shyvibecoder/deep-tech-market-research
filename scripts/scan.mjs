@@ -29,7 +29,7 @@ import { newsForQuery } from "./lib/news.mjs";
 import { chokepointHeat } from "./lib/chokepoints.mjs";
 import { rankOpportunities, opportunityScore } from "./lib/opportunity.mjs";
 import { forcedFlowSignal, reconcileWithTiming } from "./lib/forced-flow.mjs";
-import { discoverProxies, rankProxies } from "./lib/edgar-fts.mjs";
+import { discoverProxies, rankProxies, proxyGraph } from "./lib/edgar-fts.mjs";
 
 const OFFLINE = process.argv.includes("--offline");
 const read = (p) => JSON.parse(readFileSync(new URL(`../web/data/${p}`, import.meta.url)));
@@ -351,6 +351,7 @@ if (!OFFLINE) console.log(`Opportunity Score: top = ${opportunities.slice(0, 3).
 // --- Inaccessible-chokepoint tracker: DISCOVER public proxies (EDGAR full-text
 // mentions) + heat (proxy momentum + news) for un-investable bottlenecks ---
 let chokepoints = [];
+let proxy_hubs = [];
 {
   let cps = []; try { cps = read("chokepoints.json").chokepoints || []; } catch { /* optional */ }
   const etfMoms2 = portfolio.holdings.filter((h) => securities[h.ticker]?.type === "etf")
@@ -373,7 +374,10 @@ let chokepoints = [];
   // Re-rank discovered proxies by SPECIFICITY across all chokepoints (TF-IDF): the purest
   // pure-play, not the most-mentioning megacap. Needs the full set, so it runs after the loop.
   chokepoints = rankProxies(chokepoints);
-  if (!OFFLINE) console.log(`Chokepoints: ${chokepoints.length} tracked; discovered proxies for ${chokepoints.filter((c) => c.discovered.length).length}`);
+  // Second-order exposure graph: which public names sit across MULTIPLE bottlenecks (hubs) vs.
+  // pure plays — the diversified vs. concentrated way to play the inaccessible-chokepoint complex.
+  proxy_hubs = proxyGraph(chokepoints).filter((n) => n.degree >= 2).slice(0, 12);
+  if (!OFFLINE) console.log(`Chokepoints: ${chokepoints.length} tracked; ${proxy_hubs.filter((h) => h.hub).length} cross-chokepoint hub(s)`);
 }
 
 // --- Accountability ledger: resolve matured forecasts, score them, record new ones ---
@@ -429,6 +433,7 @@ const out = {
   scarcity_signals,
   opportunities,
   chokepoints,
+  proxy_hubs,
   data_quality,
   scarcity_drift,
   digest,

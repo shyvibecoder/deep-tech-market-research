@@ -198,8 +198,10 @@ partners). They're ranked by **specificity** (a TF-IDF score, 0–1) rather than
 diversified megacap that mentions everything once in boilerplate — and shows up across many chokepoints —
 is a *weak* proxy, so it's dimmed and flagged **⚠ generic**, while a concentrated pure-play is surfaced
 first. The app also shows a **heat** (attention + proxy momentum) and the proxies' relative strength vs
-the AI-capex complex. All data-derived (no hand-picked lists); discovered names are research leads, not
-recommendations.
+the AI-capex complex. A **🕸 Cross-chokepoint hubs** panel maps *second-order* exposure: public names
+that appear across **multiple** bottlenecks (×degree) — a **hub** (≥3) is a diversified
+"picks-and-shovels" way to play the whole complex, a degree-1 name is a concentrated pure play. All
+data-derived (no hand-picked lists); discovered names are research leads, not recommendations.
 
 ### 5.7 Stress test
 Applies the thesis's named shocks to **your** sleeve and shows the drawdown vs the **−35% objective

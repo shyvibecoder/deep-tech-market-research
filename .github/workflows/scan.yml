@@ -41,9 +41,12 @@ jobs:
           GH_TOKEN: ${{ github.token }}
         run: |
           fired=$(node -e "const s=require('./web/data/signals.json');const f=Object.entries(s.trigger_status||{}).filter(([k,v])=>v&&v.fired).map(([k])=>k);process.stdout.write(f.join(','))")
-          if [ -n "$fired" ]; then
-            gh issue create --title "⚠️ Scarcity trigger fired: $fired" \
-              --body "Auto-detected by the scan workflow on $(date -u). Triggers fired: **$fired**. Review the dashboard and POSITION-SIZING.md actions." || echo "issue create skipped"
+          if [ -z "$fired" ]; then echo "no triggers fired"; exit 0; fi
+          # Dedupe: don't spam a new issue every run while the condition persists.
+          open=$(gh issue list --state open --search "Scarcity trigger fired in:title" --json number --jq 'length' 2>/dev/null || echo 0)
+          if [ "$open" != "0" ]; then
+            echo "trigger fired ($fired) but an open trigger issue already exists; skipping"
           else
-            echo "no triggers fired"
+            gh issue create --title "⚠️ Scarcity trigger fired: $fired" \
+              --body "Auto-detected by the scan workflow on $(date -u). Triggers fired: **$fired**. Review the dashboard and POSITION-SIZING.md actions. (Close this issue once handled; the scanner won't reopen it while it stays open.)" || echo "issue create skipped"
           fi

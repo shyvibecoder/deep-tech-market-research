@@ -181,6 +181,11 @@ limit**: 2027–28 AI-capex digestion, a 2022-style rate shock, a broad recessio
 rare-earth "peace." Coarse, documented high-beta shock vectors (not fitted) — a feel for tail risk.
 Runs entirely in your browser on your stored positions.
 
+### 5.8 Suggested IRA tilts
+The last mile from analysis to allocation: per-name **TSMOM tilt × regime** → concrete, bounded (±25%)
+weight deltas. **Add** overweights only in a risk-on regime; **trim** underweights in any regime; the
+**taxable** sleeve stays buy-and-hold. Graded over time by the Track record. Not advice.
+
 ## 6. Filings & news
 
 ![Filings and news](img/catalysts.png)

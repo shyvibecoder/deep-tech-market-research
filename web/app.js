@@ -178,6 +178,16 @@ function renderMetrics() {
     </div>${m.backtest ? `<p class="foot">Trend-brake backtest (${m.backtest.n}d, ${m.backtest.ma_period}-day MA, no look-ahead): max-DD <strong>${(m.backtest.braked.max_drawdown*100).toFixed(0)}%</strong> braked vs ${(m.backtest.unbraked.max_drawdown*100).toFixed(0)}% buy&amp;hold (−${(m.backtest.dd_reduction*100).toFixed(0)} pts); Calmar ${num(m.backtest.braked.calmar)} vs ${num(m.backtest.unbraked.calmar)}; ${m.backtest.whipsaws} switches, ${Math.round(m.backtest.time_in_market*100)}% in market.</p>` : ""}${scLine}`;
 }
 
+function renderSizing() {
+  const box = $("#sizingBox"); if (!box) return;
+  const td = window.targetDeltas, reg = DATA.sig?.regime, per = reg?.per_name;
+  if (!td || !per || !reg || reg.posture === "unknown") { box.innerHTML = ""; return; }
+  const rows = td(DATA.port?.holdings || [], per, reg).filter((x) => x.action === "add" || x.action === "trim");
+  box.innerHTML = `<h3>Suggested IRA tilts <button class="help" data-help="sizing">?</button> <span class="foot">— per-name TSMOM × regime, bounded ±25%, tactical (IRA) sleeve only</span></h3>` +
+    (rows.length ? `<table class="mine"><thead><tr><th>Ticker</th><th>Tilt</th><th>Δ weight</th><th>Action</th></tr></thead><tbody>${rows.map((r) => `<tr><td><strong>${esc(r.ticker)}</strong></td><td>${esc(r.tilt)}</td><td class="${r.delta_pct >= 0 ? "pos" : "neg"}">${r.delta_pct > 0 ? "+" : ""}${r.delta_pct}%</td><td>${r.action}</td></tr>`).join("")}</tbody></table>`
+      : `<p class="foot">No active tilts (regime isn't risk-on and nothing is flagged underweight).</p>`);
+}
+
 function renderStress() {
   const box = $("#stressTest"); if (!box) return;
   const S = window.PuckStress; const pos = getPositions().positions || {};
@@ -201,6 +211,7 @@ function renderPortfolio() {
   renderMyHoldings();
   renderDca();
   renderStress();
+  renderSizing();
   const p = DATA.port;
   $("#portSummary").innerHTML = `
     <div class="card"><b>${fmtUsd(p.sleeve_usd)}</b><span>sleeve (~${Math.round(p.sleeve_usd / p.total_portfolio_usd * 100)}% of ${fmtUsd(p.total_portfolio_usd)})</span></div>
@@ -703,6 +714,7 @@ const HELP = {
     <li><strong>heat</strong> — market attention + proxy momentum (0–100); <strong>proxy rel</strong> — the seeded proxies' strength vs the AI-capex complex.</li>
     <li><strong>Discovered</strong> — public companies whose SEC filings mention the entity (your tradable exposure), with mention counts.</li></ul>
     <p>This is the differentiated, hard-to-replicate layer — turning "no clean ETF, sorry" into "here's the best obtainable read." Not advice; discovered proxies are leads to research, not recommendations.</p>` },
+  sizing: { title: "Suggested IRA tilts", body: `\n    <p>Turns the per-name <strong>TSMOM tilt</strong> (overweight/underweight) and the <strong>regime</strong> into concrete, bounded allocation deltas: <strong>add</strong> overweights only when the regime is risk-on (don't accelerate into weakness), <strong>trim</strong> underweights in any regime, and leave the <strong>taxable</strong> sleeve as buy-and-hold anchors. Deltas are capped at ±25% of target weight. The last mile from analysis to allocation — graded by the Track record. Not advice.</p>` },
   stress: { title: "Stress test", body: `\n    <p>Applies the thesis's named shocks to YOUR sleeve (your positions × latest prices) and shows the drawdown vs the <strong>−35% objective limit</strong>: the 2027–28 AI-capex digestion (the basket's shared failure mode), a 2022-style rate shock, a broad recession, and a China rare-earth 'peace' (subsidy-floor names re-rate). Shock vectors are coarse and documented (high-beta assumptions), not fitted — a feel for tail risk, not a prediction. Runs entirely in your browser. Not advice.</p>` },
   dca: { title: "DCA progress", body: `
     <p>Tracks how much of each holding's <strong>target</strong> you've actually <strong>deployed</strong> (shares × cost basis from your Settings positions), against the 9-month dollar-cost-averaging calendar. The bar + % shows progress to target; the card shows the sleeve total deployed. Helps you stay on the plan and see where dry powder still needs to go.</p>` },

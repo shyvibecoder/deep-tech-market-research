@@ -127,6 +127,7 @@
     <div class="tscroll"><table id="holdings"><thead><tr>
       <th>Ticker</th><th>Name</th><th>Acct</th><th>Target $</th><th>Wt</th><th>Tier</th><th>Price</th><th>YTD</th><th>% off high</th><th>vs 200-DMA</th><th>Fwd P/E</th><th>Role</th>
     </tr></thead><tbody></tbody></table></div>
+    <div id="sizingBox"></div>
   </section>
 
   <section id="catalysts" class="tab">
@@ -179,5 +180,6 @@
   <script type="module">import { configStatus, browserKeyStatus } from "./admin.mjs"; window.PuckAdmin = { configStatus, browserKeyStatus };</script>
   <script type="module">import { dcaProgress } from "./dca-view.mjs"; window.dcaProgress = dcaProgress;</script>
   <script type="module">import { applyShock, SCENARIOS } from "./stress.mjs"; window.PuckStress = { applyShock, SCENARIOS };</script>
+  <script type="module">import { targetDeltas } from "./sizing.mjs"; window.targetDeltas = targetDeltas;</script>
 </body>
 </html>

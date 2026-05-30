@@ -80,6 +80,19 @@ export async function fetchYahoo(ticker) {
   };
 }
 
+// Aligned daily close series (date,close) for building a basket index. Throws on thin data.
+export async function fetchSeries(ticker) {
+  const url = `https://query1.finance.yahoo.com/v8/finance/chart/${encodeURIComponent(ticker)}?range=1y&interval=1d`;
+  const r = await fetch(url, { headers: { "user-agent": "Mozilla/5.0" }, signal: AbortSignal.timeout(10000) });
+  const res = (await r.json())?.chart?.result?.[0];
+  const closes = res?.indicators?.quote?.[0]?.close || [];
+  const ts = res?.timestamp || [];
+  const dates = [], cl = [];
+  for (let i = 0; i < ts.length; i++) if (closes[i] != null && closes[i] > 0) { dates.push(new Date(ts[i] * 1000).toISOString().slice(0, 10)); cl.push(closes[i]); }
+  if (cl.length < 30) throw new Error("insufficient series");
+  return { ticker, dates, closes: cl };
+}
+
 // Try Yahoo (richer) first, then Stooq (price only). Returns null on total failure.
 export async function getQuote(ticker) {
   // skip non-tradeable placeholders like "(private: ...)" or cash

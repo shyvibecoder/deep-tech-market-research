@@ -7,7 +7,8 @@
 // Usage: node scripts/scan.mjs [--offline]
 
 import { readFileSync, writeFileSync } from "node:fs";
-import { isTradeable, fetchYahoo } from "./lib/quotes.mjs";
+import { isTradeable, fetchYahoo, fetchSeries } from "./lib/quotes.mjs";
+import { basketIndex, portfolioMetrics } from "./lib/metrics.mjs";
 import { getQuotes, providerKeys } from "./lib/marketdata.mjs";
 import { macroStress } from "./lib/macro.mjs";
 import { toUsd, fetchRates } from "./lib/fx.mjs";
@@ -241,6 +242,23 @@ const alerts = {
 };
 if (alerts.newly_fired.length) console.log(`Alerts: newly fired -> ${alerts.newly_fired.join(", ")}`);
 
+// --- Objective metrics: trailing CAGR / maxDD / Calmar / Sortino on the strategy basket ---
+let metrics = null;
+if (!OFFLINE) {
+  try {
+    const etfs = portfolio.holdings.filter((h) => isTradeable(h.ticker) && securities[h.ticker]?.type === "etf");
+    const use = etfs.length >= 3 ? etfs : portfolio.holdings.filter((h) => isTradeable(h.ticker));
+    const weights = Object.fromEntries(use.map((h) => [h.ticker, h.weight || h.target_usd || 1]));
+    const series = {};
+    for (const h of use) { try { series[h.ticker] = await fetchSeries(h.ticker); } catch { /* skip */ } await new Promise((r) => setTimeout(r, 120)); }
+    const idx = basketIndex(series, weights);
+    if (idx.values.length > 60) {
+      metrics = { ...portfolioMetrics(idx.values), basis: Object.keys(series), window: `${idx.dates[0]}..${idx.dates[idx.dates.length - 1]}`, note: "trailing ~1y, target-weighted strategy basket" };
+      console.log(`Metrics: CAGR ${metrics.cagr}, maxDD ${metrics.max_drawdown} (breaches35=${metrics.breaches_35}), Calmar ${metrics.calmar}, Sortino ${metrics.sortino}`);
+    }
+  } catch (e) { errors.push(`metrics: ${e.message}`); }
+}
+
 // --- Macro-stress overlay inputs (free, keyless): VIX term-structure + HY credit velocity ---
 let macro = null;
 if (!OFFLINE) {
@@ -290,6 +308,7 @@ const out = {
   trigger_status,
   alerts,
   regime,
+  metrics,
   data_quality,
   scarcity_drift,
   digest,

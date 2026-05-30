@@ -119,6 +119,7 @@ export function validateSignals(s, errors = []) {
   if ("scarcity_drift" in s) check(errors, isObj(s.scarcity_drift), `${w}: scarcity_drift must be an object`);
   if ("data_quality" in s) check(errors, isObj(s.data_quality), `${w}: data_quality must be an object`);
   if ("alerts" in s) check(errors, isObj(s.alerts), `${w}: alerts must be an object`);
+  if ("metrics" in s && s.metrics !== null) check(errors, isObj(s.metrics), `${w}: metrics must be an object or null`);
   for (const [t, q] of Object.entries(isObj(s.quotes) ? s.quotes : {})) {
     if (q == null) continue; // null = intentional non-tradeable placeholder
     if (!isObj(q)) { errors.push(`${w}: quotes[${t}] must be an object or null`); continue; }

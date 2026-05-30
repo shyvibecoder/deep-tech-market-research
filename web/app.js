@@ -140,8 +140,24 @@ function renderDca() {
     <table class="mine"><thead><tr><th>Ticker</th><th>Tier</th><th>Target</th><th>Deployed</th><th>Progress</th></tr></thead><tbody>${rows}</tbody></table>`;
 }
 
+function renderMetrics() {
+  const box = $("#objMetrics"); if (!box) return;
+  const m = DATA.sig?.metrics;
+  if (!m) { box.innerHTML = ""; return; }
+  const pct = (x) => (x == null ? "—" : (x * 100).toFixed(1) + "%");
+  const num = (x) => (x == null ? "—" : x.toFixed(2));
+  box.innerHTML = `<h3>Objective scorecard <button class="help" data-help="metrics">?</button> <span class="foot">— ${esc(m.note || "")} ${esc(m.window || "")}</span></h3>
+    <div class="cards">
+      <div class="card"><b>${pct(m.cagr)}</b><span>CAGR (trailing)</span></div>
+      <div class="card ${m.breaches_35 ? "dq-bad" : ""}"><b>${pct(m.max_drawdown)}</b><span>max drawdown ${m.breaches_35 ? "⚠ &gt;35%" : "✓ &lt;35%"}</span></div>
+      <div class="card"><b>${num(m.calmar)}</b><span>Calmar (CAGR÷maxDD)</span></div>
+      <div class="card"><b>${num(m.sortino)}</b><span>Sortino</span></div>
+    </div>`;
+}
+
 function renderPortfolio() {
   renderRegime();
+  renderMetrics();
   renderMyHoldings();
   renderDca();
   const p = DATA.port;
@@ -627,6 +643,11 @@ const HELP = {
     <ul><li><strong>Browser keys</strong> (Gemini/Groq/Finnhub/… + dispatch token) — stored only in this browser; power the in-browser digest, live price check, and Refresh.</li>
     <li><strong>Repo configuration</strong> — what the automated GitHub Actions scanner uses. Paste an <strong>admin GitHub token</strong> (fine-grained: Secrets <em>read</em>, Variables <em>read/write</em>) and click <strong>Check configuration</strong> to see a ✅/⬜ status for every secret and variable.</li></ul>
     <p><strong>Variables</strong> (alert email, SEC user-agent) are non-secret — you can <strong>save them to GitHub right here</strong>. <strong>Secrets</strong> (API keys, SMTP password) are write-only in GitHub for security and can't be set from a static page — the panel shows whether each is configured and links you to GitHub's secrets form to set/rotate them. Everything you paste stays in this browser.</p>` },
+  metrics: { title: "Objective scorecard", body: `
+    <p>The app's <strong>objective</strong>: maximize 10-year return while keeping <strong>max drawdown &lt; 35%</strong>, with the best <strong>Calmar</strong> (CAGR ÷ maxDD) and <strong>Sortino</strong> (return ÷ downside risk). This card measures the <em>strategy basket</em> (your target-weighted holdings) over the trailing window the scan has history for — a live read on whether the timing/risk layer is actually holding drawdown under 35% and earning a good risk-adjusted return.</p>
+    <ul><li><strong>CAGR</strong> — annualized return. <strong>Max drawdown</strong> — worst peak-to-trough (turns ⚠ red if it breaches −35%).</li>
+    <li><strong>Calmar</strong> — return per unit of drawdown (higher = better). <strong>Sortino</strong> — return per unit of <em>downside</em> volatility.</li></ul>
+    <p>It's a backward-looking proxy that grows more meaningful as history accumulates; not a forecast. Not advice.</p>` },
   dca: { title: "DCA progress", body: `
     <p>Tracks how much of each holding's <strong>target</strong> you've actually <strong>deployed</strong> (shares × cost basis from your Settings positions), against the 9-month dollar-cost-averaging calendar. The bar + % shows progress to target; the card shows the sleeve total deployed. Helps you stay on the plan and see where dry powder still needs to go.</p>` },
   settings: { title: "Settings &amp; onboarding", body: `

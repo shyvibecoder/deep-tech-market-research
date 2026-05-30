@@ -9,9 +9,9 @@
     "scan:offline": "node scripts/scan.mjs --offline",
     "selfcheck": "node scripts/selfcheck.mjs",
     "test:unit": "node --test tests/*.test.mjs",
-    "test:integration": "node --test tests/integration/*.test.mjs",
+    "test:integration": "node --test --test-concurrency=1 tests/integration/*.test.mjs",
     "test:e2e": "node --test tests/e2e/*.test.mjs",
-    "test": "node --test tests/*.test.mjs tests/integration/*.test.mjs tests/e2e/*.test.mjs",
+    "test": "npm run test:unit && npm run test:integration && npm run test:e2e",
     "test:e2e:browser": "playwright test",
     "screenshots": "node tests/e2e-browser/screenshots.mjs",
     "docs:word": "pandoc docs/USER-GUIDE.md -o docs/USER-GUIDE.docx --resource-path=docs",
@@ -21,5 +21,7 @@
   "devDependencies": {
     "@playwright/test": "^1.49.0"
   },
-  "engines": { "node": ">=20" }
+  "engines": {
+    "node": ">=20"
+  }
 }

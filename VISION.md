@@ -72,6 +72,8 @@ asserted edge into evidence, and is the one asset that compounds and can't be cl
 - [ ] **Mobile/desktop responsive deep pass** (U1) — card fallbacks for wide tables, modal/regime layout on phones.
 
 ## Sequencing
+**Every round includes a COHERENCE PHASE** (build → adversarial review → fix → **coherence test** → re-vision): run `tests/integration/coherence.test.mjs` so the app develops as one coherent system, not a feature pile.
+
 P0 (trust) → P1 (measure the objective) → P2 (accountability/moat) → P3 (act) → P4 (differentiate).
 Every item: pure-core TDD (red-first, ARCHITECTURE §6), `?` help + USER-GUIDE section, tiering invariant,
 free/keyless, degrade-gracefully. The loop repeats: build → adversarial review → fix → re-vision.

@@ -88,6 +88,7 @@ export function computeRegime(quotes, holdings, { macro, securities = {} } = {})
   if (avgVsMa200 == null && avgMom == null && avgOffHigh == null) {
     return { version: REGIME_VERSION, posture: "unknown", risk_score: null, components: {},
       composite_basis, per_name, account_policy: accountPolicy("unknown"),
+      macro_available: macro != null, macro_stressed: !!macro?.stressed, fast_reentry: false,
       action: "Insufficient price history — fall back to the DCA calendar.",
       note: "timing layer needs live quotes (runs in GitHub Actions)" };
   }

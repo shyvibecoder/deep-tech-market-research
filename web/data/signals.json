@@ -1,17 +1,533 @@
 {
   "schema_version": 1,
-  "scanned_at": "2026-05-30T00:00:00Z",
-  "source": "seed (replaced by scripts/scan.mjs in CI)",
-  "quotes": {},
+  "scanned_at": "2026-05-30T19:08:32.555Z",
+  "source": "offline run",
+  "universe_count": 52,
+  "quotes": {
+    "PAVE": {
+      "ticker": "PAVE",
+      "error": "no quote"
+    },
+    "GRID": {
+      "ticker": "GRID",
+      "error": "no quote"
+    },
+    "FIW": {
+      "ticker": "FIW",
+      "error": "no quote"
+    },
+    "SHLD": {
+      "ticker": "SHLD",
+      "error": "no quote"
+    },
+    "ASML": {
+      "ticker": "ASML",
+      "error": "no quote"
+    },
+    "SMNEY": {
+      "ticker": "SMNEY",
+      "error": "no quote"
+    },
+    "SMH": {
+      "ticker": "SMH",
+      "error": "no quote"
+    },
+    "COPX": {
+      "ticker": "COPX",
+      "error": "no quote"
+    },
+    "NUKZ": {
+      "ticker": "NUKZ",
+      "error": "no quote"
+    },
+    "MU": {
+      "ticker": "MU",
+      "error": "no quote"
+    },
+    "GEV": {
+      "ticker": "GEV",
+      "error": "no quote"
+    },
+    "CEG": {
+      "ticker": "CEG",
+      "error": "no quote"
+    },
+    "EME": {
+      "ticker": "EME",
+      "error": "no quote"
+    },
+    "MP": {
+      "ticker": "MP",
+      "error": "no quote"
+    },
+    "LEU": {
+      "ticker": "LEU",
+      "error": "no quote"
+    },
+    "ROBO": {
+      "ticker": "ROBO",
+      "error": "no quote"
+    },
+    "UFO": {
+      "ticker": "UFO",
+      "error": "no quote"
+    },
+    "VST": {
+      "ticker": "VST",
+      "error": "no quote"
+    },
+    "TLN": {
+      "ticker": "TLN",
+      "error": "no quote"
+    },
+    "ETN": {
+      "ticker": "ETN",
+      "error": "no quote"
+    },
+    "PWR": {
+      "ticker": "PWR",
+      "error": "no quote"
+    },
+    "FIX": {
+      "ticker": "FIX",
+      "error": "no quote"
+    },
+    "MYRG": {
+      "ticker": "MYRG",
+      "error": "no quote"
+    },
+    "PRY.MI": {
+      "ticker": "PRY.MI",
+      "error": "no quote"
+    },
+    "NEX.PA": {
+      "ticker": "NEX.PA",
+      "error": "no quote"
+    },
+    "CCJ": {
+      "ticker": "CCJ",
+      "error": "no quote"
+    },
+    "U.UN": {
+      "ticker": "U.UN",
+      "error": "no quote"
+    },
+    "FCX": {
+      "ticker": "FCX",
+      "error": "no quote"
+    },
+    "TECK": {
+      "ticker": "TECK",
+      "error": "no quote"
+    },
+    "IVN": {
+      "ticker": "IVN",
+      "error": "no quote"
+    },
+    "LYC": {
+      "ticker": "LYC",
+      "error": "no quote"
+    },
+    "WOLF": {
+      "ticker": "WOLF",
+      "error": "no quote"
+    },
+    "NVTS": {
+      "ticker": "NVTS",
+      "error": "no quote"
+    },
+    "QRVO": {
+      "ticker": "QRVO",
+      "error": "no quote"
+    },
+    "SYR.AX": {
+      "ticker": "SYR.AX",
+      "error": "no quote"
+    },
+    "NVX": {
+      "ticker": "NVX",
+      "error": "no quote"
+    },
+    "TSM": {
+      "ticker": "TSM",
+      "error": "no quote"
+    },
+    "COHR": {
+      "ticker": "COHR",
+      "error": "no quote"
+    },
+    "LITE": {
+      "ticker": "LITE",
+      "error": "no quote"
+    },
+    "AVGO": {
+      "ticker": "AVGO",
+      "error": "no quote"
+    },
+    "4185.T": {
+      "ticker": "4185.T",
+      "error": "no quote"
+    },
+    "6988.T": {
+      "ticker": "6988.T",
+      "error": "no quote"
+    },
+    "VRT": {
+      "ticker": "VRT",
+      "error": "no quote"
+    },
+    "MOD": {
+      "ticker": "MOD",
+      "error": "no quote"
+    },
+    "NVT": {
+      "ticker": "NVT",
+      "error": "no quote"
+    },
+    "6324.T": {
+      "ticker": "6324.T",
+      "error": "no quote"
+    },
+    "6268.T": {
+      "ticker": "6268.T",
+      "error": "no quote"
+    },
+    "RKLB": {
+      "ticker": "RKLB",
+      "error": "no quote"
+    },
+    "OXIG.L": {
+      "ticker": "OXIG.L",
+      "error": "no quote"
+    },
+    "DHR": {
+      "ticker": "DHR",
+      "error": "no quote"
+    },
+    "TMO": {
+      "ticker": "TMO",
+      "error": "no quote"
+    },
+    "RDDT": {
+      "ticker": "RDDT",
+      "error": "no quote"
+    }
+  },
   "filings": [],
   "news": [],
   "trigger_status": {
-    "drawdown": {"fired": false, "value": null, "note": "awaiting first scan"},
-    "trim_rule": {"fired": false, "hits": []},
-    "sleeve_cap": {"fired": false, "value": null}
+    "drawdown": {
+      "met": false,
+      "fired": false,
+      "value": null,
+      "note": "no data"
+    },
+    "sleeve_cap": {
+      "met": false,
+      "fired": false,
+      "value": null,
+      "note": "add web/data/positions.local.json (gitignored) for the live sleeve value"
+    },
+    "trim_rule": {
+      "met": false,
+      "fired": false,
+      "hits": [],
+      "note": "add positions.local.json with cost basis to evaluate"
+    }
   },
-  "alerts": {"fired": [], "newly_fired": []},
-  "regime": {"posture": "unknown", "risk_score": null, "note": "awaiting first scan"},
-  "digest": "Run the scanner (GitHub Action or `node scripts/scan.mjs`) to populate live quotes, crowding scores, trigger status, and an optional LLM news digest.",
-  "errors": []
+  "alerts": {
+    "fired": [],
+    "newly_fired": []
+  },
+  "regime": {
+    "version": 2,
+    "posture": "unknown",
+    "risk_score": null,
+    "components": {},
+    "composite_basis": [
+      "PAVE",
+      "GRID",
+      "FIW",
+      "SHLD",
+      "SMH",
+      "COPX",
+      "NUKZ",
+      "ROBO",
+      "UFO"
+    ],
+    "per_name": [
+      {
+        "ticker": "PAVE",
+        "account": "taxable",
+        "tsmom": 0,
+        "above_200": null,
+        "tilt": "n/a"
+      },
+      {
+        "ticker": "GRID",
+        "account": "taxable",
+        "tsmom": 0,
+        "above_200": null,
+        "tilt": "n/a"
+      },
+      {
+        "ticker": "FIW",
+        "account": "taxable",
+        "tsmom": 0,
+        "above_200": null,
+        "tilt": "n/a"
+      },
+      {
+        "ticker": "SHLD",
+        "account": "taxable",
+        "tsmom": 0,
+        "above_200": null,
+        "tilt": "n/a"
+      },
+      {
+        "ticker": "ASML",
+        "account": "taxable",
+        "tsmom": 0,
+        "above_200": null,
+        "tilt": "n/a"
+      },
+      {
+        "ticker": "SMNEY",
+        "account": "taxable",
+        "tsmom": 0,
+        "above_200": null,
+        "tilt": "n/a"
+      },
+      {
+        "ticker": "CASH-MUNI",
+        "account": "taxable",
+        "tsmom": 0,
+        "above_200": null,
+        "tilt": "n/a"
+      },
+      {
+        "ticker": "SMH",
+        "account": "ira",
+        "tsmom": 0,
+        "above_200": null,
+        "tilt": "n/a"
+      },
+      {
+        "ticker": "COPX",
+        "account": "ira",
+        "tsmom": 0,
+        "above_200": null,
+        "tilt": "n/a"
+      },
+      {
+        "ticker": "NUKZ",
+        "account": "ira",
+        "tsmom": 0,
+        "above_200": null,
+        "tilt": "n/a"
+      },
+      {
+        "ticker": "MU",
+        "account": "ira",
+        "tsmom": 0,
+        "above_200": null,
+        "tilt": "n/a"
+      },
+      {
+        "ticker": "GEV",
+        "account": "ira",
+        "tsmom": 0,
+        "above_200": null,
+        "tilt": "n/a"
+      },
+      {
+        "ticker": "CEG",
+        "account": "ira",
+        "tsmom": 0,
+        "above_200": null,
+        "tilt": "n/a"
+      },
+      {
+        "ticker": "EME",
+        "account": "ira",
+        "tsmom": 0,
+        "above_200": null,
+        "tilt": "n/a"
+      },
+      {
+        "ticker": "MP",
+        "account": "ira",
+        "tsmom": 0,
+        "above_200": null,
+        "tilt": "n/a"
+      },
+      {
+        "ticker": "LEU",
+        "account": "ira",
+        "tsmom": 0,
+        "above_200": null,
+        "tilt": "n/a"
+      },
+      {
+        "ticker": "ROBO",
+        "account": "ira",
+        "tsmom": 0,
+        "above_200": null,
+        "tilt": "n/a"
+      },
+      {
+        "ticker": "UFO",
+        "account": "ira",
+        "tsmom": 0,
+        "above_200": null,
+        "tilt": "n/a"
+      },
+      {
+        "ticker": "CASH-MMF",
+        "account": "ira",
+        "tsmom": 0,
+        "above_200": null,
+        "tilt": "n/a"
+      }
+    ],
+    "account_policy": {
+      "ira": "Tactical sleeve — deploy/accelerate per the posture (tax-free turnover).",
+      "taxable": "Buy-and-hold anchors — stay invested; ignore the timing dial here."
+    },
+    "macro_available": false,
+    "macro_stressed": false,
+    "fast_reentry": false,
+    "action": "Insufficient price history — fall back to the DCA calendar.",
+    "note": "timing layer needs live quotes (runs in GitHub Actions)"
+  },
+  "metrics": null,
+  "scorecard": {
+    "by_tilt": {
+      "overweight": {
+        "n": 0,
+        "hits": 0
+      },
+      "underweight": {
+        "n": 0,
+        "hits": 0
+      }
+    },
+    "total": {
+      "n": 0,
+      "hits": 0
+    },
+    "hit_rate": null
+  },
+  "scarcity_signals": {
+    "electrons": {
+      "flag": "none",
+      "rs": null
+    },
+    "transformers": {
+      "flag": "none",
+      "rs": null
+    },
+    "turbines": {
+      "flag": "none",
+      "rs": null
+    },
+    "electricians": {
+      "flag": "none",
+      "rs": null
+    },
+    "hvdc": {
+      "flag": "none",
+      "rs": null
+    },
+    "enrichment": {
+      "flag": "none",
+      "rs": null
+    },
+    "uranium": {
+      "flag": "none",
+      "rs": null
+    },
+    "copper": {
+      "flag": "none",
+      "rs": null
+    },
+    "rare-earth-magnets": {
+      "flag": "none",
+      "rs": null
+    },
+    "gallium": {
+      "flag": "none",
+      "rs": null
+    },
+    "graphite": {
+      "flag": "none",
+      "rs": null
+    },
+    "hbm": {
+      "flag": "none",
+      "rs": null
+    },
+    "advanced-packaging": {
+      "flag": "none",
+      "rs": null
+    },
+    "semicap": {
+      "flag": "none",
+      "rs": null
+    },
+    "optical": {
+      "flag": "none",
+      "rs": null
+    },
+    "specialty-materials": {
+      "flag": "none",
+      "rs": null
+    },
+    "cooling": {
+      "flag": "none",
+      "rs": null
+    },
+    "manipulation-data": {
+      "flag": "none",
+      "rs": null
+    },
+    "reducers": {
+      "flag": "none",
+      "rs": null
+    },
+    "space-power": {
+      "flag": "none",
+      "rs": null
+    },
+    "thermal-rejection": {
+      "flag": "none",
+      "rs": null
+    },
+    "cryogenics": {
+      "flag": "none",
+      "rs": null
+    },
+    "bio-data": {
+      "flag": "none",
+      "rs": null
+    },
+    "rl-data": {
+      "flag": "none",
+      "rs": null
+    }
+  },
+  "data_quality": {
+    "ok": false,
+    "ok_quotes": 0,
+    "errored": 52,
+    "flagged": 0,
+    "corroborated": 0,
+    "corroborated_of": 0,
+    "note": "degraded — auto-triggers held this run"
+  },
+  "scarcity_drift": {},
+  "digest": "(no LLM key set — set GEMINI_API_KEY or GROQ_API_KEY in repo secrets to enable the agent digest)",
+  "errors": [
+    "offline mode: no live quotes fetched"
+  ]
 }

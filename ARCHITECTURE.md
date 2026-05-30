@@ -110,6 +110,12 @@ GitHub-issue channel; resolve currency (F2) before summing foreign lots.
 4. **Free-tier / keyless / degrade-gracefully** for all data + LLM (unchanged).
 5. **Shared math is single-source:** browser-served modules under `web/` (e.g. `web/options.mjs`),
    re-exported for Node/tests via `scripts/lib/*` — don't duplicate.
+6a. **Coherence phase (every loop round):** `tests/integration/coherence.test.mjs` asserts the app
+   stays ONE system — producer↔consumer contract (every `DATA.sig.<field>` the dashboard reads is a
+   section the scanner emits), cross-feature deps (scarcity_signals↔scarcities, dca↔portfolio,
+   per_name/forecasts↔holdings, quotes↔holdings), uniform `regime`/`trigger_status` shape across paths,
+   and shared-math single-source (no esc/safeUrl drift). Run it after each feature; it catches
+   integration rot that per-feature unit tests miss.
 6. **Tests (the pyramid):** `tests/*.test.mjs` = unit (options/regime/marketdata/schema/dca/history),
    `tests/integration/` = the real offline scan pipeline + selfcheck, `tests/e2e/` = static HTML↔JS
    contract + serve smoke — all zero-dep `node:test`, BDD `describe/it`, run by `npm test` (CI: `ci.yml`).

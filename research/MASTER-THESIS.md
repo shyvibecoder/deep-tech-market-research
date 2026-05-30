@@ -117,7 +117,7 @@ The same chokepoints appear in 3–5 different sector deep-dives. These recurren
 - **Sleeve C — de-correlators + options (~10–15%):** non-AI (water, biotech) + early-stage (space/quantum/robotics/defense/fusion).
 
 ### 7d. Tailored model portfolio (full version in `PORTFOLIO.md`)
-For a **$1.56mm sleeve (30% of a $5.2mm portfolio), taxable-heavy:** ETFs + durable compounders in taxable (PAVE, GRID, SMH, COPX, FIW, SHLD, NUKZ, ASML, Siemens Energy ADR); cyclical single names you'll trim at peaks in the IRA/401k (MU, GEV, an IPP, EME, MP, LEU); small option sleeve (ROBO/UFO); ~5% muni-money-market dry powder. Keep foreign dividend payers in taxable (foreign-tax credit); US single names in the IRA (foreign withholding is lost there).
+For a **$1.5mm sleeve ($800k IRA + $700k taxable, ~29% of a $5.2mm portfolio):** with more IRA room than taxable, put all trim/rebalance-heavy holdings in the IRA (cyclical ETFs SMH/COPX/NUKZ + single names MU/GEV/IPP/EME/MP/LEU + options); reserve taxable for buy-and-hold anchors (PAVE/GRID/FIW/SHLD) + foreign dividend payers (ASML, Siemens Energy ADR) for the foreign-tax credit; ~5% money-market dry powder. See `POSITION-SIZING.md` for the per-name dollar targets and 9-month deployment calendar.
 
 ---
 

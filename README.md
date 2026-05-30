@@ -9,7 +9,7 @@ A multi-agent, adversarially-reviewed deep-research study of how the major techn
 
 ## Investment outputs
 - **[`research/etf-map.md`](research/etf-map.md)** — thematic-ETF reference: best pure-plays per theme, purity verdicts, and the dilution traps (QTUM, URA, REMX, SMH, etc.).
-- **[`research/PORTFOLIO.md`](research/PORTFOLIO.md)** — the tailored **$1.56mm model allocation** (30% of a $5.2mm portfolio) with taxable-vs-IRA asset location and ETF-only / single-stock-enhanced versions.
+- **[`research/PORTFOLIO.md`](research/PORTFOLIO.md)** — the tailored **$1.5mm model allocation** ($800k IRA + $700k taxable, ~29% of a $5.2mm portfolio) with taxable-vs-IRA asset location and ETF-only / single-stock-enhanced versions.
 - **[`research/POSITION-SIZING.md`](research/POSITION-SIZING.md)** — concrete per-name dollar targets, a 9-month dollar-cost-averaging deployment calendar, position caps, rebalancing bands, trim discipline, and the dry-powder deployment triggers.
 
 ## Evidence base

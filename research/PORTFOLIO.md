@@ -3,51 +3,45 @@
 
 ---
 
-## TAILORED ALLOCATION — $1.56mm sleeve (30% of a $5.2mm portfolio), taxable-heavy
+## TAILORED ALLOCATION — $1.5mm sleeve ($800k IRA + $700k taxable)
+*(~29% of a $5.2mm portfolio. The full per-name dollar deployment calendar lives in [`POSITION-SIZING.md`](POSITION-SIZING.md) — this section is the allocation; that file is the schedule.)*
 
-**Governing principle (asset location):** taxable = buy-and-hold, tax-efficient ETFs + durable compounders you'll never be forced to sell; tax-advantaged (IRA/401k) = the cyclical single names whose strategy *requires* trimming at peaks (tax-free there). Also: keep **foreign dividend payers (ASML, Siemens Energy) in TAXABLE** so you can claim the foreign-tax credit; keep **US-domiciled single names in the IRA** (foreign withholding is unrecoverable in an IRA).
+**Governing principle (asset location):** with **more IRA room ($800k) than taxable ($700k)**, push everything you'll trim/rebalance — the cyclical single names *and* the cyclical ETFs — into the **IRA** (tax-free turnover). Reserve **taxable** for only the lowest-turnover anchors **plus foreign dividend payers** (ASML, Siemens Energy) so you can claim the foreign-tax credit. Keep US-domiciled single names in the IRA (foreign withholding is unrecoverable there).
 
-*Note: 30% in one thematic sleeve is at the aggressive end — it only works because the other 70% ($3.64mm) is your diversified ballast (broad index + bonds). Don't let the sleeve creep above 30%.*
+*Note: ~29% in one thematic sleeve is aggressive — it only works because the other ~$3.7mm is your diversified ballast (broad index + bonds). Don't let the sleeve creep above ~30% ($1.56mm).*
 
-### A. TAXABLE CORE — buy-and-hold, tax-efficient (~72% of sleeve ≈ $1,123k)
-*Hold these for years; low turnover; add to them with the dry powder rather than trading them.*
-
-| Holding | % of sleeve | $ | Tier | Hold-through-anything? |
-|---|---|---|---|---|
-| **PAVE** | 15% | $234k | Anchor | Yes — broad reshoring/electrification |
-| **GRID** | 11% | $172k | Anchor | Yes — grid/electrical equipment |
-| **FIW** | 7% | $109k | Anchor | Yes — water, non-AI de-correlator |
-| **SHLD** | 5% | $78k | Anchor | Yes — secular defense |
-| **ASML** | 4% | $62k | Anchor | Yes — semicap monopoly; foreign div → taxable for FTC |
-| **Siemens Energy (SMNEY)** | 3% | $47k | Core | Electrons/turbines; foreign div → taxable for FTC |
-| **SMH** | 11% | $172k | Cyclical core | Holdable but bumpy (AI/semis beta) |
-| **COPX** | 10% | $156k | Cyclical core | Holdable through cycles (structural deficit); be willing to ride drawdowns |
-| **NUKZ** | 6% | $94k | Cyclical core | Nuclear/electrons breadth |
-
-### B. TAX-ADVANTAGED SATELLITE — cyclical single names, trim freely, US-domiciled (~20% ≈ $312k)
-*These need active trimming at cycle peaks — that's why they go where selling is tax-free. Requires ~$312k of IRA/401k capacity allocated here; if you have less, replace each with its taxable ETF equivalent (MU→SMH, GEV/IPP→NUKZ, MP→leave out, LEU→leave out, EME→PAVE).*
-
-| Holding | % of sleeve | $ | Why a single name |
+### TAXABLE — $700k (lowest-turnover anchors + foreign dividend payers)
+| Holding | $ | % sleeve | Why here |
 |---|---|---|---|
-| **Micron (MU)** | 6% | $94k | Cheapest forward multiple in the complex; trim at memory-cycle peak |
-| **GE Vernova (GEV)** | 4% | $62k | Turbine backlog to 2030; rich multiple → trim discipline |
-| **IPP: Constellation (CEG) / Vistra (VST) / Talen (TLN)** | 4% | $62k | Own the electrons; no clean IPP ETF |
-| **EMCOR (EME)** | 2% | $31k | Electrical build at ~half Quanta's multiple; no clean EPC ETF |
-| **MP Materials (MP)** | 2% | $31k | Rare-earth magnets (US — avoids IRA foreign-withholding issue) |
-| **Centrus (LEU)** | 2% | $31k | Enrichment chokepoint, 2028 cliff; cyclical → trim |
+| **PAVE** | $225k | 15% | Anchor — broad reshoring/electrification |
+| **GRID** | $165k | 11% | Anchor — grid/electrical equipment |
+| **FIW** | $105k | 7% | Anchor — water, non-AI de-correlator |
+| **SHLD** | $75k | 5% | Secular defense, low turnover |
+| **ASML** | $60k | 4% | Semicap monopoly; foreign div → FTC |
+| **Siemens Energy (SMNEY)** | $45k | 3% | Electrons/turbines; foreign div → FTC |
+| **Muni money-market (dry powder)** | $25k | 1.7% | Tax-efficient cash |
+| **Subtotal** | **$700k** | **46.7%** | |
 
-### C. OPTION SLEEVE — speculative, small (~3% ≈ $47k)
-**ROBO 2% ($31k)** + **UFO 1% ($16k)** — either account; accept a high loss rate. (Skip QTUM.)
+### IRA / 401k — $800k (everything you'll trim/rebalance + US cyclical single names)
+| Holding | $ | % sleeve | Why here |
+|---|---|---|---|
+| **SMH** | $165k | 11% | AI/semis beta — trim at peak, tax-free |
+| **COPX** | $150k | 10% | Copper — rebalance through cycles tax-free |
+| **NUKZ** | $90k | 6% | Nuclear/electrons breadth |
+| **Micron (MU)** | $90k | 6% | Forward-cheap (~10–12x), HBM sold out; trim at memory peak |
+| **GE Vernova (GEV)** | $60k | 4% | Turbine backlog to 2030; rich → trim discipline |
+| **IPP: Constellation/Vistra/Talen** | $60k | 4% | Own the electrons; no clean IPP ETF |
+| **EMCOR (EME)** | $30k | 2% | Electrical build at ~half Quanta's multiple |
+| **MP Materials (MP)** | $30k | 2% | Rare-earth magnets (US-domiciled) |
+| **Centrus (LEU)** | $30k | 2% | Enrichment chokepoint, 2028 cliff |
+| **ROBO** | $30k | 2% | Robotics option |
+| **UFO** | $15k | 1% | Space option |
+| **Money-market (dry powder)** | $50k | 3.3% | Frictionless trigger-buys of IRA single names |
+| **Subtotal** | **$800k** | **53.3%** | |
 
-### D. DRY POWDER — ~5% ≈ $78k
-Hold in a **muni money-market fund in taxable** (tax-efficient at your bracket). Deploying it = buying (no tax event), so taxable is fine. Deploy on the trigger below.
+**Totals:** Taxable $700k + IRA $800k = **$1.5mm**. Dry powder $75k (5%). Single-stock max = MU $90k (6% of sleeve, ~1.7% of total) — within caps.
 
-**Totals:** A 72% + B 20% + C 3% + D 5% = 100% = $1.56mm.
-
-### Phasing for $1.56mm (don't lump-sum)
-- **Now (~$700k, ~45%):** the forward-cheap + backlog-protected + anchors — MU, GEV, EME, an IPP, ASML, PAVE, GRID, FIW. These don't need a de-rating.
-- **Over 9–12 months (~$620k, ~40%), monthly tranches:** the crowded/cyclical — COPX, SMH, NUKZ, MP, LEU, Siemens Energy, SHLD. Averages through the volatility and the possible 2027–28 air-pocket.
-- **Dry powder (~$78k):** deploy on **either** a ≥20–25% drawdown in the complex **or** two consecutive quarters of hyperscaler capex guided *up*.
+*Why this is better than the prior taxable-heavy split: all the names whose strategy is "trim at the peak" (MU, MP, LEU, GEV, and the cyclical ETFs SMH/COPX/NUKZ) now sit where selling triggers no tax, while taxable holds only buy-and-hold anchors + the two foreign names that benefit from being taxable.*
 
 ---
 

@@ -1,0 +1,22 @@
+{
+  "schema_version": 1,
+  "updated": "2026-05-30",
+  "open": [],
+  "scorecard": {
+    "by_tilt": {
+      "overweight": {
+        "n": 0,
+        "hits": 0
+      },
+      "underweight": {
+        "n": 0,
+        "hits": 0
+      }
+    },
+    "total": {
+      "n": 0,
+      "hits": 0
+    },
+    "hit_rate": null
+  }
+}

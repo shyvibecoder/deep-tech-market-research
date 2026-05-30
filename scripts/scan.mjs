@@ -23,6 +23,7 @@ import { getForwardPEs } from "./lib/fundamentals.mjs";
 import { computeRegime } from "./lib/regime.mjs";
 import { updateScarcityHistory, applySeenState } from "./lib/history.mjs";
 import { writeDcaPlan } from "./lib/dca.mjs";
+import { makeForecasts, resolveDue, updateScorecard } from "./lib/forecast.mjs";
 
 const OFFLINE = process.argv.includes("--offline");
 const read = (p) => JSON.parse(readFileSync(new URL(`../web/data/${p}`, import.meta.url)));
@@ -295,6 +296,24 @@ console.log(`History: ${Object.keys(scarcity_drift).length} scarcities drifted; 
 // F6: regenerate the machine-readable DCA plan from the tier rules (deterministic).
 writeDcaPlan(dataUrl("dca.json"), portfolio, TODAY);
 
+// --- Accountability ledger: resolve matured forecasts, score them, record new ones ---
+let scorecard = null;
+{
+  const fpath = dataUrl("forecasts.json");
+  let store;
+  try { store = JSON.parse(readFileSync(fpath)); }
+  catch { store = { schema_version: SCHEMA_VERSION, open: [], scorecard: updateScorecard(null, []) }; }
+  const { resolved, stillOpen } = resolveDue(store.open, enriched, TODAY);
+  store.scorecard = updateScorecard(store.scorecard, resolved);
+  const fresh = makeForecasts({ regime, quotes: enriched }, TODAY);
+  const openIds = new Set(stillOpen.map((f) => f.id));
+  store.open = [...stillOpen, ...fresh.filter((f) => !openIds.has(f.id))];
+  store.updated = TODAY;
+  writeFileSync(fpath, JSON.stringify(store, null, 2) + "\n");
+  scorecard = store.scorecard;
+  console.log(`Forecasts: ${resolved.length} resolved, ${store.open.length} open, hit-rate ${store.scorecard.hit_rate}`);
+}
+
 // --- Optional free-LLM analyst + red-team digest ---
 let digest = "(no LLM key set — set GEMINI_API_KEY or GROQ_API_KEY in repo secrets to enable the agent digest)";
 if (llmAvailable() && !OFFLINE) {
@@ -319,6 +338,7 @@ const out = {
   alerts,
   regime,
   metrics,
+  scorecard,
   data_quality,
   scarcity_drift,
   digest,

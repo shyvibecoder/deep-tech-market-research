@@ -42,7 +42,7 @@ jobs:
         run: |
           git config user.name "puck-bot"
           git config user.email "puck-bot@users.noreply.github.com"
-          git add web/data/signals.json web/data/scarcity-history.json web/data/seen.state.json web/data/dca.json
+          git add web/data/signals.json web/data/scarcity-history.json web/data/seen.state.json web/data/dca.json web/data/forecasts.json
           git commit -m "scan: refresh signals [skip ci]" || { echo "no changes"; exit 0; }
           # Rebase on any concurrent commit before pushing so history is never lost (R3).
           for i in 1 2 3; do git pull --rebase origin main && git push && break || sleep $((i*3)); done

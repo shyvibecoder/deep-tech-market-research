@@ -116,6 +116,13 @@ drawdown** (turns ⚠ red if it breaches −35%), **Calmar** (CAGR ÷ maxDD), an
 downside risk). It's a live check on whether the timing/risk layer is actually holding drawdown under the
 limit while earning a good risk-adjusted return — a backward-looking proxy, not a forecast. A **trend-brake backtest** line below it shows, on this basket and with no look-ahead, whether a moving-average brake actually cut max-drawdown and improved Calmar vs. buy-and-hold (the dial's premise, tested).
 
+### 5.1c Track record (self-grading)
+Puck records every dated **per-name TSMOM tilt** (overweight → expect the stock up over ~21 days;
+underweight → down) and, when the horizon matures, **resolves** it against the realized price into a
+**hit-rate**. It starts empty and fills in over ~21 days. This is the accountability layer — the system
+is graded on whether its calls came true, turning opinions into a verifiable, compounding record. A
+hit-rate persistently below ~50% means the signal isn't working (which is what you want to know).
+
 ### 5.2 Summary cards
 Sleeve size, IRA vs taxable split, holding count, and a **data-quality** card (✓ OK or ⚠ degraded —
 see §11).

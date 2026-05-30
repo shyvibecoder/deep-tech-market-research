@@ -143,16 +143,19 @@ function renderDca() {
 function renderMetrics() {
   const box = $("#objMetrics"); if (!box) return;
   const m = DATA.sig?.metrics;
-  if (!m) { box.innerHTML = ""; return; }
+  const sc = DATA.sig?.scorecard;
+  if (!m && !(sc && (sc.total?.n >= 0))) { box.innerHTML = ""; return; }
   const pct = (x) => (x == null ? "—" : (x * 100).toFixed(1) + "%");
   const num = (x) => (x == null ? "—" : x.toFixed(2));
+  const scLine = sc ? `<p class="foot">Track record (self-graded TSMOM tilts): ${sc.total?.n ? `hit-rate <strong>${Math.round(sc.hit_rate * 100)}%</strong> over ${sc.total.n} resolved calls (OW ${sc.by_tilt.overweight.hits}/${sc.by_tilt.overweight.n}, UW ${sc.by_tilt.underweight.hits}/${sc.by_tilt.underweight.n})` : "building — first calls resolve in ~21 days"} <button class="help" data-help="scorecard">?</button></p>` : "";
+  if (!m) { box.innerHTML = `<h3>Track record <button class="help" data-help="scorecard">?</button></h3>${scLine}`; return; }
   box.innerHTML = `<h3>Objective scorecard <button class="help" data-help="metrics">?</button> <span class="foot">— ${esc(m.note || "")} ${esc(m.window || "")}</span></h3>
     <div class="cards">
       <div class="card"><b>${pct(m.cagr)}</b><span>CAGR (trailing)</span></div>
       <div class="card ${m.breaches_35 ? "dq-bad" : ""}"><b>${pct(m.max_drawdown)}</b><span>max drawdown ${m.breaches_35 ? "⚠ &gt;35%" : "✓ &lt;35%"}</span></div>
       <div class="card"><b>${num(m.calmar)}</b><span>Calmar (CAGR÷maxDD)</span></div>
       <div class="card"><b>${num(m.sortino)}</b><span>Sortino</span></div>
-    </div>${m.backtest ? `<p class="foot">Trend-brake backtest (${m.backtest.n}d, ${m.backtest.ma_period}-day MA, no look-ahead): max-DD <strong>${(m.backtest.braked.max_drawdown*100).toFixed(0)}%</strong> braked vs ${(m.backtest.unbraked.max_drawdown*100).toFixed(0)}% buy&amp;hold (−${(m.backtest.dd_reduction*100).toFixed(0)} pts); Calmar ${num(m.backtest.braked.calmar)} vs ${num(m.backtest.unbraked.calmar)}; ${m.backtest.whipsaws} switches, ${Math.round(m.backtest.time_in_market*100)}% in market.</p>` : ""}`;
+    </div>${m.backtest ? `<p class="foot">Trend-brake backtest (${m.backtest.n}d, ${m.backtest.ma_period}-day MA, no look-ahead): max-DD <strong>${(m.backtest.braked.max_drawdown*100).toFixed(0)}%</strong> braked vs ${(m.backtest.unbraked.max_drawdown*100).toFixed(0)}% buy&amp;hold (−${(m.backtest.dd_reduction*100).toFixed(0)} pts); Calmar ${num(m.backtest.braked.calmar)} vs ${num(m.backtest.unbraked.calmar)}; ${m.backtest.whipsaws} switches, ${Math.round(m.backtest.time_in_market*100)}% in market.</p>` : ""}${scLine}`;
 }
 
 function renderPortfolio() {
@@ -652,6 +655,9 @@ const HELP = {
     <ul><li><strong>CAGR</strong> — annualized return. <strong>Max drawdown</strong> — worst peak-to-trough (turns ⚠ red if it breaches −35%).</li>
     <li><strong>Calmar</strong> — return per unit of drawdown (higher = better). <strong>Sortino</strong> — return per unit of <em>downside</em> volatility.</li></ul>
     <p>It's a backward-looking proxy that grows more meaningful as history accumulates; not a forecast. Not advice.</p><p>The <strong>trend-brake backtest</strong> line is on-basket evidence (no look-ahead): it compares max-drawdown and Calmar of a moving-average brake vs. buy-and-hold over the available window — the timing dial's premise, tested rather than asserted.</p>` },
+  scorecard: { title: "Track record (self-grading)", body: `
+    <p>Puck records every dated <strong>per-name TSMOM tilt</strong> it makes (overweight → expect the stock up over ~21 days; underweight → down), anchored to the price at the time. When the horizon matures, a later scan <strong>resolves</strong> each call against the realized price and updates a <strong>hit-rate</strong>. This is the accountability layer: the system is graded on whether its calls actually came true — converting opinions into a verifiable record that compounds over time.</p>
+    <p>It starts empty and fills in as calls resolve (~21 days). A hit-rate persistently below ~50% is the system telling you the signal isn't working — which is exactly what you want to know. Not advice.</p>` },
   dca: { title: "DCA progress", body: `
     <p>Tracks how much of each holding's <strong>target</strong> you've actually <strong>deployed</strong> (shares × cost basis from your Settings positions), against the 9-month dollar-cost-averaging calendar. The bar + % shows progress to target; the card shows the sleeve total deployed. Helps you stay on the plan and see where dry powder still needs to go.</p>` },
   settings: { title: "Settings &amp; onboarding", body: `

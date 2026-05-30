@@ -1,6 +1,27 @@
 import { describe, it } from "node:test";
 import assert from "node:assert/strict";
 import { parseProposal, sanitizeEdit, proposeScarcityEdits } from "../scripts/lib/research.mjs";
+import { deepDivePrompt, RESEARCH_PROMPT_VERSION } from "../scripts/lib/research-prompts.mjs";
+
+describe("research: prompt is calibrated on the MATCHING call type (alpha edge), not just tilts", () => {
+  const sc = { hit_rate: 0.7, total: { n: 40 }, by_signal: { underperform: { n: 6, hits: 2 }, outperform: { n: 4, hits: 1 } } };
+  it("injects the de-rating/inflecting accuracy when by_signal exists (the call it's actually making)", () => {
+    const p = deepDivePrompt({ id: "x", scarcity: "X" }, {}, sc);
+    // 3/10 = 30% on the matching priced-in→de-rating call type → prompt must cite THAT, humbly
+    assert.match(p, /de-rating\/inflecting|relative call|alpha/i);
+    assert.match(p, /30%/);
+  });
+  it("falls back to the tilt hit-rate when no relative calls have resolved yet", () => {
+    const p = deepDivePrompt({ id: "x", scarcity: "X" }, {}, { hit_rate: 0.55, total: { n: 12 } });
+    assert.match(p, /55%/);
+  });
+  it("keeps a modest prior with no track record at all", () => {
+    assert.match(deepDivePrompt({ id: "x", scarcity: "X" }, {}, null), /modest|0\.6/i);
+  });
+  it("prompt version advanced past 1 (prompts improve over time)", () => {
+    assert.ok(RESEARCH_PROMPT_VERSION >= 2);
+  });
+});
 
 describe("research: parse + F9 ownership enforcement", () => {
   it("parses JSON embedded in model text", () => {

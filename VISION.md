@@ -1,0 +1,77 @@
+# Puck — Vision & build plan ("to 1000x")
+
+Synthesis of an iterative **Visionary ↔ Adversarial** agent loop (round 1), anchored to the owner's
+explicit objective. This is the live build plan; `TODO.md` tracks execution.
+
+## 🎯 The objective function (north star)
+**Maximize 10-year total portfolio return, subject to max drawdown < 35%, optimizing for the highest
+Calmar (CAGR ÷ maxDD) and Sortino (return ÷ downside deviation).**
+Everything is judged against this: the scarcity thesis supplies the return engine; the timing/regime +
+options + cash layer exists to **keep maxDD < 35% while preserving compounding** (a 35% drawdown needs
++54% to recover — drawdown control *is* return over 10 years). You cannot optimize what you don't
+measure → measurement is the foundation.
+
+## The single biggest lever (Visionary)
+**Turn Puck from a snapshot renderer into an accountable, self-grading forecasting record.** It already
+commits dated JSON to git every scan — an immutable, free, longitudinal claim ledger by accident. Record
+every dated, resolvable claim (regime posture, per-name tilt, crowding, scarcity `priced_in`), then
+**resolve them against realized outcomes and score** (Brier / hit-rate / and — per the objective —
+did `defensive` postures actually cut drawdown and lift Calmar/Sortino?). This converts the whole app's
+asserted edge into evidence, and is the one asset that compounds and can't be cloned.
+
+## The measurement substrate (objective-critical, build first)
+- **`metrics.mjs`** — pure: CAGR, max drawdown, Calmar, Sortino, Sharpe, vol, time-in-drawdown.
+- **Basket/portfolio value series** — a target-weighted index from holdings' histories (+ the user's
+  actual sleeve from positions), committed and grown over time → feeds metrics + the scorecard.
+- **Regime backtest** scored *on the objective*: does the dial keep maxDD < 35% and raise Calmar/Sortino
+  vs. always-deployed DCA, out-of-sample on this basket? (Visionary #4.)
+
+## Prioritized backlog (objective-weighted; merges Visionary roadmap + Red-team fixes)
+
+### P0 — correctness/security the red-team found (finish first; some shipped)
+- [x] XSS sanitization (S2), corroboration true-median + outlier exclusion (C1/C2), currency leak (C3),
+  securities validation (S1), Actions commit-race concurrency+rebase (R3).
+- [ ] **R1/R5 — silent-disable surfacing:** when macro/EDGAR/IV feeds fail, mark the run degraded and the
+  regime `macro_available:false` (don't show RISK-ON with the brake silently off); guard `high52`/series
+  against a single spurious historical bar.
+- [ ] **R2 — targeted-poison fail-safe:** a single flagged holding should be excludable from the drawdown
+  average / sleeve, not require >25% of the universe to flag.
+- [ ] **U2 — browser sleeve currency:** the "Your holdings" panel must FX-convert or exclude foreign lots
+  (today it mis-sums) — match the help copy.
+- [ ] **S4 — pin `dawidd6/action-send-mail` to a commit SHA** (supply-chain); S6 — SEC UA contact.
+- [ ] **O1/O2 — honest calibration:** stop presenting `risk_score X/100` as precise; show posture bands +
+  a "low-confidence/whipsaw-risk" note; document that the score constants are heuristics pending the backtest.
+- [ ] **O3 — options fairness vs the live IV surface** (compare to fetched ATM IV, not just realized).
+- [ ] **R4 — retention:** cap `scarcity-history.json`; consider periodic squash of `signals.json` churn.
+
+### P1 — make the alpha & timing MEASURABLE (the objective)
+- [ ] **metrics.mjs** (CAGR/maxDD/Calmar/Sortino/Sharpe) — pure, TDD.
+- [ ] **Regime backtest** on-basket, scored on maxDD<35% / Calmar / Sortino (Visionary #4).
+- [ ] **Composite scarcity index + relative-strength de-rating** detector (Visionary #2/#3) — replaces the
+  crude crowding proxy; operationalizes "crowded theses de-rate first."
+
+### P2 — accountability (the moat)
+- [ ] **Forecast ledger + scorecard** (Visionary #1) — record → resolve → Brier/hit-rate + objective-scored.
+- [ ] **Action-integrity layer** (Visionary #9) — every actionable output (triggers, sizing, de-rating,
+  auto-PR) must pass: N-scan confirmed + ≥2-source corroborated + not-degraded.
+- [ ] **Provenance manifest** per scan (Visionary #12).
+
+### P3 — last mile to action (compounding the objective)
+- [ ] **Target-weight sizing vector** (Visionary #5) — promote per-name TSMOM tilt into numeric,
+  cap-bounded, account-aware weight deltas.
+- [ ] **Scenario stress simulator** (Visionary #10) — show the user's sleeve under the named 2027–28
+  capex-digestion / rate-shock; does it breach −35%?
+- [ ] **Catalyst calendar** (Visionary #6) — extract the dated policy events into `catalysts.json` + countdowns.
+- [ ] **Weekly decision memo** (Visionary #11) — posture + why-changed + de-rating + catalysts + scorecard.
+
+### P4 — differentiators (need P1–P2 as ground truth)
+- [ ] **v3 ensemble auto-research** gated by cross-model agreement × empirical calibration (Visionary #7).
+- [ ] **Inaccessible-chokepoint tracker** via public proxies (Visionary #8).
+
+### Cross-cutting
+- [ ] **Mobile/desktop responsive deep pass** (U1) — card fallbacks for wide tables, modal/regime layout on phones.
+
+## Sequencing
+P0 (trust) → P1 (measure the objective) → P2 (accountability/moat) → P3 (act) → P4 (differentiate).
+Every item: pure-core TDD (red-first, ARCHITECTURE §6), `?` help + USER-GUIDE section, tiering invariant,
+free/keyless, degrade-gracefully. The loop repeats: build → adversarial review → fix → re-vision.

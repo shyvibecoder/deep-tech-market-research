@@ -1,6 +1,7 @@
 # Puck — TODO / what-to-do-next
 
-Living checklist and the source of truth for "what's next". Update every session.
+Living checklist. **Objective: max 10-yr return, maxDD < 35%, best Calmar/Sortino.** Full build plan: `VISION.md`.
+Update every session.
 Audit findings are detailed in `ARCHITECTURE.md`; the timing layer in `REGIME.md`.
 
 ## ⭐ North star: alpha (scarcity thesis) → timing (regime) → cash

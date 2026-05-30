@@ -40,6 +40,11 @@ You are working in **`shyvibecoder/deep-tech-market-research`** (private). It co
 
 ---
 
+## OBJECTIVE FUNCTION (the goal)
+**Maximize 10-year total portfolio return, subject to max drawdown < 35%, optimizing Calmar (CAGR/maxDD)
+and Sortino.** Drawdown control IS return over 10 years. The scarcity thesis is the return engine; the
+timing/options/cash layer keeps maxDD < 35% while preserving compounding. See `VISION.md` for the build plan.
+
 ## NORTH STAR (the app's purpose)
 **Alpha → timing → cash.** The scarcity research is the *alpha* (what to own). On top of it sits a
 **timing/market-regime layer** (`REGIME.md`) — trend (200-DMA), 12-month absolute momentum, volatility

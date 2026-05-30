@@ -115,7 +115,9 @@ Rules that tell you to act. Each shows a state — **armed** (active), **monitor
 - **Sleeve cap** (auto): sleeve value > ~$1.72mm → trim back (needs your holdings from Settings).
 - **Policy triggers** (manual): e.g. rare-earth/uranium policy shifts.
 
-When a trigger fires, the scanner opens a GitHub issue (deduped — one open issue at a time). **Auto
+When a trigger fires, the scanner opens a GitHub issue (deduped — one open issue at a time). You can
+also get an **email** the moment a trigger *newly* fires (a state change, not every run) — turn it on in
+**Settings → Admin** (set the alert email variable) plus the SMTP secrets in `SETUP.md` §3c. **Auto
 triggers are held on a degraded-data run** so bad data can't fire an action (§11).
 
 ### 5.4 Holdings table

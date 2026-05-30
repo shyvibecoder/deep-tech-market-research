@@ -119,5 +119,5 @@ GitHub-issue channel; resolve currency (F2) before summing foreign lots.
 7. **User Guide stays in lock-step (`docs/USER-GUIDE.md`):** every UI change must update the guide. The
    `docs.yml` workflow auto-regenerates the **screenshots** (`docs/img/*.png`, via Playwright) and the
    **Word** version (`docs/USER-GUIDE.docx`, via pandoc) whenever `web/**` or the guide changes. A
-   `.githooks/pre-commit` (enable: `git config core.hooksPath .githooks`) blocks a UI commit that forgot
-   to touch the guide. **Convention: any new feature ships with a `?` help entry AND a guide section.**
+   `.githooks/pre-commit` (enable: `git config core.hooksPath .githooks`) reminds locally, and the
+   **`ci.yml` `guide-sync` job FAILS the build** if UI files change without a `USER-GUIDE.md` update. **Convention: any new feature ships with a `?` help entry AND a guide section.**

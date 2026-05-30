@@ -33,7 +33,7 @@ all-in vs. apply the brakes into cash. See `REGIME.md` for the evidence base.
 
 ## Docs / User Guide (shipped)
 - [x] **`docs/USER-GUIDE.md`** — deeply detailed, per-feature guide (what it is, what it means, how to use).
-- [x] **Auto-update hook** — `docs.yml` regenerates screenshots (Playwright) + Word `.docx` (pandoc) on any `web/**` or guide change; `.githooks/pre-commit` blocks UI commits that skip the guide.
+- [x] **Auto-update hook** — `docs.yml` regenerates screenshots (Playwright) + Word `.docx` (pandoc) on any `web/**` or guide change; **`ci.yml` `guide-sync` job fails the build** if UI changes without a `USER-GUIDE.md` update (+ a local `.githooks/pre-commit` reminder).
 - [x] Screenshots wired (`tests/e2e-browser/screenshots.mjs`); placeholder PNGs committed until CI generates real ones.
 - [x] First CI run of `docs.yml` done (commit a2244a6): real screenshots + `USER-GUIDE.docx` (1.8MB) committed.
 

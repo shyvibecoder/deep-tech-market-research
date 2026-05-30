@@ -177,8 +177,12 @@ holding, and the sleeve total deployed. Use it to stay on the plan and see where
 The sharpest thesis idea: **the best chokepoints have no clean ETF** — they're private (SpaceX, Physical
 Intelligence), foreign (ASML, Ajinomoto, Harmonic Drive), or impaired. The app **discovers the public
 proxies** exposed to each by searching **SEC filings** for who mentions the entity (customers/suppliers/
-partners), ranked by mention count, and shows a **heat** (attention + proxy momentum) and the proxies'
-relative strength vs the AI-capex complex. Discovered names are research leads, not recommendations.
+partners). They're ranked by **specificity** (a TF-IDF score, 0–1) rather than raw mention count: a
+diversified megacap that mentions everything once in boilerplate — and shows up across many chokepoints —
+is a *weak* proxy, so it's dimmed and flagged **⚠ generic**, while a concentrated pure-play is surfaced
+first. The app also shows a **heat** (attention + proxy momentum) and the proxies' relative strength vs
+the AI-capex complex. All data-derived (no hand-picked lists); discovered names are research leads, not
+recommendations.
 
 ### 5.7 Stress test
 Applies the thesis's named shocks to **your** sleeve and shows the drawdown vs the **−35% objective

@@ -37,3 +37,28 @@ export async function discoverProxies(terms, { max = 6 } = {}) {
   }
   return { proxies: Object.values(tally).sort((a, b) => b.mentions - a.mentions).slice(0, max), errors };
 }
+
+// Rank discovered proxies by SPECIFICITY, not raw mentions. Raw counts are inverted for
+// our purpose: a diversified megacap that mentions every term once in boilerplate (and so
+// appears across many chokepoints) is the WORST proxy, yet would rank highest. We want the
+// concentrated pure-play. So we score TF-IDF-style — term frequency within a chokepoint ×
+// inverse "document" frequency across chokepoints — and flag ubiquitous tickers as generic.
+// Fully data-derived (no hand-coded megacap list, per the discovery mandate). Pure.
+export function rankProxies(chokepoints) {
+  const cps = chokepoints || [];
+  const N = cps.length || 1;
+  const df = {}; // how many chokepoints each ticker appears in
+  for (const c of cps) for (const d of c.discovered || []) df[d.ticker] = (df[d.ticker] || 0) + 1;
+  return cps.map((c) => {
+    const disc = c.discovered || [];
+    const maxM = Math.max(1, ...disc.map((d) => d.mentions || 0));
+    const scored = disc.map((d) => {
+      // sqrt dampens raw-mention dominance (a megacap's boilerplate shouldn't win on volume);
+      // 1/df is the specificity multiplier — a ticker in every chokepoint is generic, so ↓.
+      const tf = Math.sqrt((d.mentions || 0) / maxM);            // 0..1, sublinear
+      const idf = 1 / (df[d.ticker] || 1);                       // 1 = unique to this chokepoint
+      return { ...d, score: +(tf * idf).toFixed(3), generic: (df[d.ticker] || 0) > N / 2 };
+    }).sort((a, b) => b.score - a.score || b.mentions - a.mentions);
+    return { ...c, discovered: scored };
+  });
+}

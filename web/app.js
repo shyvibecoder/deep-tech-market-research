@@ -51,7 +51,12 @@ function renderChokepoints() {
   const cps = DATA.sig?.chokepoints || [];
   if (!cps.length) { box.innerHTML = `<p class="foot">No chokepoint data yet — proxies are discovered in the scan (GitHub Actions).</p>`; return; }
   box.innerHTML = cps.slice().sort((a, b) => (b.heat || 0) - (a.heat || 0)).map((c) => {
-    const disc = (c.discovered || []).slice(0, 6).map((d) => `${esc(d.ticker)}${d.mentions ? ` <span style="color:var(--mut)">(${d.mentions})</span>` : ""}`).join(", ");
+    // Discovered proxies are ranked by SPECIFICITY (purest play first), not raw mentions.
+    // Generic tickers (appear across many chokepoints → diversified, weaker proxy) are dimmed + ⚠.
+    const disc = (c.discovered || []).slice(0, 6).map((d) => {
+      const m = d.mentions ? ` <span style="color:var(--mut)">(${d.mentions}×${d.score != null ? `, score ${d.score}` : ""})</span>` : "";
+      return d.generic ? `<span style="opacity:.55" title="appears across many chokepoints — diversified, weaker proxy">${esc(d.ticker)}⚠${m}</span>` : `<strong>${esc(d.ticker)}</strong>${m}`;
+    }).join(", ");
     const news = c.top_headline ? `<a href="${safeUrl(c.top_headline.link)}" target="_blank" rel="noopener">${esc(c.top_headline.title)}</a>` : "";
     return `<div class="choke">
       <div class="choke-h"><strong>${esc(c.name)}</strong> <span class="access ${esc(c.access)}">${esc(c.access)}</span>
@@ -713,7 +718,7 @@ const HELP = {
     <p>The <strong>Alpha edge</strong> line grades the harder claim: each <strong>de-rating/inflecting</strong> flag becomes a 42-day <em>relative</em> forecast — does the flagged basket actually under/out-perform the AI-capex complex? That, not raw direction, is the thesis's real edge, and it's scored separately so you can see whether the alpha signal earns its keep.</p>` },
   alpha: { title: "De-rating / inflecting (alpha signal)", body: `\n    <p>Operationalizes the thesis's core claim: <strong>crowded/already-priced scarcities de-rate first; under-priced ones inflect.</strong> For each scarcity we measure its basket's <strong>relative strength vs the AI-capex complex</strong> (the theme ETFs). A <strong>crowded</strong> thesis losing relative strength is flagged <strong>↓ de-rating</strong> (reduce); an <strong>under-priced</strong> thesis gaining is <strong>↑ inflecting</strong> (accumulate). It's the relative move + the priced-in context — the closest thing here to a tradable edge, and the scorecard grades whether it works. Not advice.</p>` },
   chokepoints: { title: "Inaccessible chokepoints", body: `
-    <p>The thesis's sharpest idea: <strong>the best chokepoints are inaccessible</strong> — private (SpaceX, Physical Intelligence), foreign (ASML, Ajinomoto, Harmonic Drive), or impaired (a chokepoint isn't a rent — Wolfspeed went bankrupt owning one). There's no clean ETF, so the app does the next best thing: it <strong>discovers the public proxies</strong> exposed to each bottleneck by searching <strong>SEC filings</strong> for who mentions it (customers/suppliers/partners), ranked by mention count.</p>
+    <p>The thesis's sharpest idea: <strong>the best chokepoints are inaccessible</strong> — private (SpaceX, Physical Intelligence), foreign (ASML, Ajinomoto, Harmonic Drive), or impaired (a chokepoint isn't a rent — Wolfspeed went bankrupt owning one). There's no clean ETF, so the app does the next best thing: it <strong>discovers the public proxies</strong> exposed to each bottleneck by searching <strong>SEC filings</strong> for who mentions it (customers/suppliers/partners). They're ranked by <strong>specificity</strong> (TF-IDF), not raw mention count: a diversified megacap that mentions everything once in boilerplate is a <em>weak</em> proxy and is dimmed + flagged ⚠ generic, while a concentrated pure-play is surfaced first. The <strong>score</strong> (0–1) is how specific the exposure looks — all data-derived, no hand-picked lists.</p>
     <ul><li><strong>access</strong> — private / foreign / impaired.</li>
     <li><strong>heat</strong> — market attention + proxy momentum (0–100); <strong>proxy rel</strong> — the seeded proxies' strength vs the AI-capex complex.</li>
     <li><strong>Discovered</strong> — public companies whose SEC filings mention the entity (your tradable exposure), with mention counts.</li></ul>

@@ -27,7 +27,7 @@ import { makeForecasts, resolveDue, updateScorecard, makeScarcityForecasts } fro
 import { relativeStrength, deRatingSignal } from "./lib/derating.mjs";
 import { newsForQuery } from "./lib/news.mjs";
 import { chokepointHeat } from "./lib/chokepoints.mjs";
-import { discoverProxies } from "./lib/edgar-fts.mjs";
+import { discoverProxies, rankProxies } from "./lib/edgar-fts.mjs";
 
 const OFFLINE = process.argv.includes("--offline");
 const read = (p) => JSON.parse(readFileSync(new URL(`../web/data/${p}`, import.meta.url)));
@@ -339,6 +339,9 @@ let chokepoints = [];
       how_to_access: c.how_to_access, discovered, top_headline: top, ...h,
     });
   }
+  // Re-rank discovered proxies by SPECIFICITY across all chokepoints (TF-IDF): the purest
+  // pure-play, not the most-mentioning megacap. Needs the full set, so it runs after the loop.
+  chokepoints = rankProxies(chokepoints);
   if (!OFFLINE) console.log(`Chokepoints: ${chokepoints.length} tracked; discovered proxies for ${chokepoints.filter((c) => c.discovered.length).length}`);
 }
 

@@ -71,7 +71,15 @@ export async function upsertPriceHistory(rows, opts = {}) {
 // market-data provider, with a finite positive close and a valid date, may enter the database.
 // This guard makes that structural: offline/synthetic/placeholder/zero/unknown-source rows are
 // dropped, not written. (Mirrors the V2.3 overlay's "refuses to act on fake data" rule.)
-export const TRUSTED_PRICE_SOURCES = new Set(["yahoo", "stooq", "finnhub", "twelvedata", "alphavantage", "consensus"]);
+export const TRUSTED_PRICE_SOURCES = new Set(["yahoo", "stooq", "tiingo", "finnhub", "twelvedata", "alphavantage", "consensus"]);
+
+// First-wins de-dupe by (ticker, d). Push higher-trust rows first (e.g. reconciled 'consensus'
+// before single-source) so the trusted bar survives.
+export function dedupePriceRows(rows) {
+  const seen = new Set(), out = [];
+  for (const r of rows || []) { const k = `${r.ticker}|${r.d}`; if (!seen.has(k)) { seen.add(k); out.push(r); } }
+  return out;
+}
 
 export function sanitizePriceRows(rows) {
   return (rows || []).filter((r) =>

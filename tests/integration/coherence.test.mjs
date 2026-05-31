@@ -63,9 +63,13 @@ describe("coherence: cross-feature dependencies line up", () => {
       assert.ok(q && (typeof q.price === "number" || typeof q.error === "string"), `${h.ticker} not in quotes`);
     }
   });
-  it("open forecasts only reference real holdings", () => {
+  it("open forecasts only reference real subjects (holdings for tilts, scarcity ids for relative calls)", () => {
     const port = new Set(r("portfolio.json").holdings.map((h) => h.ticker));
-    for (const f of r("forecasts.json").open) assert.ok(port.has(f.subject), `forecast ghost subject ${f.subject}`);
+    const scar = new Set(r("scarcities.json").scarcities.map((s) => s.id));
+    for (const f of r("forecasts.json").open) {
+      if (f.type === "scarcity_rel") assert.ok(scar.has(f.subject), `forecast ghost scarcity ${f.subject}`);
+      else assert.ok(port.has(f.subject), `forecast ghost subject ${f.subject}`);
+    }
   });
 });
 

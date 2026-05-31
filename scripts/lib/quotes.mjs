@@ -8,6 +8,7 @@
 export const isTradeable = (t) => !!t && !/[()]/.test(t) && !/^CASH/i.test(t);
 
 const stooqSymbol = (t) => {
+  if (/^\^/.test(t)) return t.toLowerCase();        // index like ^VIX -> ^vix (no .us suffix)
   // US tickers -> ".us"; keep exchange-suffixed (e.g. PRY.MI, 6324.T) as-is lowercased.
   if (/[.]/.test(t)) return t.toLowerCase();
   return `${t.toLowerCase()}.us`;
@@ -23,6 +24,52 @@ export async function fetchStooq(ticker) {
   const price = parseFloat(close);
   if (!isFinite(price) || !(price > 0)) throw new Error(`bad close: ${close}`);
   return { ticker, price, date, source: "stooq", currency: null }; // currency unknown from Stooq
+}
+
+// Full DAILY history from Stooq (keyless) — a second deep source for the price-history backfill,
+// so we don't depend solely on Yahoo's range=max. Pure parser + thin fetcher.
+export function parseStooqHistory(ticker, csv) {
+  const lines = String(csv || "").trim().split("\n");
+  if (lines.length < 2 || !/date.*close/i.test(lines[0])) return { ticker, dates: [], closes: [] };
+  const dates = [], closes = [];
+  for (let i = 1; i < lines.length; i++) {
+    const cols = lines[i].split(",");
+    if (cols.length < 5) continue;
+    const d = cols[0], close = parseFloat(cols[4]); // Date,Open,High,Low,Close,Volume
+    if (/^\d{4}-\d{2}-\d{2}$/.test(d) && Number.isFinite(close) && close > 0) { dates.push(d); closes.push(close); }
+  }
+  return { ticker, dates, closes };
+}
+
+export async function fetchStooqHistory(ticker) {
+  const url = `https://stooq.com/q/d/l/?s=${stooqSymbol(ticker)}&i=d`;
+  const r = await fetch(url, { signal: AbortSignal.timeout(15000) });
+  const out = parseStooqHistory(ticker, await r.text());
+  if (!out.closes.length) throw new Error("no stooq history");
+  return out;
+}
+
+// Tiingo daily history (deep, decades; free key). Uses splitAdjusted close ('adjClose' when
+// present, else 'close'). Pure parser + thin fetcher. Key from env TIINGO_API_KEY.
+export function parseTiingoHistory(ticker, json) {
+  if (!Array.isArray(json)) return { ticker, dates: [], closes: [] };
+  const dates = [], closes = [];
+  for (const row of json) {
+    const d = typeof row?.date === "string" ? row.date.slice(0, 10) : null;
+    const close = Number(row?.adjClose ?? row?.close);
+    if (d && /^\d{4}-\d{2}-\d{2}$/.test(d) && Number.isFinite(close) && close > 0) { dates.push(d); closes.push(close); }
+  }
+  return { ticker, dates, closes };
+}
+
+export async function fetchTiingoHistory(ticker, { key = process.env.TIINGO_API_KEY, start = "1995-01-01" } = {}) {
+  if (!key) throw new Error("no tiingo key");
+  const url = `https://api.tiingo.com/tiingo/daily/${encodeURIComponent(ticker)}/prices?startDate=${start}&token=${key}`;
+  const r = await fetch(url, { headers: { "content-type": "application/json" }, signal: AbortSignal.timeout(15000) });
+  if (!r.ok) throw new Error(`tiingo ${r.status}`);
+  const out = parseTiingoHistory(ticker, await r.json());
+  if (!out.closes.length) throw new Error("no tiingo history");
+  return out;
 }
 
 const sma = (arr, n) => (arr.length >= n ? arr.slice(-n).reduce((a, b) => a + b, 0) / n : null);

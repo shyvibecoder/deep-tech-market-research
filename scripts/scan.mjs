@@ -7,7 +7,8 @@
 // Usage: node scripts/scan.mjs [--offline]
 
 import { readFileSync, writeFileSync } from "node:fs";
-import { isTradeable, fetchYahoo, fetchSeries } from "./lib/quotes.mjs";
+import { isTradeable, fetchYahoo, fetchSeries, fetchStooqHistory, fetchTiingoHistory } from "./lib/quotes.mjs";
+import { reconcileSeries } from "./lib/history-reconcile.mjs";
 import { basketIndex, portfolioMetrics } from "./lib/metrics.mjs";
 import { backtestRegime } from "./lib/backtest.mjs";
 import { getQuotes, providerKeys } from "./lib/marketdata.mjs";
@@ -30,7 +31,7 @@ import { chokepointHeat } from "./lib/chokepoints.mjs";
 import { rankOpportunities, opportunityScore } from "./lib/opportunity.mjs";
 import { forcedFlowSignal, reconcileWithTiming } from "./lib/forced-flow.mjs";
 import { v23State, dislocationEntryWindow, compositeStress } from "./lib/v23.mjs";
-import { supabaseConfigured, seriesToRows, upsertPriceHistory, sanitizePriceRows } from "./lib/supabase.mjs";
+import { supabaseConfigured, seriesToRows, upsertPriceHistory, sanitizePriceRows, dedupePriceRows } from "./lib/supabase.mjs";
 import { discoverProxies, rankProxies, proxyGraph } from "./lib/edgar-fts.mjs";
 
 const OFFLINE = process.argv.includes("--offline");
@@ -263,7 +264,6 @@ if (!OFFLINE) {
     const weights = Object.fromEntries(use.map((h) => [h.ticker, h.weight || h.target_usd || 1]));
     const series = {};
     for (const h of use) { try { series[h.ticker] = await fetchSeries(h.ticker); } catch { /* skip */ } await new Promise((r) => setTimeout(r, 120)); }
-    for (const s of Object.values(series)) priceRows.push(...seriesToRows(s)); // accumulate basket history for the DB
     const idx = basketIndex(series, weights);
     if (idx.values.length > 60) {
       metrics = { ...portfolioMetrics(idx.values), basis: Object.keys(series), window: `${idx.dates[0]}..${idx.dates[idx.dates.length - 1]}`, note: "trailing ~1y, target-weighted strategy basket" };
@@ -365,7 +365,11 @@ if (!OFFLINE) {
       fetchSeries("^VIX3M", "2y").catch(() => null),
       fetchSeries("HYG", "2y").catch(() => null),
     ]);
-    for (const s of [qqqS, vixS, vix3mS, hygS]) priceRows.push(...seriesToRows(s)); // 2y macro history for the DB
+    // Keep the V2.3 inputs current daily by persisting only their LATEST real bar (deep history
+    // comes from --backfill). Re-writing the whole series daily would downgrade reconciled bars.
+    for (const s of [qqqS, vixS, vix3mS, hygS]) {
+      if (s?.dates?.length) priceRows.push({ ticker: s.ticker, d: s.dates[s.dates.length - 1], close: s.closes[s.closes.length - 1], source: "yahoo" });
+    }
     const stress = compositeStress({ vixCloses: vixS?.closes, vix3mCloses: vix3mS?.closes, hygCloses: hygS?.closes });
     v23 = v23State(qqqS?.closes || null, { compositeStress: stress });
     console.log(`V2.3 cross-check: ${v23.state} (${v23.rule}${v23.overlay_applied ? "+overlay" : ""}); composite-stress ${stress == null ? "suppressed" : stress}`);
@@ -469,25 +473,44 @@ const out = {
 };
 
 // --- Persist price history to Supabase (phase 1) — only when configured (server-side, the
-// scanner's service_role key). Adds today's close for every priced ticker on top of the deep
-// series already fetched above, then upserts idempotently. No-ops silently otherwise so local/
-// offline runs and forks are unaffected. `--backfill` seeds DEEP history (range=max) once. ---
+// scanner's service_role key). No-ops silently otherwise so local/offline runs and forks are
+// unaffected. Robustness ("no synthetic data"): the deep --backfill reconciles every bar across
+// providers (Yahoo + Stooq + Tiingo) — median consensus, conflict/weekend/holiday/jump screening
+// (see history-reconcile.mjs). Daily increments persist each ticker's latest REAL bar (true
+// date from `asof`, cross-source-corroborated price). `--backfill` seeds FULL history once. ---
+const V23_TICKERS = ["QQQ", "^VIX", "^VIX3M", "HYG", "QLD", "SGOV"]; // V2.3 cross-check + execution instruments
 if (!OFFLINE && supabaseConfigured()) {
   try {
+    // Daily increment: latest real bar per universe ticker (price already cross-source-corroborated,
+    // dated by its real last session via `asof`, not a synthesized "today").
     for (const [t, q] of Object.entries(enriched)) {
-      // Only REAL, corroborated prints — carry the actual source so the anti-synthetic guard applies.
-      if (q && !q.error && q.price > 0 && q.source) priceRows.push({ ticker: t, d: TODAY, close: q.price, source: q.source });
-    }
-    if (BACKFILL) {
-      console.log("Backfill: fetching deep history (range=max) for the full universe…");
-      for (const t of universe) {
-        try { priceRows.push(...seriesToRows(await fetchSeries(t, "max"))); } catch { /* skip */ }
-        await new Promise((r) => setTimeout(r, 120));
+      if (q && !q.error && q.price > 0 && q.source) {
+        const corroborated = (q.corroboration?.sources?.length || 0) >= 2;
+        priceRows.push({ ticker: t, d: q.asof || TODAY, close: q.price, source: corroborated ? "consensus" : q.source });
       }
     }
-    // De-dupe (ticker,d) so a backfill row doesn't collide with a same-day fetched row.
-    const seen = new Set(), dedup = [];
-    for (const r of priceRows) { const k = `${r.ticker}|${r.d}`; if (!seen.has(k)) { seen.add(k); dedup.push(r); } }
+    if (BACKFILL) {
+      // FULL history for EVERY ticker (universe + the V2.3 set), reconciled across all providers.
+      const all = [...new Set([...universe, ...V23_TICKERS])];
+      console.log(`Backfill: deep history for ${all.length} tickers across Yahoo+Stooq${process.env.TIINGO_API_KEY ? "+Tiingo" : ""}, cross-provider reconciled…`);
+      const tally = { tickers: 0, kept: 0, conflict: 0, weekend: 0, holiday: 0, jump: 0, single: 0, corr: 0 };
+      for (const t of all) {
+        const sources = {};
+        try { sources.yahoo = await fetchSeries(t, "max"); } catch { /* skip */ }
+        await new Promise((r) => setTimeout(r, 120));
+        try { sources.stooq = await fetchStooqHistory(t); } catch { /* skip */ }
+        await new Promise((r) => setTimeout(r, 120));
+        if (process.env.TIINGO_API_KEY) { try { sources.tiingo = await fetchTiingoHistory(t); } catch { /* skip */ } await new Promise((r) => setTimeout(r, 120)); }
+        const { rows, stats } = reconcileSeries(t, sources);
+        for (const r of rows) priceRows.push({ ticker: r.ticker, d: r.d, close: r.close, source: r.source }); // drop the corroborated flag (encoded in source)
+        if (rows.length) { tally.tickers++; tally.kept += stats.kept; tally.conflict += stats.dropped_conflict; tally.weekend += stats.dropped_weekend; tally.holiday += stats.dropped_holiday_fill; tally.jump += stats.dropped_jump; tally.single += stats.single_source; tally.corr += stats.corroborated; }
+        console.log(`  ${t}: ${stats.kept} bars (${stats.corroborated} corroborated, ${stats.single_source} single)${rows.length ? ` ${rows[0].d}..${rows[rows.length - 1].d}` : ""}${stats.dropped_conflict + stats.dropped_weekend + stats.dropped_holiday_fill + stats.dropped_jump ? ` · dropped ${stats.dropped_conflict}conf/${stats.dropped_weekend}wknd/${stats.dropped_holiday_fill}hol/${stats.dropped_jump}jump` : ""}`);
+      }
+      console.log(`Backfill reconciliation: ${tally.tickers} tickers, ${tally.kept} bars kept (${tally.corr} corroborated, ${tally.single} single-source); dropped ${tally.conflict} conflict / ${tally.weekend} weekend / ${tally.holiday} holiday-fill / ${tally.jump} jump.`);
+    }
+    // Higher-trust bars first so de-dupe keeps them: consensus > single-source.
+    const ordered = priceRows.slice().sort((a, b) => (a.source === "consensus" ? 0 : 1) - (b.source === "consensus" ? 0 : 1));
+    const dedup = dedupePriceRows(ordered);
     const clean = sanitizePriceRows(dedup); // anti-synthetic guard: only real, trusted, valid prints
     const dropped = dedup.length - clean.length;
     const { written, skipped } = await upsertPriceHistory(clean);

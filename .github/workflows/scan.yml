@@ -39,6 +39,8 @@ jobs:
           FINNHUB_API_KEY: ${{ secrets.FINNHUB_API_KEY }}
           TWELVE_DATA_API_KEY: ${{ secrets.TWELVE_DATA_API_KEY }}
           ALPHAVANTAGE_API_KEY: ${{ secrets.ALPHAVANTAGE_API_KEY }}
+          # Optional deep daily-history source for the price-history backfill (free key):
+          TIINGO_API_KEY: ${{ secrets.TIINGO_API_KEY }}
           # Optional: set repo variable SEC_USER_AGENT to "Your Name you@email.com"
           # (SEC etiquette). A sensible default is used if unset.
           SEC_USER_AGENT: ${{ vars.SEC_USER_AGENT }}

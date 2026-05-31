@@ -248,8 +248,10 @@ and proposes updates to each scarcity's **priced-in / bind-window / non-consensu
 
 Each card shows the **before→after** change, the LLM's rationale, its sources, and confidence:
 - **✓ Accept → open PR** opens a GitHub pull request containing *just that one change* to
-  `scarcities.json`, which you then merge. Needs a token in **Settings → Admin** with **Contents:
-  read/write** and **Pull requests: read/write**.
+  `scarcities.json`, which you then merge. Needs a token in **Settings → Admin** with write access —
+  a **classic** token with the **`repo`** scope, or a **fine-grained** token with **Contents** and
+  **Pull requests** both read/write. (A 404/403 on a public repo means the token can read but not
+  write — usually the classic `repo` scope wasn't ticked.)
 - **✕ Reject** dismisses it.
 
 The bot only *proposes*; **you approve**, and it can **only ever** touch those three fields — never the
@@ -342,8 +344,11 @@ One place for every credential, in two tiers:
 - **GitHub dispatch token** (Contents: R/W) — lets **⟳ Refresh** trigger a live scan (§10).
 - Click **Save browser keys**.
 
-**Repo configuration** (what the automated scanner uses). Paste an **admin GitHub token** (fine-grained:
-*Secrets: read*, *Variables: read/write*) and click **⟲ Check configuration** to get a ✅/⬜ status for
+**Repo configuration + research review** (what the automated scanner uses, and what approves research
+proposals). Paste an **admin GitHub token** — a **classic** token with the **`repo`** scope, or a
+**fine-grained** token with *Contents + Pull requests* (read/write, for accepting proposals on the
+Research tab) plus *Secrets: read* and *Variables: read/write* (for the config check). Click
+**⟲ Check configuration** to get a ✅/⬜ status for
 **every** secret and variable the scanner can use (LLM keys, data keys, `SMTP_USER`/`SMTP_PASS`,
 `ALERT_EMAIL_TO`, `SEC_USER_AGENT`).
 - **Variables** (alert email, SEC user-agent) are non-secret — set them **right here** with **Save
@@ -427,6 +432,9 @@ Add free market-data keys (§9.3) for stronger corroboration.
 - **Digest says "no LLM key set".** Add a Gemini/Groq key (Settings or repo secret).
 - **Refresh rejected (401/403/404).** The dispatch token is missing/insufficient — it needs Contents:
   Read & write on this repo. It's auto-cleared so you can re-paste.
+- **Accept → open PR fails (branch 404/403).** The admin token can read but not write. Give it write
+  access: a classic token needs the **`repo`** scope ticked, or a fine-grained token needs **Contents**
+  + **Pull requests** read/write on this repo.
 - **I don't want my real holdings anywhere shared.** They never leave your browser (localStorage), and
   `positions.local.json` is gitignored.
 

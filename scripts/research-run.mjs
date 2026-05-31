@@ -102,7 +102,7 @@ const analysts = providers.length >= 2 ? providers.map((pr) => (p) => llm(p, pr)
 // Resilient: a transient LLM/network error must NOT fail the workflow — write a stub + exit 0
 // so the run is green and the evidence summary is still visible.
 try {
-  const { proposals, report } = await proposeScarcityEdits({ scarcities: scar.scarcities, evidence, analyst, analysts, redteam, scorecard: sig.scorecard, minConfidence: 0.6 });
+  const { proposals, report } = await proposeScarcityEdits({ scarcities: scar.scarcities, evidence, analyst, analysts, redteam, scorecard: sig.scorecard, minConfidence: 0.5 });
   write(`${date}.md`, report);
   write(`${date}.proposals.json`, JSON.stringify(proposals, null, 2) + "\n");
   // Also publish the latest proposals to the dashboard-readable data tier so the front-end

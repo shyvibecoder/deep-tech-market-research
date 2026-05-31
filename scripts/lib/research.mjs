@@ -61,19 +61,21 @@ export async function proposeScarcityEdits({ scarcities, evidence = {}, analyst,
   });
   for (const s of scarcities) {
     const ev = evidence[s.id] || {};
-    // Deep-dive on every model in the pool. Capture the first error so a dead/retired model is
+    // Deep-dive on every model in the pool. Capture ALL distinct errors so a dead/retired model is
     // reported with its reason instead of vanishing into an empty string (the old silent-fail trap).
+    // Collecting every error (not just the first) is what reveals a SECOND provider also failing —
+    // e.g. "Gemini 429" hiding the fact that Groq returned nothing too.
     const raws = [];
-    let firstErr = "";
+    const errs = [];
     for (const fn of pool) {
       try { raws.push(parseProposal(await fn(deepDivePrompt(s, ev, scorecard)))); }
-      catch (e) { if (!firstErr) firstErr = e.message; raws.push(null); }
+      catch (e) { if (!errs.includes(e.message)) errs.push(e.message); raws.push(null); }
     }
     // Resilient: anchor on the first model that actually produced a parseable call, not raws[0].
     // One dead provider must not zero out the whole run when another model answered.
     const good = raws.filter(Boolean);
     let a = good[0];
-    if (!a) { note(s, "no-response", null, firstErr); continue; }
+    if (!a) { note(s, "no-response", null, errs.join(" | ")); continue; }
     // Multi-model: require a strict majority on priced_in across the models that DID answer, else
     // this call isn't robust → skip. A lone surviving model falls through to single-model handling.
     let ensemble = null;

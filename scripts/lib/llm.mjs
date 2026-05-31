@@ -15,17 +15,38 @@
 const DEFAULT_GEMINI_MODEL = "gemini-3.5-flash";
 const DEFAULT_GROQ_MODEL = "openai/gpt-oss-120b";
 
+// Free tiers rate-limit aggressively (Gemini free RPM is tiny). Retry transient throttling/outages
+// with exponential backoff, honoring a server Retry-After when present. A persistent quota error
+// still throws after the last attempt — loudly, with the body — so it surfaces in the report.
+const RETRY_STATUS = new Set([429, 500, 502, 503, 504]);
+const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
+
+export async function fetchRetry(url, opts, label, { tries = 4, base = 2000, fetchImpl = fetch } = {}) {
+  let last = "";
+  for (let i = 0; i < tries; i++) {
+    let r;
+    try { r = await fetchImpl(url, opts); }
+    catch (e) { last = `${label}: ${e.name === "TimeoutError" ? "timeout" : e.message}`; await sleep(base * 2 ** i); continue; }
+    if (r.ok) return r;
+    const body = (await r.text()).slice(0, 200);
+    last = `${label} HTTP ${r.status}: ${body}`;
+    if (!RETRY_STATUS.has(r.status) || i === tries - 1) throw new Error(last);
+    const ra = Number(r.headers.get("retry-after"));
+    await sleep(Number.isFinite(ra) && ra > 0 ? ra * 1000 : base * 2 ** i);
+  }
+  throw new Error(last);
+}
+
 async function callGemini(prompt) {
   const key = process.env.GEMINI_API_KEY;
   const model = process.env.GEMINI_MODEL || DEFAULT_GEMINI_MODEL;
   const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${key}`;
-  const r = await fetch(url, {
+  const r = await fetchRetry(url, {
     method: "POST",
     headers: { "content-type": "application/json" },
     body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }] }),
     signal: AbortSignal.timeout(120000), // thinking models take longer than the old flash
-  });
-  if (!r.ok) throw new Error(`gemini ${model} HTTP ${r.status}: ${(await r.text()).slice(0, 200)}`);
+  }, `gemini ${model}`);
   const j = await r.json();
   const text = j?.candidates?.[0]?.content?.parts?.map((p) => p?.text).filter(Boolean).join("") || "";
   if (!text) throw new Error(`gemini ${model}: empty response (${JSON.stringify(j).slice(0, 200)})`);
@@ -35,7 +56,7 @@ async function callGemini(prompt) {
 async function callGroq(prompt) {
   const key = process.env.GROQ_API_KEY;
   const model = process.env.GROQ_MODEL || DEFAULT_GROQ_MODEL;
-  const r = await fetch("https://api.groq.com/openai/v1/chat/completions", {
+  const r = await fetchRetry("https://api.groq.com/openai/v1/chat/completions", {
     method: "POST",
     headers: { "content-type": "application/json", authorization: `Bearer ${key}` },
     // gpt-oss reasons by default; Groq returns the thinking in a separate `reasoning` field, so
@@ -43,10 +64,11 @@ async function callGroq(prompt) {
     // value would 400 and reintroduce the silent-fail we're fixing.
     body: JSON.stringify({ model, messages: [{ role: "user", content: prompt }] }),
     signal: AbortSignal.timeout(120000),
-  });
-  if (!r.ok) throw new Error(`groq ${model} HTTP ${r.status}: ${(await r.text()).slice(0, 200)}`);
+  }, `groq ${model}`);
   const j = await r.json();
-  const text = j?.choices?.[0]?.message?.content || "";
+  // gpt-oss may leave content empty when the answer lands in `reasoning` — fall back to it.
+  const msg = j?.choices?.[0]?.message || {};
+  const text = msg.content || msg.reasoning || "";
   if (!text) throw new Error(`groq ${model}: empty response (${JSON.stringify(j).slice(0, 200)})`);
   return text;
 }
@@ -56,9 +78,12 @@ const PROVIDERS = {
   groq: { env: "GROQ_API_KEY", label: () => `groq:${process.env.GROQ_MODEL || DEFAULT_GROQ_MODEL}`, call: callGroq },
 };
 
-// Providers with a key present, in analyst-first preference order.
+// Providers with a key present, in PRIMARY-first preference order. Groq is preferred as the primary
+// analyst: its free tier has far higher limits than Gemini's, so it carries the bulk of the calls,
+// with Gemini as the cross-model second opinion. Override the order implicitly by setting only one key.
+const PREFERENCE = ["groq", "gemini"];
 export function availableProviders() {
-  return Object.keys(PROVIDERS).filter((p) => process.env[PROVIDERS[p].env]);
+  return PREFERENCE.filter((p) => process.env[PROVIDERS[p].env]);
 }
 export function llmAvailable() { return availableProviders().length > 0; }
 

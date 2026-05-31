@@ -240,6 +240,21 @@ The last mile from analysis to allocation: per-name **TSMOM tilt × regime** →
 weight deltas. **Add** overweights only in a risk-on regime; **trim** underweights in any regime; the
 **taxable** sleeve stays buy-and-hold. Graded over time by the Track record. Not advice.
 
+## 5c. Research (LLM proposals you approve)
+The **Research** tab surfaces the monthly research engine's proposed reassessments. The engine runs the
+free LLMs (deep-dive → cross-model red-team → synthesis) over **deep evidence** — multi-angle news
+*article excerpts* + *SEC filing passages* + the live de-rating / forced-flow / opportunity signals —
+and proposes updates to each scarcity's **priced-in / bind-window / non-consensus** fields only.
+
+Each card shows the **before→after** change, the LLM's rationale, its sources, and confidence:
+- **✓ Accept → open PR** opens a GitHub pull request containing *just that one change* to
+  `scarcities.json`, which you then merge. Needs a token in **Settings → Admin** with **Contents:
+  read/write** and **Pull requests: read/write**.
+- **✕ Reject** dismisses it.
+
+The bot only *proposes*; **you approve**, and it can **only ever** touch those three fields — never the
+thesis or tickers (the F9 ownership rule, enforced in the browser *and* the scanner). Not advice.
+
 ## 6. Filings & news
 
 ![Filings and news](img/catalysts.png)

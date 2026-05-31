@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "scanned_at": "2026-05-31T01:35:59.762Z",
+  "scanned_at": "2026-05-31T01:46:21.506Z",
   "source": "scripts/scan.mjs",
   "universe_count": 52,
   "quotes": {
@@ -1578,7 +1578,7 @@
         "5.07"
       ],
       "url": "https://www.sec.gov/Archives/edgar/data/1996810/000199681026000115/gev-20260520.htm",
-      "is_new": true
+      "is_new": false
     },
     {
       "ticker": "CEG",
@@ -1590,7 +1590,7 @@
         "9.01"
       ],
       "url": "https://www.sec.gov/Archives/edgar/data/1868275/000186827526000063/ceg-20260511.htm",
-      "is_new": true
+      "is_new": false
     },
     {
       "ticker": "CEG",
@@ -1598,7 +1598,7 @@
       "date": "2026-05-11",
       "items": [],
       "url": "https://www.sec.gov/Archives/edgar/data/1868275/000186827526000067/ceg-20260331.htm",
-      "is_new": true
+      "is_new": false
     }
   ],
   "news": [
@@ -1674,17 +1674,17 @@
     },
     {
       "scarcity": "enrichment",
-      "title": "CENTRUS ENERGY CORP SEC 10-K Report - TradingView",
-      "link": "https://news.google.com/rss/articles/CBMingFBVV95cUxQczRWMHdZRmNhczRUVHdHV0tqeldZb2tRLTdqUzhOTV9hN2ZpR0d0aWs0clpyd2R0OGR3S1dtSVh6b1JyZVVwQzg5Y1kyZ29KbXZJU0dwMDNCTVp1alRfS29fZVB6dTFIZ29YSzliNjJVYVNjSHB5T2tDR0l1bkxRSkhadjVseHp6X0ZBLU41eFVkXzVvZlpfQ0kxbGxCdw?oc=5",
-      "date": "2026-02-11",
-      "is_new": true
-    },
-    {
-      "scarcity": "enrichment",
       "title": "DOE Issues $2.7B Orders to Scale Domestic Nuclear LEU and HALEU Enrichment - POWER Magazine",
       "link": "https://news.google.com/rss/articles/CBMioAFBVV95cUxQaDRMVzZFUXVtcFhwTzNvb2Focm5iMFV3NUt6VHBvU0ZPTmFscl9VRUtzeC1PQ1ZPWWE1TjRSNEk5d19DOXdiNWVaMWxHeUZmeGtWVWVzQ0FHemFBcGxmeEU4dmFYbmtPZjZDYUNQcTBzeEhNVy1GaGFFY1lMV2xaemlaMW9oWjRoTE1maWd2SnYwQXJERnVlcUNsWGQ1Q1FI?oc=5",
       "date": "2026-01-05",
       "is_new": true
+    },
+    {
+      "scarcity": "enrichment",
+      "title": "LEU Stock Down 19% in Three Months: Should You Buy the Dip? - TradingView",
+      "link": "https://news.google.com/rss/articles/CBMisgFBVV95cUxQaTQ1R3pEcm1SSFl0eGl0SDJDRkNubk5ub0JmWng0RjFzd2lmQlROeUc4RVlCRGpsYTJhRnNRSEk5dUNhSzhoUkd4LWRMaXpRWnFvTDNaUmRZVkxGQTJubzhNRmtkLVlFdXVTZlo4bF8tZmYyT3RZYjJrcjItd2Z4X09pQmJkRkJVTnIzU3I2cEZEYkhSbHZGdmN0c2FZQ3VIcm4zcy1XcTVNR1dMZS1jMHdB?oc=5",
+      "date": "2026-03-11",
+      "is_new": false
     },
     {
       "scarcity": "uranium",
@@ -1984,12 +1984,12 @@
     "note": "trend 20% vs 200-DMA · 12m mom 70% · -5% from highs · vol 1.24x · breadth200 78% · breadth20 89%"
   },
   "metrics": {
-    "cagr": 0.6659,
-    "max_drawdown": 0.1509,
-    "calmar": 4.4139,
-    "sortino": 3.7527,
-    "sharpe": 2.4199,
-    "vol": 0.2212,
+    "cagr": 0.6846,
+    "max_drawdown": 0.1512,
+    "calmar": 4.5295,
+    "sortino": 3.831,
+    "sharpe": 2.4681,
+    "vol": 0.2214,
     "breaches_35": false,
     "n": 251,
     "basis": [
@@ -2008,26 +2008,26 @@
     "backtest": {
       "ma_period": 100,
       "braked": {
-        "cagr": 0.3923,
-        "max_drawdown": 0.1545,
-        "calmar": 2.5386,
-        "sortino": 2.1571,
-        "sharpe": 1.476,
-        "vol": 0.2445,
+        "cagr": 0.4611,
+        "max_drawdown": 0.1511,
+        "calmar": 3.0506,
+        "sortino": 2.447,
+        "sharpe": 1.6642,
+        "vol": 0.2461,
         "breaches_35": false,
         "n": 152
       },
       "unbraked": {
-        "cagr": 0.5583,
-        "max_drawdown": 0.1509,
-        "calmar": 3.7006,
-        "sortino": 2.8156,
-        "sharpe": 1.8559,
-        "vol": 0.2569,
+        "cagr": 0.5792,
+        "max_drawdown": 0.1512,
+        "calmar": 3.8319,
+        "sortino": 2.8939,
+        "sharpe": 1.9063,
+        "vol": 0.2571,
         "breaches_35": false,
         "n": 152
       },
-      "dd_reduction": -0.0037,
+      "dd_reduction": 0,
       "whipsaws": 4,
       "time_in_market": 0.97,
       "n": 151
@@ -2975,9 +2975,9 @@
     },
     "detail": {
       "price": 738.3099975585938,
-      "sma200": 617.85,
+      "sma200": 616.82,
       "sma20": 709.04,
-      "ret252": 0.4228,
+      "ret252": 0.4297,
       "vol60": 0.19
     },
     "reasons": [
@@ -3454,7 +3454,7 @@
     "note": "47 ok, 0 flagged, 40/47 cross-source-corroborated"
   },
   "scarcity_drift": {},
-  "digest": "_Analyst: gemini:gemini-2.0-flash · Red-team: groq:llama-3.3-70b-versatile (cross-model adversarial review)_\n\n## Analyst\n\n\n## Red-team\nI'd be happy to provide a skeptical analysis. However, you haven't provided the analyst digest. Please provide the digest, and I'll respond with 4-6 sharp bullets identifying claims that are:\n\n* Over-stated\n* Already-priced\n* Not supported by the data (quotes/filings/news provided)\n\nPlease provide the digest, and I'll get started.",
+  "digest": "_Analyst: gemini:gemini-2.0-flash · Red-team: groq:llama-3.3-70b-versatile (cross-model adversarial review)_\n\n## Analyst\n\n\n## Red-team\nI'm happy to provide a skeptical red-team analysis. However, I don't see an analyst digest provided. Please provide the digest, and I'll be happy to assist with the following:\n\n* Identifying overstated claims\n* Highlighting already-priced information\n* Flagging unsupported claims\n* Questioning data sources and quotes\n* Examining potential biases or flaws in the analysis\n* Providing alternative perspectives or contradictory evidence \n\nPlease provide the digest, and I'll get started.",
   "errors": [
     "SMNEY: no quote from any source",
     "U.UN: no quote from any source",

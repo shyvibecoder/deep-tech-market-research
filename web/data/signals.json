@@ -1,226 +1,1782 @@
 {
   "schema_version": 1,
-  "scanned_at": "2026-05-31T01:00:54.341Z",
-  "source": "offline run",
+  "scanned_at": "2026-05-31T01:35:59.762Z",
+  "source": "scripts/scan.mjs",
   "universe_count": 52,
   "quotes": {
     "PAVE": {
       "ticker": "PAVE",
-      "error": "no quote"
+      "price": 56.310001373291016,
+      "high52": 58.349998474121094,
+      "pct_off_high": -0.0349613908170853,
+      "ytd": 0.15271244897012543,
+      "ma50": 54.367500381469725,
+      "ma200": 50.488975009918214,
+      "ma20": 56.13600044250488,
+      "pct_vs_ma50": 0.03572908407029433,
+      "pct_vs_ma200": 0.11529301916367486,
+      "above_ma200": true,
+      "above_ma20": true,
+      "asof": "2026-05-29",
+      "mom_12m": 0.3565406805637077,
+      "mom_1m": 0.02140395941073625,
+      "vol_3m": 0.2461903601317068,
+      "vol_1y": 0.18825784873506876,
+      "currency": "USD",
+      "source": "yahoo",
+      "corroboration": {
+        "sources": [
+          "yahoo",
+          "stooq"
+        ],
+        "n": 2,
+        "median": 56.31,
+        "used": 56.31,
+        "spread": 0,
+        "ok": true
+      },
+      "crowding": 50
     },
     "GRID": {
       "ticker": "GRID",
-      "error": "no quote"
+      "price": 193.07000732421875,
+      "high52": 199.8000030517578,
+      "pct_off_high": -0.03368366178550893,
+      "ytd": 0.23905787606910422,
+      "ma50": 182.06360046386717,
+      "ma200": 162.76650009155273,
+      "ma20": 193.39800033569335,
+      "pct_vs_ma50": 0.06045363725812912,
+      "pct_vs_ma200": 0.18617778975170526,
+      "above_ma200": true,
+      "above_ma20": false,
+      "asof": "2026-05-29",
+      "mom_12m": 0.48595411535189514,
+      "mom_1m": 0.04764238080172856,
+      "vol_3m": 0.2823085008303384,
+      "vol_1y": 0.1936790564299772,
+      "currency": "USD",
+      "source": "yahoo",
+      "corroboration": {
+        "sources": [
+          "yahoo",
+          "stooq"
+        ],
+        "n": 2,
+        "median": 193.07,
+        "used": 193.07,
+        "spread": 0,
+        "ok": true
+      },
+      "crowding": 59
     },
     "FIW": {
       "ticker": "FIW",
-      "error": "no quote"
+      "price": 103.73999786376953,
+      "high52": 115.83999633789062,
+      "pct_off_high": -0.10445441001937646,
+      "ytd": -0.05242971608660017,
+      "ma50": 104.77480026245117,
+      "ma200": 110.18799991607666,
+      "ma20": 103.44300003051758,
+      "pct_vs_ma50": -0.009876443534986946,
+      "pct_vs_ma200": -0.05851818761769134,
+      "above_ma200": false,
+      "above_ma20": true,
+      "asof": "2026-05-29",
+      "mom_12m": -0.01835732812078006,
+      "mom_1m": -0.017985626058845683,
+      "vol_3m": 0.17875954502958494,
+      "vol_1y": 0.15586821952505606,
+      "currency": "USD",
+      "source": "yahoo",
+      "corroboration": {
+        "sources": [
+          "yahoo",
+          "stooq"
+        ],
+        "n": 2,
+        "median": 103.74,
+        "used": 103.74,
+        "spread": 0,
+        "ok": true
+      },
+      "crowding": 23
     },
     "SHLD": {
       "ticker": "SHLD",
-      "error": "no quote"
+      "price": 67.52999877929688,
+      "high52": 78.0199966430664,
+      "pct_off_high": -0.13445268283924966,
+      "ytd": 0.01655876063627519,
+      "ma50": 69.35439949035644,
+      "ma200": 68.80609992980958,
+      "ma20": 65.55849971771241,
+      "pct_vs_ma50": -0.02630547916881965,
+      "pct_vs_ma200": -0.018546337487729676,
+      "above_ma200": false,
+      "above_ma20": true,
+      "asof": "2026-05-29",
+      "mom_12m": 0.18390599045228906,
+      "mom_1m": 0.014116271108298273,
+      "vol_3m": 0.2770110875161661,
+      "vol_1y": 0.2383146307759438,
+      "currency": "USD",
+      "source": "yahoo",
+      "corroboration": {
+        "sources": [
+          "yahoo",
+          "stooq"
+        ],
+        "n": 2,
+        "median": 67.53,
+        "used": 67.53,
+        "spread": 0,
+        "ok": true
+      },
+      "crowding": 20
     },
     "ASML": {
       "ticker": "ASML",
-      "error": "no quote"
+      "price": 1612.760009765625,
+      "high52": 1632.9000244140625,
+      "pct_off_high": -0.012333893286372135,
+      "ytd": 0.385794539488714,
+      "ma50": 1455.6760009765626,
+      "ma200": 1195.2504986572267,
+      "ma20": 1540.9725036621094,
+      "pct_vs_ma50": 0.10791138184848839,
+      "pct_vs_ma200": 0.34930712145900683,
+      "above_ma200": true,
+      "above_ma20": true,
+      "asof": "2026-05-29",
+      "mom_12m": 1.188959874876152,
+      "mom_1m": 0.15686335117378225,
+      "vol_3m": 0.49868943889698253,
+      "vol_1y": 0.4034084490742168,
+      "currency": "USD",
+      "source": "yahoo",
+      "corroboration": {
+        "sources": [
+          "yahoo",
+          "stooq"
+        ],
+        "n": 2,
+        "median": 1612.76,
+        "used": 1612.76,
+        "spread": 0,
+        "ok": true
+      },
+      "crowding": 77
     },
     "SMNEY": {
       "ticker": "SMNEY",
-      "error": "no quote"
+      "error": "no quote from any source"
     },
     "SMH": {
       "ticker": "SMH",
-      "error": "no quote"
+      "price": 598.9299926757812,
+      "high52": 602.1400146484375,
+      "pct_off_high": -0.005331022510653835,
+      "ytd": 0.6044200703482111,
+      "ma50": 484.730400390625,
+      "ma200": 388.7531999206543,
+      "ma20": 561.7890029907227,
+      "pct_vs_ma50": 0.23559403782623772,
+      "pct_vs_ma200": 0.540643248204837,
+      "above_ma200": true,
+      "above_ma20": true,
+      "asof": "2026-05-29",
+      "mom_12m": 1.4981438693463245,
+      "mom_1m": 0.19886706588304137,
+      "vol_3m": 0.37730191344705205,
+      "vol_1y": 0.30394533428719667,
+      "currency": "USD",
+      "source": "yahoo",
+      "corroboration": {
+        "sources": [
+          "yahoo",
+          "stooq"
+        ],
+        "n": 2,
+        "median": 598.93,
+        "used": 598.93,
+        "spread": 0,
+        "ok": true
+      },
+      "crowding": 99
     },
     "COPX": {
       "ticker": "COPX",
-      "error": "no quote"
+      "price": 88.13999938964844,
+      "high52": 95.69999694824219,
+      "pct_off_high": -0.07899684221183888,
+      "ytd": 0.20640572590986747,
+      "ma50": 81.27260009765625,
+      "ma200": 71.55290016174317,
+      "ma20": 84.44199981689454,
+      "pct_vs_ma50": 0.08449833380180276,
+      "pct_vs_ma200": 0.23181588992774066,
+      "above_ma200": true,
+      "above_ma20": true,
+      "asof": "2026-05-29",
+      "mom_12m": 1.1445256122125262,
+      "mom_1m": 0.1339250686110547,
+      "vol_3m": 0.5437622605635124,
+      "vol_1y": 0.4133218294775939,
+      "currency": "USD",
+      "source": "yahoo",
+      "corroboration": {
+        "sources": [
+          "yahoo",
+          "stooq"
+        ],
+        "n": 2,
+        "median": 88.14,
+        "used": 88.14,
+        "spread": 0,
+        "ok": true
+      },
+      "crowding": 48
     },
     "NUKZ": {
       "ticker": "NUKZ",
-      "error": "no quote"
+      "price": 72.33000183105469,
+      "high52": 76.2300033569336,
+      "pct_off_high": -0.051160978015674936,
+      "ytd": 0.09491378298795096,
+      "ma50": 70.43779998779297,
+      "ma200": 67.78469985961914,
+      "ma20": 71.78899993896485,
+      "pct_vs_ma50": 0.026863443259012056,
+      "pct_vs_ma200": 0.06705498410185168,
+      "above_ma200": true,
+      "above_ma20": true,
+      "asof": "2026-05-29",
+      "mom_12m": 0.4277536922406753,
+      "mom_1m": 0.02799888009684426,
+      "vol_3m": 0.34657103150106866,
+      "vol_1y": 0.29646800629377856,
+      "currency": "USD",
+      "source": "yahoo",
+      "corroboration": {
+        "sources": [
+          "yahoo",
+          "stooq"
+        ],
+        "n": 2,
+        "median": 72.33,
+        "used": 72.33,
+        "spread": 0,
+        "ok": true
+      },
+      "crowding": 41
     },
     "MU": {
       "ticker": "MU",
-      "error": "no quote"
+      "price": 971,
+      "high52": 971,
+      "pct_off_high": 0,
+      "ytd": 2.0784349713511916,
+      "ma50": 557.5588012695313,
+      "ma200": 338.73865032196045,
+      "ma20": 751.4640014648437,
+      "pct_vs_ma50": 0.7415203522733126,
+      "pct_vs_ma200": 1.8665167056581675,
+      "above_ma200": true,
+      "above_ma20": true,
+      "asof": "2026-05-29",
+      "mom_12m": 9.279483478839172,
+      "mom_1m": 0.8728541427466336,
+      "vol_3m": 0.8431532707460208,
+      "vol_1y": 0.6499609458688225,
+      "currency": "USD",
+      "source": "yahoo",
+      "corroboration": {
+        "sources": [
+          "yahoo",
+          "stooq"
+        ],
+        "n": 2,
+        "median": 971,
+        "used": 971,
+        "spread": 0,
+        "ok": true
+      },
+      "crowding": 100
     },
     "GEV": {
       "ticker": "GEV",
-      "error": "no quote"
+      "price": 968.3200073242188,
+      "high52": 1149.530029296875,
+      "pct_off_high": -0.15763835424420858,
+      "ytd": 0.42494301334492335,
+      "ma50": 1000.9749938964844,
+      "ma200": 748.3312487792969,
+      "ma20": 1049.1024841308595,
+      "pct_vs_ma50": -0.03262317917168935,
+      "pct_vs_ma200": 0.2939724338703949,
+      "above_ma200": true,
+      "above_ma20": false,
+      "asof": "2026-05-29",
+      "mom_12m": 1.0472746941354543,
+      "mom_1m": -0.0891629081971207,
+      "vol_3m": 0.5025950218017914,
+      "vol_1y": 0.47959370602844786,
+      "currency": "USD",
+      "source": "yahoo",
+      "corroboration": {
+        "sources": [
+          "yahoo",
+          "stooq"
+        ],
+        "n": 2,
+        "median": 968.32,
+        "used": 968.32,
+        "spread": 0,
+        "ok": true
+      },
+      "crowding": 57
     },
     "CEG": {
       "ticker": "CEG",
-      "error": "no quote"
+      "price": 287.75,
+      "high52": 403.95001220703125,
+      "pct_off_high": -0.28765938530898416,
+      "ytd": -0.2143344709897611,
+      "ma50": 292.5146008300781,
+      "ma200": 323.2251500701904,
+      "ma20": 292.2875030517578,
+      "pct_vs_ma50": -0.016288420532026258,
+      "pct_vs_ma200": -0.10975368118008996,
+      "above_ma200": false,
+      "above_ma20": false,
+      "asof": "2026-05-29",
+      "mom_12m": -0.060101238815329805,
+      "mom_1m": -0.031144781144781142,
+      "vol_3m": 0.5114947206225812,
+      "vol_1y": 0.4637006071385942,
+      "currency": "USD",
+      "source": "yahoo",
+      "corroboration": {
+        "sources": [
+          "yahoo",
+          "stooq"
+        ],
+        "n": 2,
+        "median": 287.75,
+        "used": 287.75,
+        "spread": 0,
+        "ok": true
+      },
+      "crowding": 0
     },
     "EME": {
       "ticker": "EME",
-      "error": "no quote"
+      "price": 826.8200073242188,
+      "high52": 943.75,
+      "pct_off_high": -0.12389932998758278,
+      "ytd": 0.2946370871633414,
+      "ma50": 833.3974011230468,
+      "ma200": 710.5926016235352,
+      "ma20": 891.6890045166016,
+      "pct_vs_ma50": -0.007892265790563678,
+      "pct_vs_ma200": 0.16356405264441476,
+      "above_ma200": true,
+      "above_ma20": false,
+      "asof": "2026-05-29",
+      "mom_12m": 0.7522570953080305,
+      "mom_1m": -0.007859639573473798,
+      "vol_3m": 0.3564138934185811,
+      "vol_1y": 0.3863821006971954,
+      "currency": "USD",
+      "source": "yahoo",
+      "corroboration": {
+        "sources": [
+          "yahoo",
+          "stooq"
+        ],
+        "n": 2,
+        "median": 826.82,
+        "used": 826.82,
+        "spread": 0,
+        "ok": true
+      },
+      "crowding": 50
     },
     "MP": {
       "ticker": "MP",
-      "error": "no quote"
+      "price": 64.69999694824219,
+      "high52": 98.6500015258789,
+      "pct_off_high": -0.34414601168283404,
+      "ytd": 0.1770055577854798,
+      "ma50": 59.72679985046387,
+      "ma200": 62.91034982681274,
+      "ma20": 64.32199935913086,
+      "pct_vs_ma50": 0.08326575524269769,
+      "pct_vs_ma200": 0.028447578599645442,
+      "above_ma200": true,
+      "above_ma20": true,
+      "asof": "2026-05-29",
+      "mom_12m": 1.9692516856269426,
+      "mom_1m": 0.05546488994287091,
+      "vol_3m": 0.7378875931453469,
+      "vol_1y": 0.8829991785432633,
+      "currency": "USD",
+      "source": "yahoo",
+      "corroboration": {
+        "sources": [
+          "yahoo",
+          "stooq"
+        ],
+        "n": 2,
+        "median": 64.7,
+        "used": 64.7,
+        "spread": 0,
+        "ok": true
+      },
+      "crowding": 18
     },
     "LEU": {
       "ticker": "LEU",
-      "error": "no quote"
+      "price": 182.47000122070312,
+      "high52": 436,
+      "pct_off_high": -0.5814908228882956,
+      "ytd": -0.33038531662127296,
+      "ma50": 193.45600036621093,
+      "ma200": 248.77525016784668,
+      "ma20": 192.3265007019043,
+      "pct_vs_ma50": -0.0567881023318552,
+      "pct_vs_ma200": -0.2665267099617343,
+      "above_ma200": false,
+      "above_ma20": false,
+      "asof": "2026-05-29",
+      "mom_12m": 0.43767730738393396,
+      "mom_1m": -0.04953638253192105,
+      "vol_3m": 0.7752693719992704,
+      "vol_1y": 0.9073356504619354,
+      "currency": "USD",
+      "source": "yahoo",
+      "corroboration": {
+        "sources": [
+          "yahoo",
+          "stooq"
+        ],
+        "n": 2,
+        "median": 182.47,
+        "used": 182.47,
+        "spread": 0,
+        "ok": true
+      },
+      "crowding": 0
     },
     "ROBO": {
       "ticker": "ROBO",
-      "error": "no quote"
+      "price": 88.63999938964844,
+      "high52": 89.98999786376953,
+      "pct_off_high": -0.015001650251895501,
+      "ytd": 0.25357093108933537,
+      "ma50": 78.64739990234375,
+      "ma200": 71.81524496078491,
+      "ma20": 85.61000022888183,
+      "pct_vs_ma50": 0.127055687787676,
+      "pct_vs_ma200": 0.2342783128853877,
+      "above_ma200": true,
+      "above_ma20": true,
+      "asof": "2026-05-29",
+      "mom_12m": 0.584554908217795,
+      "mom_1m": 0.12687509868940472,
+      "vol_3m": 0.3159293550212978,
+      "vol_1y": 0.23009826378972112,
+      "currency": "USD",
+      "source": "yahoo",
+      "corroboration": {
+        "sources": [
+          "yahoo",
+          "stooq"
+        ],
+        "n": 2,
+        "median": 88.64,
+        "used": 88.64,
+        "spread": 0,
+        "ok": true
+      },
+      "crowding": 63
     },
     "UFO": {
       "ticker": "UFO",
-      "error": "no quote"
+      "price": 65.30999755859375,
+      "high52": 67.80500030517578,
+      "pct_off_high": -0.03679673675027739,
+      "ytd": 0.6197916183758662,
+      "ma50": 52.83800003051758,
+      "ma200": 42.27294505119324,
+      "ma20": 57.68925018310547,
+      "pct_vs_ma50": 0.2360421954061989,
+      "pct_vs_ma200": 0.5449597249375991,
+      "above_ma200": true,
+      "above_ma20": true,
+      "asof": "2026-05-29",
+      "mom_12m": 1.6777367442785796,
+      "mom_1m": 0.3164683885322559,
+      "vol_3m": 0.437556834286035,
+      "vol_1y": 0.3690914015726767,
+      "currency": "USD",
+      "source": "yahoo",
+      "corroboration": {
+        "sources": [
+          "yahoo",
+          "stooq"
+        ],
+        "n": 2,
+        "median": 65.31,
+        "used": 65.31,
+        "spread": 0,
+        "ok": true
+      },
+      "crowding": 94
     },
     "VST": {
       "ticker": "VST",
-      "error": "no quote"
+      "price": 160.22999572753906,
+      "high52": 217.9199981689453,
+      "pct_off_high": -0.26473018963904965,
+      "ytd": -0.030260849296667048,
+      "ma50": 154.3775991821289,
+      "ma200": 173.2397998046875,
+      "ma20": 151.28049926757814,
+      "pct_vs_ma50": 0.03790962274588634,
+      "pct_vs_ma200": -0.07509708561090368,
+      "above_ma200": false,
+      "above_ma20": true,
+      "asof": "2026-05-29",
+      "mom_12m": -0.0021175286863700515,
+      "mom_1m": 0.04187530218188096,
+      "vol_3m": 0.5149496015280722,
+      "vol_1y": 0.4888106596543016,
+      "currency": "USD",
+      "source": "yahoo",
+      "corroboration": {
+        "sources": [
+          "yahoo",
+          "stooq"
+        ],
+        "n": 2,
+        "median": 160.23,
+        "used": 160.23,
+        "spread": 0,
+        "ok": true
+      },
+      "crowding": 0
     },
     "TLN": {
       "ticker": "TLN",
-      "error": "no quote"
+      "price": 386.79998779296875,
+      "high52": 445.8399963378906,
+      "pct_off_high": -0.1324242083031442,
+      "ytd": -0.025029674888148497,
+      "ma50": 349.2317999267578,
+      "ma200": 371.6342495727539,
+      "ma20": 368.90149841308596,
+      "pct_vs_ma50": 0.10757378873885455,
+      "pct_vs_ma200": 0.04080823615597865,
+      "above_ma200": true,
+      "above_ma20": true,
+      "asof": "2026-05-29",
+      "mom_12m": 0.5855707834873818,
+      "mom_1m": 0.09914462154465897,
+      "vol_3m": 0.5866727247769561,
+      "vol_1y": 0.5539018384746494,
+      "currency": "USD",
+      "source": "yahoo",
+      "corroboration": {
+        "sources": [
+          "yahoo",
+          "stooq"
+        ],
+        "n": 2,
+        "median": 386.8,
+        "used": 386.8,
+        "spread": 0,
+        "ok": true
+      },
+      "crowding": 19
     },
     "ETN": {
       "ticker": "ETN",
-      "error": "no quote"
+      "price": 400.6000061035156,
+      "high52": 433.010009765625,
+      "pct_off_high": -0.07484816270102373,
+      "ytd": 0.22391619288012057,
+      "ma50": 393.5328009033203,
+      "ma200": 364.9986004638672,
+      "ma20": 401.7125015258789,
+      "pct_vs_ma50": 0.017958363785618756,
+      "pct_vs_ma200": 0.09753847163907894,
+      "above_ma200": true,
+      "above_ma20": false,
+      "asof": "2026-05-29",
+      "mom_12m": 0.2510930381991998,
+      "mom_1m": -0.02475833966005181,
+      "vol_3m": 0.3877050218729733,
+      "vol_1y": 0.31975659235306925,
+      "currency": "USD",
+      "source": "yahoo",
+      "corroboration": {
+        "sources": [
+          "yahoo",
+          "stooq"
+        ],
+        "n": 2,
+        "median": 400.6,
+        "used": 400.6,
+        "spread": 0,
+        "ok": true
+      },
+      "crowding": 50
     },
     "PWR": {
       "ticker": "PWR",
-      "error": "no quote"
+      "price": 711.72998046875,
+      "high52": 785.239990234375,
+      "pct_off_high": -0.09361470465059231,
+      "ytd": 0.6187454337809217,
+      "ma50": 652.2512023925781,
+      "ma200": 501.025450592041,
+      "ma20": 746.4089965820312,
+      "pct_vs_ma50": 0.09118998609430348,
+      "pct_vs_ma200": 0.4205465603149065,
+      "above_ma200": true,
+      "above_ma20": false,
+      "asof": "2026-05-29",
+      "mom_12m": 1.0776797803047944,
+      "mom_1m": 0.1322462744376094,
+      "vol_3m": 0.4509755645888065,
+      "vol_1y": 0.35643472513063695,
+      "currency": "USD",
+      "source": "yahoo",
+      "corroboration": {
+        "sources": [
+          "yahoo",
+          "stooq"
+        ],
+        "n": 2,
+        "median": 711.73,
+        "used": 711.73,
+        "spread": 0,
+        "ok": true
+      },
+      "crowding": 85
     },
     "FIX": {
       "ticker": "FIX",
-      "error": "no quote"
+      "price": 1828.2099609375,
+      "high52": 2042.3599853515625,
+      "pct_off_high": -0.10485420099787143,
+      "ytd": 0.8215793852917462,
+      "ma50": 1702.4152001953125,
+      "ma200": 1171.36029876709,
+      "ma20": 1918.2070007324219,
+      "pct_vs_ma50": 0.07389193936223985,
+      "pct_vs_ma200": 0.5607580032051405,
+      "above_ma200": true,
+      "above_ma20": false,
+      "asof": "2026-05-29",
+      "mom_12m": 2.822867488317804,
+      "mom_1m": 0.0603604959022328,
+      "vol_3m": 0.5393518756064453,
+      "vol_1y": 0.5179929112972315,
+      "currency": "USD",
+      "source": "yahoo",
+      "corroboration": {
+        "sources": [
+          "yahoo",
+          "stooq"
+        ],
+        "n": 2,
+        "median": 1828.21,
+        "used": 1828.21,
+        "spread": 0,
+        "ok": true
+      },
+      "crowding": 83
     },
     "MYRG": {
       "ticker": "MYRG",
-      "error": "no quote"
+      "price": 465.05999755859375,
+      "high52": 478.92999267578125,
+      "pct_off_high": -0.02896038111895197,
+      "ytd": 1.0512526246234266,
+      "ma50": 367.22280029296877,
+      "ma200": 259.75750030517577,
+      "ma20": 455.15549926757814,
+      "pct_vs_ma50": 0.26642462610592504,
+      "pct_vs_ma200": 0.7903621532091224,
+      "above_ma200": true,
+      "above_ma20": true,
+      "asof": "2026-05-29",
+      "mom_12m": 1.964998275178071,
+      "mom_1m": 0.37689478953208067,
+      "vol_3m": 0.5721776183664454,
+      "vol_1y": 0.43956629058861973,
+      "currency": "USD",
+      "source": "yahoo",
+      "corroboration": {
+        "sources": [
+          "yahoo",
+          "stooq"
+        ],
+        "n": 2,
+        "median": 465.06,
+        "used": 465.06,
+        "spread": 0,
+        "ok": true
+      },
+      "crowding": 95
     },
     "PRY.MI": {
       "ticker": "PRY.MI",
-      "error": "no quote"
+      "price": 148,
+      "high52": 156.89999389648438,
+      "pct_off_high": -0.056723991349267956,
+      "ytd": 0.6466400147155305,
+      "ma50": 125.93760009765624,
+      "ma200": 97.66399997711181,
+      "ma20": 147.7675003051758,
+      "pct_vs_ma50": 0.17518517015756876,
+      "pct_vs_ma200": 0.5153997382319457,
+      "above_ma200": true,
+      "above_ma20": true,
+      "asof": "2026-05-29",
+      "mom_12m": 1.5774992114166149,
+      "mom_1m": 0.19018899731471084,
+      "vol_3m": 0.5005697073850455,
+      "vol_1y": 0.37063757561327226,
+      "currency": "EUR",
+      "source": "yahoo",
+      "corroboration": {
+        "sources": [
+          "yahoo"
+        ],
+        "n": 1,
+        "median": 148,
+        "used": 148,
+        "spread": 0,
+        "ok": null
+      },
+      "crowding": 91
     },
     "NEX.PA": {
       "ticker": "NEX.PA",
-      "error": "no quote"
+      "price": 158.39999389648438,
+      "high52": 167.89999389648438,
+      "pct_off_high": -0.05658130044874837,
+      "ytd": 0.2346063143317608,
+      "ma50": 141.62399993896486,
+      "ma200": 130.623500289917,
+      "ma20": 161.59499893188476,
+      "pct_vs_ma50": 0.11845445662281394,
+      "pct_vs_ma200": 0.21264545464574028,
+      "above_ma200": true,
+      "above_ma20": false,
+      "asof": "2026-05-29",
+      "mom_12m": 0.5683167712523205,
+      "mom_1m": 0.034617815686991404,
+      "vol_3m": 0.4109225487863432,
+      "vol_1y": 0.36559797196376126,
+      "currency": "EUR",
+      "source": "yahoo",
+      "corroboration": {
+        "sources": [
+          "yahoo"
+        ],
+        "n": 1,
+        "median": 158.4,
+        "used": 158.4,
+        "spread": 0,
+        "ok": null
+      },
+      "crowding": 54
     },
     "CCJ": {
       "ticker": "CCJ",
-      "error": "no quote"
+      "price": 112.69999694824219,
+      "high52": 134.08999633789062,
+      "pct_off_high": -0.1595197253622725,
+      "ytd": 0.14346590645197846,
+      "ma50": 113.43359985351563,
+      "ma200": 100.7599997329712,
+      "ma20": 112.33599967956543,
+      "pct_vs_ma50": -0.0064672452097155825,
+      "pct_vs_ma200": 0.11849937720239916,
+      "above_ma200": true,
+      "above_ma20": true,
+      "asof": "2026-05-29",
+      "mom_12m": 0.9255082743672673,
+      "mom_1m": -0.013912012901814097,
+      "vol_3m": 0.5562586287404093,
+      "vol_1y": 0.5336726312223832,
+      "currency": "USD",
+      "source": "yahoo",
+      "corroboration": {
+        "sources": [
+          "yahoo",
+          "stooq"
+        ],
+        "n": 2,
+        "median": 112.7,
+        "used": 112.7,
+        "spread": 0,
+        "ok": true
+      },
+      "crowding": 29
     },
     "U.UN": {
       "ticker": "U.UN",
-      "error": "no quote"
+      "error": "no quote from any source"
     },
     "FCX": {
       "ticker": "FCX",
-      "error": "no quote"
+      "price": 65.70999908447266,
+      "high52": 70.36000061035156,
+      "pct_off_high": -0.06608870786727629,
+      "ytd": 0.26535718656491986,
+      "ma50": 61.89359992980957,
+      "ma200": 52.61344987869263,
+      "ma20": 62.18000049591065,
+      "pct_vs_ma50": 0.0616606427642127,
+      "pct_vs_ma200": 0.2489201760381781,
+      "above_ma200": true,
+      "above_ma20": true,
+      "asof": "2026-05-29",
+      "mom_12m": 0.7076403291623794,
+      "mom_1m": 0.15422446394223255,
+      "vol_3m": 0.5618763377324755,
+      "vol_1y": 0.48201231470090045,
+      "currency": "USD",
+      "source": "yahoo",
+      "corroboration": {
+        "sources": [
+          "yahoo",
+          "stooq"
+        ],
+        "n": 2,
+        "median": 65.71,
+        "used": 65.71,
+        "spread": 0,
+        "ok": true
+      },
+      "crowding": 56
     },
     "TECK": {
       "ticker": "TECK",
-      "error": "no quote"
+      "price": 66.16000366210938,
+      "high52": 66.83999633789062,
+      "pct_off_high": -0.01017343975220675,
+      "ytd": 0.3774725243305099,
+      "ma50": 57.801000137329105,
+      "ma200": 48.67530009269714,
+      "ma20": 62.710499954223636,
+      "pct_vs_ma50": 0.14461693577827642,
+      "pct_vs_ma200": 0.3592110071456036,
+      "above_ma200": true,
+      "above_ma20": true,
+      "asof": "2026-05-29",
+      "mom_12m": 0.785695142361313,
+      "mom_1m": 0.17638694323582782,
+      "vol_3m": 0.4934012165888009,
+      "vol_1y": 0.4500742667640997,
+      "currency": "USD",
+      "source": "yahoo",
+      "corroboration": {
+        "sources": [
+          "yahoo",
+          "stooq"
+        ],
+        "n": 2,
+        "median": 66.16,
+        "used": 66.16,
+        "spread": 0,
+        "ok": true
+      },
+      "crowding": 76
     },
     "IVN": {
       "ticker": "IVN",
-      "error": "no quote"
+      "error": "no quote from any source"
     },
     "LYC": {
       "ticker": "LYC",
-      "error": "no quote"
+      "error": "no quote from any source"
     },
     "WOLF": {
       "ticker": "WOLF",
-      "error": "no quote"
+      "price": 59.279998779296875,
+      "high52": 73.5,
+      "pct_off_high": -0.1934694043633078,
+      "ytd": 2.131537127502778,
+      "ma50": 35.58399990081787,
+      "ma200": null,
+      "ma20": 56.00849990844726,
+      "pct_vs_ma50": 0.6659172365255759,
+      "pct_vs_ma200": null,
+      "above_ma200": null,
+      "above_ma20": true,
+      "asof": "2026-05-29",
+      "mom_12m": null,
+      "mom_1m": 1.3129145813644962,
+      "vol_3m": 1.3272560284616326,
+      "vol_1y": 1.1518097448843736,
+      "currency": "USD",
+      "source": "yahoo",
+      "corroboration": {
+        "sources": [
+          "yahoo",
+          "stooq"
+        ],
+        "n": 2,
+        "median": 59.28,
+        "used": 59.28,
+        "spread": 0,
+        "ok": true
+      },
+      "crowding": 69
     },
     "NVTS": {
       "ticker": "NVTS",
-      "error": "no quote"
+      "price": 26.600000381469727,
+      "high52": 31.790000915527344,
+      "pct_off_high": -0.16325889854009537,
+      "ytd": 2.174224345848279,
+      "ma50": 15.712899971008301,
+      "ma200": 10.497924990653992,
+      "ma20": 21.990000009536743,
+      "pct_vs_ma50": 0.6928765810607268,
+      "pct_vs_ma200": 1.5338341058019522,
+      "above_ma200": true,
+      "above_ma20": true,
+      "asof": "2026-05-29",
+      "mom_12m": 4.215686446838499,
+      "mom_1m": 0.7183463286864504,
+      "vol_3m": 1.413804020519392,
+      "vol_1y": 1.206438837669623,
+      "currency": "USD",
+      "source": "yahoo",
+      "corroboration": {
+        "sources": [
+          "yahoo",
+          "stooq"
+        ],
+        "n": 2,
+        "median": 26.6,
+        "used": 26.6,
+        "spread": 0,
+        "ok": true
+      },
+      "crowding": 74
     },
     "QRVO": {
       "ticker": "QRVO",
-      "error": "no quote"
+      "price": 103.55999755859375,
+      "high52": 108.2300033569336,
+      "pct_off_high": -0.04314890190789841,
+      "ytd": 0.20041731295137308,
+      "ma50": 87.20730026245117,
+      "ma200": 86.62419979095459,
+      "ma20": 96.10125045776367,
+      "pct_vs_ma50": 0.18751523378122,
+      "pct_vs_ma200": 0.19550885097362383,
+      "above_ma200": true,
+      "above_ma20": true,
+      "asof": "2026-05-29",
+      "mom_12m": 0.3622731140706936,
+      "mom_1m": 0.1975022379585829,
+      "vol_3m": 0.40574209444774095,
+      "vol_1y": 0.3415199897091741,
+      "currency": "USD",
+      "source": "yahoo",
+      "corroboration": {
+        "sources": [
+          "yahoo",
+          "stooq"
+        ],
+        "n": 2,
+        "median": 103.56,
+        "used": 103.56,
+        "spread": 0,
+        "ok": true
+      },
+      "crowding": 53
     },
     "SYR.AX": {
       "ticker": "SYR.AX",
-      "error": "no quote"
+      "price": 0.0989999994635582,
+      "high52": 0.5149999856948853,
+      "pct_off_high": -0.8077669859932552,
+      "ytd": -0.7088235340522647,
+      "ma50": 0.1142477397620678,
+      "ma200": 0.24673585895448924,
+      "ma20": 0.10424999967217445,
+      "pct_vs_ma50": -0.1334620740004531,
+      "pct_vs_ma200": -0.5987612020277163,
+      "above_ma200": false,
+      "above_ma20": false,
+      "asof": "2026-05-29",
+      "mom_12m": -0.6806451654769131,
+      "mom_1m": -0.13913045506396193,
+      "vol_3m": 0.9938088249068129,
+      "vol_1y": 0.865310568224103,
+      "currency": "AUD",
+      "source": "yahoo",
+      "corroboration": {
+        "sources": [
+          "yahoo"
+        ],
+        "n": 1,
+        "median": 0.099,
+        "used": 0.099,
+        "spread": 0,
+        "ok": null
+      },
+      "crowding": 0
     },
     "NVX": {
       "ticker": "NVX",
-      "error": "no quote"
+      "price": 0.7149999737739563,
+      "high52": 2.940000057220459,
+      "pct_off_high": -0.7568027347421439,
+      "ytd": -0.34403674139557766,
+      "ma50": 0.7084000039100647,
+      "ma200": 1.1187899991869927,
+      "ma20": 0.6794500023126602,
+      "pct_vs_ma50": 0.009316727593820644,
+      "pct_vs_ma200": -0.360916727631159,
+      "above_ma200": false,
+      "above_ma20": true,
+      "asof": "2026-05-29",
+      "mom_12m": -0.3672566577069808,
+      "mom_1m": 0.01851844933511959,
+      "vol_3m": 0.7284809211703117,
+      "vol_1y": 0.9769638593506154,
+      "currency": "USD",
+      "source": "yahoo",
+      "corroboration": {
+        "sources": [
+          "yahoo",
+          "stooq"
+        ],
+        "n": 2,
+        "median": 0.7149,
+        "used": 0.7149,
+        "spread": 0.0003,
+        "ok": true
+      },
+      "crowding": 0
     },
     "TSM": {
       "ticker": "TSM",
-      "error": "no quote"
+      "price": 418.45001220703125,
+      "high52": 424.8599853515625,
+      "pct_off_high": -0.015087260192854206,
+      "ytd": 0.3092519989534975,
+      "ma50": 379.39599975585935,
+      "ma200": 321.3798999786377,
+      "ma20": 407.1459991455078,
+      "pct_vs_ma50": 0.10293733322518711,
+      "pct_vs_ma200": 0.30204164054704685,
+      "above_ma200": true,
+      "above_ma20": true,
+      "asof": "2026-05-29",
+      "mom_12m": 1.1645458118840484,
+      "mom_1m": 0.06251435003476558,
+      "vol_3m": 0.4205300885447287,
+      "vol_1y": 0.3521632336897016,
+      "currency": "USD",
+      "source": "yahoo",
+      "corroboration": {
+        "sources": [
+          "yahoo",
+          "stooq"
+        ],
+        "n": 2,
+        "median": 418.45,
+        "used": 418.45,
+        "spread": 0,
+        "ok": true
+      },
+      "crowding": 69
     },
     "COHR": {
       "ticker": "COHR",
-      "error": "no quote"
+      "price": 361.4700012207031,
+      "high52": 404.94000244140625,
+      "pct_off_high": -0.10734923929130247,
+      "ytd": 0.8600833521061534,
+      "ma50": 319.97520233154296,
+      "ma200": 203.172600440979,
+      "ma20": 363.4760040283203,
+      "pct_vs_ma50": 0.1296812958841893,
+      "pct_vs_ma200": 0.779127699483814,
+      "above_ma200": true,
+      "above_ma20": false,
+      "asof": "2026-05-29",
+      "mom_12m": 3.7794527878865827,
+      "mom_1m": 0.18541963697562025,
+      "vol_3m": 0.8347644830414972,
+      "vol_1y": 0.6986392810649353,
+      "currency": "USD",
+      "source": "yahoo",
+      "corroboration": {
+        "sources": [
+          "yahoo",
+          "stooq"
+        ],
+        "n": 2,
+        "median": 361.47,
+        "used": 361.47,
+        "spread": 0,
+        "ok": true
+      },
+      "crowding": 83
     },
     "LITE": {
       "ticker": "LITE",
-      "error": "no quote"
+      "price": 854.9600219726562,
+      "high52": 1053.0899658203125,
+      "pct_off_high": -0.18814151713364907,
+      "ytd": 1.2142914050621987,
+      "ma50": 865.49419921875,
+      "ma200": 457.9545251464844,
+      "ma20": 939.6455017089844,
+      "pct_vs_ma50": -0.012171285787475665,
+      "pct_vs_ma200": 0.8669103044656737,
+      "above_ma200": true,
+      "above_ma20": false,
+      "asof": "2026-05-29",
+      "mom_12m": 10.828445440117275,
+      "mom_1m": -0.00391460681667799,
+      "vol_3m": 1.0472450784607892,
+      "vol_1y": 0.8302240473352392,
+      "currency": "USD",
+      "source": "yahoo",
+      "corroboration": {
+        "sources": [
+          "yahoo",
+          "stooq"
+        ],
+        "n": 2,
+        "median": 854.96,
+        "used": 854.96,
+        "spread": 0,
+        "ok": true
+      },
+      "crowding": 70
     },
     "AVGO": {
       "ticker": "AVGO",
-      "error": "no quote"
+      "price": 446.7699890136719,
+      "high52": 446.7699890136719,
+      "pct_off_high": 0,
+      "ytd": 0.2852252324066098,
+      "ma50": 385.6988006591797,
+      "ma200": 352.3037506103516,
+      "ma20": 422.90549926757814,
+      "pct_vs_ma50": 0.15833906729841593,
+      "pct_vs_ma200": 0.26813861118328,
+      "above_ma200": true,
+      "above_ma20": true,
+      "asof": "2026-05-29",
+      "mom_12m": 0.845623065625335,
+      "mom_1m": 0.1019113961341842,
+      "vol_3m": 0.4135319261952991,
+      "vol_1y": 0.42608765425801676,
+      "currency": "USD",
+      "source": "yahoo",
+      "corroboration": {
+        "sources": [
+          "yahoo",
+          "stooq"
+        ],
+        "n": 2,
+        "median": 446.77,
+        "used": 446.77,
+        "spread": 0,
+        "ok": true
+      },
+      "crowding": 69
     },
     "4185.T": {
       "ticker": "4185.T",
-      "error": "no quote"
+      "error": "no quote from any source"
     },
     "6988.T": {
       "ticker": "6988.T",
-      "error": "no quote"
+      "price": 2990.5,
+      "high52": 4068,
+      "pct_off_high": -0.26487217305801375,
+      "ytd": -0.19674993284985226,
+      "ma50": 3145.36,
+      "ma200": 3483.13,
+      "ma20": 3057.45,
+      "pct_vs_ma50": -0.049234427855635005,
+      "pct_vs_ma200": -0.1414331362883384,
+      "above_ma200": false,
+      "above_ma20": false,
+      "asof": "2026-05-29",
+      "mom_12m": 0.1090302243649175,
+      "mom_1m": -0.07242555831265507,
+      "vol_3m": 0.40382187503573325,
+      "vol_1y": 0.32989723097887824,
+      "currency": "JPY",
+      "source": "yahoo",
+      "corroboration": {
+        "sources": [
+          "yahoo"
+        ],
+        "n": 1,
+        "median": 2990.5,
+        "used": 2990.5,
+        "spread": 0,
+        "ok": null
+      },
+      "crowding": 0
     },
     "VRT": {
       "ticker": "VRT",
-      "error": "no quote"
+      "price": 315.7099914550781,
+      "high52": 376.2300109863281,
+      "pct_off_high": -0.1608590962017893,
+      "ytd": 0.7977905037172933,
+      "ma50": 307.3630014038086,
+      "ma200": 211.28220027923584,
+      "ma20": 339.69400177001955,
+      "pct_vs_ma50": 0.027156782088756957,
+      "pct_vs_ma200": 0.4942574009444615,
+      "above_ma200": true,
+      "above_ma20": false,
+      "asof": "2026-05-29",
+      "mom_12m": 1.9251365752098333,
+      "mom_1m": 0.031125478500446446,
+      "vol_3m": 0.5978831909402479,
+      "vol_1y": 0.564837414686704,
+      "currency": "USD",
+      "source": "yahoo",
+      "corroboration": {
+        "sources": [
+          "yahoo",
+          "stooq"
+        ],
+        "n": 2,
+        "median": 315.71,
+        "used": 315.71,
+        "spread": 0,
+        "ok": true
+      },
+      "crowding": 74
     },
     "MOD": {
       "ticker": "MOD",
-      "error": "no quote"
+      "price": 278.9100036621094,
+      "high52": 295.8800048828125,
+      "pct_off_high": -0.057354336016806326,
+      "ytd": 0.980754268148109,
+      "ma50": 247.2790005493164,
+      "ma200": 181.49029972076417,
+      "ma20": 270.1875,
+      "pct_vs_ma50": 0.12791625266410198,
+      "pct_vs_ma200": 0.5367763681653092,
+      "above_ma200": true,
+      "above_ma20": true,
+      "asof": "2026-05-29",
+      "mom_12m": 2.0716959723352115,
+      "mom_1m": 0.19503836664596985,
+      "vol_3m": 0.7629199043383676,
+      "vol_1y": 0.6522086289267985,
+      "currency": "USD",
+      "source": "yahoo",
+      "corroboration": {
+        "sources": [
+          "yahoo",
+          "stooq"
+        ],
+        "n": 2,
+        "median": 278.91,
+        "used": 278.91,
+        "spread": 0,
+        "ok": true
+      },
+      "crowding": 91
     },
     "NVT": {
       "ticker": "NVT",
-      "error": "no quote"
+      "price": 166.99000549316406,
+      "high52": 173.9600067138672,
+      "pct_off_high": -0.040066687466663066,
+      "ytd": 0.5632840850986753,
+      "ma50": 144.01020080566406,
+      "ma200": 114.31975048065186,
+      "ma20": 166.90800094604492,
+      "pct_vs_ma50": 0.1595706731810639,
+      "pct_vs_ma200": 0.46072751900754383,
+      "above_ma200": true,
+      "above_ma20": true,
+      "asof": "2026-05-29",
+      "mom_12m": 1.5378419110681638,
+      "mom_1m": 0.21562212585585616,
+      "vol_3m": 0.5001715961602938,
+      "vol_1y": 0.3987275554532873,
+      "currency": "USD",
+      "source": "yahoo",
+      "corroboration": {
+        "sources": [
+          "yahoo",
+          "stooq"
+        ],
+        "n": 2,
+        "median": 166.99,
+        "used": 166.99,
+        "spread": 0,
+        "ok": true
+      },
+      "crowding": 90
     },
     "6324.T": {
       "ticker": "6324.T",
-      "error": "no quote"
+      "price": 7800,
+      "high52": 8000,
+      "pct_off_high": -0.025,
+      "ytd": 1.03125,
+      "ma50": 5101.7,
+      "ma200": 3713.35,
+      "ma20": 6593.25,
+      "pct_vs_ma50": 0.5289021306623283,
+      "pct_vs_ma200": 1.1005291717721195,
+      "above_ma200": true,
+      "above_ma20": true,
+      "asof": "2026-05-29",
+      "mom_12m": 1.2510822510822512,
+      "mom_1m": 0.8593563766388559,
+      "vol_3m": 0.8939927376307275,
+      "vol_1y": 0.7192808372308527,
+      "currency": "JPY",
+      "source": "yahoo",
+      "corroboration": {
+        "sources": [
+          "yahoo"
+        ],
+        "n": 1,
+        "median": 7800,
+        "used": 7800,
+        "spread": 0,
+        "ok": null
+      },
+      "crowding": 96
     },
     "6268.T": {
       "ticker": "6268.T",
-      "error": "no quote"
+      "price": 5533,
+      "high52": 5750,
+      "pct_off_high": -0.03773913043478261,
+      "ytd": 0.4446475195822454,
+      "ma50": 4850.3,
+      "ma200": 4018.4475,
+      "ma20": 5446.35,
+      "pct_vs_ma50": 0.14075418015380486,
+      "pct_vs_ma200": 0.3768999097288193,
+      "above_ma200": true,
+      "above_ma20": true,
+      "asof": "2026-05-29",
+      "mom_12m": 1.2991896945771866,
+      "mom_1m": 0.18024744027303763,
+      "vol_3m": 0.5925440002132157,
+      "vol_1y": 0.4279497515278973,
+      "currency": "JPY",
+      "source": "yahoo",
+      "corroboration": {
+        "sources": [
+          "yahoo"
+        ],
+        "n": 1,
+        "median": 5533,
+        "used": 5533,
+        "spread": 0,
+        "ok": null
+      },
+      "crowding": 78
     },
     "RKLB": {
       "ticker": "RKLB",
-      "error": "no quote"
+      "price": 143.47999572753906,
+      "high52": 150.22999572753906,
+      "pct_off_high": -0.044931106915838376,
+      "ytd": 0.8881431735892623,
+      "ma50": 91.25099967956542,
+      "ma200": 69.12327503204345,
+      "ma20": 118.0929988861084,
+      "pct_vs_ma50": 0.5723662889325003,
+      "pct_vs_ma200": 1.0757117723520202,
+      "above_ma200": true,
+      "above_ma20": true,
+      "asof": "2026-05-29",
+      "mom_12m": 4.355729407399117,
+      "mom_1m": 0.8628927808510312,
+      "vol_3m": 1.0365438571327399,
+      "vol_1y": 0.8881764422329067,
+      "currency": "USD",
+      "source": "yahoo",
+      "corroboration": {
+        "sources": [
+          "yahoo",
+          "stooq"
+        ],
+        "n": 2,
+        "median": 143.48,
+        "used": 143.48,
+        "spread": 0,
+        "ok": true
+      },
+      "crowding": 93
     },
     "OXIG.L": {
       "ticker": "OXIG.L",
-      "error": "no quote"
+      "price": 3278,
+      "high52": 3278,
+      "pct_off_high": 0,
+      "ytd": 0.5951338199513382,
+      "ma50": 2773.04,
+      "ma200": 2278.415,
+      "ma20": 2992.8,
+      "pct_vs_ma50": 0.18209618325015148,
+      "pct_vs_ma200": 0.438719460677708,
+      "above_ma200": true,
+      "above_ma20": true,
+      "asof": "2026-05-29",
+      "mom_12m": 0.815060908084164,
+      "mom_1m": 0.1632363378282471,
+      "vol_3m": 0.3884956984245357,
+      "vol_1y": 0.34387002609918854,
+      "currency": "GBp",
+      "source": "yahoo",
+      "corroboration": {
+        "sources": [
+          "yahoo"
+        ],
+        "n": 1,
+        "median": 3278,
+        "used": 3278,
+        "spread": 0,
+        "ok": null
+      },
+      "crowding": 100
     },
     "DHR": {
       "ticker": "DHR",
-      "error": "no quote"
+      "price": 182.6699981689453,
+      "high52": 242.0500030517578,
+      "pct_off_high": -0.24532123170481931,
+      "ytd": -0.20716144527757022,
+      "ma50": 181.78739959716796,
+      "ma200": 206.09144989013672,
+      "ma20": 171.36849975585938,
+      "pct_vs_ma50": 0.004855114126353895,
+      "pct_vs_ma200": -0.1136459165757576,
+      "above_ma200": false,
+      "above_ma20": true,
+      "asof": "2026-05-29",
+      "mom_12m": -0.038072648551427446,
+      "mom_1m": 0.021644267623794455,
+      "vol_3m": 0.29559638720238934,
+      "vol_1y": 0.2759797131128501,
+      "currency": "USD",
+      "source": "yahoo",
+      "corroboration": {
+        "sources": [
+          "yahoo",
+          "stooq"
+        ],
+        "n": 2,
+        "median": 182.67,
+        "used": 182.67,
+        "spread": 0,
+        "ok": true
+      },
+      "crowding": 1
     },
     "TMO": {
       "ticker": "TMO",
-      "error": "no quote"
+      "price": 492.510009765625,
+      "high52": 639.4500122070312,
+      "pct_off_high": -0.22979122626685053,
+      "ytd": -0.16877352002805202,
+      "ma50": 479.60599731445313,
+      "ma200": 526.779949798584,
+      "ma20": 458.9414993286133,
+      "pct_vs_ma50": 0.026905444309344956,
+      "pct_vs_ma200": -0.06505551330505688,
+      "above_ma200": false,
+      "above_ma20": true,
+      "asof": "2026-05-29",
+      "mom_12m": 0.22265528228645604,
+      "mom_1m": 0.05629905943079927,
+      "vol_3m": 0.3588373693589919,
+      "vol_1y": 0.30777955857939154,
+      "currency": "USD",
+      "source": "yahoo",
+      "corroboration": {
+        "sources": [
+          "yahoo",
+          "stooq"
+        ],
+        "n": 2,
+        "median": 492.51,
+        "used": 492.51,
+        "spread": 0,
+        "ok": true
+      },
+      "crowding": 3
     },
     "RDDT": {
       "ticker": "RDDT",
-      "error": "no quote"
+      "price": 176,
+      "high52": 270.7099914550781,
+      "pct_off_high": -0.34985776086803355,
+      "ytd": -0.2723965420476501,
+      "ma50": 150.66439971923828,
+      "ma200": 191.4413998413086,
+      "ma20": 158.44449996948242,
+      "pct_vs_ma50": 0.16815916917317153,
+      "pct_vs_ma200": -0.08065862375697433,
+      "above_ma200": false,
+      "above_ma20": true,
+      "asof": "2026-05-29",
+      "mom_12m": 0.5665331765940358,
+      "mom_1m": 0.1912013536379018,
+      "vol_3m": 0.6452080918221622,
+      "vol_1y": 0.6519384389539182,
+      "currency": "USD",
+      "source": "yahoo",
+      "corroboration": {
+        "sources": [
+          "yahoo",
+          "stooq"
+        ],
+        "n": 2,
+        "median": 176,
+        "used": 176,
+        "spread": 0,
+        "ok": true
+      },
+      "crowding": 0
     }
   },
-  "filings": [],
-  "news": [],
+  "filings": [
+    {
+      "ticker": "GEV",
+      "form": "8-K",
+      "date": "2026-05-22",
+      "items": [
+        "5.07"
+      ],
+      "url": "https://www.sec.gov/Archives/edgar/data/1996810/000199681026000115/gev-20260520.htm",
+      "is_new": true
+    },
+    {
+      "ticker": "CEG",
+      "form": "8-K",
+      "date": "2026-05-11",
+      "items": [
+        "Results / guidance",
+        "Reg FD disclosure",
+        "9.01"
+      ],
+      "url": "https://www.sec.gov/Archives/edgar/data/1868275/000186827526000063/ceg-20260511.htm",
+      "is_new": true
+    },
+    {
+      "ticker": "CEG",
+      "form": "10-Q",
+      "date": "2026-05-11",
+      "items": [],
+      "url": "https://www.sec.gov/Archives/edgar/data/1868275/000186827526000067/ceg-20260331.htm",
+      "is_new": true
+    }
+  ],
+  "news": [
+    {
+      "scarcity": "electrons",
+      "title": "15 Best Power Generation Stocks To Buy For Data Center Demand - Insider Monkey",
+      "link": "https://news.google.com/rss/articles/CBMiqAFBVV95cUxQUmpYcW1OVFZ5bVlTLXRHazVHdFp2QjlvdzU0Y1gxcnlYRTRwVFVyQkVUZDVDejNzX0IyRlNJa3VCanBlYW1aOElCX3Q0ZHhGUDJCRlZHZGV2ckpUOF9fbVo1V1NURjNqVGF3MjFkR1pzVWVDcjYtRS1pOWozTFpBTUMtYnRpOWJpdmFOMlFiU1N2bFR6WmlXRDB0Mjd3WWNqSmQ2clE0Z0LSAbABQVVfeXFMTmREazY4U29xT1JFVnNsT2huNE1RTFRaY2lBMklPbTRtTVRyRDRYWElDRmZjLVVORWhWVlg0Rk0wNktLYzNGVUlmWjN4anh6V1pLbkNRWkYxVS1lUnZQMzd2aGtXdXJta1dhQXRjZVJxU3pVU3F5VTNzVEpkMVRTMlBxUGpxTWR6ZmlORVJOa21nWTUxR2hOcVhUNjAyVm4xUzRTOEpfRzFncmItblNsRDE?oc=5",
+      "date": "2026-05-08",
+      "is_new": false
+    },
+    {
+      "scarcity": "electrons",
+      "title": "Who controls power in the AI era? - Latitude Media",
+      "link": "https://news.google.com/rss/articles/CBMiiAFBVV95cUxPNUkydUxHTTRpU0FhRGpFbHYwOEVGR093eXY3S3VzczA5TnpMakxCSXRXMERoSm9vUmprZld3U2Q0dTBnaDNOWEMzTFVWSU01Z0QtUGt5VE5obmlmQmRhcXlOUTNTT0xoWHNGUGFGWXk1dTlEaXNOUHRIYXlKcjZ5OGhxb0dYYXk4?oc=5",
+      "date": "2026-01-09",
+      "is_new": true
+    },
+    {
+      "scarcity": "transformers",
+      "title": "U.S. transformer market faces severe supply constraints as lead times extend to four years - pv magazine USA",
+      "link": "https://news.google.com/rss/articles/CBMiyAFBVV95cUxOeW9hVks4TUZ2V2hmSTNhaFQ3eGk5b09DR18wa0tmZ2psQ045elk1dTAxNEhaX2xtSUdPREJhNmlxU1dFakdiampfVUpwbUpnSlBfZlZuMkVuajdoVVhvRGVoZF9YNm5qeFlydkpsMzhZRnJra2Y2c0hvSmdQdDV2OFdWVTZJVkhFMHhwbkl2aWlHcGtiSnBtSDB3SXp5OXBOQzF3aDhQTVJvSWZUc21LNGQzTjNuM1BCdEVKZ0E3Y055dnhJbGxhRQ?oc=5",
+      "date": "2026-05-11",
+      "is_new": false
+    },
+    {
+      "scarcity": "transformers",
+      "title": "Transformers in 2026: Shortage, Scramble, or Self-Inflicted Crisis? - POWER Magazine",
+      "link": "https://news.google.com/rss/articles/CBMikwFBVV95cUxOcm55Rl8xTUZKenlHTl95c191TzBMTVhOdHAtZTFaYWctTDdfQ1F4WVA3aUdvWURlcFJMSEZXVlVVdFpLNHhQXzN3T2c3U3hPS0ZHN2VmQUlWTXZhamNBSDF4VDVlS3NiampHaVFYdFlicVBtQTdCZHNyRWRUcFJvN0N4dUlPck1ZQ0xNMFl5SEVrelU?oc=5",
+      "date": "2026-01-02",
+      "is_new": true
+    },
+    {
+      "scarcity": "turbines",
+      "title": "Natural Gas Turbines Aren't ‘Gating’ Data Center Buildouts, GE Vernova Says - Natural Gas Intelligence",
+      "link": "https://news.google.com/rss/articles/CBMiqAFBVV95cUxNU3lfaWl2eEd6d3FVa0dZTXNXc1A3Tmh0MzE5QmgtMUVFbkVSMjFFNFJOaEpOUU5RY1cxdEhHV3NtUlJDTnEybWlNX3l1U0xaMFExQUM4bDBIZ3FNa0xBQ183Y3RIMkhzcVlUYmQ5UFdZQUtYbF9odHJqMEg0V3llSklhUmpvSHJvTGl4dG1pV0VUNzNpY2Rac2hQUFgzb2VITnRDNHpjd1Q?oc=5",
+      "date": "2026-05-28",
+      "is_new": false
+    },
+    {
+      "scarcity": "turbines",
+      "title": "Siemens Energy to spend $1B expanding US turbine and grid factories - E&E News by POLITICO",
+      "link": "https://news.google.com/rss/articles/CBMioAFBVV95cUxQSEw3cGRUU0FPcnZiSS1DVnBtdHZSTDZsS2dLd081cEFmR2JpWU1yTzVGZ09tTzBlcUVVZVBfUUJPQVF2QXVET1JIcHI4aXIyQmhqRDZZVnlHb3d4YVNSNU5tWG1sNkZwdVZxVG56M0xIMzh6YUFoTVN0dzJMVUxoUGFfaE53VWh5R18tNkcwY3ZlWTRZWm00Z21GT25IOXd2?oc=5",
+      "date": "2026-01-05",
+      "is_new": true
+    },
+    {
+      "scarcity": "electricians",
+      "title": "Data center rush worsens shortages of power, grid workers - Reuters",
+      "link": "https://news.google.com/rss/articles/CBMisgFBVV95cUxPU2R6LTFPRGt1THNBcEFRY3dwbUtLRk5ldUozbG9HMnJsWkl5WGZSNUNRdzlGRkdWQUFpQUE5dEhKMnBNeUhnMUh5ZlEzX1NvVUh2TVJJWXZJXzRKWVYzVXctTmdIMGNFQko0cXhxd21BWWNIUFIxS0dCT3F0b1lsSnNEV1lCdk0yX2Q0eWFnWVI3ZzVDZjU4OEFBYU5lbm56WVFORUVzR29mRzkySUhheFJ3?oc=5",
+      "date": "2026-05-18",
+      "is_new": false
+    },
+    {
+      "scarcity": "electricians",
+      "title": "Electricians Are the New Must-Have for Data Centers. These Stocks Benefit. - Barron's",
+      "link": "https://news.google.com/rss/articles/CBMib0FVX3lxTE9KZ0V5LTNaTXRJNXpVSHdwcDUtMXc2aTJWSzd5YUlsNmNnWFNsX240c0dHbnB6Nk1CRmx6QTdNWTA3M29pc3dtVXBwbWFuZ2xJRmdBcFkwUW5fSGw4RzlTQ3Y3NzZiRlBSQktsZjUyTQ?oc=5",
+      "date": "2026-05-05",
+      "is_new": false
+    },
+    {
+      "scarcity": "hvdc",
+      "title": "Subsea Power Cable Market Size, Share | Growth Report [2032] - Fortune Business Insights",
+      "link": "https://news.google.com/rss/articles/CBMilgFBVV95cUxPa2Q0aHFHeEpWcnJYd3VUNjFyNFlWTnAyd05UMjlqSmdMX2RzUTktVDk4TkRaNEJMNTQza0xKS3JpWDJpd1c1NDdGQjZsUno5VVlMdEs2WXVsUlI3aFJVVldWTE5mOW9ieWV0VVVIZjJHM1dld21rUjFjb2pFYWVQQWxKMzU2TnNaNkplWTloXzBxakxpVnc?oc=5",
+      "date": "2026-05-04",
+      "is_new": false
+    },
+    {
+      "scarcity": "hvdc",
+      "title": "Challenges associated with subsea interconnections - Nexans",
+      "link": "https://news.google.com/rss/articles/CBMijAFBVV95cUxNUlk4TWFTYTYyVml2X1FkVGZqZWVLMEZ3Y25ta2VNNngxbFY5RUFzdHJsa0pGU1NnMXNuZ0dRTG1idU04bmVabDE1SjdmalU3QkNaZkZJVmwybW9VQkxaV1RFZTRZM0s0MUVZQnJDLUtwajFUMFE0eGpkaGlFNUZTQ3gwbTJqODU3bGpLRA?oc=5",
+      "date": "2025-12-10",
+      "is_new": true
+    },
+    {
+      "scarcity": "enrichment",
+      "title": "CENTRUS ENERGY CORP SEC 10-K Report - TradingView",
+      "link": "https://news.google.com/rss/articles/CBMingFBVV95cUxQczRWMHdZRmNhczRUVHdHV0tqeldZb2tRLTdqUzhOTV9hN2ZpR0d0aWs0clpyd2R0OGR3S1dtSVh6b1JyZVVwQzg5Y1kyZ29KbXZJU0dwMDNCTVp1alRfS29fZVB6dTFIZ29YSzliNjJVYVNjSHB5T2tDR0l1bkxRSkhadjVseHp6X0ZBLU41eFVkXzVvZlpfQ0kxbGxCdw?oc=5",
+      "date": "2026-02-11",
+      "is_new": true
+    },
+    {
+      "scarcity": "enrichment",
+      "title": "DOE Issues $2.7B Orders to Scale Domestic Nuclear LEU and HALEU Enrichment - POWER Magazine",
+      "link": "https://news.google.com/rss/articles/CBMioAFBVV95cUxQaDRMVzZFUXVtcFhwTzNvb2Focm5iMFV3NUt6VHBvU0ZPTmFscl9VRUtzeC1PQ1ZPWWE1TjRSNEk5d19DOXdiNWVaMWxHeUZmeGtWVWVzQ0FHemFBcGxmeEU4dmFYbmtPZjZDYUNQcTBzeEhNVy1GaGFFY1lMV2xaemlaMW9oWjRoTE1maWd2SnYwQXJERnVlcUNsWGQ1Q1FI?oc=5",
+      "date": "2026-01-05",
+      "is_new": true
+    },
+    {
+      "scarcity": "uranium",
+      "title": "AI Electricity Demand & Uranium Supply Deficits Drive Prices to the Highest Level Since 2008 - Crux Investor",
+      "link": "https://news.google.com/rss/articles/CBMiwwFBVV95cUxPMnNzSjdKUHlzeVBYQkJTUERNRy1DeWd6eTV4X240YThrUURQNmVIMXJVSTk5c01hQkdfZHhJeDhLWGUxbFdCMzI4N2JNZDNYelhTTWNsc1ZXV2tTRzFYRTJ2YUVlbE9TS0g4SVF4dlh1Qm9fTXFHNGlhX04xbVgzeHJVOXlTLTFlVVVEVk5QM3F3cVQ3SG1HR0l3UnRENk85VW1lemdkaXdLbzdhdzVRLW9vb2RGaF9rWTVsaFdWeUswR2M?oc=5",
+      "date": "2026-05-27",
+      "is_new": false
+    },
+    {
+      "scarcity": "uranium",
+      "title": "Is the US uranium market about to go nuclear in 2026? - Reuters",
+      "link": "https://news.google.com/rss/articles/CBMinwFBVV95cUxQbm1rRW5selNXNUE5TEJyYmRBR29pWHR0Uzg4MDQ0U3hJeV9xc1E4cTVYQnNBSVBlQ2FCZW9xeVV4Q3hOVlJ0d242VHR4TmMyRkFsbmg0YlRxWnVPM1pGS0tDcldUUXpRZVhGc0phRWdaNFVVQ3Z6SkxFOXFNWkVId0JrSUl6MmV6SGZKenRuQVZnaDZFOWpJN2Q2elItUTA?oc=5",
+      "date": "2026-01-13",
+      "is_new": true
+    },
+    {
+      "scarcity": "copper",
+      "title": "Copper Falls Below US$13,400/t as China Demand Weakens & US$110 Oil Collides With a 17-Year Global Supply Shortage - Crux Investor",
+      "link": "https://news.google.com/rss/articles/CBMi4AFBVV95cUxORi1la1dnOVl6WTI1UlY0Z3lvN3NkaVVmNVJhd2hFa24wTXk5ZHNIWjM4RzBHRUJ6LVZzU0VkWW4tWUNaMENacWQ3OUNXcXU5UGNaRzZta054RGZWNzRxaFlXWjBkRjBoaHJDRFljR0RsT3JZTXlqY0x2cXFHME1TVklNOXY0aURaU0hOT3lhalBMLTFCWmhxclAtQ2ZCYnB3bnY2WG9hNDJkR2g4R0phQnpDcEx2Sk1yVjdER050SzNGWWZrT0lHd1kxT1h5RjlsY0pXUkxQUUZjeU16Rk83aw?oc=5",
+      "date": "2026-05-19",
+      "is_new": false
+    },
+    {
+      "scarcity": "copper",
+      "title": "Why we're running out of copper - Investorideas.com",
+      "link": "https://news.google.com/rss/articles/CBMipgFBVV95cUxPMlp4WVZtTkZnZkc5SHpBamh6ZmxYcWNiSDZTVmNKTGx3UlJIbDJLYmZTcFJiclJYN012X2IzVXNJc2NFekRRdzNoa1JHVmhUM2dha19URnEzT1gxU3NfY3BoVHEwNWJCaHB3ZmQwV3lDR0JpZGlJbnZPV1JLWWllY2Y5aXZacHg3ZmNZaDd5SmUzV0JzS3ZtcTFhX3dXQTVmTm5YckVR?oc=5",
+      "date": "2026-02-12",
+      "is_new": true
+    },
+    {
+      "scarcity": "rare-earth-magnets",
+      "title": "China Keeps Rare Earth Pressure on Washington After Trump Summit - Crude Oil Prices Today | OilPrice.com",
+      "link": "https://news.google.com/rss/articles/CBMisgFBVV95cUxPZ0xZbTRxY29qam9LN1NQTTRqdkoyMl9qS2lwRW5TRUlFRURlS05GdzkwSVdLZkhnblpfRy13RmNuTlM0QUd6dF9MZTU5M1Z2QjZvTjJfZUpwb2pyNkRjVUdlX1hRV185a1NDZzZYNkdKRlRRMXY4NG5ablFkd0NzTmk2S2ZZM01LTXhEQWNLU1VjYXZKUWZJMlNoLXd1S1FCYXhNdEROUWIxMVZjenMwM1VR0gG3AUFVX3lxTE5YblpkbExjbEgzUHVjVG5EOG1IT0hEc1NpdDBrR29xeHFHSmJtelI4cHl3ZzZPTWFIYnU1ZVFjNGNYc2NvTm12WlV3aHllZ0lEODY0dGFwZ0U3NEU4Y2lkb1lkbk1YcDgxN3cyVFJnYkd0aXcyblFZdFhvWDZaOG9rcG9nVHFMMFZFaE1jMFFycnU3NmJTNmNnMEtoN3kyN3lwdkV2QjIta1V4UWRQZ3VVeEZza1hGNA?oc=5",
+      "date": "2026-05-28",
+      "is_new": false
+    },
+    {
+      "scarcity": "rare-earth-magnets",
+      "title": "REalloys Locks In Western Hemisphere's First Commercial Heavy Rare Earth Supply, Targeting 2027 Defense Deadline - Tech Times",
+      "link": "https://news.google.com/rss/articles/CBMi3gFBVV95cUxNaGVfT1Q1TVlVVUJYUFk3TU10R3ladjNHUW9YZ3NCRnZKVVdVZDl6TjNqUWhjdEpNMGwtdWg2Ni1nSEZIWEtEa1ZhM2J2T3huaDJ0R0RTQkw0TWNNMkJDdGtlakpES0ZzQVpBaUJmWWEtUlRvTThlY1BEMDUzekZSZzJpMnp6UVNpUG51TGtmeDZ3dk9peU5waThsUFUzMkpQbzBBeXBOcm5GMjRFRDFoZE9RNVFzcEdycU1PemltNm9QdWRCUVhkSHZyN3gySlc2RThQQ2hNT0h5RDA4T1E?oc=5",
+      "date": "2026-05-28",
+      "is_new": false
+    },
+    {
+      "scarcity": "gallium",
+      "title": "Beyond Rare Earths: China’s Growing Threat to Gallium Supply Chains - CSIS | Center for Strategic and International Studies",
+      "link": "https://news.google.com/rss/articles/CBMilwFBVV95cUxNMTlyTDc4MEJ6UHIwcWhXNlZvYkRJTnBLSmVzWmF0MVlOUzNVTzNSS2ZWdjh2bC1iSVl4WnZSSXFqSExvXzEwTmNWV3BITkl5SnJtcmxBWnloWm9oUldnMGR6cEMtUzluRzU4OWZqdG50SEpQLXlZODR2RjZJZHh0WDl6cndIQllTX1FjUEtDc09zY213QTRB?oc=5",
+      "date": "2025-07-17",
+      "is_new": true
+    },
+    {
+      "scarcity": "gallium",
+      "title": "China’s ‘silent sanction’ on US semiconductors creates a weapons generation gap - South China Morning Post",
+      "link": "https://news.google.com/rss/articles/CBMixgFBVV95cUxQY1NJLWoxTW5RQWpmNHNoUmxLRy1LLWxBY1ZPcWR1cG1QOVVKM3lKdkwzU2Fjakc3OUlGWkNGdEQtekplekdvX1RSVHB2OXFGVWUtV0lJcVMtaUdPeEE0a3UxWjZvSl8wTGNzM0JSVWd5VDBvSEtwLVN1clFXTlpCTEZtRXBIRm5EZDhnS2d1Uy16SVhpcll5NC1SZkd5UWtvaHNsd25OY21WcUlQVTdnOWNGeEF0VHhPR2V4LXFjbXl4d0xHVFHSAcYBQVVfeXFMTXM1M1VnNm83WW9TNmJCVG9ONmZXRG5EQnlGZXpUU3p1VDFOUUhiVEN5OWdUcDFhd1p2SkJ3U3hOdTFPaXVTMEVUd3A1c3A5ZHRpb1VhS1dad0R3TmF3LXhnQjU5LWJRTW5FQjQydWpOX2xGdVRPNEF6Vk1DeVlMZS05ZnFWeGhPVUt0anpBRW8weUlKOWhCMWVZN2N1RUZ4Z0xqY1Y2NE9wRnpjNlgtNHFGRy15NDBNZ3dOakVDV19Fd3kzMm9R?oc=5",
+      "date": "2025-09-05",
+      "is_new": true
+    },
+    {
+      "scarcity": "graphite",
+      "title": "China imposes export controls on lithium-batteries and artificial graphite anode materials - Herbert Smith Freehills Kramer",
+      "link": "https://news.google.com/rss/articles/CBMivwFBVV95cUxPV0psWGcxTEFVV0lRX0pKbnlHS1ZiMVptUEZkZGhHbmhGR1VDLVFDS0Zvc1lvU2xXR0tkLVo3YkI2N19kalhaMmxORm1SSnhlT2VxSHZ3ekRvcFRiZ2lTaUI4THFKaUEzMkJwZlFPU3liTkZYbW5xS2ZZUnhvWVdBWWRXQmxXellFNFFYOVB3NHF4RFcxNC1wTXFjUFJYWFdDbWhfb09mY1pzUzVtaDMtYlhvbkZodmNWNEw2UElNMA?oc=5",
+      "date": "2025-10-10",
+      "is_new": true
+    },
+    {
+      "scarcity": "graphite",
+      "title": "China imposes export controls on lithium batteries and graphite anode materials - WorldECR",
+      "link": "https://news.google.com/rss/articles/CBMirwFBVV95cUxQOTloOFY2M2RXWkZsTXpSUnRrRU9RcUZDYjZQeHpYb1Iwa3pSSDAzTlVxSDNPbWV4elBFY2FLdzFSZUcxOS1OQVZtSU5MMDhCdnNjNTE4UnduODlvSEt6b1FQb3pNUVQ1eU1ielpxZjhDMVZIaGRRNkowNno5dHhEbFBNZkhiNU9TbHFlaDBGYU4tNGR3WUhkSXAyZUg1MHVKYUVuRnpHY3Nockd2SGNV?oc=5",
+      "date": "2025-10-16",
+      "is_new": true
+    },
+    {
+      "scarcity": "hbm",
+      "title": "Is the AI Boom Fueling a Global Memory Crisis - Kavout",
+      "link": "https://news.google.com/rss/articles/CBMihwFBVV95cUxPMzk4MnRiV0VmTjIwYnNCMGdLb2l1eTAxUW1BQmk4VmVPN0xmcVd6NUpoRXoyMU5XZWx0OU5DTEVqcjZ4SXpDaXlSeFRNOU1mVndsd2p6Q1RsMm5pOUZBVGtEZkY3MjlUOUJnemhGdWcyQTBhYVYyVkhVMGJ4TTQ1dHNTLVZfU28?oc=5",
+      "date": "2026-05-30",
+      "is_new": false
+    },
+    {
+      "scarcity": "hbm",
+      "title": "Micron Technology hits $1 trillion market cap for first time on AI chip demand - eciks.org",
+      "link": "https://news.google.com/rss/articles/CBMiqgFBVV95cUxPNHNOaTA2amlmUHpBTkhDcVFQV01Ta01zVGM3WEljNmhMZTZaOUwtWWhmSjNiLTFab3ZMYldzNXdFQmhOeXQ3UUhMbjNtekxzRXRRUFhnVW5uZVpVUm9Ma0p6Y0JYMkQ4QzZyTHVKdlN3YjU4UFpsdm1MR3FweFE2T29XemJqc0RCWks2bVVydWExMUlqM1FsN0tuTU9zay1tMUs0Z1lMV0VnUQ?oc=5",
+      "date": "2026-05-30",
+      "is_new": false
+    }
+  ],
   "trigger_status": {
     "drawdown": {
       "met": false,
       "fired": false,
-      "value": null,
-      "note": "no data"
+      "value": -14.4,
+      "note": "avg -14.4% from 52w highs"
     },
     "sleeve_cap": {
       "met": false,
@@ -241,9 +1797,13 @@
   },
   "regime": {
     "version": 2,
-    "posture": "unknown",
-    "risk_score": null,
-    "components": {},
+    "posture": "risk-on",
+    "risk_score": 91,
+    "confidence": "high",
+    "confidence_note": "",
+    "fast_reentry": true,
+    "macro_stressed": false,
+    "macro_available": true,
     "composite_basis": [
       "PAVE",
       "GRID",
@@ -259,37 +1819,37 @@
       {
         "ticker": "PAVE",
         "account": "taxable",
-        "tsmom": 0,
-        "above_200": null,
-        "tilt": "n/a"
+        "tsmom": 1,
+        "above_200": true,
+        "tilt": "overweight"
       },
       {
         "ticker": "GRID",
         "account": "taxable",
-        "tsmom": 0,
-        "above_200": null,
-        "tilt": "n/a"
+        "tsmom": 1,
+        "above_200": true,
+        "tilt": "overweight"
       },
       {
         "ticker": "FIW",
         "account": "taxable",
-        "tsmom": 0,
-        "above_200": null,
-        "tilt": "n/a"
+        "tsmom": -1,
+        "above_200": false,
+        "tilt": "underweight"
       },
       {
         "ticker": "SHLD",
         "account": "taxable",
-        "tsmom": 0,
-        "above_200": null,
-        "tilt": "n/a"
+        "tsmom": 1,
+        "above_200": false,
+        "tilt": "neutral"
       },
       {
         "ticker": "ASML",
         "account": "taxable",
-        "tsmom": 0,
-        "above_200": null,
-        "tilt": "n/a"
+        "tsmom": 1,
+        "above_200": true,
+        "tilt": "overweight"
       },
       {
         "ticker": "SMNEY",
@@ -308,79 +1868,79 @@
       {
         "ticker": "SMH",
         "account": "ira",
-        "tsmom": 0,
-        "above_200": null,
-        "tilt": "n/a"
+        "tsmom": 1,
+        "above_200": true,
+        "tilt": "overweight"
       },
       {
         "ticker": "COPX",
         "account": "ira",
-        "tsmom": 0,
-        "above_200": null,
-        "tilt": "n/a"
+        "tsmom": 1,
+        "above_200": true,
+        "tilt": "overweight"
       },
       {
         "ticker": "NUKZ",
         "account": "ira",
-        "tsmom": 0,
-        "above_200": null,
-        "tilt": "n/a"
+        "tsmom": 1,
+        "above_200": true,
+        "tilt": "overweight"
       },
       {
         "ticker": "MU",
         "account": "ira",
-        "tsmom": 0,
-        "above_200": null,
-        "tilt": "n/a"
+        "tsmom": 1,
+        "above_200": true,
+        "tilt": "overweight"
       },
       {
         "ticker": "GEV",
         "account": "ira",
-        "tsmom": 0,
-        "above_200": null,
-        "tilt": "n/a"
+        "tsmom": 1,
+        "above_200": true,
+        "tilt": "overweight"
       },
       {
         "ticker": "CEG",
         "account": "ira",
-        "tsmom": 0,
-        "above_200": null,
-        "tilt": "n/a"
+        "tsmom": -1,
+        "above_200": false,
+        "tilt": "underweight"
       },
       {
         "ticker": "EME",
         "account": "ira",
-        "tsmom": 0,
-        "above_200": null,
-        "tilt": "n/a"
+        "tsmom": 1,
+        "above_200": true,
+        "tilt": "overweight"
       },
       {
         "ticker": "MP",
         "account": "ira",
-        "tsmom": 0,
-        "above_200": null,
-        "tilt": "n/a"
+        "tsmom": 1,
+        "above_200": true,
+        "tilt": "overweight"
       },
       {
         "ticker": "LEU",
         "account": "ira",
-        "tsmom": 0,
-        "above_200": null,
-        "tilt": "n/a"
+        "tsmom": 1,
+        "above_200": false,
+        "tilt": "neutral"
       },
       {
         "ticker": "ROBO",
         "account": "ira",
-        "tsmom": 0,
-        "above_200": null,
-        "tilt": "n/a"
+        "tsmom": 1,
+        "above_200": true,
+        "tilt": "overweight"
       },
       {
         "ticker": "UFO",
         "account": "ira",
-        "tsmom": 0,
-        "above_200": null,
-        "tilt": "n/a"
+        "tsmom": 1,
+        "above_200": true,
+        "tilt": "overweight"
       },
       {
         "ticker": "CASH-MMF",
@@ -394,15 +1954,85 @@
       "ira": "Tactical sleeve — deploy/accelerate per the posture (tax-free turnover).",
       "taxable": "Buy-and-hold anchors — stay invested; ignore the timing dial here."
     },
-    "macro_available": false,
-    "macro_stressed": false,
-    "fast_reentry": false,
-    "confidence": "low",
-    "confidence_note": "no usable price history",
-    "action": "Insufficient price history — fall back to the DCA calendar.",
-    "note": "timing layer needs live quotes (runs in GitHub Actions)"
+    "components": {
+      "trend_vs_200dma": 20.5,
+      "momentum_12m": 70.5,
+      "avg_off_high": -5.5,
+      "vol_state": 1.24,
+      "breadth_above_200dma": 78,
+      "breadth_above_20dma": 89
+    },
+    "macro": {
+      "stressed": false,
+      "term_inverted": false,
+      "hy_stressed": false,
+      "vix_term": 0.821,
+      "hy_mom_1m": 0.002246353567272985,
+      "reasons": []
+    },
+    "options_suggestion": {
+      "stance": "accelerate",
+      "structures": [
+        "long call / LEAPS for capped-downside leverage"
+      ],
+      "rationale": "leveraged upside vs. buying more shares, with defined risk",
+      "dte": "90-365d",
+      "delta": "call ~0.25-0.40"
+    },
+    "action": "Uptrend + positive 12m momentum, contained vol — deploy on schedule / accelerate low-regret anchors.",
+    "basis": "trend(200-DMA)+abs-momentum(12m)+vol-state+drawdown, +20-DMA fast re-entry +VIX/HY macro overlay; see REGIME.md",
+    "note": "trend 20% vs 200-DMA · 12m mom 70% · -5% from highs · vol 1.24x · breadth200 78% · breadth20 89%"
   },
-  "metrics": null,
+  "metrics": {
+    "cagr": 0.6659,
+    "max_drawdown": 0.1509,
+    "calmar": 4.4139,
+    "sortino": 3.7527,
+    "sharpe": 2.4199,
+    "vol": 0.2212,
+    "breaches_35": false,
+    "n": 251,
+    "basis": [
+      "PAVE",
+      "GRID",
+      "FIW",
+      "SHLD",
+      "SMH",
+      "COPX",
+      "NUKZ",
+      "ROBO",
+      "UFO"
+    ],
+    "window": "2025-05-30..2026-05-29",
+    "note": "trailing ~1y, target-weighted strategy basket",
+    "backtest": {
+      "ma_period": 100,
+      "braked": {
+        "cagr": 0.3923,
+        "max_drawdown": 0.1545,
+        "calmar": 2.5386,
+        "sortino": 2.1571,
+        "sharpe": 1.476,
+        "vol": 0.2445,
+        "breaches_35": false,
+        "n": 152
+      },
+      "unbraked": {
+        "cagr": 0.5583,
+        "max_drawdown": 0.1509,
+        "calmar": 3.7006,
+        "sortino": 2.8156,
+        "sharpe": 1.8559,
+        "vol": 0.2569,
+        "breaches_35": false,
+        "n": 152
+      },
+      "dd_reduction": -0.0037,
+      "whipsaws": 4,
+      "time_in_market": 0.97,
+      "n": 151
+    }
+  },
   "scorecard": {
     "by_tilt": {
       "overweight": {
@@ -423,12 +2053,13 @@
   },
   "scarcity_signals": {
     "electrons": {
-      "flag": "none",
-      "rs": null,
-      "score": 38,
-      "gate": 0.33,
+      "flag": "de-rating",
+      "action": "reduce",
+      "rs": -0.0914,
+      "score": 60,
+      "gate": 0.52,
       "static_gate": 0.33,
-      "live_gate": null,
+      "live_gate": 0.81,
       "quality": 1,
       "contrarian": true,
       "components": {
@@ -437,19 +2068,20 @@
         "defensibility": 1
       },
       "forced_flow": {
-        "dislocation": null,
+        "dislocation": 0.446,
         "window": null,
-        "intact": null,
+        "intact": true,
         "flag": "none"
       }
     },
     "transformers": {
-      "flag": "none",
-      "rs": null,
-      "score": 33,
-      "gate": 0.33,
+      "flag": "de-rating",
+      "action": "reduce",
+      "rs": -0.1536,
+      "score": 38,
+      "gate": 0.38,
       "static_gate": 0.33,
-      "live_gate": null,
+      "live_gate": 0.46,
       "quality": 1,
       "contrarian": false,
       "components": {
@@ -458,19 +2090,20 @@
         "defensibility": 1
       },
       "forced_flow": {
-        "dislocation": null,
+        "dislocation": 0.232,
         "window": null,
-        "intact": null,
+        "intact": false,
         "flag": "none"
       }
     },
     "turbines": {
-      "flag": "none",
-      "rs": null,
-      "score": 0,
-      "gate": 0,
+      "flag": "de-rating",
+      "action": "reduce",
+      "rs": -0.1858,
+      "score": 16,
+      "gate": 0.17,
       "static_gate": 0,
-      "live_gate": null,
+      "live_gate": 0.43,
       "quality": 0.91,
       "contrarian": false,
       "components": {
@@ -479,19 +2112,19 @@
         "defensibility": 1
       },
       "forced_flow": {
-        "dislocation": null,
+        "dislocation": 0.326,
         "window": null,
-        "intact": null,
+        "intact": false,
         "flag": "none"
       }
     },
     "electricians": {
       "flag": "none",
-      "rs": null,
-      "score": 38,
-      "gate": 0.33,
+      "rs": 0.0438,
+      "score": 33,
+      "gate": 0.29,
       "static_gate": 0.33,
-      "live_gate": null,
+      "live_gate": 0.22,
       "quality": 1,
       "contrarian": true,
       "components": {
@@ -500,19 +2133,19 @@
         "defensibility": 1
       },
       "forced_flow": {
-        "dislocation": null,
+        "dislocation": 0.134,
         "window": null,
-        "intact": null,
+        "intact": false,
         "flag": "none"
       }
     },
     "hvdc": {
       "flag": "none",
-      "rs": null,
-      "score": 69,
-      "gate": 0.66,
+      "rs": 0.0158,
+      "score": 53,
+      "gate": 0.51,
       "static_gate": 0.66,
-      "live_gate": null,
+      "live_gate": 0.28,
       "quality": 0.91,
       "contrarian": true,
       "components": {
@@ -521,19 +2154,20 @@
         "defensibility": 1
       },
       "forced_flow": {
-        "dislocation": null,
+        "dislocation": 0.085,
         "window": null,
-        "intact": null,
+        "intact": false,
         "flag": "none"
       }
     },
     "enrichment": {
-      "flag": "none",
-      "rs": null,
-      "score": 0,
-      "gate": 0,
+      "flag": "de-rating",
+      "action": "reduce",
+      "rs": -0.1283,
+      "score": 34,
+      "gate": 0.34,
       "static_gate": 0,
-      "live_gate": null,
+      "live_gate": 0.85,
       "quality": 0.86,
       "contrarian": true,
       "components": {
@@ -542,19 +2176,20 @@
         "defensibility": 1
       },
       "forced_flow": {
-        "dislocation": null,
+        "dislocation": 0.551,
         "window": null,
-        "intact": null,
-        "flag": "none"
+        "intact": false,
+        "flag": "broken"
       }
     },
     "uranium": {
-      "flag": "none",
-      "rs": null,
-      "score": 0,
-      "gate": 0,
+      "flag": "de-rating",
+      "action": "reduce",
+      "rs": -0.1105,
+      "score": 22,
+      "gate": 0.28,
       "static_gate": 0,
-      "live_gate": null,
+      "live_gate": 0.71,
       "quality": 0.79,
       "contrarian": false,
       "components": {
@@ -563,19 +2198,19 @@
         "defensibility": 0.5
       },
       "forced_flow": {
-        "dislocation": null,
+        "dislocation": 0.253,
         "window": null,
-        "intact": null,
+        "intact": false,
         "flag": "none"
       }
     },
     "copper": {
       "flag": "none",
-      "rs": null,
-      "score": 22,
-      "gate": 0.33,
+      "rs": 0.0583,
+      "score": 23,
+      "gate": 0.36,
       "static_gate": 0.33,
-      "live_gate": null,
+      "live_gate": 0.4,
       "quality": 0.66,
       "contrarian": false,
       "components": {
@@ -584,19 +2219,20 @@
         "defensibility": 0.5
       },
       "forced_flow": {
-        "dislocation": null,
+        "dislocation": 0.077,
         "window": null,
-        "intact": null,
+        "intact": false,
         "flag": "none"
       }
     },
     "rare-earth-magnets": {
-      "flag": "none",
-      "rs": null,
-      "score": 0,
-      "gate": 0,
+      "flag": "de-rating",
+      "action": "reduce",
+      "rs": -0.0411,
+      "score": 33,
+      "gate": 0.33,
       "static_gate": 0,
-      "live_gate": null,
+      "live_gate": 0.82,
       "quality": 0.88,
       "contrarian": true,
       "components": {
@@ -605,19 +2241,20 @@
         "defensibility": 0.5
       },
       "forced_flow": {
-        "dislocation": null,
+        "dislocation": 0.516,
         "window": null,
-        "intact": null,
-        "flag": "none"
+        "intact": false,
+        "flag": "broken"
       }
     },
     "gallium": {
-      "flag": "none",
-      "rs": null,
-      "score": 100,
-      "gate": 1,
+      "flag": "inflecting",
+      "action": "accumulate",
+      "rs": 0.6463,
+      "score": 85,
+      "gate": 0.74,
       "static_gate": 1,
-      "live_gate": null,
+      "live_gate": 0.35,
       "quality": 1,
       "contrarian": true,
       "components": {
@@ -626,19 +2263,19 @@
         "defensibility": 1
       },
       "forced_flow": {
-        "dislocation": null,
+        "dislocation": 0.2,
         "window": null,
-        "intact": null,
+        "intact": true,
         "flag": "none"
       }
     },
     "graphite": {
       "flag": "none",
-      "rs": null,
+      "rs": -0.1569,
       "score": 84,
       "gate": 1,
       "static_gate": 1,
-      "live_gate": null,
+      "live_gate": 1,
       "quality": 0.73,
       "contrarian": true,
       "components": {
@@ -647,19 +2284,22 @@
         "defensibility": 0.5
       },
       "forced_flow": {
-        "dislocation": null,
+        "dislocation": 0.869,
         "window": null,
-        "intact": null,
-        "flag": "none"
+        "intact": true,
+        "flag": "accumulate",
+        "subordinate_to_timing": false,
+        "guidance": "Accumulate: timing permits — forced/neglect selling into an intact thesis."
       }
     },
     "hbm": {
-      "flag": "none",
-      "rs": null,
-      "score": 44,
-      "gate": 0.66,
+      "flag": "inflecting",
+      "action": "accumulate",
+      "rs": 0.7763,
+      "score": 26,
+      "gate": 0.4,
       "static_gate": 0.66,
-      "live_gate": null,
+      "live_gate": 0,
       "quality": 0.57,
       "contrarian": true,
       "components": {
@@ -668,19 +2308,19 @@
         "defensibility": 0
       },
       "forced_flow": {
-        "dislocation": null,
+        "dislocation": 0,
         "window": null,
-        "intact": null,
+        "intact": false,
         "flag": "none"
       }
     },
     "advanced-packaging": {
       "flag": "none",
-      "rs": null,
-      "score": 22,
-      "gate": 0.33,
+      "rs": 0.0131,
+      "score": 20,
+      "gate": 0.31,
       "static_gate": 0.33,
-      "live_gate": null,
+      "live_gate": 0.27,
       "quality": 0.66,
       "contrarian": false,
       "components": {
@@ -689,19 +2329,19 @@
         "defensibility": 0
       },
       "forced_flow": {
-        "dislocation": null,
+        "dislocation": 0.021,
         "window": null,
-        "intact": null,
+        "intact": false,
         "flag": "none"
       }
     },
     "semicap": {
       "flag": "none",
-      "rs": null,
-      "score": 33,
-      "gate": 0.33,
+      "rs": 0.0603,
+      "score": 29,
+      "gate": 0.29,
       "static_gate": 0.33,
-      "live_gate": null,
+      "live_gate": 0.23,
       "quality": 1,
       "contrarian": false,
       "components": {
@@ -710,19 +2350,19 @@
         "defensibility": 1
       },
       "forced_flow": {
-        "dislocation": null,
+        "dislocation": 0.019,
         "window": null,
-        "intact": null,
+        "intact": false,
         "flag": "none"
       }
     },
     "optical": {
       "flag": "none",
-      "rs": null,
-      "score": 0,
-      "gate": 0,
+      "rs": -0.0021,
+      "score": 6,
+      "gate": 0.1,
       "static_gate": 0,
-      "live_gate": null,
+      "live_gate": 0.26,
       "quality": 0.6,
       "contrarian": false,
       "components": {
@@ -731,19 +2371,19 @@
         "defensibility": 0
       },
       "forced_flow": {
-        "dislocation": null,
+        "dislocation": 0.149,
         "window": null,
-        "intact": null,
+        "intact": false,
         "flag": "none"
       }
     },
     "specialty-materials": {
       "flag": "none",
-      "rs": null,
+      "rs": -0.169,
       "score": 100,
       "gate": 1,
       "static_gate": 1,
-      "live_gate": null,
+      "live_gate": 1,
       "quality": 1,
       "contrarian": true,
       "components": {
@@ -752,19 +2392,21 @@
         "defensibility": 1
       },
       "forced_flow": {
-        "dislocation": null,
+        "dislocation": 0.67,
         "window": null,
-        "intact": null,
-        "flag": "none"
+        "intact": true,
+        "flag": "accumulate",
+        "subordinate_to_timing": false,
+        "guidance": "Accumulate: timing permits — forced/neglect selling into an intact thesis."
       }
     },
     "cooling": {
       "flag": "none",
-      "rs": null,
-      "score": 27,
-      "gate": 0.33,
+      "rs": 0.0507,
+      "score": 21,
+      "gate": 0.26,
       "static_gate": 0.33,
-      "live_gate": null,
+      "live_gate": 0.15,
       "quality": 0.7,
       "contrarian": true,
       "components": {
@@ -773,9 +2415,9 @@
         "defensibility": 0.5
       },
       "forced_flow": {
-        "dislocation": null,
+        "dislocation": 0.129,
         "window": null,
-        "intact": null,
+        "intact": false,
         "flag": "none"
       }
     },
@@ -801,12 +2443,13 @@
       }
     },
     "reducers": {
-      "flag": "none",
-      "rs": null,
-      "score": 34,
-      "gate": 0.66,
+      "flag": "inflecting",
+      "action": "accumulate",
+      "rs": 0.4232,
+      "score": 23,
+      "gate": 0.45,
       "static_gate": 0.66,
-      "live_gate": null,
+      "live_gate": 0.13,
       "quality": 0.52,
       "contrarian": false,
       "components": {
@@ -815,19 +2458,20 @@
         "defensibility": 0
       },
       "forced_flow": {
-        "dislocation": null,
+        "dislocation": 0.047,
         "window": null,
-        "intact": null,
+        "intact": false,
         "flag": "none"
       }
     },
     "space-power": {
-      "flag": "none",
-      "rs": null,
-      "score": 74,
-      "gate": 1,
+      "flag": "inflecting",
+      "action": "accumulate",
+      "rs": 0.7663,
+      "score": 47,
+      "gate": 0.63,
       "static_gate": 1,
-      "live_gate": null,
+      "live_gate": 0.07,
       "quality": 0.65,
       "contrarian": true,
       "components": {
@@ -836,9 +2480,9 @@
         "defensibility": 0.5
       },
       "forced_flow": {
-        "dislocation": null,
+        "dislocation": 0.067,
         "window": null,
-        "intact": null,
+        "intact": false,
         "flag": "none"
       }
     },
@@ -864,12 +2508,13 @@
       }
     },
     "cryogenics": {
-      "flag": "none",
-      "rs": null,
-      "score": 99,
-      "gate": 1,
+      "flag": "inflecting",
+      "action": "accumulate",
+      "rs": 0.0666,
+      "score": 59,
+      "gate": 0.6,
       "static_gate": 1,
-      "live_gate": null,
+      "live_gate": 0,
       "quality": 0.86,
       "contrarian": true,
       "components": {
@@ -878,19 +2523,19 @@
         "defensibility": 1
       },
       "forced_flow": {
-        "dislocation": null,
+        "dislocation": 0,
         "window": null,
-        "intact": null,
+        "intact": true,
         "flag": "none"
       }
     },
     "bio-data": {
       "flag": "none",
-      "rs": null,
-      "score": 69,
-      "gate": 0.66,
+      "rs": -0.0576,
+      "score": 83,
+      "gate": 0.79,
       "static_gate": 0.66,
-      "live_gate": null,
+      "live_gate": 0.98,
       "quality": 0.91,
       "contrarian": true,
       "components": {
@@ -899,19 +2544,22 @@
         "defensibility": 1
       },
       "forced_flow": {
-        "dislocation": null,
+        "dislocation": 0.556,
         "window": null,
-        "intact": null,
-        "flag": "none"
+        "intact": true,
+        "flag": "accumulate",
+        "subordinate_to_timing": false,
+        "guidance": "Accumulate: timing permits — forced/neglect selling into an intact thesis."
       }
     },
     "rl-data": {
-      "flag": "none",
-      "rs": null,
+      "flag": "inflecting",
+      "action": "accumulate",
+      "rs": 0.0946,
       "score": 84,
       "gate": 1,
       "static_gate": 1,
-      "live_gate": null,
+      "live_gate": 1,
       "quality": 0.73,
       "contrarian": true,
       "components": {
@@ -920,30 +2568,16 @@
         "defensibility": 0.5
       },
       "forced_flow": {
-        "dislocation": null,
+        "dislocation": 0.725,
         "window": null,
-        "intact": null,
-        "flag": "none"
+        "intact": true,
+        "flag": "accumulate",
+        "subordinate_to_timing": false,
+        "guidance": "Accumulate: timing permits — forced/neglect selling into an intact thesis."
       }
     }
   },
   "opportunities": [
-    {
-      "id": "gallium",
-      "scarcity": "Gallium / GaN for radar & EW",
-      "sector": "Minerals",
-      "score": 100,
-      "gate": 1,
-      "static_gate": 1,
-      "live_gate": null,
-      "quality": 1,
-      "contrarian": true,
-      "components": {
-        "bind_proximity": 1,
-        "durability": 1,
-        "defensibility": 1
-      }
-    },
     {
       "id": "specialty-materials",
       "scarcity": "Single-source semi materials (ABF/T-glass/EUV resist)",
@@ -951,27 +2585,11 @@
       "score": 100,
       "gate": 1,
       "static_gate": 1,
-      "live_gate": null,
+      "live_gate": 1,
       "quality": 1,
       "contrarian": true,
       "components": {
         "bind_proximity": 1,
-        "durability": 1,
-        "defensibility": 1
-      }
-    },
-    {
-      "id": "cryogenics",
-      "scarcity": "He-3 + sub-Kelvin cryogenics",
-      "sector": "Quantum",
-      "score": 99,
-      "gate": 1,
-      "static_gate": 1,
-      "live_gate": null,
-      "quality": 0.86,
-      "contrarian": true,
-      "components": {
-        "bind_proximity": 0.65,
         "durability": 1,
         "defensibility": 1
       }
@@ -993,13 +2611,29 @@
       }
     },
     {
+      "id": "gallium",
+      "scarcity": "Gallium / GaN for radar & EW",
+      "sector": "Minerals",
+      "score": 85,
+      "gate": 0.74,
+      "static_gate": 1,
+      "live_gate": 0.35,
+      "quality": 1,
+      "contrarian": true,
+      "components": {
+        "bind_proximity": 1,
+        "durability": 1,
+        "defensibility": 1
+      }
+    },
+    {
       "id": "graphite",
       "scarcity": "Battery-grade graphite anode",
       "sector": "Minerals",
       "score": 84,
       "gate": 1,
       "static_gate": 1,
-      "live_gate": null,
+      "live_gate": 1,
       "quality": 0.73,
       "contrarian": true,
       "components": {
@@ -1031,7 +2665,7 @@
       "score": 84,
       "gate": 1,
       "static_gate": 1,
-      "live_gate": null,
+      "live_gate": 1,
       "quality": 0.73,
       "contrarian": true,
       "components": {
@@ -1041,13 +2675,77 @@
       }
     },
     {
+      "id": "bio-data",
+      "scarcity": "Proprietary AI-ready bio-data + GMP capacity",
+      "sector": "Biotech",
+      "score": 83,
+      "gate": 0.79,
+      "static_gate": 0.66,
+      "live_gate": 0.98,
+      "quality": 0.91,
+      "contrarian": true,
+      "components": {
+        "bind_proximity": 1,
+        "durability": 0.75,
+        "defensibility": 1
+      }
+    },
+    {
+      "id": "electrons",
+      "scarcity": "Electrons / merchant power (IPPs)",
+      "sector": "Energy",
+      "score": 60,
+      "gate": 0.52,
+      "static_gate": 0.33,
+      "live_gate": 0.81,
+      "quality": 1,
+      "contrarian": true,
+      "components": {
+        "bind_proximity": 1,
+        "durability": 1,
+        "defensibility": 1
+      }
+    },
+    {
+      "id": "cryogenics",
+      "scarcity": "He-3 + sub-Kelvin cryogenics",
+      "sector": "Quantum",
+      "score": 59,
+      "gate": 0.6,
+      "static_gate": 1,
+      "live_gate": 0,
+      "quality": 0.86,
+      "contrarian": true,
+      "components": {
+        "bind_proximity": 0.65,
+        "durability": 1,
+        "defensibility": 1
+      }
+    },
+    {
+      "id": "hvdc",
+      "scarcity": "HVDC & HV cable",
+      "sector": "Energy",
+      "score": 53,
+      "gate": 0.51,
+      "static_gate": 0.66,
+      "live_gate": 0.28,
+      "quality": 0.91,
+      "contrarian": true,
+      "components": {
+        "bind_proximity": 1,
+        "durability": 0.75,
+        "defensibility": 1
+      }
+    },
+    {
       "id": "space-power",
       "scarcity": "Space-grade power (GaAs cells + gallium)",
       "sector": "Space",
-      "score": 74,
-      "gate": 1,
+      "score": 47,
+      "gate": 0.63,
       "static_gate": 1,
-      "live_gate": null,
+      "live_gate": 0.07,
       "quality": 0.65,
       "contrarian": true,
       "components": {
@@ -1057,34 +2755,82 @@
       }
     },
     {
-      "id": "hvdc",
-      "scarcity": "HVDC & HV cable",
+      "id": "transformers",
+      "scarcity": "Large power transformers & GSUs",
       "sector": "Energy",
-      "score": 69,
-      "gate": 0.66,
-      "static_gate": 0.66,
-      "live_gate": null,
-      "quality": 0.91,
-      "contrarian": true,
+      "score": 38,
+      "gate": 0.38,
+      "static_gate": 0.33,
+      "live_gate": 0.46,
+      "quality": 1,
+      "contrarian": false,
       "components": {
         "bind_proximity": 1,
-        "durability": 0.75,
+        "durability": 1,
         "defensibility": 1
       }
     },
     {
-      "id": "bio-data",
-      "scarcity": "Proprietary AI-ready bio-data + GMP capacity",
-      "sector": "Biotech",
-      "score": 69,
-      "gate": 0.66,
-      "static_gate": 0.66,
-      "live_gate": null,
-      "quality": 0.91,
+      "id": "enrichment",
+      "scarcity": "Uranium enrichment SWU / HALEU",
+      "sector": "Minerals",
+      "score": 34,
+      "gate": 0.34,
+      "static_gate": 0,
+      "live_gate": 0.85,
+      "quality": 0.86,
+      "contrarian": true,
+      "components": {
+        "bind_proximity": 0.65,
+        "durability": 1,
+        "defensibility": 1
+      }
+    },
+    {
+      "id": "electricians",
+      "scarcity": "Skilled electrical labor / EPC",
+      "sector": "Energy",
+      "score": 33,
+      "gate": 0.29,
+      "static_gate": 0.33,
+      "live_gate": 0.22,
+      "quality": 1,
       "contrarian": true,
       "components": {
         "bind_proximity": 1,
-        "durability": 0.75,
+        "durability": 1,
+        "defensibility": 1
+      }
+    },
+    {
+      "id": "rare-earth-magnets",
+      "scarcity": "Heavy-RE (Dy/Tb) separation & NdFeB magnets",
+      "sector": "Minerals",
+      "score": 33,
+      "gate": 0.33,
+      "static_gate": 0,
+      "live_gate": 0.82,
+      "quality": 0.88,
+      "contrarian": true,
+      "components": {
+        "bind_proximity": 1,
+        "durability": 1,
+        "defensibility": 0.5
+      }
+    },
+    {
+      "id": "semicap",
+      "scarcity": "Semicap monopoly (EUV)",
+      "sector": "Compute",
+      "score": 29,
+      "gate": 0.29,
+      "static_gate": 0.33,
+      "live_gate": 0.23,
+      "quality": 1,
+      "contrarian": false,
+      "components": {
+        "bind_proximity": 1,
+        "durability": 1,
         "defensibility": 1
       }
     },
@@ -1092,10 +2838,10 @@
       "id": "hbm",
       "scarcity": "HBM + TSV / DRAM-wafer opportunity cost",
       "sector": "Compute",
-      "score": 44,
-      "gate": 0.66,
+      "score": 26,
+      "gate": 0.4,
       "static_gate": 0.66,
-      "live_gate": null,
+      "live_gate": 0,
       "quality": 0.57,
       "contrarian": true,
       "components": {
@@ -1105,109 +2851,13 @@
       }
     },
     {
-      "id": "electrons",
-      "scarcity": "Electrons / merchant power (IPPs)",
-      "sector": "Energy",
-      "score": 38,
-      "gate": 0.33,
-      "static_gate": 0.33,
-      "live_gate": null,
-      "quality": 1,
-      "contrarian": true,
-      "components": {
-        "bind_proximity": 1,
-        "durability": 1,
-        "defensibility": 1
-      }
-    },
-    {
-      "id": "electricians",
-      "scarcity": "Skilled electrical labor / EPC",
-      "sector": "Energy",
-      "score": 38,
-      "gate": 0.33,
-      "static_gate": 0.33,
-      "live_gate": null,
-      "quality": 1,
-      "contrarian": true,
-      "components": {
-        "bind_proximity": 1,
-        "durability": 1,
-        "defensibility": 1
-      }
-    },
-    {
-      "id": "reducers",
-      "scarcity": "Precision reducers / roller screws",
-      "sector": "Robotics",
-      "score": 34,
-      "gate": 0.66,
-      "static_gate": 0.66,
-      "live_gate": null,
-      "quality": 0.52,
-      "contrarian": false,
-      "components": {
-        "bind_proximity": 0.85,
-        "durability": 0.5,
-        "defensibility": 0
-      }
-    },
-    {
-      "id": "transformers",
-      "scarcity": "Large power transformers & GSUs",
-      "sector": "Energy",
-      "score": 33,
-      "gate": 0.33,
-      "static_gate": 0.33,
-      "live_gate": null,
-      "quality": 1,
-      "contrarian": false,
-      "components": {
-        "bind_proximity": 1,
-        "durability": 1,
-        "defensibility": 1
-      }
-    },
-    {
-      "id": "semicap",
-      "scarcity": "Semicap monopoly (EUV)",
-      "sector": "Compute",
-      "score": 33,
-      "gate": 0.33,
-      "static_gate": 0.33,
-      "live_gate": null,
-      "quality": 1,
-      "contrarian": false,
-      "components": {
-        "bind_proximity": 1,
-        "durability": 1,
-        "defensibility": 1
-      }
-    },
-    {
-      "id": "cooling",
-      "scarcity": "AI datacenter cooling (CDU)",
-      "sector": "Compute",
-      "score": 27,
-      "gate": 0.33,
-      "static_gate": 0.33,
-      "live_gate": null,
-      "quality": 0.7,
-      "contrarian": true,
-      "components": {
-        "bind_proximity": 1,
-        "durability": 0.5,
-        "defensibility": 0.5
-      }
-    },
-    {
       "id": "copper",
       "scarcity": "Copper structural deficit",
       "sector": "Minerals",
-      "score": 22,
-      "gate": 0.33,
+      "score": 23,
+      "gate": 0.36,
       "static_gate": 0.33,
-      "live_gate": null,
+      "live_gate": 0.4,
       "quality": 0.66,
       "contrarian": false,
       "components": {
@@ -1217,13 +2867,61 @@
       }
     },
     {
+      "id": "reducers",
+      "scarcity": "Precision reducers / roller screws",
+      "sector": "Robotics",
+      "score": 23,
+      "gate": 0.45,
+      "static_gate": 0.66,
+      "live_gate": 0.13,
+      "quality": 0.52,
+      "contrarian": false,
+      "components": {
+        "bind_proximity": 0.85,
+        "durability": 0.5,
+        "defensibility": 0
+      }
+    },
+    {
+      "id": "uranium",
+      "scarcity": "Uranium (upstream)",
+      "sector": "Minerals",
+      "score": 22,
+      "gate": 0.28,
+      "static_gate": 0,
+      "live_gate": 0.71,
+      "quality": 0.79,
+      "contrarian": false,
+      "components": {
+        "bind_proximity": 1,
+        "durability": 0.75,
+        "defensibility": 0.5
+      }
+    },
+    {
+      "id": "cooling",
+      "scarcity": "AI datacenter cooling (CDU)",
+      "sector": "Compute",
+      "score": 21,
+      "gate": 0.26,
+      "static_gate": 0.33,
+      "live_gate": 0.15,
+      "quality": 0.7,
+      "contrarian": true,
+      "components": {
+        "bind_proximity": 1,
+        "durability": 0.5,
+        "defensibility": 0.5
+      }
+    },
+    {
       "id": "advanced-packaging",
       "scarcity": "Advanced packaging (CoWoS / SoIC)",
       "sector": "Compute",
-      "score": 22,
-      "gate": 0.33,
+      "score": 20,
+      "gate": 0.31,
       "static_gate": 0.33,
-      "live_gate": null,
+      "live_gate": 0.27,
       "quality": 0.66,
       "contrarian": false,
       "components": {
@@ -1236,10 +2934,10 @@
       "id": "turbines",
       "scarcity": "Gas turbine slots",
       "sector": "Energy",
-      "score": 0,
-      "gate": 0,
+      "score": 16,
+      "gate": 0.17,
       "static_gate": 0,
-      "live_gate": null,
+      "live_gate": 0.43,
       "quality": 0.91,
       "contrarian": false,
       "components": {
@@ -1249,61 +2947,13 @@
       }
     },
     {
-      "id": "enrichment",
-      "scarcity": "Uranium enrichment SWU / HALEU",
-      "sector": "Minerals",
-      "score": 0,
-      "gate": 0,
-      "static_gate": 0,
-      "live_gate": null,
-      "quality": 0.86,
-      "contrarian": true,
-      "components": {
-        "bind_proximity": 0.65,
-        "durability": 1,
-        "defensibility": 1
-      }
-    },
-    {
-      "id": "uranium",
-      "scarcity": "Uranium (upstream)",
-      "sector": "Minerals",
-      "score": 0,
-      "gate": 0,
-      "static_gate": 0,
-      "live_gate": null,
-      "quality": 0.79,
-      "contrarian": false,
-      "components": {
-        "bind_proximity": 1,
-        "durability": 0.75,
-        "defensibility": 0.5
-      }
-    },
-    {
-      "id": "rare-earth-magnets",
-      "scarcity": "Heavy-RE (Dy/Tb) separation & NdFeB magnets",
-      "sector": "Minerals",
-      "score": 0,
-      "gate": 0,
-      "static_gate": 0,
-      "live_gate": null,
-      "quality": 0.88,
-      "contrarian": true,
-      "components": {
-        "bind_proximity": 1,
-        "durability": 1,
-        "defensibility": 0.5
-      }
-    },
-    {
       "id": "optical",
       "scarcity": "Optical interconnect / co-packaged optics",
       "sector": "Compute",
-      "score": 0,
-      "gate": 0,
+      "score": 6,
+      "gate": 0.1,
       "static_gate": 0,
-      "live_gate": null,
+      "live_gate": 0.26,
       "quality": 0.6,
       "contrarian": false,
       "components": {
@@ -1314,15 +2964,34 @@
     }
   ],
   "v23": {
-    "state": "UNAVAILABLE",
+    "state": "FULL",
+    "instrument": "QLD",
+    "rule": "trend",
+    "overlay_applied": false,
+    "signals": {
+      "trend": true,
+      "crash_off": false,
+      "thrust": true
+    },
+    "detail": {
+      "price": 738.3099975585938,
+      "sma200": 617.85,
+      "sma20": 709.04,
+      "ret252": 0.4228,
+      "vol60": 0.19
+    },
     "reasons": [
-      "offline run"
+      "TREND: QQQ above its 200-DMA — QLD (2×)"
     ],
-    "basis": "needs live QQQ/VIX/HYG series"
+    "basis": "faithful F+C Thrust replica on QQQ"
   },
   "dislocation_entry": {
-    "window": "none",
-    "reason": "nothing dislocated into an intact thesis right now."
+    "window": "open",
+    "reason": "Act: a thesis-intact dislocation is present AND timing has turned — V2.3 trend re-confirmed (FULL); Puck's 20-DMA fast re-entry is firing.",
+    "triggers": [
+      "V2.3 trend re-confirmed (FULL)",
+      "Puck's 20-DMA fast re-entry is firing"
+    ]
   },
   "chokepoints": [
     {
@@ -1334,11 +3003,58 @@
         "ASML"
       ],
       "how_to_access": "ASML is listed (NL/US ADR) — the rare accessible chokepoint; size it.",
-      "discovered": [],
-      "top_headline": null,
-      "heat": 0,
-      "rel": null,
-      "news_count": 0
+      "discovered": [
+        {
+          "ticker": "COHR",
+          "company": "II-VI INC",
+          "mentions": 43,
+          "score": 1,
+          "generic": false
+        },
+        {
+          "ticker": "INTC",
+          "company": "INTEL CORP",
+          "mentions": 25,
+          "score": 0.762,
+          "generic": false
+        },
+        {
+          "ticker": "AUMN",
+          "company": "APEX SILVER MINES LTD",
+          "mentions": 11,
+          "score": 0.506,
+          "generic": false
+        },
+        {
+          "ticker": "SRSG",
+          "company": "SPIRITS TIME INTERNATIONAL, INC.",
+          "mentions": 8,
+          "score": 0.431,
+          "generic": false
+        },
+        {
+          "ticker": "VECO",
+          "company": "VEECO INSTRUMENTS INC",
+          "mentions": 21,
+          "score": 0.349,
+          "generic": false
+        },
+        {
+          "ticker": "ON",
+          "company": "ON SEMICONDUCTOR CORP",
+          "mentions": 3,
+          "score": 0.264,
+          "generic": false
+        }
+      ],
+      "top_headline": {
+        "title": "TSMC High NA EUV Decision Puts ASML Growth Timing In Focus - Yahoo Finance",
+        "link": "https://news.google.com/rss/articles/CBMilAFBVV95cUxQMThZaUJxOUJlaS1ncFBqeUE2M2ktNGczcndJRms1MlVzSXFld2haREtESEI3OGFKeFdfUWh4TC1UOXRfVU9uU2ZCQU1OUGRmYlRBWU5EYjFnYjg4Sm5LVUUwOUJKRVg5RUJzU1Fydm1KRU9Db0ZfaGQ2OFlOd3ZnZGZjbk9yek5qVzBuTEhBSTYwMUNv?oc=5",
+        "date": "2026-05-02"
+      },
+      "heat": 100,
+      "rel": 0.0603,
+      "news_count": 5
     },
     {
       "id": "adv-packaging",
@@ -1349,11 +3065,58 @@
         "TSM"
       ],
       "how_to_access": "TSM ADR; OSAT names (ASE) as secondary.",
-      "discovered": [],
-      "top_headline": null,
-      "heat": 0,
-      "rel": null,
-      "news_count": 0
+      "discovered": [
+        {
+          "ticker": "ACMR",
+          "company": "ACM Research, Inc.",
+          "mentions": 13,
+          "score": 0.609,
+          "generic": false
+        },
+        {
+          "ticker": "KLIC",
+          "company": "KULICKE & SOFFA INDUSTRIES INC",
+          "mentions": 11,
+          "score": 0.561,
+          "generic": false
+        },
+        {
+          "ticker": "CRDO",
+          "company": "Credo Technology Group Holding Ltd",
+          "mentions": 9,
+          "score": 0.507,
+          "generic": false
+        },
+        {
+          "ticker": "VECO",
+          "company": "VEECO INSTRUMENTS INC",
+          "mentions": 35,
+          "score": 0.5,
+          "generic": false
+        },
+        {
+          "ticker": "DSS",
+          "company": "DOCUMENT SECURITY SYSTEMS INC",
+          "mentions": 6,
+          "score": 0.414,
+          "generic": false
+        },
+        {
+          "ticker": "GSIT",
+          "company": "GSI TECHNOLOGY INC",
+          "mentions": 6,
+          "score": 0.414,
+          "generic": false
+        }
+      ],
+      "top_headline": {
+        "title": "MediaTek adopts Intel’s advanced chip packaging alongside TSMC’s services - Crypto Briefing",
+        "link": "https://news.google.com/rss/articles/CBMidkFVX3lxTE9yS3d6NHBPQlJPTWJyNzVadmlqekdLM1FHbGJKYlowd3BGMTBBb09VZTYwMGxHYnY0WWR4QXlrXzJwVWdpRTAydDhVeWg5OTdIeWoxbnJFeTlKTUZmeDlja2ZUTVE2Q2xVTzRubTlORVhCc3ZmQVE?oc=5",
+        "date": "2026-05-29"
+      },
+      "heat": 91,
+      "rel": -0.0341,
+      "news_count": 5
     },
     {
       "id": "re-separation",
@@ -1365,11 +3128,58 @@
         "LYC"
       ],
       "how_to_access": "MP/Lynas are subsidy-floor proxies; the true chokepoint (China separation) is un-investable.",
-      "discovered": [],
-      "top_headline": null,
-      "heat": 0,
-      "rel": null,
-      "news_count": 0
+      "discovered": [
+        {
+          "ticker": "MP",
+          "company": "MP Materials Corp. / DE",
+          "mentions": 35,
+          "score": 1,
+          "generic": false
+        },
+        {
+          "ticker": "AREC",
+          "company": "American Resources Corp",
+          "mentions": 16,
+          "score": 0.676,
+          "generic": false
+        },
+        {
+          "ticker": "EMAT",
+          "company": "Evolution Metals & Technologies Corp.",
+          "mentions": 13,
+          "score": 0.609,
+          "generic": false
+        },
+        {
+          "ticker": "REEMF",
+          "company": "RARE ELEMENT RESOURCES LTD",
+          "mentions": 11,
+          "score": 0.561,
+          "generic": false
+        },
+        {
+          "ticker": "USAR",
+          "company": "USA Rare Earth, Inc.",
+          "mentions": 8,
+          "score": 0.478,
+          "generic": false
+        },
+        {
+          "ticker": "TMRC",
+          "company": "Texas Rare Earth Resources Corp.",
+          "mentions": 6,
+          "score": 0.414,
+          "generic": false
+        }
+      ],
+      "top_headline": {
+        "title": "Rare Earth Export Restrictions One Year Later - CSIS | Center for Strategic and International Studies",
+        "link": "https://news.google.com/rss/articles/CBMigAFBVV95cUxOWjl4RTQ4VXFxaVRuT2FrYUNlVE11dEJKVzdSTm51U3l3dG1jNGdHdWVXaVVVM0RBeTU4cGRJaWM5Zkk2NUlEal9oNTFyWURldURHTTg4UEg3TnNyZVpJbEVQUm5aSEI1TU9sRk9KV0NERG5ONkV3NlR4cTl3bWJ0OA?oc=5",
+        "date": "2026-04-27"
+      },
+      "heat": 89,
+      "rel": -0.0411,
+      "news_count": 5
     },
     {
       "id": "abf-substrate",
@@ -1380,11 +3190,58 @@
         "4185.T"
       ],
       "how_to_access": "Ajinomoto (Tokyo); Ibiden/Shinko secondary — all foreign-listed.",
-      "discovered": [],
-      "top_headline": null,
-      "heat": 0,
+      "discovered": [
+        {
+          "ticker": "ADM",
+          "company": "ARCHER DANIELS MIDLAND CO",
+          "mentions": 15,
+          "score": 1,
+          "generic": false
+        },
+        {
+          "ticker": "WCUI",
+          "company": "Wellness Center USA, Inc.",
+          "mentions": 7,
+          "score": 0.683,
+          "generic": false
+        },
+        {
+          "ticker": "RVNC",
+          "company": "Revance Therapeutics, Inc.",
+          "mentions": 4,
+          "score": 0.516,
+          "generic": false
+        },
+        {
+          "ticker": "INSM",
+          "company": "INSMED Inc",
+          "mentions": 3,
+          "score": 0.447,
+          "generic": false
+        },
+        {
+          "ticker": "MDLZ",
+          "company": "Mondelez International, Inc.",
+          "mentions": 1,
+          "score": 0.258,
+          "generic": false
+        },
+        {
+          "ticker": "IONS",
+          "company": "ISIS PHARMACEUTICALS INC",
+          "mentions": 1,
+          "score": 0.258,
+          "generic": false
+        }
+      ],
+      "top_headline": {
+        "title": "The Seasoning Company Behind Your Food Flavors Controls The Future Of AI Chips, And Supply Is Running Dangerously Low - Wccftech",
+        "link": "https://news.google.com/rss/articles/CBMiqAFBVV95cUxPQnk2bV9GRzVFdUVmRnBweTYwLWtNeEszUEJOUWhNdHdhV3pNZU1uTmZEUFFHZF9IUmRqTjJBS2I2QTlnZjB6NEl2WjdVNFlQUWozRXV4QkhDTk9seEhLeFpKWUZqZkNXMU5sUlVsRWxHUWV5QkVMa2dDczZyZUJwT2RzOTQ4RGJRaVBIalJObmNxTFBfZzJEZjVaeDhUR0I2Mzk3M215WnrSAa4BQVVfeXFMTzZMNmFHcjBPYlRiQjI3SHhZRmk3SF9FOFg0cHNncm4wRGpwdGVjUE1US0VpYmQ2Tmc0OFpPampoV2h2RE9kSzlEb2p1UVF6RThKOFFvbFpNYzFwSUNsRXU4QU8tZFZmTnBnZzJaTzkyZHBmcUlUdmVoUTY0VHotcTZ4Rk1XRzVGaWkweFdDX3lqZmEtb1ZGYXcwa3lvTUF2ZGoyVXNjVjN5bGtrWjhR?oc=5",
+        "date": "2026-04-11"
+      },
+      "heat": 100,
       "rel": null,
-      "news_count": 0
+      "news_count": 5
     },
     {
       "id": "precision-reducers",
@@ -1396,10 +3253,14 @@
       ],
       "how_to_access": "Harmonic Drive (Tokyo); eroding moat (Schaeffler, China entrants).",
       "discovered": [],
-      "top_headline": null,
-      "heat": 0,
-      "rel": null,
-      "news_count": 0
+      "top_headline": {
+        "title": "Limited joint-load capacity threatens humanoid robots' ability to replace human labor - digitimes",
+        "link": "https://news.google.com/rss/articles/CBMiigFBVV95cUxOckphUlhNVldKcnJ6QTRHS1RGZ280MnlyTnlmX3BMaFJBOEg3U0tTMnBpcjZqbTVyZ2lzRkJ6N0VsS2hKOGdSSXRKeVg4VVY4d201Rkg4SnJlSmdjM0RwOWdEUWNZeWtaLWI3dll2a1lkVzAzaTFZV1F2Yy12bGZmYTZHMjdJR21BZEE?oc=5",
+        "date": "2026-05-21"
+      },
+      "heat": 100,
+      "rel": 0.7628,
+      "news_count": 5
     },
     {
       "id": "manipulation-data",
@@ -1410,11 +3271,37 @@
         "ROBO"
       ],
       "how_to_access": "Private (Physical Intelligence, Skild, Tesla). No clean proxy; ROBO/NVDA are picks-and-shovels.",
-      "discovered": [],
-      "top_headline": null,
-      "heat": 0,
-      "rel": null,
-      "news_count": 0
+      "discovered": [
+        {
+          "ticker": "NVDA",
+          "company": "NVIDIA CORP",
+          "mentions": 2,
+          "score": 1,
+          "generic": false
+        },
+        {
+          "ticker": "ADI",
+          "company": "ANALOG DEVICES INC",
+          "mentions": 1,
+          "score": 0.707,
+          "generic": false
+        },
+        {
+          "ticker": "ZBRA",
+          "company": "ZEBRA TECHNOLOGIES CORP",
+          "mentions": 1,
+          "score": 0.707,
+          "generic": false
+        }
+      ],
+      "top_headline": {
+        "title": "DAIMON Robotics Wants to Give Robot Hands a Sense of Touch - IEEE Spectrum",
+        "link": "https://news.google.com/rss/articles/CBMiY0FVX3lxTE5CT1NKRW1lQ190YjFyQkE2RlcyNExlVHRDVmJRa1FBX3pOdzRrMGZNcFljekQzYnhER1hNSE1ueVZYZDV4Ri14LS1YZ3hUeGZldmVERlhXRGhGb19VdEwyUUd6WQ?oc=5",
+        "date": "2026-05-04"
+      },
+      "heat": 100,
+      "rel": 0.0303,
+      "news_count": 5
     },
     {
       "id": "launch-space-power",
@@ -1425,11 +3312,58 @@
         "RKLB"
       ],
       "how_to_access": "SpaceX private; RKLB is the closest listed launch proxy.",
-      "discovered": [],
-      "top_headline": null,
-      "heat": 0,
-      "rel": null,
-      "news_count": 0
+      "discovered": [
+        {
+          "ticker": "NSSC",
+          "company": "NAPCO SECURITY TECHNOLOGIES, INC",
+          "mentions": 23,
+          "score": 1,
+          "generic": false
+        },
+        {
+          "ticker": "IRDM",
+          "company": "Iridium Communications Inc.",
+          "mentions": 22,
+          "score": 0.978,
+          "generic": false
+        },
+        {
+          "ticker": "KVHI",
+          "company": "KVH INDUSTRIES INC \\DE\\",
+          "mentions": 20,
+          "score": 0.933,
+          "generic": false
+        },
+        {
+          "ticker": "SATS",
+          "company": "EchoStar CORP",
+          "mentions": 9,
+          "score": 0.626,
+          "generic": false
+        },
+        {
+          "ticker": "EGP",
+          "company": "EASTGROUP PROPERTIES INC",
+          "mentions": 7,
+          "score": 0.552,
+          "generic": false
+        },
+        {
+          "ticker": "BNGO",
+          "company": "Bionano Genomics, Inc",
+          "mentions": 6,
+          "score": 0.511,
+          "generic": false
+        }
+      ],
+      "top_headline": {
+        "title": "A trillion dollar question: Will SpaceX's Starship launch go well? - KUOW",
+        "link": "https://news.google.com/rss/articles/CBMilgFBVV95cUxQb2xPN0pwT012ZkFUR1pJNU41U2pKMVcwRk1rT2t3ZkFlRHhXUXdDaVF3R1J2Q3UycmlZTlBkV0ZtTTI3ZHIzSm02SFp2N2QtZ21ibEo5MVdkYU01ZGVmbDlMS0x0dXZWU0t1ckFDVTY5anhaRVc5MFBYbXdFX1Q4emFKaTJIekE0UTNfV3hFTjVQck1OMWc?oc=5",
+        "date": "2026-05-21"
+      },
+      "heat": 100,
+      "rel": 0.7663,
+      "news_count": 5
     },
     {
       "id": "gallium-gan",
@@ -1442,26 +3376,90 @@
         "QRVO"
       ],
       "how_to_access": "WOLF impaired (chokepoint != rent); NVTS/QRVO partial GaN exposure.",
-      "discovered": [],
-      "top_headline": null,
-      "heat": 0,
-      "rel": null,
-      "news_count": 0
+      "discovered": [
+        {
+          "ticker": "AXTI",
+          "company": "AXT INC",
+          "mentions": 63,
+          "score": 1,
+          "generic": false
+        },
+        {
+          "ticker": "GAN",
+          "company": "GAN Ltd",
+          "mentions": 49,
+          "score": 0.882,
+          "generic": false
+        },
+        {
+          "ticker": "NVTS",
+          "company": "Live Oak Acquisition Corp II",
+          "mentions": 36,
+          "score": 0.756,
+          "generic": false
+        },
+        {
+          "ticker": "ODII",
+          "company": "Odyssey Semiconductor Technologies, Inc.",
+          "mentions": 19,
+          "score": 0.549,
+          "generic": false
+        },
+        {
+          "ticker": "WOLF",
+          "company": "CREE INC",
+          "mentions": 17,
+          "score": 0.519,
+          "generic": false
+        },
+        {
+          "ticker": "CLFD",
+          "company": "APA Enterprises, Inc.",
+          "mentions": 16,
+          "score": 0.504,
+          "generic": false
+        }
+      ],
+      "top_headline": {
+        "title": "China’s ‘silent sanction’ on US semiconductors creates a weapons generation gap - South China Morning Post",
+        "link": "https://news.google.com/rss/articles/CBMixgFBVV95cUxQY1NJLWoxTW5RQWpmNHNoUmxLRy1LLWxBY1ZPcWR1cG1QOVVKM3lKdkwzU2Fjakc3OUlGWkNGdEQtekplekdvX1RSVHB2OXFGVWUtV0lJcVMtaUdPeEE0a3UxWjZvSl8wTGNzM0JSVWd5VDBvSEtwLVN1clFXTlpCTEZtRXBIRm5EZDhnS2d1Uy16SVhpcll5NC1SZkd5UWtvaHNsd25OY21WcUlQVTdnOWNGeEF0VHhPR2V4LXFjbXl4d0xHVFHSAcYBQVVfeXFMTXM1M1VnNm83WW9TNmJCVG9ONmZXRG5EQnlGZXpUU3p1VDFOUUhiVEN5OWdUcDFhd1p2SkJ3U3hOdTFPaXVTMEVUd3A1c3A5ZHRpb1VhS1dad0R3TmF3LXhnQjU5LWJRTW5FQjQydWpOX2xGdVRPNEF6Vk1DeVlMZS05ZnFWeGhPVUt0anpBRW8weUlKOWhCMWVZN2N1RUZ4Z0xqY1Y2NE9wRnpjNlgtNHFGRy15NDBNZ3dOakVDV19Fd3kzMm9R?oc=5",
+        "date": "2025-09-05"
+      },
+      "heat": 100,
+      "rel": 0.6463,
+      "news_count": 5
     }
   ],
-  "proxy_hubs": [],
+  "proxy_hubs": [
+    {
+      "ticker": "VECO",
+      "company": "VEECO INSTRUMENTS INC",
+      "degree": 2,
+      "chokepoints": [
+        "euv-litho",
+        "adv-packaging"
+      ],
+      "pure_play": false,
+      "hub": false,
+      "avg_specificity": 0.424
+    }
+  ],
   "data_quality": {
-    "ok": false,
-    "ok_quotes": 0,
-    "errored": 52,
+    "ok": true,
+    "ok_quotes": 47,
+    "errored": 5,
     "flagged": 0,
-    "corroborated": 0,
-    "corroborated_of": 0,
-    "note": "degraded — auto-triggers held this run"
+    "corroborated": 40,
+    "corroborated_of": 47,
+    "note": "47 ok, 0 flagged, 40/47 cross-source-corroborated"
   },
   "scarcity_drift": {},
-  "digest": "(no LLM key set — set GEMINI_API_KEY or GROQ_API_KEY in repo secrets to enable the agent digest)",
+  "digest": "_Analyst: gemini:gemini-2.0-flash · Red-team: groq:llama-3.3-70b-versatile (cross-model adversarial review)_\n\n## Analyst\n\n\n## Red-team\nI'd be happy to provide a skeptical analysis. However, you haven't provided the analyst digest. Please provide the digest, and I'll respond with 4-6 sharp bullets identifying claims that are:\n\n* Over-stated\n* Already-priced\n* Not supported by the data (quotes/filings/news provided)\n\nPlease provide the digest, and I'll get started.",
   "errors": [
-    "offline mode: no live quotes fetched"
+    "SMNEY: no quote from any source",
+    "U.UN: no quote from any source",
+    "IVN: no quote from any source",
+    "LYC: no quote from any source",
+    "4185.T: no quote from any source"
   ]
 }

@@ -8,6 +8,7 @@
 
 import { readFileSync, writeFileSync } from "node:fs";
 import { isTradeable, fetchYahoo, fetchSeries, fetchStooqHistory, fetchTiingoHistory } from "./lib/quotes.mjs";
+import { technicalsFromHistory } from "./lib/technicals.mjs";
 import { reconcileSeries } from "./lib/history-reconcile.mjs";
 import { basketIndex, portfolioMetrics } from "./lib/metrics.mjs";
 import { backtestRegime } from "./lib/backtest.mjs";
@@ -123,18 +124,39 @@ function crowding(q) {
   return Math.round(Math.max(0, Math.min(100, ytdScore + nearHigh)));
 }
 
+// DB-FIRST TECHNICALS: when Supabase is configured, derive each ticker's technicals (200-DMA,
+// 12m/1m momentum, vol, 52w-high, YTD) from the DEEP, adjusted, cross-checked DB series + today's
+// already-corroborated price — instead of the live 1-year quote. Deep + consistent with the
+// backtest basis. The live quote still provides today's PRICE (corroboration intact) and is the
+// graceful FALLBACK when the DB lacks or is shallow on a ticker. Anti-synthetic: only real prints.
+async function dbTechnicals(ticker, q) {
+  if (!supabaseConfigured() || !q || q.error || !(q.price > 0)) return null;
+  try {
+    const s = await readSeries(ticker, { minDate: new Date(Date.now() - 2.2 * 365.25 * 86400000).toISOString().slice(0, 10) });
+    if (!s) return null;
+    const t = technicalsFromHistory(s, { date: q.asof || TODAY, price: q.price }, { currency: q.currency ?? null, source: "db+today" });
+    return t ? { ...t, price: q.price } : null; // keep the corroborated price
+  } catch { return null; }
+}
+
 const enriched = {};
 let drops = [];
+let _dbTech = 0;
 for (const t of universe) {
   const q = quotes[t];
   if (q && !q.error) {
-    enriched[t] = { ...q, crowding: crowding(q) };
-    if (q.pct_off_high != null) drops.push(q.pct_off_high);
+    const dbt = await dbTechnicals(t, q);
+    // Merge DB technicals over the live quote (preserve price/asof/currency/source/corroboration/flags).
+    const merged = dbt ? { ...q, ...dbt, price: q.price, asof: q.asof ?? dbt.asof, source: q.source, corroboration: q.corroboration, flags: q.flags, technicals_src: "db" } : q;
+    if (dbt) _dbTech++;
+    enriched[t] = { ...merged, crowding: crowding(merged) };
+    if (merged.pct_off_high != null) drops.push(merged.pct_off_high);
   } else {
     enriched[t] = q || { ticker: t, error: "no quote" };
     if (q?.error) errors.push(`${t}: ${q.error}`);
   }
 }
+if (!OFFLINE && supabaseConfigured()) console.log(`Technicals: ${_dbTech}/${Object.keys(enriched).length} from deep DB history (rest live)`);
 
 // Data-quality summary across the universe (drives fail-safe trigger gating below).
 const vals = Object.values(enriched);

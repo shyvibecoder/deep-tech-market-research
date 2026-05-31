@@ -2,6 +2,7 @@
 // Primary: Stooq CSV. Fallback: Yahoo Finance chart API. Both are keyless and free.
 // Runs in GitHub Actions (open network). In a restricted sandbox, fetches fail and
 // the scanner degrades gracefully (errors recorded, prior signals preserved).
+import { computeTechnicals } from "./technicals.mjs";
 
 // A ticker is tradeable if it isn't a placeholder like "(private: ...)" or cash.
 // Shared by the scanner's universe filter and the CI selfcheck so they stay in sync.
@@ -95,46 +96,22 @@ const realizedVol = (closes, n) => {
 };
 
 export async function fetchYahoo(ticker) {
-  // 1y daily history -> price + 52w high + YTD + moving averages + currency.
+  // 1y daily history -> price + 52w high + YTD + moving averages + currency. Technicals are
+  // computed by the shared (windowed, unit-tested) computeTechnicals so the live and DB paths
+  // are identical math (see technicals.mjs / REGIME.md for the literature grounding).
   const url = `https://query1.finance.yahoo.com/v8/finance/chart/${encodeURIComponent(yahooSymbol(ticker))}?range=1y&interval=1d`;
   const r = await fetch(url, { headers: { "user-agent": "Mozilla/5.0" }, signal: AbortSignal.timeout(10000) });
   const j = await r.json();
   const res = j?.chart?.result?.[0];
-  const closes = (res?.indicators?.quote?.[0]?.close || []).filter((x) => x != null);
   const ts = res?.timestamp || [];
+  const rawCloses = res?.indicators?.quote?.[0]?.close || [];
+  const dates = [], closes = [];
+  for (let i = 0; i < rawCloses.length; i++) if (rawCloses[i] != null) { dates.push(new Date(ts[i] * 1000).toISOString().slice(0, 10)); closes.push(rawCloses[i]); }
   if (!closes.length) throw new Error("no closes");
   const price = closes[closes.length - 1];
   if (!(price > 0) || !isFinite(price)) throw new Error(`implausible price: ${price}`); // plausibility guard
-  const high52 = Math.max(...closes);
-  const asof = ts.length ? new Date(ts[ts.length - 1] * 1000).toISOString().slice(0, 10) : null;
-  // YTD: first close on/after Jan 1 of current year
-  const yearStart = new Date(new Date().getFullYear(), 0, 1).getTime() / 1000;
-  let ytdBase = closes[0];
-  for (let i = 0; i < ts.length; i++) { if (ts[i] >= yearStart) { ytdBase = closes[i]; break; } }
-  // Technicals (literature-grounded; see REGIME.md): 200-DMA trend filter (Faber 2007),
-  // 12-month absolute/time-series momentum (Moskowitz-Ooi-Pedersen 2012), and realized
-  // volatility for vol-state scaling (Moreira-Muir 2017).
-  const ma50 = sma(closes, 50);
-  const ma200 = sma(closes, 200);
-  const ma20 = sma(closes, 20);
-  const mom_12m = closes.length >= 200 ? price / closes[0] - 1 : null; // ~1y total return
-  const mom_1m = closes.length >= 22 ? price / closes[closes.length - 22] - 1 : null; // ~21 sessions (fast)
-  return {
-    ticker, price, high52,
-    pct_off_high: high52 ? (price - high52) / high52 : null,
-    ytd: ytdBase ? (price - ytdBase) / ytdBase : null,
-    ma50, ma200, ma20,
-    pct_vs_ma50: ma50 ? (price - ma50) / ma50 : null,
-    pct_vs_ma200: ma200 ? (price - ma200) / ma200 : null,
-    above_ma200: ma200 != null ? price >= ma200 : null,
-    above_ma20: ma20 != null ? price >= ma20 : null,
-    asof,
-    mom_12m, mom_1m,
-    vol_3m: realizedVol(closes, 63),
-    vol_1y: realizedVol(closes, 252),
-    currency: res?.meta?.currency || null,
-    source: "yahoo",
-  };
+  const t = computeTechnicals(dates, closes, { currency: res?.meta?.currency || null, source: "yahoo" });
+  return { ticker, ...t };
 }
 
 // Aligned daily ADJUSTED close series (date,close) for backtests / the price-history DB.

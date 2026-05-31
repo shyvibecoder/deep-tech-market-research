@@ -98,13 +98,18 @@ console.log(`research evidence: ${totalExcerpts} news excerpts, ${totalPassages}
 // one key the role structure is preserved on a single model. This replaces the deep-dive→red-team
 // path in production. The provider pool is preference-ordered (Groq → OpenRouter → Gemini).
 const seats = providers.map((pr) => (p) => llm(p, pr));
+// Chief-Risk-Officer review (trust lever #3): an independent final pass on the STRONGEST available
+// model (providers[0] — frontier-first when a paid key is set) that does the fuzzy checks code
+// can't — hallucinated tickers, illogical thesis, momentum-chasing. Only runs on calls that would
+// be proposed. Skipped with a single provider (it'd just grade itself).
+const cro = providers.length >= 2 ? (p) => llm(p, providers[0]) : null;
 // Resilient: a transient LLM/network error must NOT fail the workflow — write a stub + exit 0
 // so the run is green and the evidence summary is still visible.
 try {
   // concurrency=4: process 4 scarcities at once (seats within each also run in parallel). With the
   // retry/backoff in llm.mjs this stays under the free-tier RPMs while cutting the ~50-min serial
   // run to roughly a third. Lower it if a provider's free limit is tighter.
-  const { proposals, report } = await proposeScarcityEdits({ scarcities: scar.scarcities, evidence, seats, scorecard: sig.scorecard, minConfidence: 0.5, concurrency: 4 });
+  const { proposals, report } = await proposeScarcityEdits({ scarcities: scar.scarcities, evidence, seats, cro, scorecard: sig.scorecard, minConfidence: 0.5, concurrency: 4 });
   write(`${date}.md`, report);
   write(`${date}.proposals.json`, JSON.stringify(proposals, null, 2) + "\n");
   // Also publish the latest proposals to the dashboard-readable data tier so the front-end

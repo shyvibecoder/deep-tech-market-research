@@ -2,7 +2,7 @@
 // gated and sanitized so the bot can ONLY propose F9-owned fields with enough
 // confidence. LLM functions are INJECTED, so the logic is fully unit-testable without
 // network/keys (in prod they're bound to the free providers).
-import { deepDivePrompt, redTeamPrompt, synthesisPrompt, seatPrompt, cioPrompt, RESEARCH_PROMPT_VERSION } from "./research-prompts.mjs";
+import { deepDivePrompt, redTeamPrompt, synthesisPrompt, seatPrompt, cioPrompt, croPrompt, RESEARCH_PROMPT_VERSION } from "./research-prompts.mjs";
 import { verifyProposal } from "./research-verify.mjs";
 
 const PRICED = ["low", "medium", "high", "crowded"];
@@ -159,6 +159,28 @@ export async function runCommittee({ scarcity, evidence = {}, seats, scorecard =
   return out;
 }
 
+// CHIEF RISK OFFICER review (trust lever #3): an independent model pass over the committee's edit,
+// doing the FUZZY checks code can't — hallucinated/misattributed tickers, illogical thesis,
+// momentum-chasing. APPROVE passes through; REVISE docks confidence; VETO drops the proposal.
+// FAIL-OPEN: any CRO error or unparseable verdict keeps the proposal (we never silently drop on an
+// infra hiccup) — the deterministic gate already caught the hard stuff. Pure given an injected `cro`.
+export async function croReview({ scarcity, edit, evidence = {}, cro }) {
+  if (!cro || !edit) return { veto: false, edit, error: "" };
+  let v;
+  try { v = parseProposal(await cro(croPrompt(scarcity, edit, evidence))); }
+  catch (e) { return { veto: false, edit, error: e.message }; }
+  if (!v || typeof v.verdict !== "string") return { veto: false, edit };   // unparseable → approve
+  const verdict = v.verdict.toLowerCase();
+  if (verdict === "veto") return { veto: true, edit, reason: typeof v.reason === "string" ? v.reason : "CRO veto" };
+  if (verdict === "revise") {
+    const adj = typeof v.confidence_adj === "number" ? Math.min(0, v.confidence_adj) : 0;
+    const next = { ...edit, confidence: +Math.max(0, (edit.confidence || 0) + adj).toFixed(3) };
+    if (typeof v.reason === "string") next.cro_note = v.reason;
+    return { veto: false, edit: next };
+  }
+  return { veto: false, edit };   // approve
+}
+
 // Build one "considered" audit entry (pure — so it's safe to create inside concurrent workers and
 // merge in order later, rather than pushing to a shared array mid-flight).
 function noteOf(s, reason, edit, error) {
@@ -170,7 +192,7 @@ function noteOf(s, reason, edit, error) {
   };
 }
 
-export async function proposeScarcityEdits({ scarcities, evidence = {}, analyst, analysts = null, redteam, seats = null, scorecard = null, minConfidence = 0.6, concurrency = 4 }) {
+export async function proposeScarcityEdits({ scarcities, evidence = {}, analyst, analysts = null, redteam, seats = null, cro = null, scorecard = null, minConfidence = 0.6, concurrency = 4 }) {
   const pool = analysts && analysts.length ? analysts : (analyst ? [analyst] : []);
   const primary = pool[0];
   const proposals = [];
@@ -204,6 +226,20 @@ export async function proposeScarcityEdits({ scarcities, evidence = {}, analyst,
         return { kind: "considered", entry };
       }
       if (edit && edit.confidence >= minConfidence && changed(s, edit)) {
+        // CRO REVIEW (trust lever #3): only review calls that would actually be proposed (saves a
+        // model call on every no-change). A veto drops it; a revise may push it back below threshold.
+        if (cro) {
+          const rv = await croReview({ scarcity: s, edit, evidence: ev, cro });
+          if (rv.veto) {
+            const entry = noteOf(s, "cro-vetoed", rv.edit);
+            entry.rationale = rv.reason || "CRO veto";
+            return { kind: "considered", entry };
+          }
+          if (rv.edit.confidence < minConfidence) {
+            return { kind: "considered", entry: noteOf(s, "below-confidence", rv.edit) };
+          }
+          return { kind: "proposal", entry: { id: s.id, ...rv.edit, prompt_version: RESEARCH_PROMPT_VERSION } };
+        }
         return { kind: "proposal", entry: { id: s.id, ...edit, prompt_version: RESEARCH_PROMPT_VERSION } };
       }
       return { kind: "considered", entry: noteOf(s, !edit || !changed(s, edit) ? "no-change" : "below-confidence", edit) };
@@ -284,6 +320,7 @@ const REASON_LABEL = {
   "no-change": "confident no-change", "below-confidence": "below confidence bar",
   "no-majority": "models split (no priced_in majority)", "no-response": "no usable model output",
   "verification-failed": "❌ failed an automated check (likely momentum trap / unsupported)",
+  "cro-vetoed": "❌ vetoed by the Chief-Risk-Officer review (hallucination / logic flaw)",
 };
 function buildConsidered(considered) {
   if (!considered?.length) return "";

@@ -117,6 +117,21 @@ export function cioPrompt(scarcity, seats, disp) {
   ].join("\n");
 }
 
+// The CHIEF RISK OFFICER review (Phase: trust). A final, independent pass on the committee's
+// proposal — ideally on the strongest available model — replicating the human sanity-check: is any
+// ticker real and correctly attributed? Is the thesis logically sound? Is it momentum-chasing a
+// name already up a lot? The CRO can APPROVE, REVISE (dock confidence), or VETO (kill it).
+export function croPrompt(scarcity, edit, evidence = {}) {
+  const ec = evidence?.evidence_count || {};
+  return [
+    `You are the CHIEF RISK OFFICER. Independently review this proposed reassessment before it reaches the human. Be skeptical; your job is to catch errors the committee missed.`,
+    `Check specifically: (1) HALLUCINATION — is every company/ticker named in the variant_view REAL and correctly attributed to "${scarcity.scarcity}"? A made-up or misattributed ticker (e.g. citing an auto-parts company as a robotics-data play) is an automatic VETO. (2) LOGIC — does the thesis actually follow from the evidence, or is it a non-sequitur? (3) MOMENTUM-CHASING — does it call a name already up a lot "cheap/under-priced" without a concrete reason price hasn't caught up? (4) OVER-REACH — is confidence justified by the ${(ec.news_with_excerpt || 0)} excerpts + ${(ec.filing_passages || 0)} filing passages actually present?`,
+    `Scarcity: ${JSON.stringify({ scarcity: scarcity.scarcity, priced_in: scarcity.priced_in, bind_window: scarcity.bind_window, tickers: scarcity.tickers, thesis: scarcity.thesis })}`,
+    `PROPOSAL: ${JSON.stringify({ priced_in: edit.priced_in, bind_window: edit.bind_window, non_consensus: edit.non_consensus, confidence: edit.confidence, variant_view: edit.variant_view, rationale: edit.rationale })}`,
+    `Output STRICT JSON: {"verdict":"approve|revise|veto","confidence_adj":-1..0,"reason":"<=60 words; for veto, name the specific flaw"}`,
+  ].join("\n");
+}
+
 export function redTeamPrompt(scarcity, proposal) {
   return [
     `You are a skeptical red-team (a different model than the analyst). Attack this proposed reassessment of "${scarcity.scarcity}".`,

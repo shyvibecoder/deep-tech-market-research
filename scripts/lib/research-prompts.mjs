@@ -23,7 +23,12 @@
 // inside seatPrompt — so the cycle resolves cleanly (no use at module-eval time).
 import { triangulate } from "./research.mjs";
 
-export const RESEARCH_PROMPT_VERSION = 4;
+//   v5 — hardening against the observed committee failure modes: seats now see explicit PRICE
+//        CONTEXT (so an up-86%-YTD name can't be called "cheap"), are told to separate timing
+//        ("binds now") from valuation ("cheap now"), and the CIO carries a burden-of-proof-on-change
+//        default + a ban on pulling bind_window earlier without dated evidence. Pairs with the
+//        deterministic verification gate (research-verify.mjs) that hard-blocks the same errors.
+export const RESEARCH_PROMPT_VERSION = 5;
 
 const OBJECTIVE = "Objective: maximize 10-year return while keeping max drawdown < 35% (best Calmar/Sortino).";
 const OWNERSHIP = "You may ONLY propose: priced_in (low|medium|high|crowded), bind_window (now|2027|2028-29|2030+|physics-floor), non_consensus (bool), confidence (0..1), rationale, sources[], variant_view (what consensus misses + the catalyst), bear_case (the steelmanned counter), kill_criterion ({condition, by_date as YYYY or YYYY-MM}). NEVER change thesis, tickers, id, or sector.";
@@ -67,6 +72,19 @@ const SEAT = {
   bear: "the BEAR / short-seller. Try to KILL this thesis: supply response, demand air-pocket, substitution, policy reversal, or it's already-priced and will de-rate first. Attack, don't hedge.",
   skeptic: "the BASE-RATE SKEPTIC. Take the OUTSIDE view: how often do 'structural shortage' stories actually mean-revert? Ignore the narrative; weigh reference-class frequency and disconfirming data.",
 };
+// Render the basket's price context explicitly so a model CANNOT call an up-86%-YTD name "cheap"
+// without confronting the number. This is the prompt-side guard against the momentum trap.
+function priceContext(evidence) {
+  const q = evidence?.quotes || {};
+  const parts = Object.entries(q).filter(([, v]) => v && !v.error).map(([t, v]) => {
+    const ytd = typeof v.ytd === "number" ? `${(v.ytd * 100).toFixed(0)}% YTD` : null;
+    const ma = typeof v.vs200 === "number" ? `${(v.vs200 * 100).toFixed(0)}% vs 200-DMA` : null;
+    return `${t} ${[ytd, ma].filter(Boolean).join(", ")}`.trim();
+  });
+  if (!parts.length) return "PRICE CONTEXT: no live quotes available.";
+  return `PRICE CONTEXT (the basket is ALREADY up by this much): ${parts.join("; ")}. A name already up a lot / well above its 200-DMA is LESS likely to be under-priced — do not call an extended winner "cheap" without a concrete, fundamental reason the price hasn't caught up.`;
+}
+
 export function seatPrompt(role, scarcity, evidence = {}, scorecard = null) {
   const ec = evidence?.evidence_count || {};
   return [
@@ -74,6 +92,8 @@ export function seatPrompt(role, scarcity, evidence = {}, scorecard = null) {
     `Scarcity under review: "${scarcity.scarcity}". ${OBJECTIVE}`,
     calib(scorecard),
     `Ground every claim in the EVIDENCE; cite news excerpts / SEC filing passages (ticker/form/date). The bundle has ${ec.news_with_excerpt || 0} excerpts and ${ec.filing_passages || 0} filing passages — read them, don't invent. Edge lives where filings, price, and news DISAGREE.`,
+    priceContext(evidence),
+    `TWO SEPARATE QUESTIONS — do not conflate them: (1) TIMING — does the scarcity BIND now vs later (bind_window)? (2) VALUATION — is it CHEAP now vs already-priced (priced_read)? "Binds now" is NOT the same as "cheap now": a real, present shortage can be fully priced in. Answer each on its own evidence.`,
     `TRIANGULATION: ${triangulate(evidence).note}`,
     `Current state: ${JSON.stringify({ priced_in: scarcity.priced_in, bind_window: scarcity.bind_window, non_consensus: scarcity.non_consensus, thesis: scarcity.thesis })}`,
     `EVIDENCE: ${JSON.stringify(evidence).slice(0, 24000)}`,
@@ -88,6 +108,8 @@ export function cioPrompt(scarcity, seats, disp) {
     `You are the CIO chairing an investment committee on "${scarcity.scarcity}". ${OBJECTIVE}`,
     `Weigh the three seats and issue the FINAL call. ${OWNERSHIP}`,
     `Seat reads dispersion: ${disp?.level || "n/a"} (agreement ${disp?.agreement ?? "n/a"}). If dispersion is wide, the committee disagrees — LOWER confidence and consider leaving fields unchanged.`,
+    `BURDEN OF PROOF IS ON CHANGE. The DEFAULT is NO CHANGE: keep the current fields unless the evidence clearly and specifically justifies moving them. When in doubt, leave fields unchanged and lower confidence — a held call is better than a wrong one.`,
+    `Do NOT move bind_window EARLIER (pull timing forward toward "now") unless a DATED, CONCRETE piece of evidence (a filing, contract, or policy date) supports the acceleration. "It feels urgent" is not evidence — most shortages bind on the documented thesis timeline, not sooner.`,
     `BULL: ${JSON.stringify(seats.bull || {})}`,
     `BEAR: ${JSON.stringify(seats.bear || {})}`,
     `SKEPTIC: ${JSON.stringify(seats.skeptic || {})}`,

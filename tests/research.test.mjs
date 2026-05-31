@@ -35,7 +35,7 @@ describe("research: ensemble GATE in proposeScarcityEdits (multi-model)", () => 
     assert.equal(proposals.length, 0);
   });
 });
-import { deepDivePrompt, RESEARCH_PROMPT_VERSION } from "../scripts/lib/research-prompts.mjs";
+import { deepDivePrompt, seatPrompt, cioPrompt, RESEARCH_PROMPT_VERSION } from "../scripts/lib/research-prompts.mjs";
 
 describe("research: prompt is calibrated on the MATCHING call type (alpha edge), not just tilts", () => {
   const sc = { hit_rate: 0.7, total: { n: 40 }, by_signal: { underperform: { n: 6, hits: 2 }, outperform: { n: 4, hits: 1 } } };
@@ -110,6 +110,37 @@ describe("research Phase 1: falsifiability — variant view + dated kill-criteri
   it("never lets these descriptive fields smuggle in a thesis/ticker change (still F9)", () => {
     const e = sanitizeEdit({ id: "x" }, { priced_in: "high", confidence: 0.7, variant_view: "v", thesis: "HACK", tickers: ["EVIL"] });
     assert.ok(!("thesis" in e) && !("tickers" in e));
+  });
+});
+
+describe("research prompt hardening (v5): targets the real committee failure modes", () => {
+  const optical = { id: "optical", scarcity: "Optical", priced_in: "crowded", bind_window: "2027", non_consensus: false, thesis: "ran 5x" };
+  const evWithPrices = { quotes: { COHR: { ytd: 0.86, vs200: 0.3 }, LITE: { ytd: 1.21 } }, evidence_count: { news_with_excerpt: 4, filing_passages: 2 } };
+
+  it("seat prompt SURFACES explicit price levels (YTD / vs-200DMA) so a model can't call an up-86% name cheap", () => {
+    const p = seatPrompt("bull", optical, evWithPrices, null);
+    assert.match(p, /PRICE CONTEXT|already up|YTD/i);
+    assert.match(p, /86%|0\.86/); // the actual number must reach the model
+  });
+  it("seat prompt SEPARATES 'binds now' (timing) from 'cheap now' (valuation) so they aren't conflated", () => {
+    const p = seatPrompt("bull", optical, evWithPrices, null);
+    assert.match(p, /binds now.*(≠|is not|not the same).*cheap|timing.*valuation|do not conflate/i);
+  });
+  it("seat prompt warns that a name already up a lot is LESS likely under-priced (anti-momentum-trap)", () => {
+    const p = seatPrompt("bull", optical, evWithPrices, null);
+    assert.match(p, /up (a lot|sharply|big)|rallied|extended/i);
+  });
+  it("CIO prompt FORBIDS moving bind_window earlier without dated, concrete evidence", () => {
+    const p = cioPrompt(optical, { bull: {}, bear: {}, skeptic: {} }, { level: "wide", agreement: 0.33 });
+    assert.match(p, /bind_window.*earlier|do not.*accelerat|pull.*forward/i);
+    assert.match(p, /dated|concrete evidence|specific/i);
+  });
+  it("CIO prompt REWARDS leaving fields unchanged when the evidence doesn't clearly justify a change (anchor to current)", () => {
+    const p = cioPrompt(optical, { bull: {}, bear: {}, skeptic: {} }, { level: "wide", agreement: 0.33 });
+    assert.match(p, /default.*(no change|unchanged)|when in doubt|leave.*unchanged|burden of proof/i);
+  });
+  it("prompt version advanced to >=5 (hardening is a real version bump)", () => {
+    assert.ok(RESEARCH_PROMPT_VERSION >= 5);
   });
 });
 

@@ -17,11 +17,11 @@ let DATA = {};
 const bust = () => `?t=${Date.now()}`; // cache-bust signals.json so reloads see fresh commits
 
 async function fetchData() {
-  const [scar, port, trig, sig, dca] = await Promise.all(
-    ["scarcities", "portfolio", "triggers", "signals", "dca"].map((f) =>
-      fetch(`data/${f}.json${f === "signals" ? bust() : ""}`).then((r) => r.json()).catch(() => ({})))
+  const [scar, port, trig, sig, dca, proposals] = await Promise.all(
+    ["scarcities", "portfolio", "triggers", "signals", "dca", "research-proposals"].map((f) =>
+      fetch(`data/${f}.json${f === "signals" || f === "research-proposals" ? bust() : ""}`).then((r) => r.json()).catch(() => ({})))
   );
-  return { scar, port, trig, sig, dca };
+  return { scar, port, trig, sig, dca, proposals };
 }
 
 async function load() {
@@ -43,7 +43,36 @@ function render() {
     pill.className = `posture ${reg?.posture || "unknown"}`;
     pill.textContent = reg ? `${lbl}${reg.risk_score != null ? ` ${reg.risk_score}/100` : ""}` : "";
   }
-  renderStale(sig); renderRadar(); renderTimeline(); renderPortfolio(); renderV23(); renderCatalysts(); renderChokepoints(); renderDigest();
+  renderStale(sig); renderRadar(); renderTimeline(); renderPortfolio(); renderV23(); renderCatalysts(); renderChokepoints(); renderResearch(); renderDigest();
+}
+
+// Research review: show the LLM's proposed scarcity reassessments as before→after diffs with an
+// Accept/Reject control. Accept opens a PR via the user's admin token (F9-guarded in-browser to
+// bot-owned fields only). The view model + the guarded mutation live in research-review.mjs (tested).
+function renderResearch() {
+  const box = $("#researchReview"); if (!box) return;
+  const RR = window.PuckResearch;
+  const doc = DATA.proposals;
+  if (!RR || !doc?.proposals?.length || !DATA.scar?.scarcities) { box.innerHTML = ""; return; }
+  const diffs = RR.proposalDiffs(doc.proposals, DATA.scar);
+  if (!diffs.length) { box.innerHTML = `<p class="foot">No open research proposals (last run ${esc(doc.generated || "—")} proposed no changes).</p>`; return; }
+  box.innerHTML = `<h3>Research proposals <button class="help" data-help="research">?</button> <span class="foot">— LLM-proposed reassessments (prompt v${esc(String(doc.prompt_version ?? "?"))}); you approve. Bot-owned fields only.</span></h3>` +
+    diffs.map((d, i) => {
+      const chg = d.changes.map((c) => `<code>${esc(c.field)}</code>: <span class="pi-${esc(String(c.from))}">${esc(String(c.from))}</span> → <strong class="pi-${esc(String(c.to))}">${esc(String(c.to))}</strong>`).join(" · ");
+      const src = (d.sources || []).slice(0, 4).map((s) => esc(s)).join("; ");
+      return `<div class="proposal" data-pidx="${i}">
+        <div><strong>${esc(d.scarcity)}</strong> ${d.confidence != null ? `<span class="foot">conf ${Math.round(d.confidence * 100)}%</span>` : ""}</div>
+        <div>${chg}</div>
+        ${d.rationale ? `<div class="foot">${esc(d.rationale)}</div>` : ""}
+        ${src ? `<div class="foot">sources: ${src}</div>` : ""}
+        <div class="modal-actions">
+          <button class="accept-proposal" data-id="${esc(d.id)}">✓ Accept → open PR</button>
+          <button class="reject-proposal" data-id="${esc(d.id)}">✕ Reject</button>
+        </div>
+      </div>`;
+    }).join("");
+  $$(".accept-proposal", box).forEach((b) => b.onclick = () => acceptProposal(b.dataset.id));
+  $$(".reject-proposal", box).forEach((b) => b.onclick = () => { b.closest(".proposal").style.opacity = 0.4; b.closest(".proposal").querySelectorAll("button").forEach((x) => x.disabled = true); });
 }
 
 // V2.3 cross-check + the headline "when to act on a dislocation" verdict.
@@ -623,8 +652,48 @@ $("#hExport").onclick = exportPositions;
 $("#hImport").onchange = (e) => e.target.files[0] && importPositions(e.target.files[0]);
 $("#hClear").onclick = () => { if (confirm("Clear all your stored holdings from this browser?")) { localStorage.removeItem(POS_KEY); renderHoldEditor(); render(); } };
 // --- Admin: read repo config status + set non-secret variables via the GitHub API ---
-function adminToken() { const t = $("#kAdmin").value.trim(); if (t) localStorage.setItem(ADMIN_TOKEN_KEY, t); return t; }
+function adminToken() { const t = $("#kAdmin").value.trim() || localStorage.getItem(ADMIN_TOKEN_KEY) || ""; if (t) localStorage.setItem(ADMIN_TOKEN_KEY, t); return t; }
 const ghHeaders = (t) => ({ accept: "application/vnd.github+json", authorization: `Bearer ${t}`, "x-github-api-version": "2022-11-28" });
+
+// Accept a research proposal: apply it (F9-guarded, in research-review.mjs) to scarcities.json and
+// open a PR via the user's admin token — branch → commit the updated file → PR. The user merges.
+async function acceptProposal(id) {
+  const RR = window.PuckResearch, t = adminToken();
+  if (!t) { alert("Open Settings → Admin and paste a GitHub token (Contents: read/write, Pull requests: read/write) first."); return; }
+  const proposal = (DATA.proposals?.proposals || []).find((p) => p.id === id);
+  if (!proposal) return;
+  const updated = RR.applyAcceptance(DATA.scar, proposal);            // F9-guarded; new doc
+  if (updated === DATA.scar) { alert("Nothing to apply (no valid bot-owned change)."); return; }
+  const btn = document.querySelector(`.accept-proposal[data-id="${CSS.escape(id)}"]`);
+  if (btn) { btn.disabled = true; btn.textContent = "Opening PR…"; }
+  try {
+    const api = `https://api.github.com/repos/${REPO}`;
+    // 1) get scarcities.json's current sha (commit to the file, not blind overwrite)
+    const meta = await (await fetch(`${api}/contents/web/data/scarcities.json`, { headers: ghHeaders(t) })).json();
+    // 2) branch off main's head
+    const ref = await (await fetch(`${api}/git/ref/heads/main`, { headers: ghHeaders(t) })).json();
+    const branch = `research-accept/${id}-${Date.now().toString(36)}`;
+    let r = await fetch(`${api}/git/refs`, { method: "POST", headers: { ...ghHeaders(t), "content-type": "application/json" }, body: JSON.stringify({ ref: `refs/heads/${branch}`, sha: ref.object.sha }) });
+    if (!r.ok) throw new Error(`branch ${r.status}`);
+    // 3) commit the updated scarcities.json on the branch
+    const content = btoa(unescape(encodeURIComponent(JSON.stringify(updated, null, 2) + "\n")));
+    r = await fetch(`${api}/contents/web/data/scarcities.json`, { method: "PUT", headers: { ...ghHeaders(t), "content-type": "application/json" },
+      body: JSON.stringify({ message: `research: accept ${id} reassessment`, content, sha: meta.sha, branch }) });
+    if (!r.ok) throw new Error(`commit ${r.status}`);
+    // 4) open the PR
+    const chg = RR.proposalDiffs([proposal], DATA.scar)[0]?.changes?.map((c) => `${c.field}: ${c.from} → ${c.to}`).join(", ") || "";
+    r = await fetch(`${api}/pulls`, { method: "POST", headers: { ...ghHeaders(t), "content-type": "application/json" },
+      body: JSON.stringify({ title: `Accept research proposal: ${id}`, head: branch, base: "main",
+        body: `Accepted from the dashboard. ${chg}\n\nRationale: ${proposal.rationale || "—"}\nPrompt v${proposal.prompt_version ?? "?"}, confidence ${proposal.confidence ?? "?"}. Bot-owned fields only (F9).` }) });
+    const pr = await r.json();
+    if (!r.ok) throw new Error(`PR ${r.status}: ${pr.message || ""}`);
+    if (btn) { btn.textContent = "✓ PR opened"; }
+    window.open(pr.html_url, "_blank", "noopener");
+  } catch (e) {
+    if (btn) { btn.disabled = false; btn.textContent = "✓ Accept → open PR"; }
+    alert(`Could not open PR: ${e.message}. The token needs Contents: read/write + Pull requests: read/write on ${REPO}.`);
+  }
+}
 
 async function checkConfig() {
   const t = adminToken();

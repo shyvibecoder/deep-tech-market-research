@@ -1,18 +1,14 @@
 name: research
-# v3 auto-research: monthly, re-runs the thesis on the free LLMs and opens a PR with
-# proposed scarcity reassessments (HUMAN approves; bot-owned fields only).
+# v3 auto-research: monthly (+ on-demand), re-runs the thesis on the free LLMs and PUBLISHES
+# proposed scarcity reassessments. The bot only PROPOSES (writes web/data/research-proposals.json
+# + the dated report); the DASHBOARD reviews them and the user approves via a PR opened with their
+# own token (F9: bot-owned fields only). No bot PR creation (and no PR permission needed).
 on:
   schedule:
     - cron: "0 6 1 * *"   # 06:00 UTC on the 1st of each month
-  workflow_dispatch:
-    inputs:
-      open_pr:
-        description: "Open a PR with the proposals (off = just write research/auto/ files to inspect)"
-        type: boolean
-        default: true
+  workflow_dispatch: {}
 permissions:
   contents: write
-  pull-requests: write
 concurrency: { group: research, cancel-in-progress: false }
 jobs:
   research:
@@ -32,18 +28,14 @@ jobs:
           echo '```' >> "$GITHUB_STEP_SUMMARY"
           cat research-run.log >> "$GITHUB_STEP_SUMMARY"
           echo '```' >> "$GITHUB_STEP_SUMMARY"
-      - name: Open PR with proposals (human approves)
-        if: ${{ github.event_name != 'workflow_dispatch' || inputs.open_pr }}
-        env:
-          GH_TOKEN: ${{ github.token }}
+      - name: "Commit proposals to main (front-end reviews + approves them)"
         run: |
           git config user.name "puck-bot"; git config user.email "puck-bot@users.noreply.github.com"
-          if [ -z "$(git status --porcelain research/auto)" ]; then echo "no new research output"; exit 0; fi
-          b="auto-research/$(date +%F)"; git checkout -b "$b"
-          git add research/auto && git commit -m "auto-research proposals $(date +%F) [skip ci]"
-          git push -u origin "$b"
-          gh pr create --base main --head "$b" --title "Auto-research proposals $(date +%F)" \
-            --body "LLM-proposed scarcity reassessments (bot-owned fields only; ARCHITECTURE §1). Review the dated report in research/auto/ and apply by hand if you agree. Prompt version is in each proposal." || echo "pr skipped"
+          git add research/auto web/data/research-proposals.json
+          if git diff --cached --quiet; then echo "no new research output"; exit 0; fi
+          git commit -m "auto-research proposals $(date +%F) [skip ci]"
+          # Rebase before push so a concurrent commit to main can't reject (R3 race guard).
+          for i in 1 2 3; do git pull --rebase origin main && git push && break || sleep $((i*3)); done
       - name: Upload research output (inspect without a PR)
         if: always()
         uses: actions/upload-artifact@v4

@@ -105,7 +105,11 @@ try {
   const { proposals, report } = await proposeScarcityEdits({ scarcities: scar.scarcities, evidence, analyst, analysts, redteam, scorecard: sig.scorecard, minConfidence: 0.6 });
   write(`${date}.md`, report);
   write(`${date}.proposals.json`, JSON.stringify(proposals, null, 2) + "\n");
-  console.log(`research: ${proposals.length} proposal(s) written to research/auto/${date}.*`);
+  // Also publish the latest proposals to the dashboard-readable data tier so the front-end
+  // Accept/Reject review can show them (the UI opens a PR via the user's token; F9-guarded).
+  writeFileSync(new URL("../web/data/research-proposals.json", import.meta.url),
+    JSON.stringify({ schema_version: 1, generated: date, prompt_version: proposals[0]?.prompt_version ?? null, proposals }, null, 2) + "\n");
+  console.log(`research: ${proposals.length} proposal(s) written to research/auto/${date}.* + web/data/research-proposals.json`);
 } catch (e) {
   write(`${date}.md`, `# Auto-research ${date}\n\nEvidence gathered (${totalExcerpts} news excerpts, ${totalPassages} filing passages) but the LLM step errored: ${e.message}\n`);
   console.log(`research: LLM step errored (non-fatal): ${e.message}`);

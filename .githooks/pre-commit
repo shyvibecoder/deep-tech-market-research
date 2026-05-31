@@ -9,7 +9,8 @@ set -euo pipefail
 # real file. Unstage AND discard any local change to them. (CI doesn't set core.hooksPath, so
 # the bot is unaffected and still commits these normally.)
 for f in web/data/signals.json web/data/scarcity-history.json web/data/seen.state.json \
-         web/data/dca.json web/data/forecasts.json web/data/price-coverage.json; do
+         web/data/dca.json web/data/forecasts.json web/data/price-coverage.json \
+         web/data/research-proposals.json; do
   if ! git diff --cached --quiet -- "$f" 2>/dev/null; then
     git restore --staged -- "$f" 2>/dev/null || true
     git checkout -- "$f" 2>/dev/null || true

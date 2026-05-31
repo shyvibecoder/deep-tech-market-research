@@ -14,6 +14,7 @@
 // retirement and zeroed out every research run.
 const DEFAULT_GEMINI_MODEL = "gemini-3.5-flash";
 const DEFAULT_GROQ_MODEL = "openai/gpt-oss-120b";
+const DEFAULT_OPENROUTER_MODEL = "deepseek/deepseek-r1:free"; // free reasoning model; override via OPENROUTER_MODEL
 
 // Free tiers rate-limit aggressively (Gemini free RPM is tiny). Retry transient throttling/outages
 // with exponential backoff, honoring a server Retry-After when present. A persistent quota error
@@ -53,35 +54,48 @@ async function callGemini(prompt) {
   return text;
 }
 
-async function callGroq(prompt) {
-  const key = process.env.GROQ_API_KEY;
-  const model = process.env.GROQ_MODEL || DEFAULT_GROQ_MODEL;
-  const r = await fetchRetry("https://api.groq.com/openai/v1/chat/completions", {
+// Shared OpenAI-compatible chat call (Groq + OpenRouter both speak this). Thinking models can leave
+// `content` empty and put the answer in `reasoning` — fall back to it. Failures throw loudly.
+async function callOpenAIChat({ url, key, model, label, extraHeaders = {} }, prompt) {
+  const r = await fetchRetry(url, {
     method: "POST",
-    headers: { "content-type": "application/json", authorization: `Bearer ${key}` },
-    // gpt-oss reasons by default; Groq returns the thinking in a separate `reasoning` field, so
-    // message.content stays the clean final answer. Don't send reasoning_effort — an unsupported
-    // value would 400 and reintroduce the silent-fail we're fixing.
+    headers: { "content-type": "application/json", authorization: `Bearer ${key}`, ...extraHeaders },
     body: JSON.stringify({ model, messages: [{ role: "user", content: prompt }] }),
     signal: AbortSignal.timeout(120000),
-  }, `groq ${model}`);
+  }, label);
   const j = await r.json();
-  // gpt-oss may leave content empty when the answer lands in `reasoning` — fall back to it.
   const msg = j?.choices?.[0]?.message || {};
   const text = msg.content || msg.reasoning || "";
-  if (!text) throw new Error(`groq ${model}: empty response (${JSON.stringify(j).slice(0, 200)})`);
+  if (!text) throw new Error(`${label}: empty response (${JSON.stringify(j).slice(0, 200)})`);
   return text;
+}
+
+function callGroq(prompt) {
+  const model = process.env.GROQ_MODEL || DEFAULT_GROQ_MODEL;
+  return callOpenAIChat({ url: "https://api.groq.com/openai/v1/chat/completions", key: process.env.GROQ_API_KEY, model, label: `groq ${model}` }, prompt);
+}
+
+// OpenRouter: one key, MANY free models — DeepSeek R1, Qwen3, GLM, Kimi, Llama. Set OPENROUTER_MODEL
+// to A/B them (default: a free DeepSeek reasoning model). The optional referer/title headers are
+// OpenRouter etiquette for free-tier attribution.
+function callOpenRouter(prompt) {
+  const model = process.env.OPENROUTER_MODEL || DEFAULT_OPENROUTER_MODEL;
+  return callOpenAIChat({
+    url: "https://openrouter.ai/api/v1/chat/completions", key: process.env.OPENROUTER_API_KEY, model, label: `openrouter ${model}`,
+    extraHeaders: { "HTTP-Referer": "https://deep-tech-market-research.vercel.app", "X-Title": "deep-tech-market-research" },
+  }, prompt);
 }
 
 const PROVIDERS = {
   gemini: { env: "GEMINI_API_KEY", label: () => `gemini:${process.env.GEMINI_MODEL || DEFAULT_GEMINI_MODEL}`, call: callGemini },
   groq: { env: "GROQ_API_KEY", label: () => `groq:${process.env.GROQ_MODEL || DEFAULT_GROQ_MODEL}`, call: callGroq },
+  openrouter: { env: "OPENROUTER_API_KEY", label: () => `openrouter:${process.env.OPENROUTER_MODEL || DEFAULT_OPENROUTER_MODEL}`, call: callOpenRouter },
 };
 
-// Providers with a key present, in PRIMARY-first preference order. Groq is preferred as the primary
-// analyst: its free tier has far higher limits than Gemini's, so it carries the bulk of the calls,
-// with Gemini as the cross-model second opinion. Override the order implicitly by setting only one key.
-const PREFERENCE = ["groq", "gemini"];
+// Providers with a key present, in PRIMARY-first preference order. Groq carries the bulk (high free
+// limits); OpenRouter is next (one key → DeepSeek/Qwen/GLM/Kimi, useful as analyst or cross-model
+// second); Gemini last (tiny free RPM). Setting fewer keys narrows the pool — set only one to force it.
+const PREFERENCE = ["groq", "openrouter", "gemini"];
 export function availableProviders() {
   return PREFERENCE.filter((p) => process.env[PROVIDERS[p].env]);
 }

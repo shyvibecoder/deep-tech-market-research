@@ -8,7 +8,11 @@ const copper = { id: "copper", scarcity: "Copper", priced_in: "high", bind_windo
 // Seat model fns are injected (no network). Route by role keyword in the prompt so one fake "model"
 // can play every seat deterministically.
 const seatFn = (byRole) => async (prompt) => {
-  const role = /BULL/.test(prompt) ? "bull" : /BEAR/.test(prompt) ? "bear" : /SKEPTIC|base-rate/i.test(prompt) ? "skeptic" : "cio";
+  const role = /CIO chairing/.test(prompt) ? "cio"
+    : /You are the BULL|the BULL \//.test(prompt) ? "bull"
+    : /You are the BEAR|the BEAR \//.test(prompt) ? "bear"
+    : /BASE-RATE SKEPTIC|the SKEPTIC/.test(prompt) ? "skeptic"
+    : "cio";
   return byRole[role] ?? "";
 };
 

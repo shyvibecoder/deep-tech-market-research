@@ -92,7 +92,14 @@ const redteam = (p) => llm(p, providers[1] || providers[0]); // cross-model when
 // majority to surface (no single-model hallucination). With one key, falls back to the
 // single analyst (unchanged behavior).
 const analysts = providers.length >= 2 ? providers.map((pr) => (p) => llm(p, pr)) : null;
-const { proposals, report } = await proposeScarcityEdits({ scarcities: scar.scarcities, evidence, analyst, analysts, redteam, scorecard: sig.scorecard, minConfidence: 0.6 });
-write(`${date}.md`, report);
-write(`${date}.proposals.json`, JSON.stringify(proposals, null, 2) + "\n");
-console.log(`research: ${proposals.length} proposal(s) written to research/auto/${date}.*`);
+// Resilient: a transient LLM/network error must NOT fail the workflow — write a stub + exit 0
+// so the run is green and the evidence summary is still visible.
+try {
+  const { proposals, report } = await proposeScarcityEdits({ scarcities: scar.scarcities, evidence, analyst, analysts, redteam, scorecard: sig.scorecard, minConfidence: 0.6 });
+  write(`${date}.md`, report);
+  write(`${date}.proposals.json`, JSON.stringify(proposals, null, 2) + "\n");
+  console.log(`research: ${proposals.length} proposal(s) written to research/auto/${date}.*`);
+} catch (e) {
+  write(`${date}.md`, `# Auto-research ${date}\n\nEvidence gathered (${totalExcerpts} news excerpts, ${totalPassages} filing passages) but the LLM step errored: ${e.message}\n`);
+  console.log(`research: LLM step errored (non-fatal): ${e.message}`);
+}

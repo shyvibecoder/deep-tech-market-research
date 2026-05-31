@@ -27,7 +27,11 @@ jobs:
           GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
           # SEC etiquette for the filing-passage fetches (set repo variable to "Name email").
           SEC_USER_AGENT: ${{ vars.SEC_USER_AGENT }}
-        run: node scripts/research-run.mjs | tee "$GITHUB_STEP_SUMMARY"
+        run: |
+          node scripts/research-run.mjs | tee research-run.log
+          echo '```' >> "$GITHUB_STEP_SUMMARY"
+          cat research-run.log >> "$GITHUB_STEP_SUMMARY"
+          echo '```' >> "$GITHUB_STEP_SUMMARY"
       - name: Open PR with proposals (human approves)
         if: ${{ github.event_name != 'workflow_dispatch' || inputs.open_pr }}
         env:

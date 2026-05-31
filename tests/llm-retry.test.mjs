@@ -70,4 +70,20 @@ describe("llm fetchRetry: free-tier resilience", () => {
     const r = await fetchRetry("u", {}, "gemini", { ...fast, fetchImpl: s.fn });
     assert.equal(r.status, 200);
   });
+
+  it("CAPS the backoff so a huge Retry-After can't stall the run for minutes", async () => {
+    const slept = [];
+    const s = scripted([{ status: 429, headers: { "retry-after": "600" } }, { status: 200 }]); // server asks 10 min
+    const r = await fetchRetry("u", {}, "anthropic", { tries: 4, base: 2000, maxBackoffMs: 20000, fetchImpl: s.fn, sleepImpl: async (ms) => slept.push(ms) });
+    assert.equal(r.status, 200);
+    assert.equal(slept[0], 20000, "600s Retry-After must be capped at maxBackoffMs (20s), not honored literally");
+  });
+
+  it("also caps the exponential backoff (no Retry-After) at maxBackoffMs on later attempts", async () => {
+    const slept = [];
+    // base 2000 → attempt 4 would be 2000*2^3 = 16000; with base 8000 it'd be 64000 → must cap to 20000
+    const s = scripted([{ status: 503 }, { status: 503 }, { status: 200 }]);
+    await fetchRetry("u", {}, "groq", { tries: 4, base: 8000, maxBackoffMs: 20000, fetchImpl: s.fn, sleepImpl: async (ms) => slept.push(ms) });
+    assert.ok(slept.every((ms) => ms <= 20000), `every backoff must be <= 20000, got ${slept}`);
+  });
 });

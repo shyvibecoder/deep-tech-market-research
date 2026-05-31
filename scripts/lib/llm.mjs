@@ -22,18 +22,20 @@ const DEFAULT_OPENROUTER_MODEL = "deepseek/deepseek-r1:free"; // free reasoning 
 const RETRY_STATUS = new Set([429, 500, 502, 503, 504]);
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 
-export async function fetchRetry(url, opts, label, { tries = 4, base = 2000, fetchImpl = fetch } = {}) {
+export async function fetchRetry(url, opts, label, { tries = 4, base = 2000, maxBackoffMs = 20000, fetchImpl = fetch, sleepImpl = sleep } = {}) {
+  const backoff = (i, ra) => Math.min(Number.isFinite(ra) && ra > 0 ? ra * 1000 : base * 2 ** i, maxBackoffMs);
   let last = "";
   for (let i = 0; i < tries; i++) {
     let r;
     try { r = await fetchImpl(url, opts); }
-    catch (e) { last = `${label}: ${e.name === "TimeoutError" ? "timeout" : e.message}`; await sleep(base * 2 ** i); continue; }
+    catch (e) { last = `${label}: ${e.name === "TimeoutError" ? "timeout" : e.message}`; await sleepImpl(backoff(i)); continue; }
     if (r.ok) return r;
     const body = (await r.text()).slice(0, 200);
     last = `${label} HTTP ${r.status}: ${body}`;
     if (!RETRY_STATUS.has(r.status) || i === tries - 1) throw new Error(last);
-    const ra = Number(r.headers.get("retry-after"));
-    await sleep(Number.isFinite(ra) && ra > 0 ? ra * 1000 : base * 2 ** i);
+    // Honor a server Retry-After, but CAP it: a Tier-1 key can send Retry-After: 60+, which across
+    // many calls × tries would stall the run for many minutes. Cap keeps the run bounded + responsive.
+    await sleepImpl(backoff(i, Number(r.headers.get("retry-after"))));
   }
   throw new Error(last);
 }

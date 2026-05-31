@@ -14,6 +14,7 @@ concurrency: { group: research, cancel-in-progress: false }
 jobs:
   research:
     runs-on: ubuntu-latest
+    timeout-minutes: 30   # kill-switch: a rate-limited run can't burn hours of Actions minutes
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -35,6 +36,8 @@ jobs:
           GEMINI_MODEL: ${{ vars.GEMINI_MODEL }}
           # SEC etiquette for the filing-passage fetches (set repo variable to "Name email").
           SEC_USER_AGENT: ${{ vars.SEC_USER_AGENT }}
+          # Committee parallelism. Lower to 2 (or 1) for a fresh Tier-1 paid key to avoid 429 grind.
+          RESEARCH_CONCURRENCY: ${{ vars.RESEARCH_CONCURRENCY }}
         run: |
           node scripts/research-run.mjs | tee research-run.log
           echo '```' >> "$GITHUB_STEP_SUMMARY"

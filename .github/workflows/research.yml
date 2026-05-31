@@ -9,6 +9,7 @@ on:
   workflow_dispatch: {}
 permissions:
   contents: write
+  pull-requests: write   # auto-cleanup closes stale/superseded research-accept/* PRs
 concurrency: { group: research, cancel-in-progress: false }
 jobs:
   research:
@@ -47,6 +48,13 @@ jobs:
           git commit -m "auto-research proposals $(date +%F) [skip ci]"
           # Rebase before push so a concurrent commit to main can't reject (R3 race guard).
           for i in 1 2 3; do git pull --rebase origin main && git push && break || sleep $((i*3)); done
+      - name: "Auto-cleanup stale/superseded research-accept PRs"
+        if: always()
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_REPOSITORY: ${{ github.repository }}
+          CLEANUP_MAX_AGE_DAYS: ${{ vars.CLEANUP_MAX_AGE_DAYS }}
+        run: node scripts/research-cleanup-run.mjs
       - name: Upload research output (inspect without a PR)
         if: always()
         uses: actions/upload-artifact@v4

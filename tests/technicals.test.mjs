@@ -30,15 +30,14 @@ describe("technicals: technicalsFromHistory (DB series + today's price)", () => 
   });
 });
 
-// Build N business-ish daily closes ending today, with a controllable shape.
+// Build exactly N weekday daily closes; close i = fn(i) where i is the bar index (0-based).
 function series(n, fn) {
   const dates = [], closes = [];
   let d = new Date(Date.UTC(2020, 0, 1));
-  for (let i = 0; i < n; i++) {
+  while (closes.length < n) {
     const wd = d.getUTCDay();
     if (wd !== 0 && wd !== 6) { dates.push(d.toISOString().slice(0, 10)); closes.push(fn(closes.length)); }
     d = new Date(d.getTime() + 86400000);
-    if (closes.length >= n) break;
   }
   return { dates, closes };
 }

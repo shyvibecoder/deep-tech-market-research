@@ -46,6 +46,7 @@ export async function fetchStooqHistory(ticker) {
   const r = await fetch(url, { signal: AbortSignal.timeout(15000) });
   const out = parseStooqHistory(ticker, await r.text());
   if (!out.closes.length) throw new Error("no stooq history");
+  if (!isDailySeries(out.dates)) throw new Error("stooq returned non-daily — rejected");
   return out;
 }
 

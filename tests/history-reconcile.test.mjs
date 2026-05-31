@@ -72,6 +72,15 @@ describe("history-reconcile: anomaly (weird-jump) screening", () => {
     assert.equal(stats.dropped_jump, 1);
   });
 
+  it("KEEPS a SUSTAINED large move that holds (real deal/earnings gap, single source) — no truncation", () => {
+    // The MP/NVTS bug: a real +60% day that stays up must NOT be dropped, and must NOT truncate the rest.
+    const { rows, stats } = reconcileSeries("AAA", {
+      yahoo: S(["2026-02-02", "2026-02-03", "2026-02-04", "2026-02-05"], [100, 160, 162, 165]),
+    });
+    assert.deepEqual(rows.map((r) => r.d), ["2026-02-02", "2026-02-03", "2026-02-04", "2026-02-05"]);
+    assert.equal(stats.dropped_jump, 0);
+  });
+
   it("KEEPS a corroborated large move (real crash/split shows in every provider)", () => {
     const { rows } = reconcileSeries("AAA", {
       yahoo: S(["2026-02-02", "2026-02-03"], [100, 50]), stooq: S(["2026-02-02", "2026-02-03"], [100, 50.2]),

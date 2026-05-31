@@ -58,18 +58,25 @@ for (const s of scar.scarcities) {
   }
   if (!news.length) news = (sig.news || []).filter((n) => n.scarcity === s.id).map((n) => ({ title: n.title, date: n.date, link: n.link }));
 
-  // 2) SEC filing passages from thesis full-text search.
+  // 2) SEC filing passages from thesis full-text search. Search SHORT high-signal phrases (the
+  // 1–2 word key terms that actually appear in filings) — NOT the whole long news_query as one
+  // exact phrase (no 10-K contains "merchant power IPP electricity demand data center"). Try the
+  // top terms until one returns hits.
   const filings = [];
   if (!OFFLINE) {
     const kws = thesisKeywords(s);
-    try {
-      const hits = await searchFilings(s.news_query || s.scarcity, { limit: 4 });
-      for (const f of hits) {
-        try { const passages = await fetchFilingPassages(f, kws, { window: 240, max: 2 }); if (passages.length) filings.push({ ticker: f.ticker, form: f.form, date: f.date, url: f.url, passages }); }
-        catch { /* skip filing */ }
-        await sleep(200);
-      }
-    } catch { /* fts unavailable */ }
+    const searchTerms = [...new Set([kws[0], kws.slice(1, 3).join(" "), ...kws.slice(1, 4)].filter((t) => t && t.length >= 3))];
+    let hits = [];
+    for (const term of searchTerms) {
+      try { hits = await searchFilings(term, { limit: 4 }); } catch { hits = []; }
+      await sleep(200);
+      if (hits.length) break; // first term that finds filings wins
+    }
+    for (const f of hits) {
+      try { const passages = await fetchFilingPassages(f, kws, { window: 240, max: 2 }); if (passages.length) filings.push({ ticker: f.ticker, form: f.form, date: f.date, url: f.url, passages }); }
+      catch { /* skip filing */ }
+      await sleep(200);
+    }
   }
 
   // 3) Signals the LLM previously couldn't see + quotes.

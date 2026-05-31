@@ -16,7 +16,8 @@ The scanner lives in `.github/workflows/scan.yml` and runs on GitHub Actions (fr
   - `GROQ_API_KEY` — **primary**, high free limit (gpt-oss-120b thinking model). Free at **console.groq.com**.
   - `OPENROUTER_API_KEY` — **one key unlocks DeepSeek R1 / Qwen3 / GLM / Kimi**. Free at **openrouter.ai**; pick a model with the `OPENROUTER_MODEL` variable (e.g. `deepseek/deepseek-r1:free`, `qwen/qwen3-coder:free`, `z-ai/glm-4.5-air:free`).
   - `GEMINI_API_KEY` — powers the **in-browser** digest too. Free at **aistudio.google.com** (note: tiny free RPM, so it's best as a 2nd opinion, not the primary).
-  - Model overrides (variables, optional): `GROQ_MODEL`, `OPENROUTER_MODEL`, `GEMINI_MODEL` — so a model retirement needs no code change. With no key, the digest/research are skipped (everything else still runs).
+  - **(Paid, optional — materially better reasoning)** `ANTHROPIC_API_KEY` and/or `OPENAI_API_KEY` — frontier models that **lead** the committee seats / the Chief-Risk-Officer review when set (~$1–4 per research run). They're preferred ahead of the free tiers; with one set, your strongest seat runs on a frontier model while the free keys staff the rest.
+  - Model overrides (variables, optional): `ANTHROPIC_MODEL`, `OPENAI_MODEL`, `GROQ_MODEL`, `OPENROUTER_MODEL`, `GEMINI_MODEL` — so a model retirement needs no code change. With no key, the digest/research are skipped (everything else still runs).
 
 ## 3. (Optional) Wire up the dashboard **Refresh** button
 The Refresh button can kick the scan on demand from the dashboard via GitHub's `repository_dispatch`. It needs a token, which is **never committed** — it lives only in your browser's `localStorage`.

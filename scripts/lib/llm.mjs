@@ -86,16 +86,48 @@ function callOpenRouter(prompt) {
   }, prompt);
 }
 
+// --- Optional FRONTIER providers (paid) — materially better reasoning than the free tiers. Set a
+// key to opt in; they're preferred first so they staff the committee's lead seats / the CRO review.
+const DEFAULT_OPENAI_MODEL = "gpt-5.1";
+const DEFAULT_ANTHROPIC_MODEL = "claude-sonnet-4-6";
+
+// OpenAI is OpenAI-compatible → reuse the shared chat caller.
+function callOpenAI(prompt) {
+  const model = process.env.OPENAI_MODEL || DEFAULT_OPENAI_MODEL;
+  return callOpenAIChat({ url: "https://api.openai.com/v1/chat/completions", key: process.env.OPENAI_API_KEY, model, label: `openai ${model}` }, prompt);
+}
+
+// Anthropic Messages API has its own request/response shape (x-api-key, required max_tokens, content
+// blocks). parseAnthropic is exported for unit testing the extraction without a network call.
+export function parseAnthropic(j) {
+  return (j?.content || []).filter((b) => b?.type === "text").map((b) => b.text).join("") || "";
+}
+async function callAnthropic(prompt) {
+  const model = process.env.ANTHROPIC_MODEL || DEFAULT_ANTHROPIC_MODEL;
+  const r = await fetchRetry("https://api.anthropic.com/v1/messages", {
+    method: "POST",
+    headers: { "content-type": "application/json", "x-api-key": process.env.ANTHROPIC_API_KEY, "anthropic-version": "2023-06-01" },
+    body: JSON.stringify({ model, max_tokens: 2048, messages: [{ role: "user", content: prompt }] }),
+    signal: AbortSignal.timeout(120000),
+  }, `anthropic ${model}`);
+  const text = parseAnthropic(await r.json());
+  if (!text) throw new Error(`anthropic ${model}: empty response`);
+  return text;
+}
+
 const PROVIDERS = {
+  anthropic: { env: "ANTHROPIC_API_KEY", label: () => `anthropic:${process.env.ANTHROPIC_MODEL || DEFAULT_ANTHROPIC_MODEL}`, call: callAnthropic },
+  openai: { env: "OPENAI_API_KEY", label: () => `openai:${process.env.OPENAI_MODEL || DEFAULT_OPENAI_MODEL}`, call: callOpenAI },
   gemini: { env: "GEMINI_API_KEY", label: () => `gemini:${process.env.GEMINI_MODEL || DEFAULT_GEMINI_MODEL}`, call: callGemini },
   groq: { env: "GROQ_API_KEY", label: () => `groq:${process.env.GROQ_MODEL || DEFAULT_GROQ_MODEL}`, call: callGroq },
   openrouter: { env: "OPENROUTER_API_KEY", label: () => `openrouter:${process.env.OPENROUTER_MODEL || DEFAULT_OPENROUTER_MODEL}`, call: callOpenRouter },
 };
 
-// Providers with a key present, in PRIMARY-first preference order. Groq carries the bulk (high free
-// limits); OpenRouter is next (one key → DeepSeek/Qwen/GLM/Kimi, useful as analyst or cross-model
-// second); Gemini last (tiny free RPM). Setting fewer keys narrows the pool — set only one to force it.
-const PREFERENCE = ["groq", "openrouter", "gemini"];
+// Providers with a key present, in PRIMARY-first preference order. FRONTIER models (Anthropic, then
+// OpenAI) lead when their paid keys are set — they staff the committee's lead seats / the CRO review
+// for materially better reasoning. Then the free tiers: Groq (high free limit, carries bulk),
+// OpenRouter (DeepSeek/Qwen/GLM/Kimi), Gemini (tiny free RPM). Set fewer keys to narrow the pool.
+const PREFERENCE = ["anthropic", "openai", "groq", "openrouter", "gemini"];
 export function availableProviders() {
   return PREFERENCE.filter((p) => process.env[PROVIDERS[p].env]);
 }

@@ -7,6 +7,8 @@
 // they can be read-for-existence and used, but only WRITTEN via GitHub's UI/API with
 // libsodium encryption (not from this static page).
 export const REPO_SECRETS = [
+  { name: "ANTHROPIC_API_KEY", label: "Anthropic — frontier reasoning (paid, optional)" },
+  { name: "OPENAI_API_KEY", label: "OpenAI — frontier reasoning (paid, optional)" },
   { name: "GROQ_API_KEY", label: "Groq — primary analyst (high free limit)" },
   { name: "OPENROUTER_API_KEY", label: "OpenRouter — DeepSeek/Qwen/GLM/Kimi (one key)" },
   { name: "GEMINI_API_KEY", label: "Gemini — LLM digest / 2nd opinion" },

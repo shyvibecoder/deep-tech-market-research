@@ -1,6 +1,18 @@
 {
   "schema_version": 1,
-  "generated": null,
-  "prompt_version": null,
-  "proposals": []
+  "generated": "2026-05-31",
+  "prompt_version": 3,
+  "proposals": [
+    {
+      "id": "hbm",
+      "priced_in": "high",
+      "confidence": 0.72,
+      "rationale": "HBM is now broadly recognized as the binding memory chokepoint for AI accelerators: SK Hynix, Micron and Samsung have reported HBM capacity effectively sold out through the year with pre-committed volumes, and the trade has been a consensus long for multiple quarters. The scarcity is real but the 'medium / under-appreciated' framing no longer holds — it is now well-priced into the memory names. Reassess priced_in medium -> high; bind window and the non-consensus flag are unchanged (the binding is still now, but it is no longer a non-consensus call).",
+      "sources": [
+        "SK Hynix Q1 earnings call: HBM sold out for the year, capacity pre-committed",
+        "Micron 10-Q: HBM revenue ramp, multi-quarter customer commitments",
+        "Multiple sell-side notes flagging HBM as a crowded consensus long"
+      ]
+    }
+  ]
 }

@@ -54,14 +54,12 @@ describe("history-reconcile: synthetic / weekend / holiday screening", () => {
     assert.equal(stats.dropped_weekend, 2);
   });
 
-  it("drops a single-source forward-filled HOLIDAY bar (only one provider, equals prior close)", () => {
-    // Both have Fri + Tue; only Yahoo also reports Mon (a holiday) with the SAME close as Fri → synthetic fill.
-    const { rows, stats } = reconcileSeries("AAA", {
-      yahoo: S(["2026-01-16", "2026-01-19", "2026-01-20"], [100, 100, 102]), // 2026-01-19 = MLK holiday (Mon)
-      stooq: S(["2026-01-16", "2026-01-20"], [100, 102]),
+  it("keeps a legitimate unchanged-close day (does NOT mistake a flat day for a synthetic fill)", () => {
+    // A real flat close must survive — silently deleting equal-to-prior bars would corrupt the series.
+    const { rows } = reconcileSeries("AAA", {
+      yahoo: S(["2026-01-20", "2026-01-21", "2026-01-22"], [100, 100, 102]),
     });
-    assert.ok(!rows.map((r) => r.d).includes("2026-01-19"));
-    assert.equal(stats.dropped_holiday_fill, 1);
+    assert.deepEqual(rows.map((r) => r.d), ["2026-01-20", "2026-01-21", "2026-01-22"]);
   });
 });
 

@@ -492,15 +492,16 @@ if (!OFFLINE && supabaseConfigured()) {
     if (BACKFILL) {
       // FULL history for EVERY ticker (universe + the V2.3 set), reconciled across all providers.
       const all = [...new Set([...universe, ...V23_TICKERS])];
-      console.log(`Backfill: deep history for ${all.length} tickers across Yahoo+Stooq${process.env.TIINGO_API_KEY ? "+Tiingo" : ""}, cross-provider reconciled…`);
+      // Both sources are split+dividend ADJUSTED (Yahoo adjclose + Tiingo adjClose) so they share a
+      // basis and actually corroborate. Stooq is excluded here — its different adjustment created the
+      // conflicts/jumps seen earlier. Slower throttle + fetchSeries retry reduce rate-limit fallbacks.
+      console.log(`Backfill: deep ADJUSTED history for ${all.length} tickers — Yahoo(adj)${process.env.TIINGO_API_KEY ? "+Tiingo(adj)" : ""}, cross-provider reconciled…`);
       const tally = { tickers: 0, kept: 0, conflict: 0, weekend: 0, holiday: 0, jump: 0, single: 0, corr: 0 };
       for (const t of all) {
         const sources = {};
         try { sources.yahoo = await fetchSeries(t, "max"); } catch { /* skip */ }
-        await new Promise((r) => setTimeout(r, 120));
-        try { sources.stooq = await fetchStooqHistory(t); } catch { /* skip */ }
-        await new Promise((r) => setTimeout(r, 120));
-        if (process.env.TIINGO_API_KEY) { try { sources.tiingo = await fetchTiingoHistory(t); } catch { /* skip */ } await new Promise((r) => setTimeout(r, 120)); }
+        await new Promise((r) => setTimeout(r, 250));
+        if (process.env.TIINGO_API_KEY) { try { sources.tiingo = await fetchTiingoHistory(t); } catch { /* skip */ } await new Promise((r) => setTimeout(r, 350)); }
         const { rows, stats } = reconcileSeries(t, sources);
         for (const r of rows) priceRows.push({ ticker: r.ticker, d: r.d, close: r.close, source: r.source }); // drop the corroborated flag (encoded in source)
         if (rows.length) { tally.tickers++; tally.kept += stats.kept; tally.conflict += stats.dropped_conflict; tally.weekend += stats.dropped_weekend; tally.holiday += stats.dropped_holiday_fill; tally.jump += stats.dropped_jump; tally.single += stats.single_source; tally.corr += stats.corroborated; }

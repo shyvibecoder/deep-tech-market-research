@@ -59,10 +59,10 @@ export function reconcileSeries(ticker, sources = {}, { tolerance = TOLERANCE, j
         source = "consensus"; corroborated = true;
       } else { stats.dropped_conflict++; continue; } // providers disagree, no majority → untrustworthy
     } else {
-      // single source
+      // single source — kept but flagged uncorroborated (e.g. deep history only one provider has).
+      // (No "forward-fill == prior close" drop: a stock can legitimately close unchanged, and dropping
+      //  those silently deletes real flat days. Synthetic weekend bars are already screened above.)
       close = vals[0]; source = providers[0]; corroborated = false;
-      // holiday forward-fill: a lone weekday bar equal to the prior kept close that others skip.
-      if (prevClose != null && Math.abs(close / prevClose - 1) < 1e-9) { stats.dropped_holiday_fill++; continue; }
     }
 
     // anomaly: an uncorroborated implausible jump vs the previous kept bar is a bad print.

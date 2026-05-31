@@ -127,18 +127,42 @@ export async function fetchYahoo(ticker) {
   };
 }
 
-// Aligned daily close series (date,close) for building a basket index. Throws on thin data.
-// `range` defaults to 1y; the V2.3 overlay needs 2y (a 252-day distribution of a 20-day-lagged series).
+// Aligned daily ADJUSTED close series (date,close) for backtests / the price-history DB.
+// Uses split+dividend-adjusted closes (Yahoo `adjclose`) so the series is internally consistent
+// and corroborates with other adjusted providers (Tiingo adjClose) — raw closes have split jumps
+// that look like crashes and won't agree across sources. Retries on rate-limit; rejects non-daily.
 export async function fetchSeries(ticker, range = "1y") {
   const url = `https://query1.finance.yahoo.com/v8/finance/chart/${encodeURIComponent(ticker)}?range=${encodeURIComponent(range)}&interval=1d`;
-  const r = await fetch(url, { headers: { "user-agent": "Mozilla/5.0" }, signal: AbortSignal.timeout(10000) });
-  const res = (await r.json())?.chart?.result?.[0];
-  const closes = res?.indicators?.quote?.[0]?.close || [];
+  let res = null, lastErr = null;
+  for (let attempt = 0; attempt < 3; attempt++) {
+    try {
+      const r = await fetch(url, { headers: { "user-agent": "Mozilla/5.0" }, signal: AbortSignal.timeout(15000) });
+      if (r.status === 429 || r.status >= 500) throw new Error(`yahoo ${r.status}`); // transient → retry
+      res = (await r.json())?.chart?.result?.[0];
+      break;
+    } catch (e) { lastErr = e; if (attempt < 2) await new Promise((s) => setTimeout(s, 700 * (attempt + 1) * (attempt + 1))); }
+  }
+  if (!res) throw lastErr || new Error("no chart result");
+  const raw = res?.indicators?.quote?.[0]?.close || [];
+  const adj = res?.indicators?.adjclose?.[0]?.adjclose || [];
+  // Prefer adjusted; fall back to raw (e.g. indices like ^VIX have no adjclose).
+  const closes = (adj.length === raw.length && adj.some((x) => x != null)) ? adj : raw;
   const ts = res?.timestamp || [];
   const dates = [], cl = [];
   for (let i = 0; i < ts.length; i++) if (closes[i] != null && closes[i] > 0) { dates.push(new Date(ts[i] * 1000).toISOString().slice(0, 10)); cl.push(closes[i]); }
   if (cl.length < 30) throw new Error("insufficient series");
+  if (!isDailySeries(dates)) throw new Error("non-daily series (monthly/weekly) — rejected");
   return { ticker, dates, closes: cl };
+}
+
+// Guard against a provider returning monthly/weekly bars where we need daily: the median gap
+// between consecutive sessions in a real daily series is ~1 day (≤4 incl. long weekends/holidays).
+export function isDailySeries(dates) {
+  if (!Array.isArray(dates) || dates.length < 10) return false;
+  const gaps = [];
+  for (let i = 1; i < dates.length; i++) gaps.push((Date.parse(dates[i]) - Date.parse(dates[i - 1])) / 86400000);
+  gaps.sort((a, b) => a - b);
+  return gaps[Math.floor(gaps.length / 2)] <= 4; // median gap; monthly ≈ 30, weekly ≈ 7
 }
 
 // Try Yahoo (richer) first, then Stooq (price only). Returns null on total failure.

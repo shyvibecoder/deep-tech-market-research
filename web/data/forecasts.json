@@ -563,6 +563,33 @@
       "id": "2026-05-31:scarcity_rel:rl-data",
       "claim": "outperform",
       "source": "de-rating"
+    },
+    {
+      "date": "2026-05-31",
+      "type": "scarcity_rel",
+      "subject": "hvdc",
+      "proxies": [
+        "PRY.MI",
+        "NEX.PA"
+      ],
+      "complex_tickers": [
+        "PAVE",
+        "GRID",
+        "FIW",
+        "SHLD",
+        "SMH",
+        "COPX",
+        "NUKZ",
+        "ROBO",
+        "UFO"
+      ],
+      "basket_at": 153.1999969482422,
+      "complex_at": 148.22222179836697,
+      "horizon_days": 42,
+      "resolve_on": "2026-07-12",
+      "id": "2026-05-31:scarcity_rel:hvdc",
+      "claim": "outperform",
+      "source": "de-rating"
     }
   ],
   "scorecard": {

@@ -2,34 +2,437 @@
   "schema_version": 1,
   "updated": "2026-05-30",
   "legend": {
-    "bind_window": ["now", "2027", "2028-29", "2030+", "physics-floor"],
-    "priced_in": ["low", "medium", "high", "crowded"],
-    "durability": ["low", "medium", "high", "very-high"]
+    "bind_window": [
+      "now",
+      "2027",
+      "2028-29",
+      "2030+",
+      "physics-floor"
+    ],
+    "priced_in": [
+      "low",
+      "medium",
+      "high",
+      "crowded"
+    ],
+    "durability": [
+      "low",
+      "medium",
+      "high",
+      "very-high"
+    ]
   },
   "scarcities": [
-    {"id": "electrons", "sector": "Energy", "scarcity": "Electrons / merchant power (IPPs)", "bind_window": "now", "priced_in": "high", "durability": "very-high", "substitution_risk": "low", "tickers": ["CEG", "VST", "TLN", "GEV"], "non_consensus": true, "news_query": "merchant power IPP electricity demand data center", "last_reviewed": "2026-05-30", "thesis": "The purest slow-to-build scarcity; can't permit/build fast. Turbines are sold out because electrons are binding."},
-    {"id": "transformers", "sector": "Energy", "scarcity": "Large power transformers & GSUs", "bind_window": "now", "priced_in": "high", "durability": "very-high", "substitution_risk": "low", "tickers": ["ETN", "GEV"], "non_consensus": false, "news_query": "large power transformer shortage lead time", "last_reviewed": "2026-05-30", "thesis": "128-144wk lead times, ~30% fleet shortfall. No technical substitute. Eases ~2027-29 as plants ramp."},
-    {"id": "turbines", "sector": "Energy", "scarcity": "Gas turbine slots", "bind_window": "now", "priced_in": "crowded", "durability": "high", "substitution_risk": "low", "tickers": ["GEV", "SMNEY"], "non_consensus": false, "news_query": "gas turbine backlog GE Vernova Siemens Energy", "last_reviewed": "2026-05-30", "thesis": "3-OEM oligopoly sold out into 2029-30. Backlog = visibility through the digestion. Deposits partly cancellable."},
-    {"id": "electricians", "sector": "Energy", "scarcity": "Skilled electrical labor / EPC", "bind_window": "now", "priced_in": "high", "durability": "very-high", "substitution_risk": "low", "tickers": ["EME", "PWR", "FIX", "MYRG"], "non_consensus": true, "news_query": "electrician labor shortage data center construction EPC", "last_reviewed": "2026-05-30", "thesis": "45-70% of DC construction cost; 'the #1 problem' (Microsoft). Can't be factory-expanded or imported."},
-    {"id": "hvdc", "sector": "Energy", "scarcity": "HVDC & HV cable", "bind_window": "now", "priced_in": "medium", "durability": "high", "substitution_risk": "low", "tickers": ["PRY.MI", "NEX.PA"], "non_consensus": true, "news_query": "HVDC high voltage cable subsea supply", "last_reviewed": "2026-05-30", "thesis": ">5yr waitlists, cable-laying vessel constrained. Eases ~2027-30."},
-    {"id": "enrichment", "sector": "Minerals", "scarcity": "Uranium enrichment SWU / HALEU", "bind_window": "2028-29", "priced_in": "crowded", "durability": "very-high", "substitution_risk": "low", "tickers": ["LEU", "CCJ"], "non_consensus": true, "news_query": "uranium enrichment HALEU Centrus SWU", "last_reviewed": "2026-05-30", "thesis": "Hard Russian-LEU ban Jan 2028; HALEU near-monopoly could gate SMR rollout. The cleanest AI-power materials derivative."},
-    {"id": "uranium", "sector": "Minerals", "scarcity": "Uranium (upstream)", "bind_window": "now", "priced_in": "crowded", "durability": "high", "substitution_risk": "medium", "tickers": ["CCJ", "U.UN"], "non_consensus": false, "news_query": "uranium price supply deficit utilities contracting", "last_reviewed": "2026-05-30", "thesis": "Structural deficit; LT ~$90/lb. But spot round-tripping; crowded trade."},
-    {"id": "copper", "sector": "Minerals", "scarcity": "Copper structural deficit", "bind_window": "2030+", "priced_in": "high", "durability": "very-high", "substitution_risk": "medium", "tickers": ["FCX", "COPX", "TECK", "IVN"], "non_consensus": false, "news_query": "copper supply deficit mine grade", "last_reviewed": "2026-05-30", "thesis": "~30% supply deficit by 2035; slowest/most certain. Has genuine non-AI demand (a partial de-correlator)."},
-    {"id": "rare-earth-magnets", "sector": "Minerals", "scarcity": "Heavy-RE (Dy/Tb) separation & NdFeB magnets", "bind_window": "now", "priced_in": "crowded", "durability": "very-high", "substitution_risk": "medium", "tickers": ["MP", "LYC"], "non_consensus": true, "news_query": "rare earth magnet China export control NdPr dysprosium", "last_reviewed": "2026-05-30", "thesis": "China ~90% separation/magnets; weaponized. Decadal moat. But subsidy-floor trade; 'short the China peace'. Catalyst: Jan 2027 defense ban; Nov 2026 suspension lapse."},
-    {"id": "gallium", "sector": "Minerals", "scarcity": "Gallium / GaN for radar & EW", "bind_window": "now", "priced_in": "low", "durability": "very-high", "substitution_risk": "low", "tickers": ["WOLF", "NVTS", "QRVO"], "non_consensus": true, "news_query": "gallium germanium China export control GaN", "last_reviewed": "2026-05-30", "thesis": "No RF substitute, byproduct inelasticity, domestic caps 10-15% by 2030. Harder than magnets BUT cleanest proxy (WOLF) is impaired (chokepoint != rent)."},
-    {"id": "graphite", "sector": "Minerals", "scarcity": "Battery-grade graphite anode", "bind_window": "2027", "priced_in": "low", "durability": "high", "substitution_risk": "medium", "tickers": ["SYR.AX", "NVX"], "non_consensus": true, "news_query": "graphite anode battery China export", "last_reviewed": "2026-05-30", "thesis": "China >90% battery-grade anode; suspended to Nov 2026."},
-    {"id": "hbm", "sector": "Compute", "scarcity": "HBM + TSV / DRAM-wafer opportunity cost", "bind_window": "now", "priced_in": "medium", "durability": "medium", "substitution_risk": "high", "tickers": ["MU"], "non_consensus": true, "news_query": "HBM high bandwidth memory shortage Micron pricing", "last_reviewed": "2026-05-30", "thesis": "MU ~10-12x FORWARD, HBM sold out for 2026. Cheap-but-cyclical; 3 suppliers adding ~50% capacity."},
-    {"id": "advanced-packaging", "sector": "Compute", "scarcity": "Advanced packaging (CoWoS / SoIC)", "bind_window": "now", "priced_in": "high", "durability": "high", "substitution_risk": "high", "tickers": ["TSM", "ASML"], "non_consensus": false, "news_query": "CoWoS advanced packaging TSMC capacity", "last_reviewed": "2026-05-30", "thesis": "CoWoS un-binding by construction (+3.7x + OSAT). SoIC binds 2027-29; glass interposer 2028-29."},
-    {"id": "semicap", "sector": "Compute", "scarcity": "Semicap monopoly (EUV)", "bind_window": "now", "priced_in": "high", "durability": "very-high", "substitution_risk": "low", "tickers": ["ASML"], "non_consensus": false, "news_query": "ASML EUV lithography orders bookings", "last_reviewed": "2026-05-30", "thesis": "The actual chokepoint; High-NA limited production 2027-28."},
-    {"id": "optical", "sector": "Compute", "scarcity": "Optical interconnect / co-packaged optics", "bind_window": "2027", "priced_in": "crowded", "durability": "high", "substitution_risk": "high", "tickers": ["COHR", "LITE", "AVGO"], "non_consensus": false, "news_query": "optical transceiver co-packaged optics 1.6T demand", "last_reviewed": "2026-05-30", "thesis": "Already ran ~5x. CPO leg weakest (LPO substitution). Copper hits wall 2028-30."},
-    {"id": "specialty-materials", "sector": "Compute", "scarcity": "Single-source semi materials (ABF/T-glass/EUV resist)", "bind_window": "now", "priced_in": "low", "durability": "very-high", "substitution_risk": "low", "tickers": ["4185.T", "6988.T"], "non_consensus": true, "news_query": "ABF substrate EUV photoresist shortage", "last_reviewed": "2026-05-30", "thesis": "Ajinomoto ABF monopoly; Japan ~90% EUV photoresist. Geopolitically fragile; spikes 2026-27."},
-    {"id": "cooling", "sector": "Compute", "scarcity": "AI datacenter cooling (CDU)", "bind_window": "now", "priced_in": "high", "durability": "medium", "substitution_risk": "medium", "tickers": ["VRT", "MOD", "NVT"], "non_consensus": true, "news_query": "data center liquid cooling CDU shortage", "last_reviewed": "2026-05-30", "thesis": "The literal 2026 deployment throttle (secured power+contract, still can't deploy without cooling). Relievable with capex."},
-    {"id": "manipulation-data", "sector": "Robotics", "scarcity": "Real-world manipulation data", "bind_window": "2027", "priced_in": "low", "durability": "high", "substitution_risk": "medium", "tickers": ["(private: Physical Intelligence, Skild, Scale)"], "non_consensus": true, "news_query": "humanoid robot manipulation training data foundation model", "last_reviewed": "2026-05-30", "thesis": "The demo->deployment gate; no internet of physical interactions. Compounding fleet moat. Mostly private."},
-    {"id": "reducers", "sector": "Robotics", "scarcity": "Precision reducers / roller screws", "bind_window": "2027", "priced_in": "medium", "durability": "medium", "substitution_risk": "high", "tickers": ["6324.T", "6268.T"], "non_consensus": false, "news_query": "harmonic drive precision reducer robot actuator", "last_reviewed": "2026-05-30", "thesis": "Binds 2026-29 but ERODING moat (Schaeffler integrated actuators + China entrants). Don't conflate binds with durable."},
-    {"id": "space-power", "sector": "Space", "scarcity": "Space-grade power (GaAs cells + gallium)", "bind_window": "2028-29", "priced_in": "low", "durability": "high", "substitution_risk": "medium", "tickers": ["RKLB"], "non_consensus": true, "news_query": "space solar cell gallium arsenide satellite power", "last_reviewed": "2026-05-30", "thesis": "Space-cell output single-digit MW/yr; ~98% gallium behind Chinese valve."},
-    {"id": "thermal-rejection", "sector": "Space", "scarcity": "Thermal rejection (orbital radiators)", "bind_window": "physics-floor", "priced_in": "low", "durability": "very-high", "substitution_risk": "low", "tickers": ["(un-investable; buried in primes)"], "non_consensus": true, "news_query": "orbital data center radiator thermal space compute", "last_reviewed": "2026-05-30", "thesis": "Physics floor (~100-350 W/m2). The TRUE binding constraint on orbital compute, not launch cost. Short-the-hype on orbital DCs."},
-    {"id": "cryogenics", "sector": "Quantum", "scarcity": "He-3 + sub-Kelvin cryogenics", "bind_window": "2028-29", "priced_in": "low", "durability": "very-high", "substitution_risk": "low", "tickers": ["OXIG.L"], "non_consensus": true, "news_query": "dilution refrigerator helium-3 quantum cryogenics", "last_reviewed": "2026-05-30", "thesis": "He-3 physics-fixed supply (tritium decay). Fridge oligopoly. But quantum may stay commercially marginal through ~2030."},
-    {"id": "bio-data", "sector": "Biotech", "scarcity": "Proprietary AI-ready bio-data + GMP capacity", "bind_window": "now", "priced_in": "medium", "durability": "high", "substitution_risk": "low", "tickers": ["DHR", "TMO"], "non_consensus": true, "news_query": "AI drug discovery proprietary biology data GMP capacity", "last_reviewed": "2026-05-30", "thesis": "Bet the bottleneck (data, GMP, delivery IP, regulatory time), not the molecule. Tools = picks-and-shovels. NOTE: Street already re-rating tools UP (late)."},
-    {"id": "rl-data", "sector": "AI-software", "scarcity": "RL environments / agentic training data", "bind_window": "2027", "priced_in": "low", "durability": "high", "substitution_risk": "medium", "tickers": ["(private: Scale, Surge, Mercor)", "RDDT"], "non_consensus": true, "news_query": "reinforcement learning environments agentic training data", "last_reviewed": "2026-05-30", "thesis": "Public text (~300T tokens) exhausting 2026-2032. Largely private; public proxies thin."}
+    {
+      "id": "electrons",
+      "sector": "Energy",
+      "scarcity": "Electrons / merchant power (IPPs)",
+      "bind_window": "now",
+      "priced_in": "high",
+      "durability": "very-high",
+      "substitution_risk": "low",
+      "tickers": [
+        "CEG",
+        "VST",
+        "TLN",
+        "GEV"
+      ],
+      "non_consensus": true,
+      "news_query": "merchant power IPP electricity demand data center",
+      "last_reviewed": "2026-05-30",
+      "thesis": "The purest slow-to-build scarcity; can't permit/build fast. Turbines are sold out because electrons are binding."
+    },
+    {
+      "id": "transformers",
+      "sector": "Energy",
+      "scarcity": "Large power transformers & GSUs",
+      "bind_window": "now",
+      "priced_in": "high",
+      "durability": "very-high",
+      "substitution_risk": "low",
+      "tickers": [
+        "ETN",
+        "GEV"
+      ],
+      "non_consensus": false,
+      "news_query": "large power transformer shortage lead time",
+      "last_reviewed": "2026-05-30",
+      "thesis": "128-144wk lead times, ~30% fleet shortfall. No technical substitute. Eases ~2027-29 as plants ramp."
+    },
+    {
+      "id": "turbines",
+      "sector": "Energy",
+      "scarcity": "Gas turbine slots",
+      "bind_window": "now",
+      "priced_in": "crowded",
+      "durability": "high",
+      "substitution_risk": "low",
+      "tickers": [
+        "GEV",
+        "SMNEY"
+      ],
+      "non_consensus": false,
+      "news_query": "gas turbine backlog GE Vernova Siemens Energy",
+      "last_reviewed": "2026-05-30",
+      "thesis": "3-OEM oligopoly sold out into 2029-30. Backlog = visibility through the digestion. Deposits partly cancellable."
+    },
+    {
+      "id": "electricians",
+      "sector": "Energy",
+      "scarcity": "Skilled electrical labor / EPC",
+      "bind_window": "now",
+      "priced_in": "high",
+      "durability": "very-high",
+      "substitution_risk": "low",
+      "tickers": [
+        "EME",
+        "PWR",
+        "FIX",
+        "MYRG"
+      ],
+      "non_consensus": true,
+      "news_query": "electrician labor shortage data center construction EPC",
+      "last_reviewed": "2026-05-30",
+      "thesis": "45-70% of DC construction cost; 'the #1 problem' (Microsoft). Can't be factory-expanded or imported."
+    },
+    {
+      "id": "hvdc",
+      "sector": "Energy",
+      "scarcity": "HVDC & HV cable",
+      "bind_window": "now",
+      "priced_in": "medium",
+      "durability": "high",
+      "substitution_risk": "low",
+      "tickers": [
+        "PRY.MI",
+        "NEX.PA"
+      ],
+      "non_consensus": true,
+      "news_query": "HVDC high voltage cable subsea supply",
+      "last_reviewed": "2026-05-30",
+      "thesis": ">5yr waitlists, cable-laying vessel constrained. Eases ~2027-30."
+    },
+    {
+      "id": "enrichment",
+      "sector": "Minerals",
+      "scarcity": "Uranium enrichment SWU / HALEU",
+      "bind_window": "2028-29",
+      "priced_in": "crowded",
+      "durability": "very-high",
+      "substitution_risk": "low",
+      "tickers": [
+        "LEU",
+        "CCJ"
+      ],
+      "non_consensus": true,
+      "news_query": "uranium enrichment HALEU Centrus SWU",
+      "last_reviewed": "2026-05-30",
+      "thesis": "Hard Russian-LEU ban Jan 2028; HALEU near-monopoly could gate SMR rollout. The cleanest AI-power materials derivative."
+    },
+    {
+      "id": "uranium",
+      "sector": "Minerals",
+      "scarcity": "Uranium (upstream)",
+      "bind_window": "now",
+      "priced_in": "crowded",
+      "durability": "high",
+      "substitution_risk": "medium",
+      "tickers": [
+        "CCJ",
+        "U.UN"
+      ],
+      "non_consensus": false,
+      "news_query": "uranium price supply deficit utilities contracting",
+      "last_reviewed": "2026-05-30",
+      "thesis": "Structural deficit; LT ~$90/lb. But spot round-tripping; crowded trade."
+    },
+    {
+      "id": "copper",
+      "sector": "Minerals",
+      "scarcity": "Copper structural deficit",
+      "bind_window": "2030+",
+      "priced_in": "high",
+      "durability": "very-high",
+      "substitution_risk": "medium",
+      "tickers": [
+        "FCX",
+        "COPX",
+        "TECK",
+        "IVN"
+      ],
+      "non_consensus": false,
+      "news_query": "copper supply deficit mine grade",
+      "last_reviewed": "2026-05-30",
+      "thesis": "~30% supply deficit by 2035; slowest/most certain. Has genuine non-AI demand (a partial de-correlator)."
+    },
+    {
+      "id": "rare-earth-magnets",
+      "sector": "Minerals",
+      "scarcity": "Heavy-RE (Dy/Tb) separation & NdFeB magnets",
+      "bind_window": "now",
+      "priced_in": "crowded",
+      "durability": "very-high",
+      "substitution_risk": "medium",
+      "tickers": [
+        "MP",
+        "LYC"
+      ],
+      "non_consensus": true,
+      "news_query": "rare earth magnet China export control NdPr dysprosium",
+      "last_reviewed": "2026-05-30",
+      "thesis": "China ~90% separation/magnets; weaponized. Decadal moat. But subsidy-floor trade; 'short the China peace'. Catalyst: Jan 2027 defense ban; Nov 2026 suspension lapse."
+    },
+    {
+      "id": "gallium",
+      "sector": "Minerals",
+      "scarcity": "Gallium / GaN for radar & EW",
+      "bind_window": "now",
+      "priced_in": "low",
+      "durability": "very-high",
+      "substitution_risk": "low",
+      "tickers": [
+        "WOLF",
+        "NVTS",
+        "QRVO"
+      ],
+      "non_consensus": true,
+      "news_query": "gallium germanium China export control GaN",
+      "last_reviewed": "2026-05-30",
+      "thesis": "No RF substitute, byproduct inelasticity, domestic caps 10-15% by 2030. Harder than magnets BUT cleanest proxy (WOLF) is impaired (chokepoint != rent)."
+    },
+    {
+      "id": "graphite",
+      "sector": "Minerals",
+      "scarcity": "Battery-grade graphite anode",
+      "bind_window": "2027",
+      "priced_in": "low",
+      "durability": "high",
+      "substitution_risk": "medium",
+      "tickers": [
+        "SYR.AX",
+        "NVX"
+      ],
+      "non_consensus": true,
+      "news_query": "graphite anode battery China export",
+      "last_reviewed": "2026-05-30",
+      "thesis": "China >90% battery-grade anode; suspended to Nov 2026."
+    },
+    {
+      "id": "hbm",
+      "sector": "Compute",
+      "scarcity": "HBM + TSV / DRAM-wafer opportunity cost",
+      "bind_window": "now",
+      "priced_in": "high",
+      "durability": "medium",
+      "substitution_risk": "high",
+      "tickers": [
+        "MU"
+      ],
+      "non_consensus": true,
+      "news_query": "HBM high bandwidth memory shortage Micron pricing",
+      "last_reviewed": "2026-05-31",
+      "thesis": "MU ~10-12x FORWARD, HBM sold out for 2026. Cheap-but-cyclical; 3 suppliers adding ~50% capacity."
+    },
+    {
+      "id": "advanced-packaging",
+      "sector": "Compute",
+      "scarcity": "Advanced packaging (CoWoS / SoIC)",
+      "bind_window": "now",
+      "priced_in": "high",
+      "durability": "high",
+      "substitution_risk": "high",
+      "tickers": [
+        "TSM",
+        "ASML"
+      ],
+      "non_consensus": false,
+      "news_query": "CoWoS advanced packaging TSMC capacity",
+      "last_reviewed": "2026-05-30",
+      "thesis": "CoWoS un-binding by construction (+3.7x + OSAT). SoIC binds 2027-29; glass interposer 2028-29."
+    },
+    {
+      "id": "semicap",
+      "sector": "Compute",
+      "scarcity": "Semicap monopoly (EUV)",
+      "bind_window": "now",
+      "priced_in": "high",
+      "durability": "very-high",
+      "substitution_risk": "low",
+      "tickers": [
+        "ASML"
+      ],
+      "non_consensus": false,
+      "news_query": "ASML EUV lithography orders bookings",
+      "last_reviewed": "2026-05-30",
+      "thesis": "The actual chokepoint; High-NA limited production 2027-28."
+    },
+    {
+      "id": "optical",
+      "sector": "Compute",
+      "scarcity": "Optical interconnect / co-packaged optics",
+      "bind_window": "2027",
+      "priced_in": "crowded",
+      "durability": "high",
+      "substitution_risk": "high",
+      "tickers": [
+        "COHR",
+        "LITE",
+        "AVGO"
+      ],
+      "non_consensus": false,
+      "news_query": "optical transceiver co-packaged optics 1.6T demand",
+      "last_reviewed": "2026-05-30",
+      "thesis": "Already ran ~5x. CPO leg weakest (LPO substitution). Copper hits wall 2028-30."
+    },
+    {
+      "id": "specialty-materials",
+      "sector": "Compute",
+      "scarcity": "Single-source semi materials (ABF/T-glass/EUV resist)",
+      "bind_window": "now",
+      "priced_in": "low",
+      "durability": "very-high",
+      "substitution_risk": "low",
+      "tickers": [
+        "4185.T",
+        "6988.T"
+      ],
+      "non_consensus": true,
+      "news_query": "ABF substrate EUV photoresist shortage",
+      "last_reviewed": "2026-05-30",
+      "thesis": "Ajinomoto ABF monopoly; Japan ~90% EUV photoresist. Geopolitically fragile; spikes 2026-27."
+    },
+    {
+      "id": "cooling",
+      "sector": "Compute",
+      "scarcity": "AI datacenter cooling (CDU)",
+      "bind_window": "now",
+      "priced_in": "high",
+      "durability": "medium",
+      "substitution_risk": "medium",
+      "tickers": [
+        "VRT",
+        "MOD",
+        "NVT"
+      ],
+      "non_consensus": true,
+      "news_query": "data center liquid cooling CDU shortage",
+      "last_reviewed": "2026-05-30",
+      "thesis": "The literal 2026 deployment throttle (secured power+contract, still can't deploy without cooling). Relievable with capex."
+    },
+    {
+      "id": "manipulation-data",
+      "sector": "Robotics",
+      "scarcity": "Real-world manipulation data",
+      "bind_window": "2027",
+      "priced_in": "low",
+      "durability": "high",
+      "substitution_risk": "medium",
+      "tickers": [
+        "(private: Physical Intelligence, Skild, Scale)"
+      ],
+      "non_consensus": true,
+      "news_query": "humanoid robot manipulation training data foundation model",
+      "last_reviewed": "2026-05-30",
+      "thesis": "The demo->deployment gate; no internet of physical interactions. Compounding fleet moat. Mostly private."
+    },
+    {
+      "id": "reducers",
+      "sector": "Robotics",
+      "scarcity": "Precision reducers / roller screws",
+      "bind_window": "2027",
+      "priced_in": "medium",
+      "durability": "medium",
+      "substitution_risk": "high",
+      "tickers": [
+        "6324.T",
+        "6268.T"
+      ],
+      "non_consensus": false,
+      "news_query": "harmonic drive precision reducer robot actuator",
+      "last_reviewed": "2026-05-30",
+      "thesis": "Binds 2026-29 but ERODING moat (Schaeffler integrated actuators + China entrants). Don't conflate binds with durable."
+    },
+    {
+      "id": "space-power",
+      "sector": "Space",
+      "scarcity": "Space-grade power (GaAs cells + gallium)",
+      "bind_window": "2028-29",
+      "priced_in": "low",
+      "durability": "high",
+      "substitution_risk": "medium",
+      "tickers": [
+        "RKLB"
+      ],
+      "non_consensus": true,
+      "news_query": "space solar cell gallium arsenide satellite power",
+      "last_reviewed": "2026-05-30",
+      "thesis": "Space-cell output single-digit MW/yr; ~98% gallium behind Chinese valve."
+    },
+    {
+      "id": "thermal-rejection",
+      "sector": "Space",
+      "scarcity": "Thermal rejection (orbital radiators)",
+      "bind_window": "physics-floor",
+      "priced_in": "low",
+      "durability": "very-high",
+      "substitution_risk": "low",
+      "tickers": [
+        "(un-investable; buried in primes)"
+      ],
+      "non_consensus": true,
+      "news_query": "orbital data center radiator thermal space compute",
+      "last_reviewed": "2026-05-30",
+      "thesis": "Physics floor (~100-350 W/m2). The TRUE binding constraint on orbital compute, not launch cost. Short-the-hype on orbital DCs."
+    },
+    {
+      "id": "cryogenics",
+      "sector": "Quantum",
+      "scarcity": "He-3 + sub-Kelvin cryogenics",
+      "bind_window": "2028-29",
+      "priced_in": "low",
+      "durability": "very-high",
+      "substitution_risk": "low",
+      "tickers": [
+        "OXIG.L"
+      ],
+      "non_consensus": true,
+      "news_query": "dilution refrigerator helium-3 quantum cryogenics",
+      "last_reviewed": "2026-05-30",
+      "thesis": "He-3 physics-fixed supply (tritium decay). Fridge oligopoly. But quantum may stay commercially marginal through ~2030."
+    },
+    {
+      "id": "bio-data",
+      "sector": "Biotech",
+      "scarcity": "Proprietary AI-ready bio-data + GMP capacity",
+      "bind_window": "now",
+      "priced_in": "medium",
+      "durability": "high",
+      "substitution_risk": "low",
+      "tickers": [
+        "DHR",
+        "TMO"
+      ],
+      "non_consensus": true,
+      "news_query": "AI drug discovery proprietary biology data GMP capacity",
+      "last_reviewed": "2026-05-30",
+      "thesis": "Bet the bottleneck (data, GMP, delivery IP, regulatory time), not the molecule. Tools = picks-and-shovels. NOTE: Street already re-rating tools UP (late)."
+    },
+    {
+      "id": "rl-data",
+      "sector": "AI-software",
+      "scarcity": "RL environments / agentic training data",
+      "bind_window": "2027",
+      "priced_in": "low",
+      "durability": "high",
+      "substitution_risk": "medium",
+      "tickers": [
+        "(private: Scale, Surge, Mercor)",
+        "RDDT"
+      ],
+      "non_consensus": true,
+      "news_query": "reinforcement learning environments agentic training data",
+      "last_reviewed": "2026-05-30",
+      "thesis": "Public text (~300T tokens) exhausting 2026-2032. Largely private; public proxies thin."
+    }
   ]
 }

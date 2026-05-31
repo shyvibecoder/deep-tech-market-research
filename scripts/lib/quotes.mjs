@@ -14,6 +14,15 @@ const stooqSymbol = (t) => {
   return `${t.toLowerCase()}.us`;
 };
 
+// Yahoo symbol overrides: the app keeps the human-facing ticker, but some names need their
+// exchange-qualified Yahoo symbol to resolve (TSX/ASX, dual-class units). Easily extended.
+const YAHOO_OVERRIDES = {
+  IVN: "IVN.TO",      // Ivanhoe Mines (Toronto)
+  LYC: "LYC.AX",      // Lynas Rare Earths (ASX)
+  "U.UN": "U-UN.TO",  // Sprott Physical Uranium Trust units (Toronto; Yahoo uses "-" + .TO)
+};
+export const yahooSymbol = (t) => YAHOO_OVERRIDES[t] || t;
+
 export async function fetchStooq(ticker) {
   const url = `https://stooq.com/q/l/?s=${stooqSymbol(ticker)}&f=sd2t2ohlcv&h&e=csv`;
   const r = await fetch(url, { signal: AbortSignal.timeout(10000) });
@@ -87,7 +96,7 @@ const realizedVol = (closes, n) => {
 
 export async function fetchYahoo(ticker) {
   // 1y daily history -> price + 52w high + YTD + moving averages + currency.
-  const url = `https://query1.finance.yahoo.com/v8/finance/chart/${encodeURIComponent(ticker)}?range=1y&interval=1d`;
+  const url = `https://query1.finance.yahoo.com/v8/finance/chart/${encodeURIComponent(yahooSymbol(ticker))}?range=1y&interval=1d`;
   const r = await fetch(url, { headers: { "user-agent": "Mozilla/5.0" }, signal: AbortSignal.timeout(10000) });
   const j = await r.json();
   const res = j?.chart?.result?.[0];
@@ -133,27 +142,42 @@ export async function fetchYahoo(ticker) {
 // and corroborates with other adjusted providers (Tiingo adjClose) — raw closes have split jumps
 // that look like crashes and won't agree across sources. Retries on rate-limit; rejects non-daily.
 export async function fetchSeries(ticker, range = "1y") {
-  const url = `https://query1.finance.yahoo.com/v8/finance/chart/${encodeURIComponent(ticker)}?range=${encodeURIComponent(range)}&interval=1d`;
-  let res = null, lastErr = null;
+  const sym = yahooSymbol(ticker);
+  // For deep ranges Yahoo sometimes returns MONTHLY bars (esp. indices like ^VIX). If the result
+  // isn't daily, fall back to daily-capable ranges so we still get a daily series.
+  const ranges = range === "max" ? ["max", "10y", "5y"] : [range];
+  let lastErr = null;
+  for (const rng of ranges) {
+    try {
+      const res = await yahooChart(sym, rng);
+      const raw = res?.indicators?.quote?.[0]?.close || [];
+      const adj = res?.indicators?.adjclose?.[0]?.adjclose || [];
+      const closes = (adj.length === raw.length && adj.some((x) => x != null)) ? adj : raw; // prefer adjusted
+      const ts = res?.timestamp || [];
+      const dates = [], cl = [];
+      for (let i = 0; i < ts.length; i++) if (closes[i] != null && closes[i] > 0) { dates.push(new Date(ts[i] * 1000).toISOString().slice(0, 10)); cl.push(closes[i]); }
+      if (cl.length < 30) throw new Error("insufficient series");
+      if (!isDailySeries(dates)) throw new Error(`non-daily (${rng})`);
+      return { ticker, dates, closes: cl };
+    } catch (e) { lastErr = e; }
+  }
+  throw lastErr || new Error("no series");
+}
+
+// One Yahoo chart fetch with transient-error (429/5xx/timeout) retry + backoff.
+async function yahooChart(sym, range) {
+  let lastErr = null;
   for (let attempt = 0; attempt < 3; attempt++) {
     try {
+      const url = `https://query1.finance.yahoo.com/v8/finance/chart/${encodeURIComponent(sym)}?range=${encodeURIComponent(range)}&interval=1d`;
       const r = await fetch(url, { headers: { "user-agent": "Mozilla/5.0" }, signal: AbortSignal.timeout(15000) });
-      if (r.status === 429 || r.status >= 500) throw new Error(`yahoo ${r.status}`); // transient → retry
-      res = (await r.json())?.chart?.result?.[0];
-      break;
+      if (r.status === 429 || r.status >= 500) throw new Error(`yahoo ${r.status}`);
+      const res = (await r.json())?.chart?.result?.[0];
+      if (!res) throw new Error("no chart result");
+      return res;
     } catch (e) { lastErr = e; if (attempt < 2) await new Promise((s) => setTimeout(s, 700 * (attempt + 1) * (attempt + 1))); }
   }
-  if (!res) throw lastErr || new Error("no chart result");
-  const raw = res?.indicators?.quote?.[0]?.close || [];
-  const adj = res?.indicators?.adjclose?.[0]?.adjclose || [];
-  // Prefer adjusted; fall back to raw (e.g. indices like ^VIX have no adjclose).
-  const closes = (adj.length === raw.length && adj.some((x) => x != null)) ? adj : raw;
-  const ts = res?.timestamp || [];
-  const dates = [], cl = [];
-  for (let i = 0; i < ts.length; i++) if (closes[i] != null && closes[i] > 0) { dates.push(new Date(ts[i] * 1000).toISOString().slice(0, 10)); cl.push(closes[i]); }
-  if (cl.length < 30) throw new Error("insufficient series");
-  if (!isDailySeries(dates)) throw new Error("non-daily series (monthly/weekly) — rejected");
-  return { ticker, dates, closes: cl };
+  throw lastErr;
 }
 
 // Guard against a provider returning monthly/weekly bars where we need daily: the median gap

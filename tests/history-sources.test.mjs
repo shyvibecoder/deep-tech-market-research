@@ -1,6 +1,26 @@
 import { describe, it } from "node:test";
 import assert from "node:assert/strict";
-import { parseStooqHistory, parseTiingoHistory } from "../scripts/lib/quotes.mjs";
+import { parseStooqHistory, parseTiingoHistory, yahooSymbol, isDailySeries } from "../scripts/lib/quotes.mjs";
+
+describe("history sources: Yahoo symbol overrides for foreign listings", () => {
+  it("maps exchange-qualified symbols, passes US tickers through", () => {
+    assert.equal(yahooSymbol("IVN"), "IVN.TO");
+    assert.equal(yahooSymbol("LYC"), "LYC.AX");
+    assert.equal(yahooSymbol("U.UN"), "U-UN.TO");
+    assert.equal(yahooSymbol("MU"), "MU");
+    assert.equal(yahooSymbol("^VIX"), "^VIX");
+    assert.equal(yahooSymbol("PRY.MI"), "PRY.MI"); // already exchange-qualified → unchanged
+  });
+});
+
+describe("history sources: daily-vs-monthly guard", () => {
+  it("accepts a real daily series, rejects monthly", () => {
+    const daily = Array.from({ length: 40 }, (_, i) => new Date(Date.UTC(2026, 0, 5 + i)).toISOString().slice(0, 10));
+    assert.equal(isDailySeries(daily), true);
+    const monthly = ["2024-01-01", "2024-02-01", "2024-03-01", "2024-04-01", "2024-05-01", "2024-06-01", "2024-07-01", "2024-08-01", "2024-09-01", "2024-10-01", "2024-11-01"];
+    assert.equal(isDailySeries(monthly), false);
+  });
+});
 
 describe("history sources: Stooq daily CSV parser", () => {
   const csv = "Date,Open,High,Low,Close,Volume\n2026-01-05,10,11,9.5,10.5,1000\n2026-01-06,10.5,12,10,11.2,1200\n";

@@ -57,6 +57,23 @@ async function seriesFor(ticker, { liveRange = "1y", years } = {}) {
   _liveHits++;
   return { ...s, src: "live" };
 }
+
+// V2.3 series: deep history from the DB (no on-demand 2y fetch when seeded) + today's latest REAL
+// bar via one light quote — which both makes the cross-check current and appends that bar to the DB
+// (these tickers aren't in the universe, so this is how the DB stays fed for them). Pushes to priceRows.
+async function v23Series(ticker) {
+  let s = null;
+  try { s = await seriesFor(ticker, { liveRange: "2y", years: 6 }); } catch { /* may be unavailable */ }
+  try {
+    const q = await fetchYahoo(ticker); // light 1y fetch; we use only its latest bar
+    if (q && q.price > 0 && q.asof) {
+      if (!s) s = { ticker, dates: [], closes: [], src: "live" };
+      if (s.dates[s.dates.length - 1] !== q.asof) { s.dates.push(q.asof); s.closes.push(q.price); }
+      priceRows.push({ ticker, d: q.asof, close: q.price, source: q.source || "yahoo" });
+    }
+  } catch { /* top-up best-effort */ }
+  return s;
+}
 const portfolio = read("portfolio.json");
 const scarcities = read("scarcities.json");
 const triggers = read("triggers.json");
@@ -377,24 +394,20 @@ if (!OFFLINE) console.log(`Opportunity Score: top = ${opportunities.slice(0, 3).
 // rule recomputed on QQQ (200-DMA trend, 252-day/60-day-vol crash, rising-20-DMA thrust + exit-only
 // composite-stress overlay), to sanity-check Puck's regime; and the answer to "WHEN do I take
 // advantage of a dislocation?" (thesis-intact dislocation present AND timing turned). ---
-let v23 = { state: "UNAVAILABLE", reasons: ["offline run"], basis: "needs live QQQ/VIX/HYG series" };
+let v23 = { state: "UNAVAILABLE", reasons: ["offline run"], basis: "needs QQQ/VIX/HYG history" };
 if (!OFFLINE) {
   try {
-    // 2y of closes: enough for the 200-DMA + a 252-day distribution of the 20-day HY-velocity.
-    const [qqqS, vixS, vix3mS, hygS] = await Promise.all([
-      fetchSeries("QQQ", "2y").catch(() => null),
-      fetchSeries("^VIX", "2y").catch(() => null),
-      fetchSeries("^VIX3M", "2y").catch(() => null),
-      fetchSeries("HYG", "2y").catch(() => null),
-    ]);
-    // Keep the V2.3 inputs current daily by persisting only their LATEST real bar (deep history
-    // comes from --backfill). Re-writing the whole series daily would downgrade reconciled bars.
-    for (const s of [qqqS, vixS, vix3mS, hygS]) {
-      if (s?.dates?.length) priceRows.push({ ticker: s.ticker, d: s.dates[s.dates.length - 1], close: s.closes[s.closes.length - 1], source: "yahoo" });
+    // Deep history from the accumulated DB (no on-demand 2y fetch) + a light latest-bar top-up so
+    // the cross-check is current AND the non-universe V2.3 tickers stay fed in the DB.
+    const [qqqS, vixS, vix3mS, hygS] = await Promise.all(
+      ["QQQ", "^VIX", "^VIX3M", "HYG"].map((t) => v23Series(t)));
+    // Keep the V2.3 execution instruments current in the DB too (not used by the cross-check itself).
+    for (const t of ["QLD", "SGOV"]) {
+      try { const q = await fetchYahoo(t); if (q && q.price > 0 && q.asof) priceRows.push({ ticker: t, d: q.asof, close: q.price, source: q.source || "yahoo" }); } catch { /* ignore */ }
     }
     const stress = compositeStress({ vixCloses: vixS?.closes, vix3mCloses: vix3mS?.closes, hygCloses: hygS?.closes });
     v23 = v23State(qqqS?.closes || null, { compositeStress: stress });
-    console.log(`V2.3 cross-check: ${v23.state} (${v23.rule}${v23.overlay_applied ? "+overlay" : ""}); composite-stress ${stress == null ? "suppressed" : stress}`);
+    console.log(`V2.3 cross-check: ${v23.state} (${v23.rule}${v23.overlay_applied ? "+overlay" : ""}); stress ${stress == null ? "suppressed" : stress}; src qqq=${qqqS?.src || "?"}/hyg=${hygS?.src || "?"}`);
   } catch (e) { errors.push(`v23: ${e.message}`); }
 }
 const dislocation_entry = dislocationEntryWindow({ v23, regime, drawdownFired, anyDislocation });

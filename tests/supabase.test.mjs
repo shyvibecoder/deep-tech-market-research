@@ -1,6 +1,6 @@
 import { describe, it } from "node:test";
 import assert from "node:assert/strict";
-import { supabaseConfigured, seriesToRows, upsertRows, selectRows, upsertPriceHistory, sanitizePriceRows, TRUSTED_PRICE_SOURCES } from "../scripts/lib/supabase.mjs";
+import { supabaseConfigured, seriesToRows, upsertRows, selectRows, upsertPriceHistory, sanitizePriceRows, TRUSTED_PRICE_SOURCES, readSeries } from "../scripts/lib/supabase.mjs";
 
 const ENV = { SUPABASE_URL: "https://proj.supabase.co/", SUPABASE_SERVICE_KEY: "svc_key" };
 // Capture-and-OK fake fetch.
@@ -95,5 +95,26 @@ describe("supabase: select request building", () => {
     assert.deepEqual(out.rows, [{ ticker: "QQQ", close: 100 }]);
     assert.equal(cap[0].url, "https://proj.supabase.co/rest/v1/price_history?select=ticker%2Cd%2Cclose&ticker=eq.QQQ&order=d.desc&limit=10");
     assert.equal(cap[0].opts.headers.apikey, "svc_key");
+  });
+});
+
+describe("supabase: readSeries (deep history read for the read side)", () => {
+  it("returns null when Supabase isn't configured (caller falls back to live fetch)", async () => {
+    assert.equal(await readSeries("QQQ", { env: {} }), null);
+  });
+  it("paginates and reconstructs an ascending {ticker,dates,closes}", async () => {
+    // page 1 full (pageSize=2), page 2 partial → stop.
+    const pages = [[{ d: "2026-01-02", close: 10 }, { d: "2026-01-05", close: 11 }], [{ d: "2026-01-06", close: 12 }]];
+    let call = 0;
+    const fetchImpl = async () => ({ ok: true, status: 200, async json() { return pages[call++] || []; } });
+    const s = await readSeries("QQQ", { env: ENV, fetchImpl, pageSize: 2 });
+    assert.equal(s.ticker, "QQQ");
+    assert.deepEqual(s.dates, ["2026-01-02", "2026-01-05", "2026-01-06"]);
+    assert.deepEqual(s.closes, [10, 11, 12]);
+    assert.equal(call, 2); // stopped after the short page
+  });
+  it("drops non-positive/garbage closes and returns null on no rows", async () => {
+    const fetchImpl = async () => ({ ok: true, status: 200, async json() { return []; } });
+    assert.equal(await readSeries("ZZZ", { env: ENV, fetchImpl, pageSize: 1000 }), null);
   });
 });

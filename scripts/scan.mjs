@@ -31,7 +31,7 @@ import { chokepointHeat } from "./lib/chokepoints.mjs";
 import { rankOpportunities, opportunityScore } from "./lib/opportunity.mjs";
 import { forcedFlowSignal, reconcileWithTiming } from "./lib/forced-flow.mjs";
 import { v23State, dislocationEntryWindow, compositeStress } from "./lib/v23.mjs";
-import { supabaseConfigured, seriesToRows, upsertPriceHistory, sanitizePriceRows, dedupePriceRows } from "./lib/supabase.mjs";
+import { supabaseConfigured, seriesToRows, upsertPriceHistory, sanitizePriceRows, dedupePriceRows, readSeries } from "./lib/supabase.mjs";
 import { discoverProxies, rankProxies, proxyGraph } from "./lib/edgar-fts.mjs";
 
 const OFFLINE = process.argv.includes("--offline");
@@ -40,6 +40,23 @@ const read = (p) => JSON.parse(readFileSync(new URL(`../web/data/${p}`, import.m
 const priceRows = []; // accumulated daily closes (ticker,d,close) → upserted to Supabase if configured
 
 const dataUrl = (p) => new URL(`../web/data/${p}`, import.meta.url);
+
+// Series source for metrics/backtest/V2.3: prefer the ACCUMULATED, cross-checked, adjusted DB
+// history (deep → meaningful multi-year metrics, resilient to Yahoo outages); fall back to a live
+// fetch when the DB isn't configured or lacks the ticker. Returns { ticker, dates, closes, src }.
+let _dbHits = 0, _liveHits = 0;
+async function seriesFor(ticker, { liveRange = "1y", years } = {}) {
+  if (supabaseConfigured()) {
+    try {
+      const minDate = years ? new Date(Date.now() - years * 365.25 * 86400000).toISOString().slice(0, 10) : undefined;
+      const s = await readSeries(ticker, { minDate });
+      if (s && s.closes.length >= 60) { _dbHits++; return { ...s, src: "db" }; }
+    } catch { /* fall through to live */ }
+  }
+  const s = await fetchSeries(ticker, liveRange);
+  _liveHits++;
+  return { ...s, src: "live" };
+}
 const portfolio = read("portfolio.json");
 const scarcities = read("scarcities.json");
 const triggers = read("triggers.json");
@@ -263,11 +280,16 @@ if (!OFFLINE) {
     const use = etfs.length >= 3 ? etfs : portfolio.holdings.filter((h) => isTradeable(h.ticker));
     const weights = Object.fromEntries(use.map((h) => [h.ticker, h.weight || h.target_usd || 1]));
     const series = {};
-    for (const h of use) { try { series[h.ticker] = await fetchSeries(h.ticker); } catch { /* skip */ } await new Promise((r) => setTimeout(r, 120)); }
+    let fromDb = 0;
+    for (const h of use) {
+      try { const s = await seriesFor(h.ticker, { liveRange: "1y", years: 11 }); series[h.ticker] = s; if (s.src === "db") fromDb++; } catch { /* skip */ }
+      if (!supabaseConfigured()) await new Promise((r) => setTimeout(r, 120)); // throttle only when live-fetching
+    }
     const idx = basketIndex(series, weights);
     if (idx.values.length > 60) {
-      metrics = { ...portfolioMetrics(idx.values), basis: Object.keys(series), window: `${idx.dates[0]}..${idx.dates[idx.dates.length - 1]}`, note: "trailing ~1y, target-weighted strategy basket" };
-      console.log(`Metrics: CAGR ${metrics.cagr}, maxDD ${metrics.max_drawdown} (breaches35=${metrics.breaches_35}), Calmar ${metrics.calmar}, Sortino ${metrics.sortino}`);
+      const years = ((Date.parse(idx.dates[idx.dates.length - 1]) - Date.parse(idx.dates[0])) / (365.25 * 86400000)).toFixed(1);
+      metrics = { ...portfolioMetrics(idx.values), basis: Object.keys(series), window: `${idx.dates[0]}..${idx.dates[idx.dates.length - 1]}`, source: fromDb ? `accumulated DB (${fromDb}/${Object.keys(series).length} tickers)` : "live", note: `trailing ~${years}y, target-weighted strategy basket${fromDb ? " (from accumulated history)" : ""}` };
+      console.log(`Metrics: CAGR ${metrics.cagr}, maxDD ${metrics.max_drawdown} (breaches35=${metrics.breaches_35}), Calmar ${metrics.calmar}, Sortino ${metrics.sortino} [${years}y, ${fromDb} from DB]`);
       // Falsifiable evidence: does a trend brake cut drawdown on this basket vs buy-and-hold?
       if (idx.values.length > 120) {
         const mp = idx.values.length > 220 ? 100 : 50; // ~1y window → shorter trend than the live 200-DMA dial

@@ -60,6 +60,22 @@ export async function selectRows(table, { select = "*", filters = "", limit, env
   return { rows: await res.json() };
 }
 
+// Read a ticker's accumulated daily series back from the DB as { ticker, dates, closes } (ascending).
+// Paginates (PostgREST caps page size) so deep histories aren't silently truncated. Returns null
+// when Supabase isn't configured or the ticker has no rows — callers fall back to a live fetch.
+export async function readSeries(ticker, { minDate, env = process.env, fetchImpl = fetch, pageSize = 1000 } = {}) {
+  if (!supabaseConfigured(env)) return null;
+  const dates = [], closes = [];
+  for (let offset = 0; offset < 500000; offset += pageSize) {
+    const filters = `ticker=eq.${encodeURIComponent(ticker)}${minDate ? `&d=gte.${minDate}` : ""}&order=d.asc&offset=${offset}&limit=${pageSize}`;
+    const { rows, skipped } = await selectRows("price_history", { select: "d,close", filters, env, fetchImpl });
+    if (skipped) return null;
+    for (const r of rows) { const c = Number(r.close); if (r.d && Number.isFinite(c) && c > 0) { dates.push(r.d); closes.push(c); } }
+    if (rows.length < pageSize) break;
+  }
+  return dates.length ? { ticker, dates, closes } : null;
+}
+
 // Convenience: persist price history from any number of fetchSeries results + ad-hoc rows.
 // Runs the anti-synthetic guard first (defense in depth): only REAL, validated prints persist.
 export async function upsertPriceHistory(rows, opts = {}) {

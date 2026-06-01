@@ -212,24 +212,6 @@ export async function probeProviders(providers, { callFor } = {}) {
   return Promise.all(providers.map((p) => pingProvider(p, callFor ? () => callFor(p)(p) : undefined)));
 }
 
-// Given the seat→provider assignment and a {provider: isLive} map, reassign any DEAD seat to the
-// `fallback` provider (the funded frontier) when it's live. Pure → testable. Records every swap so
-// the run can announce the fallback LOUDLY: degraded cross-model diversity must never be silent.
-// When there's no live fallback, dead seats are left as-is — the committee-health path then reports
-// the run as degraded rather than pretending it ran.
-export function resolveLiveSeats(seatProviders, live, fallback) {
-  const fallbackLive = fallback && live[fallback];
-  const swaps = [];
-  const seats = seatProviders.map((p) => {
-    if (live[p] === false && fallbackLive && p !== fallback) {
-      swaps.push({ from: p, to: fallback });
-      return fallback;
-    }
-    return p;
-  });
-  return { seats, swaps };
-}
-
 // Two-pass "analyst + red-team" digest over fresh signals/filings/news.
 // Analyst runs on the first available model; red-team on a DIFFERENT model when a
 // second free key exists — a true cross-model adversarial review.

@@ -1,6 +1,7 @@
 import { describe, it } from "node:test";
 import assert from "node:assert/strict";
 import { scoutCandidateView, appendScoutScarcity } from "../web/scout-review.mjs";
+import { validateScarcities } from "../scripts/lib/schema.mjs";
 
 // Front-end review model for the SEPARATE scout feed (D3). Unlike research-review (which diffs
 // bot-owned fields on EXISTING scarcities), scout candidates are proposed NEW scarcities → the model
@@ -60,6 +61,20 @@ describe("scout-review: appendScoutScarcity (admit a NEW scarcity, F9-safe shape
     const dup = appendScoutScarcity(scarDoc, { id: "hbm", scarcity: "x" });
     assert.equal(dup.scarcities.length, 1);          // hbm already exists → not added again
     assert.equal(JSON.stringify(scarDoc), before);   // input untouched
+  });
+
+  // F1 (audit): the admitted scarcity MUST satisfy the scarcities schema — required enum fields
+  // (durability, substitution_risk, priced_in, bind_window) are otherwise missing → the daily scan
+  // would fail to validate scarcities.json. A committee proposal carries only priced_in/bind_window.
+  it("admits a SCHEMA-VALID scarcity even when the candidate omits durability/substitution_risk", () => {
+    const candidate = { id: "scout-abf", scarcity: "ABF substrate", tickers: ["AJ"], thesis: "upstream of HBM", priced_in: "low", bind_window: "2027" };
+    const next = appendScoutScarcity(scarDoc, candidate, { today: "2026-06-02" });
+    const added = next.scarcities.find((s) => s.id === "scout-abf");
+    assert.ok(["low", "medium", "high", "very-high"].includes(added.durability), "durability must be a valid default");
+    assert.ok(["low", "medium", "high"].includes(added.substitution_risk), "substitution_risk must be a valid default");
+    const errors = [];
+    validateScarcities({ schema_version: 1, scarcities: [added] }, errors);
+    assert.deepEqual(errors, [], "admitted scout scarcity must pass the schema validator");
   });
 
   it("rejects a candidate with invalid bot-owned field values (schema guard)", () => {

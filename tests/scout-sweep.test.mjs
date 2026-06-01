@@ -99,3 +99,20 @@ describe("scout: evaluateLeads (multi-engine + D2 memory)", () => {
     assert.equal(evals, 2);
   });
 });
+
+// F3 (audit): the budget cap must not let one engine starve another. Leads are interleaved by engine
+// so a high-volume constraint-shadow run can't crowd out the higher-signal BOM leads.
+describe("scout: evaluateLeads interleaves engines under the budget cap (F3)", () => {
+  it("gives each engine a fair slot rather than first-come (constraint-shadow can't starve bom)", async () => {
+    const leads = [
+      { engine: "constraint-shadow", subject: "cs one", tickers: ["C1"], lead: { phrases: ["p"] } },
+      { engine: "constraint-shadow", subject: "cs two", tickers: ["C2"], lead: { phrases: ["p"] } },
+      { engine: "constraint-shadow", subject: "cs three", tickers: ["C3"], lead: { phrases: ["p"] } },
+      { engine: "bom-ladder", subject: "bom one", tickers: ["B1"], lead: { ladder_from: "hbm" } },
+    ];
+    const seen = [];
+    await evaluateLeads(leads, { evaluate: async (d) => { seen.push(d.engine); return { approved: false }; }, maxCandidates: 2 });
+    assert.equal(seen.length, 2);
+    assert.ok(seen.includes("bom-ladder"), "bom-ladder must get a slot under the cap, not be starved by constraint-shadow");
+  });
+});

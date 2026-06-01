@@ -26,6 +26,7 @@ export function scoutCandidateView(feed, scarcitiesDoc) {
       dispersion: c.dispersion && typeof c.dispersion === "object" ? c.dispersion : null,
       complaining_filer: typeof c.complaining_filer === "string" ? c.complaining_filer : null,
       constraint_phrases: Array.isArray(c.constraint_phrases) ? c.constraint_phrases : [],
+      legibility: c.legibility === "already-legible" || c.legibility === "early-contrarian" ? c.legibility : null,
       rationale: typeof c.rationale === "string" ? c.rationale : "",
     });
   }
@@ -38,6 +39,10 @@ export function scoutCandidateView(feed, scarcitiesDoc) {
 export function appendScoutScarcity(scarcitiesDoc, candidate, { today = new Date().toISOString().slice(0, 10) } = {}) {
   if (!scarcitiesDoc?.scarcities || !candidate?.id) return scarcitiesDoc;
   if (scarcitiesDoc.scarcities.some((s) => s.id === candidate.id)) return scarcitiesDoc; // collision → no-op
+  // The scarcities schema REQUIRES priced_in/bind_window/durability/substitution_risk to be valid
+  // enums. A committee proposal only carries priced_in/bind_window, so the other two must default —
+  // otherwise admitting a candidate yields a schema-invalid scarcities.json that breaks the scan (F1).
+  // Conservative defaults match the scout draft (the committee can be asked to revise post-admission).
   const entry = {
     id: candidate.id,
     sector: typeof candidate.sector === "string" ? candidate.sector : "Unknown (scout)",
@@ -45,13 +50,13 @@ export function appendScoutScarcity(scarcitiesDoc, candidate, { today = new Date
     tickers: Array.isArray(candidate.tickers) ? candidate.tickers.filter((t) => typeof t === "string") : [],
     thesis: typeof candidate.thesis === "string" ? candidate.thesis : "",
     non_consensus: typeof candidate.non_consensus === "boolean" ? candidate.non_consensus : true,
+    priced_in: PRICED.includes(candidate.priced_in) ? candidate.priced_in : "low",
+    bind_window: BIND.includes(candidate.bind_window) ? candidate.bind_window : "2027",
+    durability: DURABILITY.includes(candidate.durability) ? candidate.durability : "medium",
+    substitution_risk: RISK.includes(candidate.substitution_risk) ? candidate.substitution_risk : "medium",
     source: "scout",
     last_reviewed: today,
   };
-  if (PRICED.includes(candidate.priced_in)) entry.priced_in = candidate.priced_in;
-  if (BIND.includes(candidate.bind_window)) entry.bind_window = candidate.bind_window;
-  if (DURABILITY.includes(candidate.durability)) entry.durability = candidate.durability;
-  if (RISK.includes(candidate.substitution_risk)) entry.substitution_risk = candidate.substitution_risk;
   return { ...scarcitiesDoc, scarcities: [...scarcitiesDoc.scarcities, entry] };
 }
 

@@ -8,7 +8,9 @@ import { readFileSync, copyFileSync, existsSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 
 const root = fileURLToPath(new URL("../../", import.meta.url));
-const dataFiles = ["signals.json", "scarcity-history.json", "seen.state.json", "dca.json"].map((f) => root + "web/data/" + f);
+// All tracked files the offline scan writes MUST be backed up/restored, else the test mutates the repo
+// (F10: forecasts.json was missing → its "updated" date leaked into git after every run).
+const dataFiles = ["signals.json", "scarcity-history.json", "seen.state.json", "dca.json", "forecasts.json"].map((f) => root + "web/data/" + f);
 const backups = new Map();
 const read = (f) => JSON.parse(readFileSync(root + "web/data/" + f));
 

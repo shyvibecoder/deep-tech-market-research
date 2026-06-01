@@ -271,11 +271,13 @@ lead), and infers the candidate chokepoint from the *pattern of who's complainin
 Filers already explained by a known scarcity are dropped (novelty filter); candidates already discussed
 widely in financial media are down-weighted (the edge is being early, not loud).
 
-**The same committee vets it.** Each lead is synthesized into a draft scarcity and run through the
-identical **Bull / Bear / Skeptic → CIO + CRO** committee that scores the known 24 — so you only ever
-review *adversarially-vetted* candidates, never raw noise. The Bear seat ("the specific thing that kills
-it — supply response, substitution, policy reversal") does the brutal filtering before anything reaches
-you.
+**The same committee vets it — fully.** Each lead is synthesized into a draft scarcity and run through
+the identical pipeline that scores the known 24: **Bull / Bear / Skeptic → CIO**, then the **deterministic
+verification gate** (thin-evidence / ticker-sanity checks) and the **CRO risk review** (which catches
+hallucinated or misattributed tickers — important, since the scout's tickers come from fuzzy filing
+discovery). So you only ever review *adversarially-vetted* candidates, never raw noise. Each card also
+carries a **legibility tag** — 🟢 *early/contrarian* (little mainstream coverage; where the edge is) vs
+🟡 *already-legible* (heavily covered, likely already priced) — and legible candidates are down-weighted.
 
 Each card shows the inferred scarcity, the **filer that flagged it** + the constraint phrases that fired,
 the proposed fields, and the committee's confidence:

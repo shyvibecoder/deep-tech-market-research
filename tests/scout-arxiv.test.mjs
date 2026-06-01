@@ -31,9 +31,16 @@ describe("scout engine 3: searchArxiv (injected fetch)", () => {
     const e = await searchArxiv("cryogenic cmos", { fetchImpl });
     assert.equal(e.length, 2);
   });
-  it("throws on non-ok so the caller records the error", async () => {
+  it("retries a transient 5xx then succeeds (F5 parity with searchFts)", async () => {
+    let n = 0;
+    const fetchImpl = async () => (++n < 2 ? { ok: false, status: 503 } : { ok: true, text: async () => ATOM });
+    const e = await searchArxiv("x", { fetchImpl, sleepImpl: async () => {} });
+    assert.equal(n, 2);
+    assert.equal(e.length, 2);
+  });
+  it("throws after exhausting retries on persistent 5xx", async () => {
     const fetchImpl = async () => ({ ok: false, status: 503 });
-    await assert.rejects(() => searchArxiv("x", { fetchImpl }), /arxiv 503/);
+    await assert.rejects(() => searchArxiv("x", { fetchImpl, sleepImpl: async () => {}, tries: 2 }), /arxiv 503/);
   });
 });
 

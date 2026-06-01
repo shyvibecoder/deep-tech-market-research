@@ -1,6 +1,6 @@
 import { describe, it } from "node:test";
 import assert from "node:assert/strict";
-import { pingProvider, probeProviders, resolveLiveSeats } from "../scripts/lib/llm.mjs";
+import { pingProvider, probeProviders } from "../scripts/lib/llm.mjs";
 
 // THE BUG CLASS THIS GUARDS: a key can be valid while its CONFIGURED MODEL slug is retired (e.g. a
 // free "deepseek-r1:free" that 404s). The seat then returns nothing, gets swallowed, and a 1-of-3
@@ -32,32 +32,5 @@ describe("llm liveness: probeProviders", () => {
     const results = await probeProviders(["anthropic", "groq", "openrouter"], { callFor });
     assert.deepEqual(results.map((r) => r.provider), ["anthropic", "groq", "openrouter"]);
     assert.deepEqual(results.map((r) => r.ok), [true, false, true]);
-  });
-});
-
-describe("llm liveness: resolveLiveSeats (swap dead seats to the funded frontier)", () => {
-  it("reassigns dead providers to the fallback and records the swaps, preserving seat count/order", () => {
-    const live = { anthropic: true, groq: false, openrouter: false };
-    const { seats, swaps } = resolveLiveSeats(["anthropic", "groq", "openrouter"], live, "anthropic");
-    assert.deepEqual(seats, ["anthropic", "anthropic", "anthropic"]); // collapses to the live frontier
-    assert.deepEqual(swaps, [{ from: "groq", to: "anthropic" }, { from: "openrouter", to: "anthropic" }]);
-  });
-  it("leaves a healthy multi-provider committee untouched (no swaps)", () => {
-    const live = { anthropic: true, groq: true, openrouter: true };
-    const { seats, swaps } = resolveLiveSeats(["anthropic", "groq", "openrouter"], live, "anthropic");
-    assert.deepEqual(seats, ["anthropic", "groq", "openrouter"]);
-    assert.equal(swaps.length, 0);
-  });
-  it("swaps only the dead seat, keeping live diversity where it exists", () => {
-    const live = { anthropic: true, groq: true, openrouter: false };
-    const { seats, swaps } = resolveLiveSeats(["anthropic", "groq", "openrouter"], live, "anthropic");
-    assert.deepEqual(seats, ["anthropic", "groq", "anthropic"]);
-    assert.deepEqual(swaps, [{ from: "openrouter", to: "anthropic" }]);
-  });
-  it("with NO live fallback, leaves dead seats as-is (committee-health degraded path then catches it)", () => {
-    const live = { groq: false, openrouter: false };
-    const { seats, swaps } = resolveLiveSeats(["groq", "openrouter"], live, null);
-    assert.deepEqual(seats, ["groq", "openrouter"]);
-    assert.equal(swaps.length, 0);
   });
 });

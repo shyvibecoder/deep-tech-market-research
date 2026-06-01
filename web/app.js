@@ -108,7 +108,7 @@ function renderScout() {
     const phrases = (c.constraint_phrases || []).slice(0, 4).map((p) => `<code>${esc(p)}</code>`).join(" ");
     const disp = c.dispersion ? ` · ${esc(c.dispersion.level)} conviction` : "";
     return `<div class="proposal" data-sidx="${i}">
-      <div><strong>${esc(c.scarcity)}</strong> ${c.confidence != null ? `<span class="foot">conf ${Math.round(c.confidence * 100)}%${disp}</span>` : ""}</div>
+      <div><strong>${esc(c.scarcity)}</strong> ${c.confidence != null ? `<span class="foot">conf ${Math.round(c.confidence * 100)}%${disp}</span>` : ""}${c.legibility ? ` <span class="foot">· ${c.legibility === "early-contrarian" ? "🟢 early/contrarian" : "🟡 already-legible"}</span>` : ""}</div>
       ${fields ? `<div>${fields} · tickers: ${esc((c.tickers || []).join(", ") || "—")}</div>` : ""}
       ${c.complaining_filer ? `<div class="foot">flagged via filer <code>${esc(c.complaining_filer)}</code>${phrases ? ` — constraint language: ${phrases}` : ""}</div>` : ""}
       ${c.rationale ? `<div class="foot">${esc(c.rationale)}</div>` : ""}

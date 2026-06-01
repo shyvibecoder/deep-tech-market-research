@@ -194,6 +194,21 @@ export function leadEvidenceHash(L) {
   return [String(L?.subject || ""), ...((L?.tickers) || []).slice().sort(), ...((L?.lead?.phrases) || []).slice().sort()].join("|").toLowerCase();
 }
 
+// Round-robin leads by engine, preserving each engine's internal order — fair representation so the
+// budget cap doesn't favor whichever engine ran first.
+export function interleaveByEngine(leads) {
+  const groups = new Map();
+  for (const L of (leads || [])) { const k = L.engine || "?"; if (!groups.has(k)) groups.set(k, []); groups.get(k).push(L); }
+  const lists = [...groups.values()];
+  const out = [];
+  for (let i = 0; out.length < (leads || []).length; i++) {
+    let any = false;
+    for (const list of lists) if (list[i]) { out.push(list[i]); any = true; }
+    if (!any) break;
+  }
+  return out;
+}
+
 // SHARED EVALUATOR: D2-dedupe → budget-cap → draft → committee, for leads from ANY engine.
 //   evaluate(draft) -> { approved, proposal?, reason? }   (wrap the committee in the runner)
 // seenState (optional) enables D2 memory: a previously-rejected lead is suppressed unless its
@@ -209,7 +224,9 @@ export async function evaluateLeads(leads, { evaluate, maxCandidates = 8, seenSt
     const fresh = new Set(upd.fresh);
     active = tagged.filter((t) => fresh.has(t.id)).map((t) => t.L);
   }
-  active = active.slice(0, maxCandidates);
+  // F3: interleave by engine (round-robin) BEFORE the cap, so a high-volume engine (constraint-shadow)
+  // can't starve a higher-signal one (BOM ladder) of committee budget.
+  active = interleaveByEngine(active).slice(0, maxCandidates);
   const proposals = [], considered = [];
   for (const L of active) {
     const draft = draftFromLead(L);
@@ -329,11 +346,19 @@ export function parseArxiv(xml) {
   return out;
 }
 
-export async function searchArxiv(query, { maxResults = 20, fetchImpl = fetch } = {}) {
+// Retries 5xx/429 with backoff (parity with searchFts, F5) — arXiv also load-sheds transiently.
+export async function searchArxiv(query, { maxResults = 20, tries = 3, base = 400, fetchImpl = fetch, sleepImpl = (ms) => new Promise((r) => setTimeout(r, ms)) } = {}) {
   const url = `https://export.arxiv.org/api/query?search_query=${encodeURIComponent(`all:"${query}"`)}&sortBy=submittedDate&sortOrder=descending&max_results=${maxResults}`;
-  const r = await fetchImpl(url, { headers: { accept: "application/atom+xml" }, signal: AbortSignal.timeout(15000) });
-  if (!r.ok) throw new Error(`arxiv ${r.status}`);
-  return parseArxiv(await r.text());
+  let last = "";
+  for (let i = 0; i < tries; i++) {
+    let r;
+    try { r = await fetchImpl(url, { headers: { accept: "application/atom+xml" }, signal: AbortSignal.timeout(15000) }); }
+    catch (e) { last = e.message; if (i < tries - 1) { await sleepImpl(base * 2 ** i); continue; } throw new Error(`arxiv ${last}`); }
+    if (r.ok) return parseArxiv(await r.text());
+    if (r.status === 429 || r.status >= 500) { last = `arxiv ${r.status}`; if (i < tries - 1) { await sleepImpl(base * 2 ** i); continue; } }
+    throw new Error(`arxiv ${r.status}`);
+  }
+  throw new Error(last || "arxiv failed");
 }
 
 // Engine-3 lead producer: a query with ENOUGH recent papers (research heat) AND a discoverable public

@@ -11,54 +11,60 @@
     "suppressed": 2,
     "candidates": 14,
     "proposals": 0,
-    "errors": 1
+    "errors": 0
   },
   "candidates": [],
   "considered": [
     {
+      "id": "scout-large-power-transformers",
+      "tickers": [
+        "NMGX",
+        "SPXC",
+        "AMSC"
+      ],
+      "engine": "bom-ladder",
+      "reason": "low committee confidence (0.38)"
+    },
+    {
+      "id": "scout-gas-turbine-hot-section-blades",
+      "tickers": [
+        "HWM",
+        "TGI"
+      ],
+      "engine": "bom-ladder",
+      "reason": "low committee confidence (0.18)"
+    },
+    {
       "id": "scout-grain-oriented-electrical-steel",
       "tickers": [
         "ATI",
         "X"
       ],
       "engine": "bom-ladder",
-      "reason": "low committee confidence (0.34)"
+      "reason": "low committee confidence (0.39)"
     },
     {
-      "id": "scout-large-power-transformer-forgings",
+      "id": "scout-large-transformer-bushings",
       "tickers": [],
       "engine": "bom-ladder",
-      "reason": "below threshold after CRO (0.34)"
-    },
-    {
-      "id": "scout-grain-oriented-electrical-steel",
-      "tickers": [
-        "ATI",
-        "X"
-      ],
-      "engine": "bom-ladder",
-      "reason": "CRO veto: HALLUCINATION/MISATTRIBUTION: ATI (Allegheny Technologies) exited grain-oriented electrical steel; X (US Steel) has no documented GOES/Hi-B capacity. Neither ticker is a qualified Western GOES mill. Citing both as GOES plays without verified production capability is a factual misattribution — automatic veto per CRO mandate."
-    },
-    {
-      "id": "scout-transformer-bushings",
-      "tickers": [
-        "ACFN",
-        "PNW"
-      ],
-      "engine": "bom-ladder",
-      "reason": "low committee confidence (0.13)"
+      "reason": "low committee confidence (0.38)"
     },
     {
       "id": "scout-single-crystal-turbine-blades",
-      "tickers": [],
+      "tickers": [
+        "HWM"
+      ],
       "engine": "bom-ladder",
-      "reason": "low committee confidence (0.33)"
+      "reason": "low committee confidence (0.28)"
     },
     {
-      "id": "scout-turbine-grade-nickel-superalloy-forgings",
-      "tickers": [],
+      "id": "scout-vacuum-melted-superalloy-billet",
+      "tickers": [
+        "ATI",
+        "CRS"
+      ],
       "engine": "bom-ladder",
-      "reason": "low committee confidence (0.11)"
+      "reason": "low committee confidence (0.21)"
     }
   ]
 }

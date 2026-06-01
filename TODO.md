@@ -73,26 +73,28 @@ in technicals; (7) trusted-source persist guard (`sanitizePriceRows`) + first-wi
 (8) `data_quality` gate holds auto-triggers on a degraded run.
 
 **Gaps the audit found → PLANNED HARDENING (do NOT port the gaps):**
-- [ ] **Single-source no-op (CRITICAL).** `corroborate` returns `ok:null` for one source → no divergence
-  check, no flag, and it persists as fresh (10/50 tickers on the 05-31 scan). Fix: flag single-source
-  quotes (`single-source` flag), exclude them from firing a trigger, and don't let an uncorroborated
-  bar count as corroborated history. (Foreign tickers are *legitimately* single-source → flag per-ticker,
-  do NOT mark the whole run degraded.)
-- [ ] **V2.3 macro-brake instruments bypass corroboration + anomaly (CRITICAL).** `^VIX`/`^VIX3M`/`HYG`/
-  `QQQ` are single-Yahoo-fetched and written straight to history — one bad VIX print can flip the regime
-  state. Fix: route V2.3/QLD/SGOV bars through plausibility + the >35% anomaly check before they touch
-  `v23State` or the DB.
-- [ ] **Stooq-only staleness gap.** Single-source *Yahoo* keeps `asof` (staleness-checked); only a
-  Stooq-only fallback has `asof:null` and can't be flagged stale. Fix: give Stooq an `asof` or flag
-  freshness-unknown.
-- [ ] **`degraded` blind to coverage.** Doesn't count single-source/uncorroborated → triggers stay armed.
-  Fix: surface a corroboration-coverage signal (without over-triggering on legitimately-foreign tickers).
-- [ ] **Ledgers fail-open to empty** (`forecasts.json`/history) → silent permanent wipe of the track
-  record. Fix: validate + fail-loud on read.
-- [ ] **`meanPrice` price-weights a basket + breaks on changed membership** (`forecast.mjs`) → scorecard
-  on a corrupt stat. Fix: equal-weight per-ticker returns over fixed membership.
-- [ ] **Other audit items:** theta dividend-sign (latent, `options.mjs`); SHA-pin `action-send-mail`;
-  `searchFilings` retry; dedupe `complexMom`; delete dead `runScoutSweep`; direct tests for `annualVol`/`sharpe`.
+- [x] **Single-source no-op (CRITICAL)** — SHIPPED (9aae228): `marketdata.mjs:100` adds a `single-source`
+  flag, excludes uncorroborated quotes from firing a trigger, and won't let them count as corroborated
+  history. Per-ticker (foreign tickers stay legitimate, run not marked degraded).
+- [x] **V2.3 macro-brake instruments bypass corroboration + anomaly (CRITICAL)** — SHIPPED (9aae228):
+  `^VIX`/`^VIX3M`/`HYG`/`QQQ` bars route through `plausibleNextBar` + anomaly check before touching
+  `v23State` or the DB; glitch bars are rejected + logged (`scan.mjs:72-78`).
+- [x] **`degraded` blind to coverage** — SHIPPED (9aae228): `marketdata.mjs:119-138` surfaces a
+  corroboration-coverage signal (`uncorroborated`/`corroborated_of`) + a collapse detector, without
+  over-tripping on legitimately-foreign single-source tickers.
+- [x] **Ledgers fail-open to empty** — SHIPPED (3c592d0): forecasts/history reads validate + fail-loud
+  instead of silently wiping the track record.
+- [x] **`meanPrice` price-weights a basket + breaks on changed membership** — SHIPPED (167a058):
+  equal-weight per-ticker returns over FIXED membership (`forecast.mjs:83`); new forecasts carry
+  `basket_prices` anchors.
+- [x] **Other audit items SHIPPED:** theta dividend-sign (F1, b57bdfe); SHA-pin first-party actions
+  (S3, b57bdfe); `searchFilings`/FTS retry (P9, `edgar.mjs:131`); dedupe `complexMom` (C2, 6951f14);
+  direct `annualVol`/`sharpe` tests (C5, 6951f14); stored-XSS + scout-name sanitize + CSP (S1/S2, dd5dcc9).
+- [~] **`runScoutSweep` "dead code" finding — WON'T-DO (finding was wrong).** It is live + covered by
+  `tests/scout-sweep.test.mjs` (budget-bound + committee-gate orchestration test). Keep it.
+- [ ] **Stooq-only staleness gap (OPEN, low).** `fetchStooq` returns `date` but the freshness path keys
+  on `asof`, so a Stooq-only quote can't be flagged stale. Fix: map Stooq `date`→`asof` or flag
+  freshness-unknown. Low severity (Stooq is the fallback-of-fallback). The one real audit item still open.
 
 ### Cross-app hardening — patterns to adopt from "Helm" (sister app; regime-brake design)
 Helm lacks our multi-source consensus + blocking anomaly rejection (our strengths), but its structural

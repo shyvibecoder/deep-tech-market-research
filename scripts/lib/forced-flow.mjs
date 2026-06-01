@@ -33,16 +33,21 @@ const DISLOCATED = 0.5;    // meaningful mechanical de-rating
 
 // Per-scarcity read: mean dislocation across its names + the seasonal overlay, classified
 // against whether the structural thesis (Opportunity) is intact.
-export function forcedFlowSignal({ quotes = {}, tickers = [], opportunity = null, today } = {}) {
+export function forcedFlowSignal({ quotes = {}, tickers = [], opportunity = null, today, minTickers = 2 } = {}) {
   const ds = (tickers || []).map((t) => dislocation(quotes[t])).filter((x) => x != null);
   const window = taxLossWindow(today);
-  if (!ds.length) return { dislocation: null, window, intact: null, flag: "none" };
+  if (!ds.length) return { dislocation: null, window, intact: null, flag: "none", n: 0 };
   const d = +(ds.reduce((a, b) => a + b, 0) / ds.length).toFixed(3);
   const intact = opportunity != null && opportunity >= INTACT_OPP;
   let flag = "none";
-  if (d >= DISLOCATED && intact) flag = "accumulate";  // forced/neglect selling into an intact thesis → buy
-  else if (d >= DISLOCATED && opportunity != null && !intact) flag = "broken"; // real deterioration → avoid
-  return { dislocation: d, window, intact, flag };
+  // P8: forced-flow is a BASKET signal — require corroboration across >=2 contributing tickers so it
+  // can't fire off a single dislocated name (e.g. when the rest of the basket errored out). The
+  // dislocation value is still reported for transparency; only the actionable flag is gated.
+  if (ds.length >= minTickers) {
+    if (d >= DISLOCATED && intact) flag = "accumulate";  // forced/neglect selling into an intact thesis → buy
+    else if (d >= DISLOCATED && opportunity != null && !intact) flag = "broken"; // real deterioration → avoid
+  }
+  return { dislocation: d, window, intact, flag, n: ds.length };
 }
 
 // Overlay composition ("alpha → timing → cash"): forced-flow governs SELECTION (what to deploy

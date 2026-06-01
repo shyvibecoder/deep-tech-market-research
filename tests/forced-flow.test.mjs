@@ -68,3 +68,18 @@ describe("forced-flow × timing overlay: compose, don't contradict", () => {
     assert.equal(reconcileWithTiming(null, {}), null);
   });
 });
+
+// Audit P8: "accumulate"/"broken" must not fire off a SINGLE dislocated name (the others erroring out).
+// A forced-flow read needs corroboration across the basket — require >=2 contributing tickers.
+describe("forced-flow: requires >=2 contributing tickers (P8)", () => {
+  const q = (off, vs200, mom) => ({ price: 10, pct_off_high: off, pct_vs_ma200: vs200, mom_1m: mom });
+  it("does NOT flag accumulate when only ONE ticker has data", () => {
+    // A=deeply dislocated, B/C error out → only 1 contributing → no flag despite high opportunity.
+    const r = forcedFlowSignal({ quotes: { A: q(-0.5, -0.3, -0.1), B: { error: "x" }, C: { error: "x" } }, tickers: ["A", "B", "C"], opportunity: 70, today: "2026-06-01" });
+    assert.equal(r.flag, "none");
+  });
+  it("DOES flag when >=2 tickers corroborate the dislocation", () => {
+    const r = forcedFlowSignal({ quotes: { A: q(-0.5, -0.3, -0.1), B: q(-0.55, -0.35, -0.12) }, tickers: ["A", "B"], opportunity: 70, today: "2026-06-01" });
+    assert.equal(r.flag, "accumulate");
+  });
+});

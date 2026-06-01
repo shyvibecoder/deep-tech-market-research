@@ -154,7 +154,10 @@ for (const t of universe) {
     const merged = dbt ? { ...q, ...dbt, price: q.price, asof: q.asof ?? dbt.asof, source: q.source, corroboration: q.corroboration, flags: q.flags, technicals_src: "db" } : q;
     if (dbt) _dbTech++;
     enriched[t] = { ...merged, crowding: crowding(merged) };
-    if (merged.pct_off_high != null) drops.push(merged.pct_off_high);
+    // P7: a BAD-DATA quote (cross-source divergence / >35% jump) must not feed the drawdown trigger —
+    // its pct_off_high may be wrong. The flag was previously cosmetic (recorded but still counted).
+    const badData = merged.flags?.some((f) => /divergence|jump|consensus/.test(f));
+    if (merged.pct_off_high != null && !badData) drops.push(merged.pct_off_high);
   } else {
     enriched[t] = q || { ticker: t, error: "no quote" };
     if (q?.error) errors.push(`${t}: ${q.error}`);

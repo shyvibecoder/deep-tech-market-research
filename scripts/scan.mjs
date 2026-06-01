@@ -6,7 +6,7 @@
 // - Writes web/data/signals.json (committed by the workflow)
 // Usage: node scripts/scan.mjs [--offline]
 
-import { readFileSync, writeFileSync } from "node:fs";
+import { readFileSync, writeFileSync, existsSync } from "node:fs";
 import { isTradeable, fetchYahoo, fetchSeries, fetchStooqHistory, fetchTiingoHistory } from "./lib/quotes.mjs";
 import { technicalsFromHistory } from "./lib/technicals.mjs";
 import { reconcileSeries } from "./lib/history-reconcile.mjs";
@@ -356,8 +356,13 @@ const regime = computeRegime(enriched, portfolio.holdings, { macro, securities }
 console.log(`Regime: ${regime.posture}${regime.risk_score != null ? ` (risk ${regime.risk_score}/100)` : ""}`);
 
 // --- F4: append scarcity history + surface drift; F7: mark new filings/news ---
-const { drift: scarcity_drift } = updateScarcityHistory(dataUrl("scarcity-history.json"), scarcities.scarcities, TODAY);
-const { newFilings, newNews } = applySeenState(dataUrl("seen.state.json"), { filings, news, triggerStatus: trigger_status, today: TODAY });
+// P6: a corrupt append-only history file now THROWS (rather than silently wiping). Capture it so the
+// scan continues (prices/regime/triggers still update) but the corrupt file is preserved + flagged.
+let scarcity_drift = {}, newFilings = 0, newNews = 0;
+try { ({ drift: scarcity_drift } = updateScarcityHistory(dataUrl("scarcity-history.json"), scarcities.scarcities, TODAY)); }
+catch (e) { errors.push(`scarcity-history: ${e.message}`); }
+try { ({ newFilings, newNews } = applySeenState(dataUrl("seen.state.json"), { filings, news, triggerStatus: trigger_status, today: TODAY })); }
+catch (e) { errors.push(`seen-state: ${e.message}`); }
 console.log(`History: ${Object.keys(scarcity_drift).length} scarcities drifted; ${newFilings} new filings, ${newNews} new headlines`);
 
 // F6: regenerate the machine-readable DCA plan from the tier rules (deterministic).
@@ -466,9 +471,15 @@ let proxy_hubs = [];
 let scorecard = null;
 {
   const fpath = dataUrl("forecasts.json");
-  let store;
+  let store, forecastsCorrupt = false;
   try { store = JSON.parse(readFileSync(fpath)); }
-  catch { store = { schema_version: SCHEMA_VERSION, open: [], scorecard: updateScorecard(null, []) }; }
+  catch (e) {
+    // P6: distinguish "first run / no file" (empty store is correct) from "file EXISTS but is corrupt"
+    // — in the latter case do NOT silently reset to empty and overwrite, which permanently wipes the
+    // scorecard track record (the "moat"). Preserve the committed file (skip the write) + fail loud.
+    if (existsSync(fpath)) { forecastsCorrupt = true; errors.push(`forecasts.json corrupt — PRESERVED (not overwritten): ${e.message}`); }
+    store = { schema_version: SCHEMA_VERSION, open: [], scorecard: updateScorecard(null, []) };
+  }
   const { resolved, stillOpen } = resolveDue(store.open, enriched, TODAY);
   store.scorecard = updateScorecard(store.scorecard, resolved);
   // The AI-capex "complex" = the diversified theme ETFs we hold; the de-rating/inflecting
@@ -482,9 +493,13 @@ let scorecard = null;
   const openIds = new Set(stillOpen.map((f) => f.id));
   store.open = [...stillOpen, ...fresh.filter((f) => !openIds.has(f.id))];
   store.updated = TODAY;
-  writeFileSync(fpath, JSON.stringify(store, null, 2) + "\n");
+  if (forecastsCorrupt) {
+    console.log("Forecasts: store CORRUPT — preserved last committed version, skipped write (recover from git history).");
+  } else {
+    writeFileSync(fpath, JSON.stringify(store, null, 2) + "\n");
+    console.log(`Forecasts: ${resolved.length} resolved, ${store.open.length} open, hit-rate ${store.scorecard.hit_rate}`);
+  }
   scorecard = store.scorecard;
-  console.log(`Forecasts: ${resolved.length} resolved, ${store.open.length} open, hit-rate ${store.scorecard.hit_rate}`);
 }
 
 // --- Optional free-LLM analyst + red-team digest ---

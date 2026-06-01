@@ -4,9 +4,12 @@
 
 import { readFileSync, writeFileSync, existsSync } from "node:fs";
 
+// P6: a MISSING file → fallback (first run). A file that EXISTS but won't parse → THROW, so the caller
+// fails loud instead of silently resetting to empty and overwriting the append-only history.
 const readJson = (url, fallback) => {
-  try { return existsSync(url) ? JSON.parse(readFileSync(url)) : fallback; }
-  catch { return fallback; }
+  if (!existsSync(url)) return fallback;
+  try { return JSON.parse(readFileSync(url)); }
+  catch (e) { throw new Error(`history file corrupt (refusing to overwrite): ${url} — ${e.message}`); }
 };
 const writeJson = (url, obj) => writeFileSync(url, JSON.stringify(obj, null, 2) + "\n");
 

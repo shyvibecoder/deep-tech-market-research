@@ -58,8 +58,9 @@ const pct = (x) => (x == null ? "  —  " : (x * 100).toFixed(1) + "%");
 const sliceFrom = (s, start) => { const i = s.dates.findIndex((d) => d >= start); return i < 0 ? { dates: [], closes: [] } : { dates: s.dates.slice(i), closes: s.closes.slice(i) }; };
 const sliceMap = (m, start) => Object.fromEntries(Object.entries(m).map(([k, v]) => [k, sliceFrom(v, start)]));
 
-// Rank: judge on the 2-factor gate (residual AI-capex beta) AND reward return. Score = Sharpe − |aiβ|.
-const score = (r) => (r.stats && r.load ? r.stats.sharpe - Math.abs(r.load.aiBeta) : -99);
+// Rank by risk-adjusted return, penalising ONLY positive AI-capex loading (negative aiβ is a hedge, not a
+// risk — see axis.mjs). In practice all liquid sectors have ~zero/negative aiβ, so this ranks on Sharpe.
+const score = (r) => (r.stats && r.load ? r.stats.sharpe - Math.max(0, r.load.aiBeta) : -99);
 
 function buildRows(marketSeries, complexSeries, candByAxis) {
   const complexTk = Object.keys(complexSeries), marketTk = Object.keys(marketSeries);
@@ -79,22 +80,22 @@ function printTable(title, cx, rows) {
   console.log("\n" + "=".repeat(112));
   console.log(title + "\n");
   console.log(`  complex: ${cx?.start}..${cx?.end} (${cx?.years}yr)  CAGR ${pct(cx?.cagr)}  maxDD ${pct(cx?.maxDD)}  Sharpe ${cx?.sharpe}\n`);
-  console.log("axis".padEnd(38), "yrs".padStart(5), "CAGR".padStart(7), "maxDD".padStart(7), "Shrp".padStart(6), "mktβ".padStart(6), "aiβ".padStart(6), "rawρ".padStart(6), "  gate(aiβ)");
+  console.log("axis".padEnd(38), "yrs".padStart(5), "CAGR".padStart(7), "maxDD".padStart(7), "Shrp".padStart(6), "mktβ".padStart(6), "aiβ".padStart(6), "aiT".padStart(6), "rawρ".padStart(6), "  gate(aiβ)");
   for (const { axis, candTk, stats, corr, load } of rows) {
     if (!stats || !load) { console.log(axis.padEnd(38), "  (insufficient data)", candTk.join(",")); continue; }
     console.log(axis.padEnd(38), String(stats.years).padStart(5), pct(stats.cagr).padStart(7), pct(stats.maxDD).padStart(7),
       String(stats.sharpe).padStart(6), String(load.marketBeta).padStart(6), String(load.aiBeta).padStart(6),
-      String(corr?.corr ?? "—").padStart(6), load.qualifies ? "  ✅ low aiβ" : "  ❌ AI-loaded");
+      String(load.aiT ?? "—").padStart(6), String(corr?.corr ?? "—").padStart(6), load.qualifies ? "  ✅ no +aiβ" : "  ❌ +AI-loaded");
   }
 }
 
 function mdTable(title, cx, rows) {
   let md = `### ${title}\n\n_Complex ${COMPLEX.join("+")} vs market ${MARKET.join("+")}: ${cx?.start}..${cx?.end} (${cx?.years}yr), CAGR ${pct(cx?.cagr)}, maxDD ${pct(cx?.maxDD)}, Sharpe ${cx?.sharpe}._\n\n`;
-  md += "| Axis | yrs | CAGR | maxDD | Sharpe | mktβ | **aiβ** | rawρ | Gate (aiβ) |\n|---|--:|--:|--:|--:|--:|--:|--:|:--|\n";
+  md += "| Axis | yrs | CAGR | maxDD | **Sharpe** | **mktβ** | aiβ | aiT | rawρ | Gate (aiβ) |\n|---|--:|--:|--:|--:|--:|--:|--:|--:|:--|\n";
   for (const { axis, candTk, stats, corr, load } of rows) {
     md += stats && load
-      ? `| ${axis} | ${stats.years} | ${pct(stats.cagr)} | ${pct(stats.maxDD)} | ${stats.sharpe} | ${load.marketBeta} | **${load.aiBeta}** | ${corr?.corr ?? "—"} | ${load.qualifies ? "✅ low aiβ" : "❌ AI-loaded"} |\n`
-      : `| ${axis} | — | — | — | — | — | — | — | ⚠️ insufficient data (${candTk.join(",")}) |\n`;
+      ? `| ${axis} | ${stats.years} | ${pct(stats.cagr)} | ${pct(stats.maxDD)} | **${stats.sharpe}** | **${load.marketBeta}** | ${load.aiBeta} | ${load.aiT ?? "—"} | ${corr?.corr ?? "—"} | ${load.qualifies ? "✅ no +aiβ" : "❌ +AI-loaded"} |\n`
+      : `| ${axis} | — | — | — | — | — | — | — | — | ⚠️ insufficient data (${candTk.join(",")}) |\n`;
   }
   return md + "\n";
 }
@@ -127,18 +128,21 @@ function mdTable(title, cx, rows) {
 
   printTable("TABLE A — each basket over its OWN max history (windows differ)", cxOwn, rowsOwn);
   printTable(`TABLE B — APPLES-TO-APPLES, all sliced to common start ${commonStart}`, cxC, rowsCommon);
-  console.log("\naiβ = residual AI-capex loading AFTER market beta (the forward-looking gate; raw ρ shown for context).");
-  console.log("Winner = LOW aiβ (✅) AND earns its capital (Sharpe/CAGR, contained maxDD) — judged on TABLE B.");
+  console.log("\naiβ = AI-capex loading AFTER market beta. Negative = mild HEDGE (passes); only POSITIVE loading fails.");
+  console.log("Finding: raw ρ is almost all market beta (mktβ). aiβ is small/negative for ALL → none amplifies AI-capex");
+  console.log("risk, and it does NOT differentiate them. So decide on risk-adjusted return + maxDD + structural thesis,");
+  console.log("preferring the LOWEST mktβ. Judge on TABLE B.");
 
   if (process.env.GITHUB_STEP_SUMMARY) {
     const fs = await import("node:fs");
     let md = "## G2 — second-axis screen (2-factor: market beta stripped out)\n\n";
-    md += "**aiβ** = the candidate's loading on the AI-capex factor *after* controlling for broad-market beta (mktβ) — ";
-    md += "the forward-looking measure of specific AI-capex risk. **Decide on Table B** (identical window). ";
-    md += "Raw correlation (rawρ) is shown for context but conflates market beta with AI-capex risk.\n\n";
+    md += "**Key finding:** raw correlation (rawρ ~0.5) is almost entirely **market beta** (mktβ). The AI-capex-specific ";
+    md += "loading (**aiβ**) is small and *negative* for every candidate — so none amplifies the AI concentration, and aiβ ";
+    md += "does **not** differentiate them. Decide on **risk-adjusted return + maxDD + lowest mktβ** (Table B, identical window). ";
+    md += "aiT (t-stat) shows aiβ is statistically thin. Negative aiβ is a mild hedge → passes; only *positive* AI loading fails.\n\n";
     md += mdTable("Table A — each basket's own max history (windows differ)", cxOwn, rowsOwn);
     md += mdTable(`Table B — apples-to-apples, all from ${commonStart}`, cxC, rowsCommon);
-    md += "_A high mktβ with LOW aiβ = genuine breadth (falls in a broad sell-off, but not specifically tied to the AI build-out). Climate/water is a control (overlaps held FIW)._\n";
+    md += "_Lowest mktβ + lowest maxDD = best diversifier against a concentrated AI book. Climate/water is a control (overlaps held FIW)._\n";
     fs.appendFileSync(process.env.GITHUB_STEP_SUMMARY, md);
   }
 })();

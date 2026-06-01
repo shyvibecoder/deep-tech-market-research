@@ -60,13 +60,17 @@ export function aiCapexLoading(seriesByTicker, candidateTickers, marketTickers, 
   const fit = ols(a2.cols.Y, [a2.cols.M, a2.cols.F]);
   if (!fit) return null;
   const marketBeta = fit.coef[1], aiBeta = fit.coef[2], aiT = fit.t?.[2] ?? null;
-  const qualifies = Math.abs(aiBeta) < aiBetaMax;
+  // ONE-SIDED gate: the concentration risk is POSITIVE AI-capex loading (amplifies the book). A negative
+  // aiBeta is a mild hedge (the basket rises when the AI factor falls), so it must NOT be penalised — using
+  // |aiBeta| would wrongly punish the best diversifiers. Fail only when the basket loads positively on the
+  // AI-capex factor beyond the tolerance, after market beta is removed.
+  const qualifies = aiBeta < aiBetaMax;
   return {
     marketBeta: +marketBeta.toFixed(3), aiBeta: +aiBeta.toFixed(3), aiT: aiT == null ? null : +aiT.toFixed(2),
     r2: +fit.r2.toFixed(3), n: fit.n, qualifies,
     note: qualifies
-      ? "low marginal AI-capex loading — genuine breadth vs the build-out (high mktBeta is just market beta)"
-      : "loads on the AI-capex factor even AFTER market beta — not real breadth against a capex air-pocket",
+      ? "no positive AI-capex loading beyond market beta — doesn't amplify the concentration (negative = mild hedge)"
+      : "positively loads on the AI-capex factor even AFTER market beta — amplifies the concentration risk",
   };
 }
 

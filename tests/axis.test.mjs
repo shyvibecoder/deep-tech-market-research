@@ -78,6 +78,13 @@ describe("axis: 2-factor AI-capex loading (the forward-looking gate)", () => {
     assert.ok(Math.abs(r.aiBeta) > 0.5, `aiBeta ${r.aiBeta} should be high`);
     assert.equal(r.qualifies, false);
   });
+  it("PASSES a basket with NEGATIVE AI-capex loading (a hedge, not a risk)", () => {
+    // candidate = market MINUS the AI-specific factor → negative aiBeta; must qualify (one-sided gate).
+    const sh = { ...s, HEDGE: { dates, closes: px(mkt.map((m, i) => 0.6 * m - 0.6 * aiComp[i])) } };
+    const r = aiCapexLoading(sh, ["HEDGE"], ["SPY"], ["CPX"], { aiBetaMax: 0.3 });
+    assert.ok(r.aiBeta < -0.3, `aiBeta ${r.aiBeta} should be clearly negative`);
+    assert.equal(r.qualifies, true);
+  });
   it("returns null on thin overlap", () => {
     const d = DATES(20);
     assert.equal(aiCapexLoading({ A: { dates: d, closes: d.map(() => 100) } }, ["A"], ["A"], ["A"]), null);

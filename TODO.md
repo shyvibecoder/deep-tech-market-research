@@ -94,6 +94,27 @@ in technicals; (7) trusted-source persist guard (`sanitizePriceRows`) + first-wi
 - [ ] **Other audit items:** theta dividend-sign (latent, `options.mjs`); SHA-pin `action-send-mail`;
   `searchFilings` retry; dedupe `complexMom`; delete dead `runScoutSweep`; direct tests for `annualVol`/`sharpe`.
 
+### Cross-app hardening — patterns to adopt from "Helm" (sister app; regime-brake design)
+Helm lacks our multi-source consensus + blocking anomaly rejection (our strengths), but its structural
+regime-brake design protects even when corroboration fails. Status mapped against Puck:
+- [ ] **#1 Suppress the overlay when ANY required input is missing/synthetic** (highest value). Puck's
+  `macroStress` evaluates a missing VIX/VIX3M/HYG leg to `false` — a silent false-negative (fails to
+  brake when data is gone). Adopt: suppress the brake entirely + fall back to the safe counterfactual,
+  surface per-input provenance. Complements (doesn't replace) the V2.3 `plausibleNextBar` value-glitch guard.
+- [ ] **#2 Multi-day persistence on the term-structure leg** (3 consecutive days). Puck already has
+  exit-only + AND-of-uncorrelated (VIX-term × HY-credit); add persistence so a lone 1-day spike is inert.
+- [ ] **#3 Drop weekend-dated / pre-inception bars at the write chokepoint.** Puck already funnels writes
+  (incl. `--backfill`) through `sanitizePriceRows` (ticker/date/finite/source); ADD weekend + pre-inception
+  drops + per-guard drop counters (Helm hit a real holiday-bar corruption here).
+- [ ] **#5 No-look-ahead regression test** — Puck's windows are verified trailing; add a test that fails
+  if any window reaches past index i (locks the property).
+- [ ] **#7 Golden-baseline numeric drift monitor** — Puck has schema `selfcheck` but no pinned-numbers
+  baseline; add for the accumulating history warehouse.
+- [ ] **#6 Staleness severity tiers + macro grace** — low until a lag-publishing macro source (FRED HY-OAS)
+  is added; Puck's flat 6-day is fine for daily Yahoo macro for now.
+- ALREADY HAVE: **#8** plausibility at write *and* read (`sanitizePriceRows` + `readSeries`); **#3** single
+  chokepoint + mirrored backfill; **#4** degraded→hold (data_quality gate); **#2** exit-only + AND-gate.
+
 ### Free market-data sources (multi-source corroboration — all free)
 Build a provider abstraction (like the LLM one) that tries keyless first, optionally free-key, and cross-checks.
 - [x] **Quotes/history (keyless):** Yahoo chart (primary) + Stooq CSV (now a cross-check validator).

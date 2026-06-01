@@ -4,7 +4,7 @@
 // a dated proposal report. The workflow opens a PR for HUMAN approval (F9). Best-effort:
 // no-op (writes a stub) when no LLM key is set or evidence is missing.
 import { readFileSync, writeFileSync, mkdirSync } from "node:fs";
-import { llm, availableProviders } from "./lib/llm.mjs";
+import { llm, availableProviders, probeProviders, resolveLiveSeats } from "./lib/llm.mjs";
 import { proposeScarcityEdits } from "./lib/research.mjs";
 import { committeeRoster, researchPreflight } from "./lib/admin.mjs";
 import { newsForQuery } from "./lib/news.mjs";
@@ -108,21 +108,31 @@ const totalPassages = Object.values(evidence).reduce((a, e) => a + (e.evidence_c
 const totalExcerpts = Object.values(evidence).reduce((a, e) => a + (e.evidence_count?.news_with_excerpt || 0), 0);
 console.log(`research evidence: ${totalExcerpts} news excerpts, ${totalPassages} filing passages across ${scar.scarcities.length} scarcities`);
 
-// Committee mode (Phase 2): each available provider staffs a seat (bull/bear/skeptic → CIO), so
-// with 2-3 free keys the seats run on DIFFERENT model families (genuine cognitive diversity); with
-// one key the role structure is preserved on a single model. This replaces the deep-dive→red-team
-// path in production. The provider pool is preference-ordered (Groq → OpenRouter → Gemini).
-const seats = providers.map((pr) => (p) => llm(p, pr));
+// LIVENESS PROBE (root-cause guard): a present key does NOT mean its configured model is alive —
+// free providers silently retire slugs, which is what collapsed past runs to a 1-of-3 monologue.
+// Ping every provider's configured model BEFORE doing 18 min of work; reassign any dead seat to the
+// funded frontier and announce it LOUDLY so degraded diversity is never silent.
+const frontier = providers.find((p) => p === "anthropic" || p === "openai") || null;
+const probes = await probeProviders(providers);
+const live = Object.fromEntries(probes.map((r) => [r.provider, r.ok]));
+for (const r of probes) console.log(`  ${r.ok ? "✓" : "✗"} ${r.provider} model ${r.ok ? "live" : "DOWN"}${r.ok ? "" : ` — ${r.error}`}`);
+const seatProviders = providers.map((p) => p);              // bull/bear/skeptic → providers[0..2]
+const { seats: liveSeatProviders, swaps } = resolveLiveSeats(seatProviders, live, frontier);
+for (const s of swaps) console.log(`  ⚠ seat fallback: ${s.from} model is down → reassigning that seat to ${s.to} (cross-model diversity reduced, loudly)`);
+
+// Committee mode (Phase 2): each LIVE provider staffs a seat (bull/bear/skeptic → CIO). With 2-3
+// live keys the seats run on DIFFERENT model families (genuine cognitive diversity); dead providers
+// were swapped to the frontier above so a seat can't silently no-op.
+const seats = liveSeatProviders.map((pr) => (p) => llm(p, pr));
 // Chief-Risk-Officer review (trust lever #3): an independent final pass that does the fuzzy checks
 // code can't — hallucinated tickers, illogical thesis, momentum-chasing. It runs ONLY on a FRONTIER
 // model (Anthropic/OpenAI): a free model grading its free-tier siblings isn't a real check, so
-// without a paid key the CRO is disabled (the deterministic gate + committee still run). When set,
-// the frontier provider is preference-first, so providers[0] is the frontier model.
-const frontier = providers.find((p) => p === "anthropic" || p === "openai") || null;
-const cro = frontier ? (p) => llm(p, frontier) : null;
-// The actual role→provider map for THIS run, published to the dashboard so the Research tab can show
-// which LLM played each role (no admin token needed). Already computed + logged by the preflight.
-const roster = preflight.roster;
+// without a paid key the CRO is disabled (the deterministic gate + committee still run).
+const cro = frontier && live[frontier] ? (p) => llm(p, frontier) : null;
+// The TRUE live role→provider map for THIS run (after fallback), published to the dashboard so the
+// Research tab shows which LLM actually played each role — not just which key was present.
+const label = (p) => p ? p[0].toUpperCase() + p.slice(1) : null;
+const roster = { ...preflight.roster, bull: label(liveSeatProviders[0]), bear: label(liveSeatProviders[1]), skeptic: label(liveSeatProviders[2]), seat_swaps: swaps };
 // Resilient: a transient LLM/network error must NOT fail the workflow — write a stub + exit 0
 // so the run is green and the evidence summary is still visible.
 try {

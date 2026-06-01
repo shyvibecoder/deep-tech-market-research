@@ -142,6 +142,44 @@ export async function llm(prompt, provider) {
   return p ? PROVIDERS[p].call(prompt) : "";
 }
 
+// LIVENESS PING (root-cause guard for the recurring "valid key, dead model slug" bug): a 1-token
+// call that proves the CONFIGURED model actually answers. A key being present is NOT enough — free
+// providers silently retire model slugs (the 2.0-flash / deepseek-r1:free traps). `callFor` is
+// injectable so the logic is unit-testable without network. Returns {provider, ok, error}.
+export async function pingProvider(provider, callFor) {
+  const call = callFor || ((p) => PROVIDERS[p].call("ping — reply with the single word: ok"));
+  try {
+    const text = await call(provider);
+    if (typeof text === "string" && text.trim()) return { provider, ok: true, error: "" };
+    return { provider, ok: false, error: `${provider}: empty response from configured model` };
+  } catch (e) {
+    return { provider, ok: false, error: e.message || String(e) };
+  }
+}
+
+// Probe a set of providers in parallel; preserves input order so the report is deterministic.
+export async function probeProviders(providers, { callFor } = {}) {
+  return Promise.all(providers.map((p) => pingProvider(p, callFor ? () => callFor(p)(p) : undefined)));
+}
+
+// Given the seat→provider assignment and a {provider: isLive} map, reassign any DEAD seat to the
+// `fallback` provider (the funded frontier) when it's live. Pure → testable. Records every swap so
+// the run can announce the fallback LOUDLY: degraded cross-model diversity must never be silent.
+// When there's no live fallback, dead seats are left as-is — the committee-health path then reports
+// the run as degraded rather than pretending it ran.
+export function resolveLiveSeats(seatProviders, live, fallback) {
+  const fallbackLive = fallback && live[fallback];
+  const swaps = [];
+  const seats = seatProviders.map((p) => {
+    if (live[p] === false && fallbackLive && p !== fallback) {
+      swaps.push({ from: p, to: fallback });
+      return fallback;
+    }
+    return p;
+  });
+  return { seats, swaps };
+}
+
 // Two-pass "analyst + red-team" digest over fresh signals/filings/news.
 // Analyst runs on the first available model; red-team on a DIFFERENT model when a
 // second free key exists — a true cross-model adversarial review.

@@ -130,6 +130,10 @@ export function clusterConstraintHits(results, { knownTickers = [], minPhrases =
 
 const BIND = ["now", "2027", "2028-29", "2030+", "physics-floor"];
 const slug = (s) => "scout-" + String(s || "").toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "");
+// The scout subject is synthesized from attacker-controllable SEC filing text and becomes the scarcity
+// DISPLAY NAME (which renders in the dashboard). Strip HTML-significant chars + control chars + cap
+// length at the data layer so scarcities.json can never carry markup, even before the UI escapes it.
+export const cleanName = (s) => String(s == null ? "" : s).replace(/[^\w .,()\/+-]/g, " ").replace(/\s+/g, " ").trim().slice(0, 120);
 
 // Step 2: synthesize a raw lead into a committee-ingestible DRAFT scarcity (SCOUT-DESIGN). The
 // committee CORRECTS these fields — so first guesses are deliberately CONSERVATIVE: priced_in starts
@@ -137,17 +141,18 @@ const slug = (s) => "scout-" + String(s || "").toLowerCase().replace(/[^a-z0-9]+
 // listed constraint is by definition off-consensus), bind defaults to the near-but-not-now '2027'.
 // `draft:true` + `source:'scout'` guarantee it's never confused with a curated scarcity.
 export function draftScarcity(lead, { proxies = [], subject = "", bind_window = "2027" } = {}) {
+  const name = cleanName(subject);   // subject derives from filing text → strip markup at the data layer
   return {
-    id: slug(subject || lead?.ticker),
+    id: slug(name || lead?.ticker),
     sector: "Unknown (scout)",
-    scarcity: subject || `Constraint flagged by ${lead?.company || lead?.ticker}`,
+    scarcity: name || `Constraint flagged by ${cleanName(lead?.company || lead?.ticker)}`,
     bind_window: BIND.includes(bind_window) ? bind_window : "2027",
     priced_in: "low",                 // committee must earn any higher read
     durability: "medium",             // neutral prior
     substitution_risk: "medium",      // neutral prior
     tickers: proxies.length ? proxies : (lead?.ticker ? [lead.ticker] : []),
     non_consensus: true,
-    thesis: `Scout lead: downstream filers report supply stress around ${subject || "this input"} ` +
+    thesis: `Scout lead: downstream filers report supply stress around ${name || "this input"} ` +
       `(constraint language: ${(lead?.phrases || []).join("; ")}). Candidate chokepoint inferred from ` +
       `the complaint pattern — committee to confirm it is a real, durable, not-yet-priced scarcity.`,
     draft: true,

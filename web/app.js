@@ -255,7 +255,7 @@ function renderTimeline() {
     col.innerHTML = `<h4><span class="pill ${cls}">${lbl}</span></h4>`;
     DATA.scar.scarcities.filter((s) => s.bind_window === key).forEach((s) => {
       const d = document.createElement("div"); d.className = "item";
-      d.innerHTML = `<strong>${s.scarcity}</strong><br><span style="color:var(--mut)">${s.sector} · priced-in: <span class="pi-${s.priced_in}">${s.priced_in}</span></span>`;
+      d.innerHTML = `<strong>${esc(s.scarcity)}</strong><br><span style="color:var(--mut)">${esc(s.sector)} · priced-in: <span class="pi-${esc(s.priced_in)}">${esc(s.priced_in)}</span></span>`;
       col.appendChild(d);
     });
     g.appendChild(col);
@@ -273,11 +273,11 @@ function renderRegime() {
   const [, lbl] = POSTURE[r.posture] || POSTURE.unknown;
   box.className = `regime ${r.posture}`;
   const ap = r.account_policy;
-  const apHtml = ap ? `<div class="acctpol"><span><strong>IRA/Roth:</strong> ${ap.ira}</span><span><strong>Taxable:</strong> ${ap.taxable}</span></div>` : "";
-  box.innerHTML = `<div><strong>Timing posture: ${lbl}${r.risk_score != null ? ` · risk ${r.risk_score}/100${r.confidence ? ` (${r.confidence} conf)` : ""}` : ""}${r.version ? ` · v${r.version}` : ""} <button class="help" data-help="regime">?</button></strong>
-      <span>${r.action || ""}</span></div>
+  const apHtml = ap ? `<div class="acctpol"><span><strong>IRA/Roth:</strong> ${esc(ap.ira)}</span><span><strong>Taxable:</strong> ${esc(ap.taxable)}</span></div>` : "";
+  box.innerHTML = `<div><strong>Timing posture: ${lbl}${r.risk_score != null ? ` · risk ${esc(r.risk_score)}/100${r.confidence ? ` (${esc(r.confidence)} conf)` : ""}` : ""}${r.version ? ` · v${esc(r.version)}` : ""} <button class="help" data-help="regime">?</button></strong>
+      <span>${esc(r.action || "")}</span></div>
     ${apHtml}
-    <div class="rnote">${r.note || ""}<br><em>Alpha = scarcity thesis · timing = trend+momentum+vol+drawdown+macro overlay, on the ETF composite${r.composite_basis?.length ? ` (${r.composite_basis.join(", ")})` : ""}. ${r.basis || ""}. ${r.confidence_note ? "⚠ " + r.confidence_note + ". " : ""}Not advice.</em></div>`;
+    <div class="rnote">${esc(r.note || "")}<br><em>Alpha = scarcity thesis · timing = trend+momentum+vol+drawdown+macro overlay, on the ETF composite${r.composite_basis?.length ? ` (${esc(r.composite_basis.join(", "))})` : ""}. ${esc(r.basis || "")}. ${r.confidence_note ? "⚠ " + esc(r.confidence_note) + ". " : ""}Not advice.</em></div>`;
 }
 
 function renderDca() {
@@ -364,8 +364,8 @@ function renderPortfolio() {
     // note carries formatted dollar figures (sleeve value) to avoid raw long numbers.
     const showVal = live?.value != null && Math.abs(live.value) < 1000;
     const d = document.createElement("div"); d.className = `trig ${state}`;
-    d.innerHTML = `<span class="badge">${state}${showVal ? ` · ${live.value}` : ""}</span><strong>${t.name}</strong><br>
-      <span style="color:var(--mut)">${t.type} · ${t.action}${live?.note ? ` <em>(${live.note})</em>` : ""}</span>`;
+    d.innerHTML = `<span class="badge">${esc(state)}${showVal ? ` · ${esc(live.value)}` : ""}</span><strong>${esc(t.name)}</strong><br>
+      <span style="color:var(--mut)">${esc(t.type)} · ${esc(t.action)}${live?.note ? ` <em>(${esc(live.note)})</em>` : ""}</span>`;
     tg.appendChild(d);
   });
 
@@ -374,14 +374,14 @@ function renderPortfolio() {
     const Q = q(h.ticker);
     const ytd = Q?.ytd, off = Q?.pct_off_high;
     const tr = document.createElement("tr");
-    const warn = Q?.flags?.length ? `<span class="dq-warn" title="${Q.flags.join("; ")}">⚠</span>` : "";
-    tr.innerHTML = `<td><strong>${h.ticker}</strong>${warn}</td><td>${h.name}</td><td>${h.account}</td>
-      <td>${fmtUsd(h.target_usd)}</td><td>${(h.weight*100).toFixed(1)}%</td><td>${h.tier}</td>
+    const warn = Q?.flags?.length ? `<span class="dq-warn" title="${esc(Q.flags.join("; "))}">⚠</span>` : "";
+    tr.innerHTML = `<td><strong>${esc(h.ticker)}</strong>${warn}</td><td>${esc(h.name)}</td><td>${esc(h.account)}</td>
+      <td>${fmtUsd(h.target_usd)}</td><td>${(h.weight*100).toFixed(1)}%</td><td>${esc(h.tier)}</td>
       <td>${Q?.price ? "$" + Q.price.toFixed(2) : "—"}</td>
       <td class="${ytd>=0?'pos':'neg'}">${fmtPct(ytd)}</td>
       <td class="${off<0?'neg':''}">${fmtPct(off)}</td>
       <td class="${Q?.pct_vs_ma200>=0?'pos':'neg'}">${fmtPct(Q?.pct_vs_ma200)}</td>
-      <td>${Q?.forward_pe ? Q.forward_pe.toFixed(1) + "x" : "—"}</td><td style="color:var(--mut)">${h.role}</td>`;
+      <td>${Q?.forward_pe ? Q.forward_pe.toFixed(1) + "x" : "—"}</td><td style="color:var(--mut)">${esc(h.role)}</td>`;
     tb.appendChild(tr);
   });
 }

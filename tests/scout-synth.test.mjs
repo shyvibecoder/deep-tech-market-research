@@ -71,3 +71,22 @@ describe("scout: scoutSeenUpdate (D2 memory — proposed + rejected, with re-ent
     assert.ok(fresh.includes("scout-bar"));
   });
 });
+
+import { cleanName } from "../scripts/lib/scout.mjs";
+// Security (audit S1): the scout subject derives from attacker-controllable filing text and becomes
+// the scarcity DISPLAY NAME. cleanName neuters HTML at the data layer so scarcities.json can't carry
+// markup even before the UI escapes it.
+describe("scout: cleanName (data-layer XSS guard on the scarcity name)", () => {
+  it("strips HTML-significant chars and tags", () => {
+    assert.equal(cleanName("<img src=x onerror=alert(1)>"), "img src x onerror alert(1)");
+    assert.equal(cleanName('a"><script>evil()</script>'), "a script evil() /script");
+  });
+  it("preserves legitimate chokepoint names", () => {
+    assert.equal(cleanName("grain-oriented electrical steel"), "grain-oriented electrical steel");
+    assert.equal(cleanName("ABF substrate (GOES)"), "ABF substrate (GOES)");
+  });
+  it("caps length and handles null", () => {
+    assert.equal(cleanName(null), "");
+    assert.ok(cleanName("x".repeat(500)).length <= 120);
+  });
+});

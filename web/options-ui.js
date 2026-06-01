@@ -1,6 +1,7 @@
 // Options tab UI (ES module). Uses the shared fair-value math in options.mjs and
 // auto-fills the underlying price + realized vol from the latest scan.
 import { evaluateOption, suggestOptionStructure } from "./options.mjs";
+import { esc } from "./sanitize.mjs";
 
 const $ = (s) => document.querySelector(s);
 let SIG = {};
@@ -41,7 +42,7 @@ function evaluate() {
   const posture = SIG.regime?.posture;
   const sug = suggestOptionStructure(posture, { macroStressed: !!SIG.regime?.macro_stressed });
   const suggest = sug.stance === "none" ? "" :
-    `Timing posture <strong>${posture}</strong> → <strong>${sug.stance}</strong>: ${sug.structures.join("; ")} (${sug.dte}, ${sug.delta}) — ${sug.rationale}. Defined-risk only.`;
+    `Timing posture <strong>${esc(posture)}</strong> → <strong>${esc(sug.stance)}</strong>: ${esc(sug.structures.join("; "))} (${esc(sug.dte)}, ${esc(sug.delta)}) — ${esc(sug.rationale)}. Defined-risk only.`;
   out.innerHTML = `
     <div class="optcard">
       <p class="verdict ${e.verdict}">Verdict: ${e.verdict.toUpperCase()} — <span style="font-weight:400">${e.reason}</span></p>

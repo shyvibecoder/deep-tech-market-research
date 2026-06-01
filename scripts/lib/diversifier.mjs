@@ -82,3 +82,80 @@ export function screenDiversifiers(seriesByTicker, universe, marketTickers, comp
     (a.maxDD ?? Infinity) - (b.maxDD ?? Infinity) ||
     a.id.localeCompare(b.id));
 }
+
+// ---------- Stage 2: committee conviction (drawdown-focused, reuses llm.mjs; NOT a bent runCommittee) ----------
+
+// The committee's verb here is NOT "reassess priced-in" (that's the AI-capex committee) — it's "how good a
+// DRAWDOWN HEDGE is this name": balance-sheet durability, demand inelasticity, dividend resilience, and
+// whether it actually de-correlates in a drawdown. Returns a strict JSON conviction so it's machine-parseable.
+export function convictionPrompt(ticker, evidence = {}) {
+  return `You are a defensive-allocation committee (bull / bear / skeptic) sizing a DIVERSIFIER sleeve held to LOWER a concentrated AI-capex book's drawdown — NOT to chase return.
+Name: ${ticker}. Sleeve: ${evidence.sleeve || "defensive"}. Evidence: ${JSON.stringify(evidence)}.
+Judge ONLY its quality as a drawdown hedge: demand inelasticity, balance-sheet durability, dividend resilience, and how independently it behaves from the AI build-out. Higher conviction = a better, more reliable hedge.
+Respond with STRICT JSON only, no prose: {"conviction": <0..1>, "why": "<one sentence>"}`;
+}
+
+// Pull a 0–1 conviction out of an LLM reply (JSON or loose). Clamps to [0,1]; returns null if absent.
+export function parseConviction(text) {
+  if (!text) return null;
+  let v = null;
+  const j = String(text).match(/"conviction"\s*:\s*(-?\d*\.?\d+)/i);
+  if (j) v = parseFloat(j[1]);
+  else { const m = String(text).match(/\b(0?\.\d+|1(?:\.0+)?|0)\b/); if (m) v = parseFloat(m[1]); }
+  if (v == null || !Number.isFinite(v)) return null;
+  return +Math.min(1, Math.max(0, v)).toFixed(3);
+}
+
+// Run the conviction pass over a list of tickers. `callers` are seat functions (prompt)=>text (e.g. from
+// llm.mjs seatCaller) so multiple models vote and we average — and tests can inject a fake. If no caller
+// returns a parseable conviction (no key / offline), every name falls back to `fallback` → the sizing
+// degrades to pure inverse-volatility (equal conviction), so the pipeline still works without an LLM.
+export async function convictionCommittee(tickers, evidenceByTicker = {}, callers = [], { fallback = 0.6 } = {}) {
+  const out = {};
+  for (const t of tickers) {
+    const votes = [];
+    for (const call of callers) {
+      try { const c = parseConviction(await call(convictionPrompt(t, evidenceByTicker[t] || {}))); if (c != null) votes.push(c); } catch { /* a dead model must not sink the sleeve */ }
+    }
+    out[t] = votes.length ? +(votes.reduce((a, b) => a + b, 0) / votes.length).toFixed(3) : fallback;
+  }
+  return out;
+}
+
+// ---------- Stage 3: size the sleeve (conviction × inverse-vol within a budget) → a proposed plan ----------
+
+// Allocate a diversifier sleeve sized at `sleevePct` of the investable sleeve. Existing diversifier holdings
+// already in the plan (e.g. FIW) COUNT toward the budget (so water isn't double-bought); the remaining
+// budget is split across the new gate-qualifying names by conviction × inverse-volatility. The AI-capex
+// holdings are scaled down so the whole plan still sums to 1.0. Pure + deterministic.
+export function fundSleeve({ candidates = [], currentHoldings = [], existingDiversifierTickers = [], sleevePct = 0.15, sleeveUsd = 0, convictions = {}, vols = {}, account = "taxable", tier = "C", defaultConviction = 0.6, defaultVol = 0.25 }) {
+  const held = new Set(currentHoldings.map((h) => h.ticker));
+  const names = [];
+  for (const c of candidates) for (const t of c.tickers || []) if (!held.has(t) && !names.some((n) => n.ticker === t)) names.push({ ticker: t, sleeve: c.id, scarcity: c.scarcity });
+
+  const existingDivWeight = currentHoldings.filter((h) => existingDiversifierTickers.includes(h.ticker)).reduce((a, h) => a + (h.weight || 0), 0);
+  const budget = Math.max(0, +(sleevePct - existingDivWeight).toFixed(6)); // new-name budget = sleeve minus what existing diversifiers already cover
+  const raw = names.map((n) => (convictions[n.ticker] ?? defaultConviction) * (1 / Math.max(vols[n.ticker] ?? defaultVol, 0.01)));
+  const sum = raw.reduce((a, b) => a + b, 0) || 1;
+  const newHoldings = names.map((n, i) => {
+    const weight = +(budget * raw[i] / sum).toFixed(4);
+    return { ticker: n.ticker, name: n.ticker, account, weight, target_usd: Math.round(weight * sleeveUsd), tier, role: `Diversifier (2nd axis) — ${n.scarcity}`, conviction: +(convictions[n.ticker] ?? defaultConviction).toFixed(3), sleeve: n.sleeve };
+  });
+  const aiWeight = +(1 - existingDivWeight).toFixed(6); // current non-diversifier (AI-capex) weight
+  const aiScale = aiWeight > 0 ? +((1 - sleevePct) / aiWeight).toFixed(4) : 1; // scale AI-capex down so the plan still sums to 1.0
+  return { newHoldings, budget, existingDivWeight: +existingDivWeight.toFixed(4), aiScale, sleevePct, existingDiversifierTickers };
+}
+
+// Produce the PROPOSED holdings list for the plan PR: AI-capex holdings scaled by aiScale, existing
+// diversifiers (FIW) kept as-is, new diversifier names appended. The result sums back to ~1.0 with the
+// diversifier axis at `sleevePct`. (Stage 3 of the pipeline; the human reviews + merges this.)
+export function applyFunding(portfolio, funding) {
+  const { newHoldings, aiScale, existingDiversifierTickers = [] } = funding;
+  const newSet = new Set(newHoldings.map((h) => h.ticker));
+  const scaled = (portfolio.holdings || []).filter((h) => !newSet.has(h.ticker)).map((h) => {
+    if (existingDiversifierTickers.includes(h.ticker)) return { ...h }; // existing diversifier (FIW) untouched — already in the budget
+    const weight = +((h.weight || 0) * aiScale).toFixed(4);
+    return { ...h, weight, target_usd: Math.round(weight * (portfolio.sleeve_usd || 0)) };
+  });
+  return [...scaled, ...newHoldings];
+}

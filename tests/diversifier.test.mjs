@@ -1,6 +1,6 @@
 import { describe, it } from "node:test";
 import assert from "node:assert/strict";
-import { screenCandidate, screenDiversifiers, DIVERSIFIER_UNIVERSE } from "../scripts/lib/diversifier.mjs";
+import { screenCandidate, screenDiversifiers, DIVERSIFIER_UNIVERSE, parseConviction, convictionCommittee, fundSleeve, applyFunding } from "../scripts/lib/diversifier.mjs";
 
 // Synthetic factor world (deterministic — no RNG): a market factor and an independent "AI-capex" factor.
 // The complex (QQQ) loads on BOTH; a HEDGE basket loads low on market and NEGATIVE on the AI factor (so
@@ -66,5 +66,55 @@ describe("diversifier: universe", () => {
   it("ships a non-empty candidate universe with tickers", () => {
     assert.ok(DIVERSIFIER_UNIVERSE.length >= 2);
     assert.ok(DIVERSIFIER_UNIVERSE.every((c) => c.id && Array.isArray(c.tickers) && c.tickers.length));
+  });
+});
+
+describe("diversifier Stage 2: conviction parsing + committee fallback", () => {
+  it("parses a JSON conviction and clamps to [0,1]", () => {
+    assert.equal(parseConviction('{"conviction": 0.82, "why": "durable"}'), 0.82);
+    assert.equal(parseConviction('{"conviction": 1.5}'), 1);
+    assert.equal(parseConviction('{"conviction": -0.2}'), 0);
+    assert.equal(parseConviction("no number here at all"), null);
+  });
+  it("averages votes across callers", async () => {
+    const a = async () => '{"conviction": 0.8}';
+    const b = async () => '{"conviction": 0.6}';
+    const out = await convictionCommittee(["JNJ"], {}, [a, b]);
+    assert.equal(out.JNJ, 0.7);
+  });
+  it("falls back to the default when no caller yields a conviction (offline / no key)", async () => {
+    const dead = async () => { throw new Error("no key"); };
+    const out = await convictionCommittee(["JNJ"], {}, [dead], { fallback: 0.6 });
+    assert.equal(out.JNJ, 0.6);
+    const none = await convictionCommittee(["MRK"], {}, []);
+    assert.equal(none.MRK, 0.6);
+  });
+});
+
+describe("diversifier Stage 3: sizing fills the sleeve budget around what's planned", () => {
+  const portfolio = { sleeve_usd: 1_500_000, holdings: [{ ticker: "FIW", weight: 0.07 }, { ticker: "PAVE", weight: 0.93 }] };
+  const funding = fundSleeve({
+    candidates: [{ id: "health", scarcity: "Health", tickers: ["JNJ", "MRK"] }],
+    currentHoldings: portfolio.holdings, existingDiversifierTickers: ["FIW"],
+    sleevePct: 0.15, sleeveUsd: portfolio.sleeve_usd,
+  });
+  it("budget = sleeve% minus the existing diversifier (FIW) weight", () => {
+    assert.equal(funding.existingDivWeight, 0.07);
+    assert.equal(funding.budget, 0.08);
+  });
+  it("splits the budget across new names (equal conviction+vol → equal split) and scales AI-capex down", () => {
+    assert.equal(funding.newHoldings.length, 2);
+    assert.equal(funding.newHoldings[0].weight, 0.04);
+    assert.equal(funding.newHoldings[0].target_usd, 60000);
+    assert.ok(Math.abs(funding.aiScale - 0.85 / 0.93) < 1e-3);
+  });
+  it("the proposed plan still sums to 1.0 with the diversifier axis at exactly the sleeve %", () => {
+    const holdings = applyFunding(portfolio, funding);
+    const total = holdings.reduce((a, h) => a + h.weight, 0);
+    assert.ok(Math.abs(total - 1.0) < 1e-3, `plan sums to ${total}`);
+    const divTickers = new Set(["FIW", ...funding.newHoldings.map((h) => h.ticker)]);
+    const divTotal = holdings.filter((h) => divTickers.has(h.ticker)).reduce((a, h) => a + h.weight, 0);
+    assert.ok(Math.abs(divTotal - 0.15) < 1e-3, `diversifier axis = ${divTotal}`);
+    assert.equal(holdings.find((h) => h.ticker === "FIW").weight, 0.07); // FIW untouched
   });
 });

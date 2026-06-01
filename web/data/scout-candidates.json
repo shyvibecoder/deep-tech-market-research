@@ -8,7 +8,7 @@
       "bom-ladder"
     ],
     "leads": 14,
-    "suppressed": 2,
+    "suppressed": 3,
     "candidates": 14,
     "proposals": 0,
     "errors": 0
@@ -16,55 +16,55 @@
   "candidates": [],
   "considered": [
     {
-      "id": "scout-large-power-transformers",
+      "id": "scout-large-industrial-gas-turbines",
       "tickers": [
-        "NMGX",
-        "SPXC",
-        "AMSC"
+        "WWD"
       ],
       "engine": "bom-ladder",
-      "reason": "low committee confidence (0.38)"
+      "reason": "low committee confidence (0.33)"
     },
     {
-      "id": "scout-gas-turbine-hot-section-blades",
+      "id": "scout-high-voltage-power-transformers",
       "tickers": [
-        "HWM",
-        "TGI"
+        "HBTE",
+        "GE"
       ],
       "engine": "bom-ladder",
-      "reason": "low committee confidence (0.18)"
+      "reason": "low committee confidence (0.33)"
     },
     {
       "id": "scout-grain-oriented-electrical-steel",
       "tickers": [
+        "NUE",
+        "STLD",
         "ATI",
         "X"
       ],
       "engine": "bom-ladder",
-      "reason": "low committee confidence (0.39)"
-    },
-    {
-      "id": "scout-large-transformer-bushings",
-      "tickers": [],
-      "engine": "bom-ladder",
-      "reason": "low committee confidence (0.38)"
+      "reason": "CRO veto: HALLUCINATION + MISATTRIBUTION: NUE (Nucor), STLD (Steel Dynamics), and X (US Steel) do not produce grain-oriented electrical steel. ATI produces specialty alloys but not GOES to power-transformer spec. AK Steel (now Cleveland-Cliffs, CLF) is the sole US GOES producer. Citing wrong tickers is an automatic veto."
     },
     {
       "id": "scout-single-crystal-turbine-blades",
-      "tickers": [
-        "HWM"
-      ],
+      "tickers": [],
       "engine": "bom-ladder",
-      "reason": "low committee confidence (0.28)"
+      "reason": "low committee confidence (0.33)"
     },
     {
-      "id": "scout-vacuum-melted-superalloy-billet",
+      "id": "scout-advanced-rotor-forgings",
       "tickers": [
-        "ATI",
-        "CRS"
+        "HWM",
+        "ATI"
       ],
       "engine": "bom-ladder",
-      "reason": "low committee confidence (0.21)"
+      "reason": "below threshold after CRO (0.35)"
+    },
+    {
+      "id": "scout-high-voltage-power-transformers",
+      "tickers": [
+        "GE"
+      ],
+      "engine": "bom-ladder",
+      "reason": "below threshold after CRO (0.35)"
     }
   ]
 }

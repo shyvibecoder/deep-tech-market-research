@@ -34,7 +34,7 @@
     },
     "scout-grain-oriented-electrical-steel": {
       "status": "rejected",
-      "evidence_hash": "*grain-oriented electrical steel**|ati|x",
+      "evidence_hash": "*grain-oriented electrical steel**|ati|nue|stld|x",
       "updated": "2026-06-01"
     },
     "scout-large-power-transformer-forgings": {
@@ -49,7 +49,7 @@
     },
     "scout-single-crystal-turbine-blades": {
       "status": "rejected",
-      "evidence_hash": "*single-crystal turbine blades**|hwm",
+      "evidence_hash": "*single-crystal turbine blades**",
       "updated": "2026-06-01"
     },
     "scout-turbine-grade-nickel-superalloy-forgings": {
@@ -75,6 +75,21 @@
     "scout-vacuum-melted-superalloy-billet": {
       "status": "rejected",
       "evidence_hash": "*vacuum-melted superalloy billet**|ati|crs",
+      "updated": "2026-06-01"
+    },
+    "scout-large-industrial-gas-turbines": {
+      "status": "rejected",
+      "evidence_hash": "*large industrial gas turbines**|wwd",
+      "updated": "2026-06-01"
+    },
+    "scout-high-voltage-power-transformers": {
+      "status": "rejected",
+      "evidence_hash": "*high-voltage power transformers**|ge",
+      "updated": "2026-06-01"
+    },
+    "scout-advanced-rotor-forgings": {
+      "status": "rejected",
+      "evidence_hash": "*advanced rotor forgings**|ati|hwm",
       "updated": "2026-06-01"
     }
   }

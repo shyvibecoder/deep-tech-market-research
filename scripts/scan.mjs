@@ -344,9 +344,10 @@ if (!OFFLINE) {
       fetchYahoo("HYG").catch(() => null),
     ]);
     const m = macroStress({ vix: vix?.price, vix3m: vix3m?.price, hygMom1m: hyg?.mom_1m });
-    // R1: if the inputs didn't come back, leave macro=null so the regime marks the
-    // exit-only brake UNAVAILABLE instead of silently showing "calm".
-    if (m.vix_term == null && m.hy_mom_1m == null) errors.push("macro: VIX/HY feeds unavailable — overlay disabled this run");
+    // Helm #1: the brake needs ALL inputs. If ANY is missing it's SUPPRESSED — leave macro=null so the
+    // regime marks the exit-only overlay UNAVAILABLE instead of silently showing "calm" (a missing VIX
+    // would otherwise make the term-structure leg false → fake "calm"). Was: only caught BOTH missing.
+    if (!m.available) errors.push(`macro: overlay suppressed — missing ${m.missing.join("/")} this run`);
     else { macro = m; console.log(`Macro: ${m.stressed ? "STRESSED" : "calm"} (vix_term ${m.vix_term}, hy_1m ${m.hy_mom_1m})`); }
   } catch (e) { errors.push(`macro: ${e.message}`); }
 }

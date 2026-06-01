@@ -28,3 +28,24 @@ describe("macro: AND-gated stress overlay", () => {
     assert.ok(m.reasons.length === 2);
   });
 });
+
+// Helm #1: the brake needs ALL inputs (VIX, VIX3M, HYG). If ANY is missing it must be SUPPRESSED
+// (available:false) — not silently evaluate to "calm" (a false-negative: failing to de-risk when data
+// is gone). Only the all-inputs-present case is a confident read.
+describe("macro: suppress on any missing input (Helm #1)", () => {
+  it("available:true only when all three inputs are present", () => {
+    assert.equal(macroStress({ vix: 30, vix3m: 26, hygMom1m: -0.05 }).available, true);
+  });
+  it("available:false + suppressed when ANY input is missing (not a confident 'calm')", () => {
+    for (const args of [{}, { vix: 30 }, { vix: 30, vix3m: 26 }, { vix3m: 26, hygMom1m: -0.05 }, { vix: 30, hygMom1m: -0.05 }]) {
+      const m = macroStress(args);
+      assert.equal(m.available, false, `should be unavailable: ${JSON.stringify(args)}`);
+      assert.equal(m.suppressed, true);
+      assert.equal(m.stressed, false);           // never fires when it couldn't be evaluated
+      assert.ok(m.missing.length > 0);
+    }
+  });
+  it("treats VIX3M<=0 as missing (no divide-by-zero / bogus ratio)", () => {
+    assert.equal(macroStress({ vix: 30, vix3m: 0, hygMom1m: -0.05 }).available, false);
+  });
+});

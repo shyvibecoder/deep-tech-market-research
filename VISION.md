@@ -40,6 +40,14 @@ the scorecard is the referee. If the de-rating/tilt calls don't beat ~50% out-of
 so and the "alpha" is just factor/beta. Open alpha work: prove de-rating vs outcomes; rank/score discovered
 proxies; ensemble-gated v3; wire de-rating + per-name TSMOM into a target-weight vector (analysis → allocation).
 
+**The two load-bearing strategic gaps (hedge-fund-process audit, 2026-06-01 — detail in TODO.md "Premier-grade gaps"):**
+the standing rule above currently has *no teeth* and *no breadth*. (1) **Factor attribution** — we grade
+hit-rate but never decompose returns vs Fama-French + momentum, so we cannot actually distinguish alpha
+from a momentum/beta load (free: Ken French data). Until then "relabel as beta" is aspirational. (2)
+**Uncorrelated alpha breadth** — the whole book is ~1.0-correlated on ONE factor (AI-capex); IR ∝ IC × √breadth,
+and breadth ≈ 1. A premier book combines *structurally uncorrelated* edges. These two gate how far the alpha
+program can actually go; the rest of the backlog optimizes a single-factor bet.
+
 ## The single biggest lever (Visionary)
 **Turn Puck from a snapshot renderer into an accountable, self-grading forecasting record.** It already
 commits dated JSON to git every scan — an immutable, free, longitudinal claim ledger by accident. Record

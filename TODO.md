@@ -36,6 +36,60 @@ chokepoints. Real alpha is spotting the *next* bottleneck before consensus.
   - [ ] **Options execution rules (DEFINED-RISK ONLY — assume NO naked options, both accounts)** — risk-on → long LEAPS calls (GEV/ASML/index); defensive/macro-stress → protective puts / debit put spreads / collars on correlated cyclicals. Active rolling in IRA (tax-free); long-dated catastrophe hedges in taxable (mind holding-period/constructive-sale/wash-sale). See POSITION-SIZING §3a.
   - [ ] Version the regime engine (v1→v2) + keep thresholds coarse/economically-motivated (anti-overfit); do NOT port QQQ-tuned params onto short-history single names; no leverage.
 
+## 🏛 Premier-grade gaps — hedge-fund-process audit (2026-06-01)
+A holistic review against how a premier fund turns theses into a *provably-alpha, risk-managed* book.
+The framework + accountability moat are already top-decile for retail; these six close the gap to
+institutional process. **All six are free-tier-achievable.** Ordered by leverage on the objective
+(max 10y return, maxDD<35%, best Calmar/Sortino). Items marked **[DESIGN-FIRST]** touch strategy/vision
+— discuss + design with the user before building (per the "no whack-a-mole" rule); the rest are buildable
+with the usual red-first TDD + `?`/USER-GUIDE discipline.
+
+- [ ] **G1 — Factor attribution (gives the honesty gate its teeth).** The scorecard grades hit-rate but
+  can't yet answer ALPHA.md's own question — *alpha or just factor/beta?* A 50%+ hit-rate is necessary,
+  not sufficient: the book may be winning purely by loading the **momentum factor** (MOP-2012 momentum
+  *is* a factor) or market beta in a bull run. Decompose the basket/sleeve returns vs **Fama-French 5 +
+  UMD (momentum)** → report market-beta, style loadings, and the **residual (true) alpha** with a t-stat.
+  Free + keyless: **Ken French Data Library** daily CSV. Wire the residual-alpha read into the scorecard
+  so any signal that can't beat its factor replication is auto-relabeled "beta," per the standing rule.
+  *Highest analytical value — it makes "alpha" falsifiable, not asserted.*
+- [ ] **G2 — Uncorrelated alpha breadth (the mono-factor Achilles heel).** [DESIGN-FIRST] The whole sleeve
+  is ~1.0-internally-correlated on ONE factor (AI-capex + electrification; acknowledged in REGIME.md).
+  Fundamental law of active management: IR ∝ IC × √**breadth** — IC is high, breadth ≈ 1. Premier
+  risk-adjusted return comes from *combining structurally uncorrelated* alpha streams. The scout finds new
+  scarcities but all downstream of the *same* factor → adds names, not risk breadth. **Reframe the scout's
+  mandate + open a 2nd scarcity axis** that is structurally uncorrelated to AI-capex (candidates to debate:
+  demographic/health-system bottlenecks, food/ag-input security, defense-reshoring decoupled from AI,
+  climate-adaptation/water) — same four-edges + falsifiability discipline. *Highest strategic value;
+  needs the G1 correlation tooling to verify candidates are actually uncorrelated, not just labelled so.*
+- [ ] **G3 — Risk-based sizing, and wire it into the loop.** `web/sizing.mjs` `targetDeltas()` does
+  *dollar*-weighting (±25% caps) and is **display-only** (never called in `scan.mjs`, never graded). On a
+  high-beta correlated book dollar-equal ≠ risk-equal — the highest-vol names silently dominate the risk
+  budget. Make sizing **risk-based** (per-name vol-scale + correlation-aware / equal-risk-contribution,
+  using the 31y warehouse), then **record the target vector to the forecast ledger** so the allocation
+  itself is scored, not just the signals. Closes the orphaned analysis→allocation final mile (P3/Visionary#5).
+- [ ] **G4 — Sized tail-hedge program (protect the −35%).** [DESIGN-FIRST] −35% is the binding constraint
+  and the book has a *known* fat-left-tail (2027-28 capex digestion). Today's hedges are three disconnected
+  islands: regime brake (all-or-nothing cash), *advisory* options suggestions (un-sized), and a browser-only
+  stress sim. Connect them: **stress scenario → required hedge notional → a defined-risk structure sized so
+  the named shock stays inside −35%.** Surface "current modeled drawdown vs −35% headroom" + the hedge that
+  closes the gap. Defined-risk only, no leverage (existing rule). Wires `web/stress.mjs` + `web/options.mjs`
+  into the scan/report loop instead of leaving them isolated.
+- [ ] **G5 — Rates / real-yield regime (the missing dominant factor for THIS book).** REGIME.md explicitly
+  has "no rates/credit/USD regime," yet IPPs/grid/long-duration capital-intensive equities are *most* driven
+  by **real yields**. The macro overlay added VIX-term + HY-credit (risk-*off* leads) but no rates trend.
+  Add a coarse, economically-motivated real-yield/10y trend leg to the macro overlay (exit-only, AND-gated,
+  same discipline). Free: Yahoo `^TNX`, FRED `DFII10`/`DGS10` (free key). Elevate above the generic
+  "Timing v2 cross-asset" item — it's the highest-relevance macro factor for this specific basket.
+- [ ] **G6 — Historical cross-sectional signal backtest (statistical power NOW, not in 5 years).** The
+  scorecard accrues only a few resolved calls per quarter → significance is years away. The *regime*
+  backtest exists; the **alpha signals do not** (Opportunity, de-rating/inflecting, forced-flow are graded
+  only forward via the live ledger). Backtest them **cross-sectionally** on the existing 31y/57-ticker
+  warehouse (many names × many dates) for an immediate IC / hit-rate read with confidence intervals.
+  Converts "asserted edge" → "evidenced edge" today; the live ledger then confirms out-of-sample.
+- **Out of scope by design (not gaps):** live trade execution (F9 keeps humans in the loop), HFT/execution
+  edge (retail loses there — correctly disclaimed), paid alt-data (free-tier rule; Edge-2 filing effort is
+  the honest substitute). The ceiling is real and the app is right not to pretend otherwise.
+
 ## Testing (TDD/BDD) — shipped
 - [x] **Unit** (`tests/*.test.mjs`, `node:test`): options (BS/parity/IV/verdict), regime (postures),
   marketdata (corroboration/plausibility/isTradeable), schema (valid+negative), dca (sums), history (drift/seen).

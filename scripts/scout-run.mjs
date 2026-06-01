@@ -8,7 +8,7 @@
 // exits 0 (the scout must never fail the workflow), and it's hard-budgeted so a sweep can't run away.
 import { readFileSync, writeFileSync, mkdirSync } from "node:fs";
 import { availableProviders, probeProviders, planCommittee, seatCaller, llm } from "./lib/llm.mjs";
-import { DEFAULT_CONSTRAINT_PHRASES, approvedPhrases, constraintShadowLeads, bomLadderLeads, bomLadderPrompt, arxivLeads, evaluateLeads, draftFromLead, leadEvidenceHash, searchArxiv, legibilityTag } from "./lib/scout.mjs";
+import { DEFAULT_CONSTRAINT_PHRASES, approvedPhrases, constraintShadowLeads, bomLadderLeads, bomLadderPrompt, arxivLeads, evaluateLeads, draftFromLead, leadEvidenceHash, searchArxiv, legibilityTag, searchTerm } from "./lib/scout.mjs";
 import { runCommittee, sanitizeEdit, croReview } from "./lib/research.mjs";
 import { verifyProposal } from "./lib/research-verify.mjs";
 import { searchFts, discoverProxies } from "./lib/edgar-fts.mjs";
@@ -104,7 +104,9 @@ const evaluate = async (draft) => {
 };
 
 // Discover public proxies for an inferred input/topic (reuses the chokepoint-discovery FTS path).
-const discover = async (term) => { try { return (await discoverProxies([term], { max: 3 })).proxies.map((p) => p.ticker); } catch { return []; } };
+// searchTerm normalizes a verbose subject to a searchable core — verbose phrases match no filings in
+// EDGAR exact-phrase search, which left BOM leads with no tickers (and thus auto-rejected).
+const discover = async (term) => { try { return (await discoverProxies([searchTerm(term)], { max: 3 })).proxies.map((p) => p.ticker); } catch { return []; } };
 // F11: seed list is overridable via the SCOUT_ARXIV_QUERIES repo variable (comma-separated) so the
 // noisiest engine's search space can be tuned without a code change; these are the speculative default.
 const DEFAULT_ARXIV_QUERIES = (process.env.SCOUT_ARXIV_QUERIES || "cryogenic CMOS, rare earth separation, solid state cooling, neutron detector, photonic interconnect, advanced packaging substrate").split(",").map((s) => s.trim()).filter(Boolean);

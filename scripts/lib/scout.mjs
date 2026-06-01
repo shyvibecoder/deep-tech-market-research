@@ -282,8 +282,27 @@ export function bomLadderPrompt(scarcity) {
     `EXCLUDE commodity inputs (electricity, water, common chemicals, generic labor, land) and anything ` +
     `already a famous bottleneck. The "why" must say why the UPSTREAM input is ITSELF scarce/hard-to-` +
     `replace — not merely that it is needed.\n` +
-    `Each input must be GENERIC (no company names) yet specific enough to search SEC filings for. ` +
-    `Output one per line as: input — why. If no non-obvious upstream chokepoint exists, output nothing.`;
+    `Each "input" must be a SHORT, searchable common name — 2-4 words, the material/component itself ` +
+    `(e.g. "grain-oriented electrical steel", "single-crystal turbine blades", "transformer bushings"). ` +
+    `Put grades, voltage/size specs and detail in the WHY, NOT the input, so it matches filing text. ` +
+    `Generic (no company names). Output one per line as: input — why. If none, output nothing.`;
+}
+
+// Normalize a verbose subject into a short, searchable proxy-discovery term (empirical-run finding:
+// verbose BOM inputs like "grain-oriented electrical steel (GOES) 0.23-0.35mm domain-refined grades"
+// matched no filings in EDGAR exact-phrase search → 0 tickers → auto-rejected). Strip parentheticals,
+// cut at the first spec/number token, drop trailing filler, cap to the core noun phrase.
+const TERM_STOP = new Set(["rated", "and", "above", "below", "type", "grade", "grades", "of", "the", "with", "for", "or", "plus", "a", "an", "&"]);
+export function searchTerm(subject) {
+  const s = String(subject || "").replace(/\([^)]*\)/g, " ").replace(/\s+/g, " ").trim();
+  const out = [];
+  for (const t of s.split(" ")) {
+    if (/\d/.test(t)) break;            // stop at the first spec/number token (the detail starts here)
+    out.push(t);
+    if (out.length >= 4) break;
+  }
+  while (out.length && TERM_STOP.has(out[out.length - 1].toLowerCase())) out.pop();
+  return out.join(" ").trim();
 }
 
 // parse the model's upstream-dependency list into { input, why }: accepts "Input — reason" /

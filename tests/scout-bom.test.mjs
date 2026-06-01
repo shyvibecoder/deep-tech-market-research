@@ -83,3 +83,22 @@ describe("scout engine 2: bomLadderLeads", () => {
     assert.ok(leads.some((l) => l.subject === "electronic-grade quartz"));   // optical seed still produced
   });
 });
+
+import { searchTerm } from "../scripts/lib/scout.mjs";
+// Empirical-run finding: BOM subjects were too verbose for EDGAR exact-phrase discovery ("grain-
+// oriented electrical steel (GOES) 0.23-0.35mm domain-refined grades" → 0 tickers → auto-rejected).
+// searchTerm normalizes a verbose subject into a short, searchable core for discoverProxies.
+describe("scout: searchTerm (verbose subject → searchable proxy-discovery term)", () => {
+  it("strips parentheticals, cuts at the first spec/number, trims trailing filler", () => {
+    assert.equal(searchTerm("grain-oriented electrical steel (GOES) 0.23-0.35mm domain-refined grades"), "grain-oriented electrical steel");
+    assert.equal(searchTerm("HV transformer bushings rated 345 kV and above"), "HV transformer bushings");
+    assert.equal(searchTerm("large frame gas turbine hot section castings directionally solidified single crystal blades"), "large frame gas turbine");
+  });
+  it("leaves an already-concise term essentially unchanged", () => {
+    assert.equal(searchTerm("grain-oriented electrical steel"), "grain-oriented electrical steel");
+  });
+  it("handles empty / junk", () => {
+    assert.equal(searchTerm(""), "");
+    assert.equal(searchTerm(null), "");
+  });
+});

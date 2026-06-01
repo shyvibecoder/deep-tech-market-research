@@ -32,17 +32,17 @@
   },
   "proposals": [
     {
-      "id": "transformers",
-      "priced_in": "crowded",
-      "bind_window": "2028-29",
+      "id": "electricians",
+      "priced_in": "high",
+      "bind_window": "2027",
       "non_consensus": false,
       "confidence": 0.52,
-      "rationale": "Committee dispersion is moderate (0.67 agreement) with Bull and Skeptic converging on 'crowded' and Bear holding 'high' — the majority read lands at 'crowded', which is the existing call and therefore requires no change under burden-of-proof rules. All three seats independently note ETN (+23% YTD, ~10-29% above 200-DMA) and GEV (+43% YTD, ~29% above 200-DMA) are extended. The shortage narrative (128-144 week lead times, 30% fleet shortfall, pv magazine 2026-05-11, POWER Magazine 2026-01-02) is explicitly consensus (non_consensus: false) — it is widely cited, not divergent. No seat produced a d",
-      "variant_view": "Consensus correctly identifies the physical shortage but misses the duration asymmetry: the real alpha is not in the next 12-18 months of scarcity (already priced) but in whether OEM margin structures lock in pricing power through 2028-29 via long-dated service contracts and tariff-insulated domestic content requirements. If ETN or GEV disclose multi-year, fixed-price transformer supply agreements with utility or hyperscaler counterparties in upcoming 10-Qs, that converts a 'crowded narrative trade' into a 'compounding earnings durability' story — a qualitatively different re-rating catalyst t",
-      "bear_case": "The steelmanned bear is straightforward and deserves full weight: at these valuations, the shortage does not need to be wrong — it only needs to be 'less bad than feared' to trigger de-rating. Three mechanisms converge by 2027: (1) Extreme lead times (4 years) are themselves the strongest capex incentive signal; South Korean, Indian, and reshored domestic capacity responses are already underway and will hit delivery windows precisely in 2027-29, the consensus 'bind' period. (2) AI load-management and grid-edge bypass technology (ENTO/GRDX, 2025-12-04) reduces effective transformer demand per M",
+      "rationale": "Committee dispersion is moderate (0.67 agreement), with Bull, Bear, and Skeptic converging on 'high/crowded' pricing but diverging on whether the bottleneck duration justifies current multiples. Burden of proof is on change; the existing thesis — skilled electrical labor scarcity binding through 2027+ — is directionally intact but the near-term valuation extension is the dominant risk. EME/PWR/FIX/MYRG trading 16–79% above 200-DMA with YTD gains of 30–105% is a concrete, repeated signal across all three seats that the near-term scarcity is already discounted. The Bull's core non-consensus argu",
+      "variant_view": "Consensus sees the shortage and has priced the near-term bind, but likely underestimates that the data-center capex cycle (hyperscaler build-outs running through 2027–2028) creates a *multi-year* backlog conversion runway — not a one-quarter pop. The real miss is margin duration: if electrician scarcity persists as a structural gating factor rather than a cyclical one, EME/PWR/FIX/MYRG can compound backlog-to-revenue conversion at elevated margins for longer than the current multiple implies. The catalyst is sequential quarters of backlog growth *and* margin expansion in 2H26 earnings, paired ",
+      "bear_case": "The steelmanned bear is that the entire trade is a crowded consensus that has already run. At 16–79% above 200-DMA, these names price in not just the shortage but an extended supercycle. Supply response is non-linear: apprenticeship completions, immigration policy shifts, or modular/prefab electrification methods could relieve bottlenecks faster than the bull assumes. More dangerously, demand destruction is real — hyperscaler capex is notoriously lumpy and subject to abrupt pause (see 2022 cloud CapEx cuts). A single quarter of data-center CapEx guidance reduction, or a macro-driven credit tig",
       "kill_criterion": {
-        "condition": "ETN or GEV reports two consecutive quarters of transformer/GSU order book growth below 10% YoY AND average lead times publicly disclosed by either company or by NERC/DOE fall below 24 months, signaling supply normalization ahead of the 2028-29 bind window; OR either stock sustains a close more than ",
-        "by_date": "2027-06"
+        "condition": "Two consecutive quarters where EME, PWR, or FIX report backlog growth below 5% YoY AND gross margin compresses more than 150bps YoY, OR any major hyperscaler (MSFT, AMZN, GOOGL) cuts data-center CapEx guidance by more than 15% for the following fiscal year",
+        "by_date": "2027-03"
       },
       "dispersion": {
         "level": "moderate",

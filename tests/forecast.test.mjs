@@ -121,3 +121,46 @@ describe("forecast: scarcity relative-performance claims (alpha grading)", () =>
     assert.equal(sc.by_tilt.overweight.n, 1); assert.equal(sc.by_tilt.overweight.hits, 1);
   });
 });
+
+import { basketReturn, priceMap } from "../scripts/lib/forecast.mjs";
+// Audit P4/F2: the basket "return" was the ratio of price-WEIGHTED mean prices, and recomputed over
+// CHANGED membership at resolution. Fix: equal-weight mean of per-ticker returns over the FIXED
+// intersection of anchor & current membership.
+describe("forecast: basketReturn (equal-weight, fixed membership)", () => {
+  it("equal-weights per-ticker returns (a high-priced name doesn't dominate)", () => {
+    const anchor = { A: 10, B: 1000 };           // a $10 and a $1000 name
+    const now = { A: { price: 12 }, B: { price: 1050 } };  // +20% and +5%
+    assert.equal(basketReturn(anchor, now), +(((0.2) + (0.05)) / 2).toFixed(10)); // 0.125 equal-weight
+  });
+  it("uses the FIXED anchor membership — a dropped ticker at resolution doesn't corrupt the return", () => {
+    const anchor = { A: 100, B: 100 };
+    const now = { A: { price: 110 }, B: { error: "no quote" } };  // B errors → use only A
+    assert.ok(Math.abs(basketReturn(anchor, now) - 0.1) < 1e-9);   // not polluted by B's absence
+  });
+  it("null when no anchored ticker resolves", () => {
+    assert.equal(basketReturn({ A: 100 }, { A: { error: "x" } }), null);
+    assert.equal(basketReturn({}, {}), null);
+  });
+  it("priceMap captures per-ticker anchor prices for valid quotes only", () => {
+    assert.deepEqual(priceMap({ A: { price: 10 }, B: { error: "x" }, C: { price: 0 } }, ["A", "B", "C"]), { A: 10 });
+  });
+});
+
+describe("forecast: resolveDue uses equal-weight basket returns (new) + legacy fallback", () => {
+  it("NEW forecast with basket_prices resolves on equal-weight per-ticker returns", () => {
+    const f = { id: "x", type: "scarcity_rel", claim: "outperform", resolve_on: "2026-02-01",
+      basket_prices: { A: 100 }, complex_prices: { Q: 100 }, basket_at: 100, complex_at: 100, proxies: ["A"], complex_tickers: ["Q"] };
+    const now = { A: { price: 120 }, Q: { price: 105 } };  // basket +20%, complex +5% → rel +15% → outperform correct
+    const { resolved } = resolveDue([f], now, "2026-02-02");
+    assert.equal(resolved.length, 1);
+    assert.equal(resolved[0].correct, true);
+    assert.equal(resolved[0].rel, 0.15);
+  });
+  it("LEGACY forecast (no basket_prices) still resolves via the old mean-ratio path", () => {
+    const f = { id: "y", type: "scarcity_rel", claim: "outperform", resolve_on: "2026-02-01",
+      basket_at: 100, complex_at: 100, proxies: ["A"], complex_tickers: ["Q"] };
+    const { resolved } = resolveDue([f], { A: { price: 120 }, Q: { price: 105 } }, "2026-02-02");
+    assert.equal(resolved.length, 1);
+    assert.equal(resolved[0].correct, true);
+  });
+});

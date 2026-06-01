@@ -35,9 +35,18 @@ export function resolveDue(open, currentPrices, today) {
   for (const f of open || []) {
     if (today < f.resolve_on) { stillOpen.push(f); continue; }
     if (f.type === "scarcity_rel") {
-      const bNow = meanPrice(currentPrices, f.proxies), cNow = meanPrice(currentPrices, f.complex_tickers);
-      if (bNow == null || cNow == null || !f.basket_at || !f.complex_at) { stillOpen.push(f); continue; }
-      const rel = (bNow / f.basket_at - 1) - (cNow / f.complex_at - 1);
+      // P4/F2: equal-weight per-ticker returns over fixed membership (new forecasts carry basket_prices);
+      // fall back to the legacy price-weighted mean-ratio for forecasts created before this change.
+      let bRet, cRet;
+      if (f.basket_prices && f.complex_prices) {
+        bRet = basketReturn(f.basket_prices, currentPrices); cRet = basketReturn(f.complex_prices, currentPrices);
+      } else {
+        const bNow = meanPrice(currentPrices, f.proxies), cNow = meanPrice(currentPrices, f.complex_tickers);
+        bRet = (bNow != null && f.basket_at) ? bNow / f.basket_at - 1 : null;
+        cRet = (cNow != null && f.complex_at) ? cNow / f.complex_at - 1 : null;
+      }
+      if (bRet == null || cRet == null) { stillOpen.push(f); continue; }
+      const rel = bRet - cRet;
       resolved.push({ ...f, resolved_on: today, rel: +rel.toFixed(4), correct: f.claim === "underperform" ? rel < 0 : rel > 0 });
     } else {
       const q = currentPrices?.[f.subject]; const price = q && !q.error ? q.price : null;
@@ -71,6 +80,24 @@ export function meanPrice(quotes, tickers) {
   return ps.length ? ps.reduce((a, b) => a + b, 0) / ps.length : null;
 }
 
+// Audit P4/F2: per-ticker anchor prices + an EQUAL-WEIGHT basket return over FIXED membership. meanPrice
+// (a price-weighted mean) let a high-nominal-price name dominate, and recomputing it over a changed
+// membership at resolution wasn't a return at all. priceMap snapshots {ticker: price} at anchor time;
+// basketReturn averages each anchored ticker's OWN return, using only those that resolve (intersection).
+export function priceMap(quotes, tickers) {
+  const m = {};
+  for (const t of (tickers || [])) { const q = quotes?.[t]; if (q && !q.error && q.price > 0) m[t] = q.price; }
+  return m;
+}
+export function basketReturn(anchorPrices, currentQuotes) {
+  const rs = [];
+  for (const t of Object.keys(anchorPrices || {})) {
+    const q = currentQuotes?.[t]; const now = q && !q.error ? q.price : null;
+    if (now > 0 && anchorPrices[t] > 0) rs.push(now / anchorPrices[t] - 1);
+  }
+  return rs.length ? rs.reduce((a, b) => a + b, 0) / rs.length : null;
+}
+
 // A high Opportunity Score (ALPHA.md Edge 1) is a structural CLAIM — binds soon, durable,
 // not yet priced → it should outperform the complex. Grade it even when the tape is quiet.
 export const OPPORTUNITY_FORECAST_THRESHOLD = 60;
@@ -78,6 +105,7 @@ export const OPPORTUNITY_FORECAST_THRESHOLD = 60;
 export function makeScarcityForecasts(scarcities, signals, today, horizon = 42, complexTickers = []) {
   const quotes = signals?.quotes || {}, sigs = signals?.scarcity_signals || {};
   const complex_at = meanPrice(quotes, complexTickers);
+  const complex_prices = priceMap(quotes, complexTickers);   // P4: per-ticker anchor for equal-weight resolution
   if (complex_at == null) return [];
   const out = [];
   for (const s of scarcities || []) {
@@ -85,7 +113,8 @@ export function makeScarcityForecasts(scarcities, signals, today, horizon = 42, 
     const basket_at = meanPrice(quotes, s.tickers);
     if (basket_at == null) continue;
     const base = { date: today, type: "scarcity_rel", subject: s.id, proxies: s.tickers,
-      complex_tickers: complexTickers, basket_at, complex_at, horizon_days: horizon, resolve_on: addDays(today, horizon) };
+      complex_tickers: complexTickers, basket_at, complex_at, basket_prices: priceMap(quotes, s.tickers), complex_prices,
+      horizon_days: horizon, resolve_on: addDays(today, horizon) };
     if (sig.flag === "de-rating" || sig.flag === "inflecting") {
       // The tape is moving: crowded de-rates (underperform), under-priced inflects (outperform).
       out.push({ ...base, id: `${today}:scarcity_rel:${s.id}`, claim: sig.flag === "de-rating" ? "underperform" : "outperform", source: "de-rating" });

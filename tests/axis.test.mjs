@@ -1,6 +1,6 @@
 import { describe, it } from "node:test";
 import assert from "node:assert/strict";
-import { basketReturns, axisCorrelation } from "../scripts/lib/axis.mjs";
+import { basketReturns, axisCorrelation, basketStats } from "../scripts/lib/axis.mjs";
 
 const DATES = (n) => Array.from({ length: n }, (_, i) => new Date(Date.UTC(2020, 0, 1) + i * 86400000).toISOString().slice(0, 10));
 
@@ -31,6 +31,23 @@ describe("axis: basketReturns", () => {
     assert.equal(rets.length, 39);
     assert.ok(Math.abs(rets[0] - 0.05) < 1e-9); // (+10% + 0%)/2
     assert.ok(Math.abs(rets[1]) < 1e-9);        // both flat after
+  });
+});
+
+describe("axis: basketStats (returns + risk + explicit window)", () => {
+  it("reports CAGR, maxDD and the window for a steadily-growing basket", () => {
+    const dates = DATES(253);
+    const grow = [100]; for (let i = 1; i < 253; i++) grow.push(grow[i - 1] * Math.pow(2, 1 / 252)); // doubles in 1yr
+    const s = { A: { dates, closes: grow } };
+    const r = basketStats(s, ["A"]);
+    assert.ok(r && r.years >= 0.9 && r.years <= 1.1, `years ${r?.years}`);
+    assert.ok(Math.abs(r.cagr - 1.0) < 0.05, `cagr ${r.cagr} ~ 100%`);
+    assert.ok(r.maxDD <= 0.001, `monotone series has ~no drawdown, got ${r.maxDD}`);
+    assert.equal(r.start, dates[0]);
+  });
+  it("returns null on thin history", () => {
+    const dates = DATES(20);
+    assert.equal(basketStats({ A: { dates, closes: dates.map(() => 100) } }, ["A"]), null);
   });
 });
 

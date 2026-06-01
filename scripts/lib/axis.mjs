@@ -3,6 +3,23 @@
 // AI-capex complex on history. Pure ESM, reuses the G1 OLS core. The whole point of this session's lesson:
 // qualify a 2nd axis by MEASURED correlation, not by narrative.
 import { alignByDate, ols } from "./factor.mjs";
+import { basketIndex, portfolioMetrics } from "../../web/metrics.mjs";
+
+// Return + risk profile of an equal-weight basket over its FULL common-date window. A 2nd axis must
+// EARN its capital, not just be uncorrelated — low correlation to a loser is worthless. Returns null on
+// thin overlap. `years`/`start`/`end` make the window explicit so a short history can't masquerade as long.
+export function basketStats(seriesByTicker, tickers, periodsPerYear = 252) {
+  const weights = {};
+  for (const t of tickers || []) if (seriesByTicker[t]?.dates?.length) weights[t] = 1;
+  const idx = basketIndex(seriesByTicker, weights);
+  if (idx.values.length < 60) return null;
+  const m = portfolioMetrics(idx.values, { periodsPerYear });
+  return {
+    start: idx.dates[0], end: idx.dates[idx.dates.length - 1],
+    years: +(idx.values.length / periodsPerYear).toFixed(1),
+    cagr: m.cagr, vol: m.vol, sharpe: m.sharpe, calmar: m.calmar, maxDD: m.max_drawdown, n: m.n,
+  };
+}
 
 // Equal-weight daily returns of a basket over the common dates of its tickers (fixed membership per day:
 // a ticker only contributes on days it has a valid prior+current close, so ragged/IPO histories are fine).

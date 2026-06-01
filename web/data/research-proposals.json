@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "generated": "2026-06-01",
-  "prompt_version": 5,
+  "prompt_version": null,
   "roster": {
     "providers": [
       "Anthropic",
@@ -21,34 +21,16 @@
     "seat_swaps": []
   },
   "committee_health": {
-    "scarcities": 24,
+    "scarcities": 26,
     "roleAnswered": {
-      "bull": 24,
-      "bear": 24,
-      "skeptic": 24
+      "bull": 26,
+      "bear": 26,
+      "skeptic": 25
     },
-    "errors": [],
+    "errors": [
+      "Unexpected end of JSON input"
+    ],
     "degraded": false
   },
-  "proposals": [
-    {
-      "id": "electricians",
-      "priced_in": "high",
-      "bind_window": "2027",
-      "non_consensus": false,
-      "confidence": 0.52,
-      "rationale": "Committee dispersion is moderate (0.67 agreement), with Bull, Bear, and Skeptic converging on 'high/crowded' pricing but diverging on whether the bottleneck duration justifies current multiples. Burden of proof is on change; the existing thesis — skilled electrical labor scarcity binding through 2027+ — is directionally intact but the near-term valuation extension is the dominant risk. EME/PWR/FIX/MYRG trading 16–79% above 200-DMA with YTD gains of 30–105% is a concrete, repeated signal across all three seats that the near-term scarcity is already discounted. The Bull's core non-consensus argu",
-      "variant_view": "Consensus sees the shortage and has priced the near-term bind, but likely underestimates that the data-center capex cycle (hyperscaler build-outs running through 2027–2028) creates a *multi-year* backlog conversion runway — not a one-quarter pop. The real miss is margin duration: if electrician scarcity persists as a structural gating factor rather than a cyclical one, EME/PWR/FIX/MYRG can compound backlog-to-revenue conversion at elevated margins for longer than the current multiple implies. The catalyst is sequential quarters of backlog growth *and* margin expansion in 2H26 earnings, paired ",
-      "bear_case": "The steelmanned bear is that the entire trade is a crowded consensus that has already run. At 16–79% above 200-DMA, these names price in not just the shortage but an extended supercycle. Supply response is non-linear: apprenticeship completions, immigration policy shifts, or modular/prefab electrification methods could relieve bottlenecks faster than the bull assumes. More dangerously, demand destruction is real — hyperscaler capex is notoriously lumpy and subject to abrupt pause (see 2022 cloud CapEx cuts). A single quarter of data-center CapEx guidance reduction, or a macro-driven credit tig",
-      "kill_criterion": {
-        "condition": "Two consecutive quarters where EME, PWR, or FIX report backlog growth below 5% YoY AND gross margin compresses more than 150bps YoY, OR any major hyperscaler (MSFT, AMZN, GOOGL) cuts data-center CapEx guidance by more than 15% for the following fiscal year",
-        "by_date": "2027-03"
-      },
-      "dispersion": {
-        "level": "moderate",
-        "agreement": 0.67
-      },
-      "prompt_version": 5
-    }
-  ]
+  "proposals": []
 }

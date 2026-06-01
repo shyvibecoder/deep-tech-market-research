@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated": "2026-05-31",
+  "updated": "2026-06-01",
   "history": {
     "electrons": [
       {
@@ -15,6 +15,12 @@
         "date": "2026-05-30",
         "priced_in": "high",
         "bind_window": "now",
+        "non_consensus": false
+      },
+      {
+        "date": "2026-06-01",
+        "priced_in": "crowded",
+        "bind_window": "2028-29",
         "non_consensus": false
       }
     ],
@@ -80,6 +86,12 @@
         "priced_in": "low",
         "bind_window": "now",
         "non_consensus": true
+      },
+      {
+        "date": "2026-06-01",
+        "priced_in": "medium",
+        "bind_window": "now",
+        "non_consensus": true
       }
     ],
     "graphite": [
@@ -88,12 +100,24 @@
         "priced_in": "low",
         "bind_window": "2027",
         "non_consensus": true
+      },
+      {
+        "date": "2026-06-01",
+        "priced_in": "medium",
+        "bind_window": "2027",
+        "non_consensus": true
       }
     ],
     "hbm": [
       {
         "date": "2026-05-30",
         "priced_in": "medium",
+        "bind_window": "now",
+        "non_consensus": true
+      },
+      {
+        "date": "2026-06-01",
+        "priced_in": "high",
         "bind_window": "now",
         "non_consensus": true
       }
@@ -192,6 +216,22 @@
         "priced_in": "low",
         "bind_window": "2027",
         "non_consensus": true
+      }
+    ],
+    "health-defensive": [
+      {
+        "date": "2026-06-01",
+        "priced_in": "medium",
+        "bind_window": "now",
+        "non_consensus": false
+      }
+    ],
+    "water-climate": [
+      {
+        "date": "2026-06-01",
+        "priced_in": "medium",
+        "bind_window": "now",
+        "non_consensus": false
       }
     ]
   }

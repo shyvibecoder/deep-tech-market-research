@@ -31,7 +31,7 @@ import { makeForecasts, resolveDue, updateScorecard, makeScarcityForecasts, make
 import { relativeStrength, deRatingSignal } from "./lib/derating.mjs";
 import { newsForQuery } from "./lib/news.mjs";
 import { chokepointHeat } from "./lib/chokepoints.mjs";
-import { rankOpportunities, opportunityScore } from "./lib/opportunity.mjs";
+import { rankOpportunities, opportunityScore, aiCapexOnly } from "./lib/opportunity.mjs";
 import { forcedFlowSignal, reconcileWithTiming } from "./lib/forced-flow.mjs";
 import { rebalanceBoth } from "./lib/sizing.mjs";
 import { v23State, dislocationEntryWindow, compositeStress } from "./lib/v23.mjs";
@@ -93,6 +93,12 @@ const TODAY = new Date().toISOString().slice(0, 10);
 
 // Fail loudly on malformed input data before doing any work.
 assertValid("input data", validateInputs({ portfolio, scarcities, triggers }));
+
+// AI-capex sleeve only — the Opportunity Score / de-rating / forced-flow / opportunity-weighted sizing
+// machinery models duration mispricing in the BUILD-OUT and must not rank or size diversifiers (the
+// second axis earns its place by lowering drawdown, judged separately by the AI-capex gate). Their
+// tickers DO stay in the price/news universe below so the dashboard still tracks and reports them.
+const aiScarcities = aiCapexOnly(scarcities.scarcities);
 
 // Build ticker universe from holdings + scarcity tickers (skip placeholders).
 const fromHoldings = portfolio.holdings.map((h) => h.ticker);
@@ -368,7 +374,7 @@ if (!OFFLINE) {
 let signal_backtest = null;
 if (!OFFLINE && supabaseConfigured()) {
   try {
-    const groups = scarcities.scarcities.map((s) => ({ id: s.id, tickers: (s.tickers || []).filter(isTradeable) })).filter((g) => g.tickers.length);
+    const groups = aiScarcities.map((s) => ({ id: s.id, tickers: (s.tickers || []).filter(isTradeable) })).filter((g) => g.tickers.length);
     const complexT = portfolio.holdings.filter((h) => securities[h.ticker]?.type === "etf").map((h) => h.ticker);
     const allTk = [...new Set([...groups.flatMap((g) => g.tickers), ...complexT])];
     const sbt = {};
@@ -440,7 +446,7 @@ const complexMom = (() => {
   return moms.length ? moms.reduce((a, b) => a + b, 0) / moms.length : null;
 })();
 {
-  for (const s of scarcities.scarcities) {
+  for (const s of aiScarcities) {
     const moms = s.tickers.map((t) => enriched[t]?.mom_1m).filter((x) => typeof x === "number");
     const rs = relativeStrength(moms, complexMom);
     scarcity_signals[s.id] = { ...deRatingSignal(s.priced_in, rs), ...opportunityScore(s, { liveCrowding: crowdingById[s.id] ?? null }) };
@@ -452,7 +458,7 @@ const complexMom = (() => {
 // --- Opportunity Score: rank the scarcity universe by ALPHA.md Edge 1 (duration mispricing).
 // Where the structural edge is BEFORE the tape moves: binds soon + durable + defensible + NOT
 // yet priced (the human label refined by LIVE crowding). From source fields, not a backtest. ---
-const opportunities = rankOpportunities(scarcities.scarcities, crowdingById);
+const opportunities = rankOpportunities(aiScarcities, crowdingById);
 
 // --- Forced-flow / neglect (ALPHA.md Edge 3): mechanical de-rating into an INTACT thesis =
 // "buy what others are forced to sell"; into a weak thesis = broken (avoid). Read from the
@@ -462,7 +468,7 @@ const opportunities = rankOpportunities(scarcities.scarcities, crowdingById);
 // now). They must never contradict on screen — so when the timing overlay has the brakes on
 // (defensive/caution or macro-stress), an "accumulate" is reframed as a deploy-on-the-trigger
 // PRIORITY, not a buy-now instruction. This keeps the overlays one coherent system.
-for (const s of scarcities.scarcities) {
+for (const s of aiScarcities) {
   const ff = forcedFlowSignal({ quotes: enriched, tickers: s.tickers, opportunity: scarcity_signals[s.id]?.score ?? null, today: TODAY });
   scarcity_signals[s.id].forced_flow = reconcileWithTiming(ff, regime);
 }
@@ -488,7 +494,7 @@ try {
   // shrinks the weight, so the thesis→allocation link is preserved. Per ticker = best (max) across its
   // scarcities. (LOW-9: a ticker in no scarcity gets no entry → opportunityFactor defaults neutral 1.0.)
   const oppByTicker = {};
-  for (const s of scarcities.scarcities) {
+  for (const s of aiScarcities) {
     const ss = scarcity_signals[s.id];
     if (!ss || !Number.isFinite(ss.static_gate) || !Number.isFinite(ss.quality)) continue;
     const staticOpp = Math.min(100, 100 * ss.static_gate * ss.quality * (ss.contrarian ? 1.15 : 1));
@@ -603,7 +609,7 @@ let scorecard = null;
     .filter((h) => securities[h.ticker]?.type === "etf").map((h) => h.ticker);
   const fresh = [
     ...makeForecasts({ regime, quotes: enriched }, TODAY),
-    ...makeScarcityForecasts(scarcities.scarcities, { quotes: enriched, scarcity_signals }, TODAY, 42, complexTickers),
+    ...makeScarcityForecasts(aiScarcities, { quotes: enriched, scarcity_signals }, TODAY, 42, complexTickers),
     ...makeSizingForecast(rebalance, enriched, TODAY), // CRITICAL-2: grade the G3 tilt vs the research baseline
   ];
   const openIds = new Set(stillOpen.map((f) => f.id));
@@ -629,7 +635,7 @@ if (rebalance) {
 let digest = "(no LLM key set — set GROQ_API_KEY, OPENROUTER_API_KEY, or GEMINI_API_KEY in repo secrets to enable the agent digest)";
 if (llmAvailable() && !OFFLINE) {
   try {
-    const slim = scarcities.scarcities.map((s) => ({ id: s.id, scarcity: s.scarcity, bind: s.bind_window, priced: s.priced_in, tickers: s.tickers }));
+    const slim = aiScarcities.map((s) => ({ id: s.id, scarcity: s.scarcity, bind: s.bind_window, priced: s.priced_in, tickers: s.tickers }));
     const slimQ = Object.fromEntries(Object.entries(enriched).map(([k, v]) => [k, v?.error ? null : { ytd: v.ytd, off_high: v.pct_off_high, crowding: v.crowding, fwd_pe: v.forward_pe ?? null }]));
     const slimF = filings.map((f) => ({ ticker: f.ticker, form: f.form, date: f.date, items: f.items }));
     const slimN = news.map((n) => ({ scarcity: n.scarcity, title: n.title, date: n.date }));

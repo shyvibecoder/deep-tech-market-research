@@ -1,7 +1,11 @@
 {
   "schema_version": 1,
-  "updated": "2026-05-30",
+  "updated": "2026-06-01",
   "legend": {
+    "axis": [
+      "ai-capex",
+      "diversifier"
+    ],
     "bind_window": [
       "now",
       "2027",
@@ -433,6 +437,72 @@
       "news_query": "reinforcement learning environments agentic training data",
       "last_reviewed": "2026-05-30",
       "thesis": "Public text (~300T tokens) exhausting 2026-2032. Largely private; public proxies thin."
+    },
+    {
+      "id": "health-defensive",
+      "axis": "diversifier",
+      "sector": "Health",
+      "scarcity": "Defensive health demand (pharma / devices)",
+      "bind_window": "now",
+      "priced_in": "medium",
+      "durability": "very-high",
+      "substitution_risk": "low",
+      "tickers": [
+        "JNJ",
+        "PFE",
+        "MRK",
+        "ABT",
+        "MDT"
+      ],
+      "non_consensus": false,
+      "news_query": "pharma medical device demand demographics aging healthcare spending",
+      "last_reviewed": "2026-06-01",
+      "diversifier_evidence": {
+        "selected": "second axis (drawdown diversifier) — chosen via axis-check 2026-06-01",
+        "common_window": "2008-04-23..2026-06-01",
+        "maxDD": 0.361,
+        "mktBeta": 0.65,
+        "aiBeta": -0.314,
+        "aiT": -22.62,
+        "gate": "pass (aiβ negative — does not amplify the AI-capex build-out)",
+        "blend_with": "water-climate",
+        "blend_maxDD": 0.312,
+        "blend_compRho": 0.655,
+        "caveat": "Health and water-climate share a rates/duration factor (compρ 0.655) — the blend softens an AI air-pocket but is not independent of a rate shock."
+      },
+      "thesis": "SECOND AXIS, not an AI-capex bottleneck — held to LOWER the book's drawdown. Defensive demographic/biology demand (excludes AI-narrative / TechBio names by design). axis-check (apples-to-apples 2008+): lowest market beta of any candidate (0.65), 36% maxDD, and a statistically robust negative AI-capex loading (aiβ -0.314, t -22.6) — a reliable mild HEDGE that does not amplify the build-out. Paired 50/50 with water-climate the sleeve drawdown drops to 31% (below either alone, under the -35% objective). Judge on drawdown reduction, NOT the Opportunity Score."
+    },
+    {
+      "id": "water-climate",
+      "axis": "diversifier",
+      "sector": "Climate-adaptation",
+      "scarcity": "Water / climate-adaptation infrastructure",
+      "bind_window": "now",
+      "priced_in": "medium",
+      "durability": "high",
+      "substitution_risk": "low",
+      "tickers": [
+        "PHO",
+        "AWK",
+        "WTRG"
+      ],
+      "non_consensus": false,
+      "news_query": "water utility infrastructure scarcity treatment climate adaptation capex",
+      "last_reviewed": "2026-06-01",
+      "diversifier_evidence": {
+        "selected": "second axis (drawdown diversifier) — chosen via axis-check 2026-06-01",
+        "common_window": "2008-04-23..2026-06-01",
+        "maxDD": 0.338,
+        "mktBeta": 0.74,
+        "aiBeta": -0.306,
+        "aiT": -18.18,
+        "gate": "pass (aiβ negative — does not amplify the AI-capex build-out)",
+        "blend_with": "health-defensive",
+        "blend_maxDD": 0.312,
+        "blend_compRho": 0.655,
+        "caveat": "Confirmed NOT held (no FIW position) — genuine fresh breadth, not a double-down. Shares a rates/duration factor with health (compρ 0.655)."
+      },
+      "thesis": "SECOND AXIS, not an AI-capex bottleneck — fresh breadth held to LOWER drawdown. Water scarcity / regulated climate-adaptation infrastructure: a durable demand driver largely independent of the AI-capex cycle. axis-check (2008+): LOWEST standalone drawdown of any candidate (34%), mktβ 0.74, robust negative AI-capex loading (aiβ -0.306, t -18.2). Different demand driver from health, so a 50/50 blend cuts the sleeve drawdown to 31% — the diversification payoff. Judge on drawdown reduction, NOT the Opportunity Score."
     }
   ]
 }

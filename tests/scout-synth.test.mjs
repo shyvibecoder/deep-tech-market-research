@@ -1,11 +1,53 @@
 import { describe, it } from "node:test";
 import assert from "node:assert/strict";
-import { draftScarcity, legibilityTag, scoutSeenUpdate } from "../scripts/lib/scout.mjs";
+import { draftScarcity, legibilityTag, scoutSeenUpdate, gateAiCapex, draftFromLead } from "../scripts/lib/scout.mjs";
 
 // Step 2 (SCOUT-DESIGN): turn a raw lead into a committee-ingestible DRAFT scarcity object. The
 // committee then CORRECTS the draft fields — so the draft just needs the SHAPE runCommittee expects
 // (id, scarcity, tickers, thesis, first-guess bind_window/priced_in/durability/substitution_risk),
 // never asserting conviction it hasn't earned. Pure → testable without network/LLM.
+describe("scout: gateAiCapex (axis-check residual-beta gate wired into the scout)", () => {
+  it("REJECTS a diversifier candidate whose residual AI-capex loading is positive (it amplifies the build-out)", () => {
+    const g = gateAiCapex({ aiBeta: 0.42 }, { axis: "diversifier" });
+    assert.equal(g.pass, false);
+    assert.equal(g.axis, "diversifier");
+    assert.match(g.reason, /amplifies/);
+  });
+  it("PASSES a diversifier whose loading is negative/zero (a genuine mild hedge)", () => {
+    assert.equal(gateAiCapex({ aiBeta: -0.314 }, { axis: "diversifier" }).pass, true);
+    assert.equal(gateAiCapex({ aiBeta: 0.0 }, { axis: "diversifier" }).pass, true);
+  });
+  it("honors a custom aiBetaMax threshold", () => {
+    assert.equal(gateAiCapex({ aiBeta: 0.2 }, { axis: "diversifier", aiBetaMax: 0.1 }).pass, false);
+    assert.equal(gateAiCapex({ aiBeta: 0.2 }, { axis: "diversifier", aiBetaMax: 0.3 }).pass, true);
+  });
+  it("does NOT block the ai-capex axis — exposure is wanted there (informational only)", () => {
+    const g = gateAiCapex({ aiBeta: 0.9 }, { axis: "ai-capex" });
+    assert.equal(g.pass, true);
+    assert.match(g.reason, /exposure wanted/);
+  });
+  it("never hard-fails a diversifier with no price history — defers to the committee", () => {
+    const g = gateAiCapex(null, { axis: "diversifier" });
+    assert.equal(g.pass, true);
+    assert.equal(g.aiBeta, null);
+    assert.match(g.reason, /committee to verify/);
+  });
+});
+
+describe("scout: draftFromLead axis/gate stamping is opt-in", () => {
+  const L = { engine: "constraint-shadow", subject: "x", tickers: ["AAA"], lead: { phrases: ["on allocation"] } };
+  it("default AI-capex drafts carry NO axis/gate field (back-compat)", () => {
+    const d = draftFromLead(L);
+    assert.equal("axis" in d, false);
+    assert.equal("gate" in d, false);
+  });
+  it("a diversifier lead stamps axis + runs the gate", () => {
+    const d = draftFromLead({ ...L, axis: "diversifier" }, { loading: { aiBeta: 0.5 } });
+    assert.equal(d.axis, "diversifier");
+    assert.equal(d.gate.pass, false);
+  });
+});
+
 describe("scout: draftScarcity (lead → committee-ingestible draft)", () => {
   const lead = { ticker: "AAA", company: "Alpha Inc", phraseCount: 3, phrases: ["lead times extended", "on allocation", "single source of supply"], mentions: 6 };
 

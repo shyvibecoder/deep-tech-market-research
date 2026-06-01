@@ -1,6 +1,25 @@
 import { describe, it } from "node:test";
 import assert from "node:assert/strict";
-import { opportunityScore, rankOpportunities, liveGate } from "../scripts/lib/opportunity.mjs";
+import { opportunityScore, rankOpportunities, liveGate, isDiversifier, aiCapexOnly } from "../scripts/lib/opportunity.mjs";
+
+describe("opportunity: axis split keeps diversifiers out of the AI-capex machinery", () => {
+  const list = [
+    { id: "copper", axis: "ai-capex" },
+    { id: "turbines" },                       // absent axis = ai-capex (back-compat default)
+    { id: "health-defensive", axis: "diversifier" },
+  ];
+  it("isDiversifier flags only the diversifier sleeve", () => {
+    assert.equal(isDiversifier({ axis: "diversifier" }), true);
+    assert.equal(isDiversifier({ axis: "ai-capex" }), false);
+    assert.equal(isDiversifier({}), false);   // default
+  });
+  it("aiCapexOnly drops diversifiers but keeps untagged (default) entries", () => {
+    assert.deepEqual(aiCapexOnly(list).map((s) => s.id), ["copper", "turbines"]);
+  });
+  it("rankOpportunities over aiCapexOnly never scores a diversifier", () => {
+    assert.equal(rankOpportunities(aiCapexOnly(list)).some((o) => o.id === "health-defensive"), false);
+  });
+});
 
 describe("opportunity: live priced-in proxy refines the gate with the tape", () => {
   it("maps crowding 0..100 to a gate (high crowding = more priced = lower)", () => {

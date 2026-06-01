@@ -43,9 +43,13 @@ describe("coherence: scanner emits every section the system depends on", () => {
 });
 
 describe("coherence: cross-feature dependencies line up", () => {
-  it("every scarcity has a scarcity_signals entry (radar alpha flag)", () => {
+  it("every AI-capex scarcity has a scarcity_signals entry; diversifiers are excluded by design", () => {
     const sig = r("signals.json"), scar = r("scarcities.json");
-    for (const sc of scar.scarcities) assert.ok(sc.id in sig.scarcity_signals, `no signal for scarcity ${sc.id}`);
+    for (const sc of scar.scarcities) {
+      const expected = sc.axis !== "diversifier"; // the Opportunity/de-rating machinery is AI-capex-only
+      assert.equal(sc.id in sig.scarcity_signals, expected,
+        expected ? `no signal for AI-capex scarcity ${sc.id}` : `diversifier ${sc.id} should NOT be scored by the AI-capex machinery`);
+    }
   });
   it("dca.json holdings exactly match portfolio holdings", () => {
     const dca = r("dca.json"), port = r("portfolio.json");

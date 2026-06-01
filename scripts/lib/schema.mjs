@@ -15,6 +15,10 @@ const BIND = ["now", "2027", "2028-29", "2030+", "physics-floor"];
 const PRICED = ["low", "medium", "high", "crowded"];
 const DURABILITY = ["low", "medium", "high", "very-high"];
 const SUBST = ["low", "medium", "high"];
+// Which sleeve a scarcity belongs to. Absent/`ai-capex` = the primary AI build-out axis (the default,
+// so existing entries are unchanged). `diversifier` = the SECOND axis: defensive names held to LOWER the
+// book's drawdown, judged by the AI-capex gate (must NOT amplify the build-out), not by duration mispricing.
+const AXIS = ["ai-capex", "diversifier"];
 const ACCOUNTS = ["ira", "taxable"];
 const TRIGGER_TYPES = ["auto", "manual"];
 const TRIGGER_STATUS = ["armed", "monitor", "fired"];
@@ -75,6 +79,7 @@ export function validateScarcities(s, errors = []) {
     check(errors, isArr(x.tickers), `${at}: tickers must be an array`);
     check(errors, isBool(x.non_consensus), `${at}: non_consensus must be a boolean`);
     check(errors, isStr(x.thesis), `${at}: thesis required`);
+    if ("axis" in x) oneOf(errors, x.axis, AXIS, `${at}: axis`);
     if ("confidence" in x && x.confidence != null) check(errors, isNum(x.confidence) && x.confidence >= 0 && x.confidence <= 1, `${at}: confidence must be 0..1`);
     if ("last_reviewed" in x) check(errors, isStr(x.last_reviewed) && !Number.isNaN(Date.parse(x.last_reviewed)), `${at}: last_reviewed must be a date string`);
   });

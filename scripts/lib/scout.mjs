@@ -162,6 +162,29 @@ export function draftScarcity(lead, { proxies = [], subject = "", bind_window = 
   };
 }
 
+// AI-capex GATE — wires the axis-check residual-beta test (axis.mjs::aiCapexLoading) into the scout so a
+// candidate's RESIDUAL AI-capex loading (`aiBeta`, the build-out sensitivity AFTER market beta) governs
+// admission per axis:
+//   • diversifier axis — a POSITIVE loading means the name amplifies the very build-out it's meant to
+//     hedge, so it FAILS the gate (the second axis exists to LOWER, not add to, AI-capex concentration);
+//   • ai-capex axis — informational only (the build-out sleeve WANTS exposure), never blocks.
+// `loading` is precomputed upstream (where price history exists); a missing loading never hard-fails —
+// the committee verifies. Returns { pass, axis, aiBeta, reason }. Pure → fixture-testable.
+export function gateAiCapex(loading, { axis = "ai-capex", aiBetaMax = 0.3 } = {}) {
+  const aiBeta = loading && Number.isFinite(loading.aiBeta) ? loading.aiBeta : null;
+  if (axis !== "diversifier") {
+    return { pass: true, axis, aiBeta, reason: aiBeta == null ? "ai-capex axis (no loading)" : "ai-capex axis (exposure wanted)" };
+  }
+  if (aiBeta == null) return { pass: true, axis, aiBeta: null, reason: "diversifier: no price history to gate — committee to verify" };
+  const pass = aiBeta <= aiBetaMax;
+  return {
+    pass, axis, aiBeta: +aiBeta.toFixed(3),
+    reason: pass
+      ? `diversifier: aiβ ${aiBeta.toFixed(3)} ≤ ${aiBetaMax} (does not amplify AI-capex)`
+      : `diversifier REJECTED: aiβ ${aiBeta.toFixed(3)} > ${aiBetaMax} (amplifies the build-out it should hedge)`,
+  };
+}
+
 // Soft anti-consensus signal (D-gate): legibility = mainstream financial coverage vs primary
 // (filing/trade/patent) coverage. Heavy financial coverage → likely already priced → DOWNWEIGHT
 // (penalty), never a hard drop; the committee still evaluates it and the Bear seat is the real filter.
@@ -178,11 +201,16 @@ export function legibilityTag({ financialCoverage = 0, primaryCoverage = 0 } = {
 
 // Build a committee-ingestible DRAFT from ANY engine's lead; the thesis is tailored per engine so the
 // committee (and the reviewer) sees WHERE the lead came from.
-export function draftFromLead(L) {
+export function draftFromLead(L, { loading = null } = {}) {
   const phrases = L?.lead?.phrases || [];
   const draft = draftScarcity({ ticker: L?.tickers?.[0], company: L?.lead?.company, phrases },
     { proxies: L?.tickers || [], subject: L?.subject, bind_window: L?.bind_window || "2027" });
   draft.engine = L?.engine || "constraint-shadow";
+  // Axis + gate (opt-in: only stamped when this lead targets the diversifier sleeve or a loading was
+  // computed) — so default AI-capex scout drafts are byte-for-byte unchanged.
+  const axis = L?.axis === "diversifier" ? "diversifier" : null;
+  if (axis) draft.axis = axis;
+  if (loading || axis) draft.gate = gateAiCapex(loading, { axis: axis || "ai-capex" });
   if (L?.lead?.ladder_from) {
     draft.ladder_from = L.lead.ladder_from;
     draft.thesis = `Scout (BOM ladder from "${L.lead.ladder_from}"): "${L.subject}" is an upstream dependency of a known scarcity${L.lead.why ? ` — ${L.lead.why}` : ""}. The supplier of a scarce thing is the highest-prior place to find the next scarce thing. Committee to confirm it's a real, durable, not-yet-priced chokepoint.`;

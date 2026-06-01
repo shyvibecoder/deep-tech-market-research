@@ -101,18 +101,19 @@ export function targetWeights(holdings, {
 
 // Actionable plan vs CURRENT holdings (marketValue per ticker; defaults to base target when absent,
 // so the plan shows how risk/signal weighting differs from the static research plan). Applies funding.
-export function rebalancePlan(targets, { currentUsd = {}, taxableTrimOk = [] } = {}) {
+export function rebalancePlan(targets, { currentUsd = {}, taxableTrimOk = [], cashBySleeve = {} } = {}) {
   const okSet = new Set(taxableTrimOk);
-  let buy = 0, sell = 0, blocked = 0;
+  const acct = {}; // per-sleeve tallies so funding is checked sleeve-by-sleeve
   const rows = (targets || []).map((t) => {
     const current = Number.isFinite(currentUsd[t.ticker]) ? currentUsd[t.ticker] : t.base_usd;
     const delta = +(t.target_usd - current).toFixed(0);
+    const a = (acct[t.account] ||= { buy: 0, sell: 0, blocked: 0 });
     let action, actioned = delta;
-    if (delta > 0) { action = "buy"; buy += delta; }
+    if (delta > 0) { action = "buy"; a.buy += delta; }
     else if (delta < 0) {
       if (t.account === "taxable" && !okSet.has(t.ticker)) {
-        action = "hold (anchor — trim bar not met)"; actioned = 0; blocked += -delta;
-      } else { action = t.account === "ira" ? "trim (funds buys)" : "trim (high-conviction)"; sell += -delta; }
+        action = "hold (anchor — trim bar not met)"; actioned = 0; a.blocked += -delta;
+      } else { action = t.account === "ira" ? "trim (funds buys)" : "trim (high-conviction)"; a.sell += -delta; }
     } else action = "hold";
     return {
       ticker: t.ticker, account: t.account, target_weight: t.target_weight,
@@ -120,9 +121,17 @@ export function rebalancePlan(targets, { currentUsd = {}, taxableTrimOk = [] } =
       delta_usd: delta, actioned_usd: actioned, action,
     };
   });
+  // HIGH-5: buys must be funded. Per sleeve, NEW cash needed = buys not covered by actioned sells +
+  // that sleeve's available dry powder. The IRA self-funds (buy≈sell) so it nets ~0; the taxable sleeve,
+  // whose anchor trims are blocked, surfaces the real outlay instead of implying free money.
+  let buy = 0, sell = 0, blocked = 0, needCash = 0;
+  for (const [name, v] of Object.entries(acct)) {
+    buy += v.buy; sell += v.sell; blocked += v.blocked;
+    needCash += Math.max(0, v.buy - v.sell - (cashBySleeve[name] || 0));
+  }
   return { rows, summary: {
-    buy_usd: +buy.toFixed(0), sell_usd: +sell.toFixed(0),
-    net_usd: +(buy - sell).toFixed(0), blocked_trim_usd: +blocked.toFixed(0),
+    buy_usd: +buy.toFixed(0), sell_usd: +sell.toFixed(0), net_usd: +(buy - sell).toFixed(0),
+    blocked_trim_usd: +blocked.toFixed(0), needs_new_cash_usd: +needCash.toFixed(0),
   } };
 }
 
@@ -138,7 +147,7 @@ export function rebalanceBoth(holdings, inputs = {}) {
     sleeveTotals = hs.reduce((a, h) => { a[h.account] = (a[h.account] || 0) + inputs.currentUsd[h.ticker]; return a; }, {});
   }
   const wInputs = { ...inputs, sleeveTotals };
-  const planArgs = { currentUsd: inputs.currentUsd, taxableTrimOk: inputs.taxableTrimOk };
+  const planArgs = { currentUsd: inputs.currentUsd, taxableTrimOk: inputs.taxableTrimOk, cashBySleeve: inputs.cashBySleeve };
   return {
     research: rebalancePlan(targetWeights(hs, { ...wInputs, mode: "research" }), planArgs),
     signal: rebalancePlan(targetWeights(hs, { ...wInputs, mode: "signal" }), planArgs),

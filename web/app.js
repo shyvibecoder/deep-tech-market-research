@@ -334,9 +334,13 @@ function renderRebalance() {
   const resById = Object.fromEntries(rb.research.rows.map((r) => [r.ticker, r]));
   const rows = rb.signal.rows.filter((r) => r.action !== "hold").sort((a, b) => Math.abs(b.delta_usd) - Math.abs(a.delta_usd));
   const s = rb.signal.summary;
-  box.innerHTML = `<h3>Rebalance plan <button class="help" data-help="rebalance">?</button> <span class="foot">— volatility-tilted target weights → buy/sell · <strong>advisory, ungraded</strong> · ±${rb.risk_cap_pct}% vol tilt · ${esc(rb.basis || "")}</span></h3>` +
+  const grade = rb.graded && rb.tilt_grade
+    ? `graded: ${rb.tilt_grade.hits}/${rb.tilt_grade.n} tilt-beats-baseline (${Math.round((rb.tilt_grade.hit_rate || 0) * 100)}%)`
+    : "<strong>advisory · ungraded</strong> (recording — grades accrue ~42d)";
+  box.innerHTML = `<h3>Rebalance plan <button class="help" data-help="rebalance">?</button> <span class="foot">— volatility-tilted target weights → buy/sell · ${grade} · ±${rb.risk_cap_pct}% vol tilt · ${esc(rb.basis || "")}</span></h3>` +
     `<p class="foot">Signal plan: <span class="pos">buy ${fmtK(s.buy_usd)}</span> · <span class="neg">sell ${fmtK(s.sell_usd)}</span> · net ${fmtK(s.net_usd)}` +
-      (s.blocked_trim_usd ? ` · <span class="neg">${fmtK(s.blocked_trim_usd)} anchor-trim held (taxable bar not met)</span>` : "") + `</p>` +
+      (s.blocked_trim_usd ? ` · <span class="neg">${fmtK(s.blocked_trim_usd)} anchor-trim held</span>` : "") +
+      (s.needs_new_cash_usd ? ` · <span class="neg">needs new cash ${fmtK(s.needs_new_cash_usd)}</span>` : "") + `</p>` +
     (rows.length ? `<table class="mine"><thead><tr><th>Ticker</th><th>Acct</th><th>Now</th><th>Signal →</th><th>Δ (signal)</th><th>Δ (research)</th><th>Action</th></tr></thead><tbody>${
       rows.map((r) => `<tr><td><strong>${esc(r.ticker)}</strong></td><td>${esc(r.account)}</td><td>${fmtK(r.current_usd)}</td><td>${fmtK(r.target_usd)}</td><td class="${r.delta_usd >= 0 ? "pos" : "neg"}">${r.delta_usd > 0 ? "+" : ""}${fmtK(r.delta_usd)}</td><td class="foot">${resById[r.ticker] ? (resById[r.ticker].delta_usd > 0 ? "+" : "") + fmtK(resById[r.ticker].delta_usd) : "—"}</td><td class="${actClass(r.action)}">${esc(r.action)}</td></tr>`).join("")
     }</tbody></table>` : `<p class="foot">No rebalancing suggested — current weights are within tolerance of both target vectors.</p>`);

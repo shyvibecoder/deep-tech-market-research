@@ -48,6 +48,13 @@ export function resolveDue(open, currentPrices, today) {
       if (bRet == null || cRet == null) { stillOpen.push(f); continue; }
       const rel = bRet - cRet;
       resolved.push({ ...f, resolved_on: today, rel: +rel.toFixed(4), correct: f.claim === "underperform" ? rel < 0 : rel > 0 });
+    } else if (f.type === "sizing_tilt") {
+      // CRITICAL-2 grading: did the signal tilt beat the research baseline over the horizon?
+      const sRet = weightedReturn(f.signal_weights, f.prices, currentPrices);
+      const rRet = weightedReturn(f.research_weights, f.prices, currentPrices);
+      if (sRet == null || rRet == null) { stillOpen.push(f); continue; }
+      const rel = sRet - rRet;
+      resolved.push({ ...f, resolved_on: today, rel: +rel.toFixed(4), signal_return: +sRet.toFixed(4), research_return: +rRet.toFixed(4), correct: rel > 0 });
     } else {
       const q = currentPrices?.[f.subject]; const price = q && !q.error ? q.price : null;
       if (price > 0 && f.price_at > 0) resolved.push({ ...f, resolved_on: today, realized_return: +(price / f.price_at - 1).toFixed(4), correct: f.claim === "up" ? price / f.price_at - 1 > 0 : price / f.price_at - 1 < 0 });
@@ -55,6 +62,36 @@ export function resolveDue(open, currentPrices, today) {
     }
   }
   return { resolved, stillOpen };
+}
+
+// --- Grade the G3 SIZING TILT (CRITICAL-2): is the signal-tilted weight vector actually better than
+// NOT tilting? Record the signal vs research portfolio weights + per-ticker anchor prices; at horizon,
+// the claim "signal_beats_research" is true iff the signal-weighted return exceeds the research-weighted
+// return. This turns the allocation overlay from an ungraded assertion into a falsifiable, scored call —
+// if tilting doesn't beat the baseline out-of-sample, the scorecard says so (ALPHA.md honesty gate). ---
+export function weightedReturn(weights, anchorPrices, currentQuotes) {
+  let wsum = 0, acc = 0;
+  for (const t of Object.keys(weights || {})) {
+    const a = anchorPrices?.[t], q = currentQuotes?.[t], now = q && !q.error ? q.price : null;
+    if (a > 0 && now > 0) { acc += weights[t] * (now / a - 1); wsum += weights[t]; } // renormalize over resolvable names
+  }
+  return wsum > 0 ? acc / wsum : null;
+}
+
+export function makeSizingForecast(rebalance, quotes, today, horizon = 42) {
+  if (!rebalance?.signal?.rows?.length || !rebalance?.research?.rows?.length) return [];
+  const sigUsd = {}, resUsd = {}, prices = {};
+  for (const r of rebalance.signal.rows) sigUsd[r.ticker] = r.target_usd;
+  for (const r of rebalance.research.rows) resUsd[r.ticker] = r.target_usd;
+  for (const t of Object.keys(sigUsd)) { const q = quotes?.[t]; if (q && !q.error && q.price > 0) prices[t] = q.price; }
+  const priced = Object.keys(prices);
+  if (priced.length < 2) return [];
+  const norm = (m) => { const tot = priced.reduce((a, k) => a + (m[k] || 0), 0) || 1; const o = {}; for (const k of priced) o[k] = (m[k] || 0) / tot; return o; };
+  return [{
+    id: `${today}:sizing_tilt`, date: today, type: "sizing_tilt", subject: "portfolio",
+    claim: "signal_beats_research", horizon_days: horizon, resolve_on: addDays(today, horizon),
+    signal_weights: norm(sigUsd), research_weights: norm(resUsd), prices,
+  }];
 }
 
 export function updateScorecard(sc, resolved) {
@@ -65,6 +102,8 @@ export function updateScorecard(sc, resolved) {
     s.total.n++; if (r.correct) s.total.hits++;
     if (r.type === "scarcity_rel") {
       (s.by_signal[r.claim] ||= { n: 0, hits: 0 }); s.by_signal[r.claim].n++; if (r.correct) s.by_signal[r.claim].hits++;
+    } else if (r.type === "sizing_tilt") {
+      (s.by_signal.sizing_tilt ||= { n: 0, hits: 0 }); s.by_signal.sizing_tilt.n++; if (r.correct) s.by_signal.sizing_tilt.hits++;
     } else {
       const k = r.claim === "up" ? "overweight" : "underweight"; s.by_tilt[k].n++; if (r.correct) s.by_tilt[k].hits++;
     }

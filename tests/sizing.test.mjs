@@ -168,3 +168,44 @@ describe("sizing G3: rebalanceBoth", () => {
     assert.equal(sum, 100000, "no rounding drift");
   });
 });
+
+// HIGH-5 (adversarial review): taxable buys must surface a funding source, not imply free money.
+describe("sizing G3: funding (needs_new_cash)", () => {
+  it("a taxable buy with no dry powder surfaces needs_new_cash; cash reduces it", () => {
+    const targets = [{ ticker: "P", account: "taxable", base_usd: 100000, target_weight: 100, target_usd: 120000 }];
+    assert.equal(rebalancePlan(targets).summary.needs_new_cash_usd, 20000);
+    assert.equal(rebalancePlan(targets, { cashBySleeve: { taxable: 15000 } }).summary.needs_new_cash_usd, 5000);
+  });
+  it("the IRA self-funds (trims cover buys) → needs_new_cash ~0 even with no cash", () => {
+    const targets = [
+      { ticker: "A", account: "ira", base_usd: 100000, target_weight: 50, target_usd: 80000 },
+      { ticker: "B", account: "ira", base_usd: 100000, target_weight: 50, target_usd: 120000 },
+    ];
+    assert.equal(rebalancePlan(targets).summary.needs_new_cash_usd, 0);
+  });
+});
+
+// LOW-10: degenerate sleeves shouldn't crash or misweight.
+describe("sizing G3: single-name sleeve", () => {
+  it("a lone name gets 100% of its sleeve", () => {
+    const w = targetWeights([{ ticker: "ONLY", account: "ira", target_usd: 50000 }], { mode: "research", vols: { ONLY: 0.4 } });
+    assert.equal(w.length, 1); assert.equal(w[0].target_weight, 100); assert.equal(w[0].target_usd, 50000);
+  });
+});
+
+// MEDIUM-8 coherence: the legacy "Suggested IRA tilts" and the G3 signal plan must not give OPPOSITE
+// directional advice for the same IRA name when the non-regime factors (opportunity, vol) are neutral.
+describe("sizing G3: coherence with legacy targetDeltas", () => {
+  it("never opposes targetDeltas on direction for an IRA name (neutral opp/vol)", () => {
+    const holds = [{ ticker: "G", account: "ira", target_usd: 100000 }, { ticker: "H", account: "ira", target_usd: 100000 }];
+    const perName = [{ ticker: "G", tilt: "underweight" }, { ticker: "H", tilt: "overweight" }];
+    const td = targetDeltas(holds, perName, { posture: "risk-on", per_name: perName });
+    const both = rebalanceBoth(holds, { vols: { G: 0.3, H: 0.3 }, perName, posture: "risk-on", oppByTicker: { G: 50, H: 50 } });
+    const dir = (a) => /trim/.test(a) ? -1 : /add|buy/.test(a) ? 1 : 0; // check trim first ("funds buys" contains "buy")
+    for (const t of ["G", "H"]) {
+      const a = dir(td.find((x) => x.ticker === t).action);
+      const b = dir(both.signal.rows.find((x) => x.ticker === t).action);
+      if (a && b) assert.notEqual(a + b, 0, `${t}: legacy and G3 views must not give opposite advice`);
+    }
+  });
+});

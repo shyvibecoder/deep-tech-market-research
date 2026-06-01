@@ -1,6 +1,6 @@
 import { describe, it } from "node:test";
 import assert from "node:assert/strict";
-import { makeForecasts, resolveDue, updateScorecard, addDays, makeScarcityForecasts, meanPrice } from "../scripts/lib/forecast.mjs";
+import { makeForecasts, resolveDue, updateScorecard, addDays, makeScarcityForecasts, meanPrice, makeSizingForecast, weightedReturn } from "../scripts/lib/forecast.mjs";
 
 const signals = {
   regime: { per_name: [
@@ -162,5 +162,49 @@ describe("forecast: resolveDue uses equal-weight basket returns (new) + legacy f
     const { resolved } = resolveDue([f], { A: { price: 120 }, Q: { price: 105 } }, "2026-02-02");
     assert.equal(resolved.length, 1);
     assert.equal(resolved[0].correct, true);
+  });
+});
+
+// CRITICAL-2 (adversarial review): the G3 sizing tilt must be RECORDED and GRADED, not asserted.
+describe("forecast: G3 sizing-tilt grading", () => {
+  const rebalance = {
+    signal: { rows: [{ ticker: "HI", target_usd: 60000 }, { ticker: "LO", target_usd: 40000 }] },
+    research: { rows: [{ ticker: "HI", target_usd: 50000 }, { ticker: "LO", target_usd: 50000 }] },
+  };
+  const quotes = { HI: { price: 100 }, LO: { price: 100 } };
+
+  it("records one falsifiable 'signal_beats_research' claim with weights + anchor prices", () => {
+    const f = makeSizingForecast(rebalance, quotes, "2026-01-01", 42);
+    assert.equal(f.length, 1);
+    assert.equal(f[0].type, "sizing_tilt");
+    assert.equal(f[0].resolve_on, "2026-02-12");
+    assert.ok(Math.abs(f[0].signal_weights.HI - 0.6) < 1e-9 && Math.abs(f[0].research_weights.HI - 0.5) < 1e-9);
+  });
+
+  it("resolves CORRECT when the signal's overweighted name outperforms (tilt beat the baseline)", () => {
+    const [f] = makeSizingForecast(rebalance, quotes, "2026-01-01", 42);
+    const { resolved } = resolveDue([f], { HI: { price: 130 }, LO: { price: 100 } }, "2026-03-01");
+    assert.equal(resolved.length, 1);
+    assert.equal(resolved[0].correct, true);       // signal overweighted HI which ran +30% → beats research
+    assert.ok(resolved[0].rel > 0);
+  });
+
+  it("resolves INCORRECT when the tilt hurt (overweighted name lagged)", () => {
+    const [f] = makeSizingForecast(rebalance, quotes, "2026-01-01", 42);
+    const { resolved } = resolveDue([f], { HI: { price: 90 }, LO: { price: 120 } }, "2026-03-01");
+    assert.equal(resolved[0].correct, false);
+  });
+
+  it("scorecard accumulates sizing_tilt under by_signal", () => {
+    const [f] = makeSizingForecast(rebalance, quotes, "2026-01-01", 42);
+    const { resolved } = resolveDue([f], { HI: { price: 130 }, LO: { price: 100 } }, "2026-03-01");
+    const sc = updateScorecard(null, resolved);
+    assert.equal(sc.by_signal.sizing_tilt.n, 1);
+    assert.equal(sc.by_signal.sizing_tilt.hits, 1);
+  });
+
+  it("weightedReturn renormalizes over resolvable names (a missing quote doesn't poison it)", () => {
+    const r = weightedReturn({ A: 0.5, B: 0.5 }, { A: 100, B: 100 }, { A: { price: 110 }, B: { error: "x" } });
+    assert.ok(Math.abs(r - 0.1) < 1e-9); // only A resolves → +10%, weight renormalized to 1
   });
 });

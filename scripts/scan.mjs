@@ -25,7 +25,7 @@ import { getForwardPEs } from "./lib/fundamentals.mjs";
 import { computeRegime } from "./lib/regime.mjs";
 import { updateScarcityHistory, applySeenState } from "./lib/history.mjs";
 import { writeDcaPlan } from "./lib/dca.mjs";
-import { makeForecasts, resolveDue, updateScorecard, makeScarcityForecasts } from "./lib/forecast.mjs";
+import { makeForecasts, resolveDue, updateScorecard, makeScarcityForecasts, makeSizingForecast } from "./lib/forecast.mjs";
 import { relativeStrength, deRatingSignal } from "./lib/derating.mjs";
 import { newsForQuery } from "./lib/news.mjs";
 import { chokepointHeat } from "./lib/chokepoints.mjs";
@@ -441,12 +441,18 @@ try {
   const reHoldings = portfolio.holdings.filter((h) => isTradeable(h.ticker) && h.target_usd > 0);
   const vols = {};
   for (const h of reHoldings) { const v = enriched[h.ticker]?.vol_1y; if (Number.isFinite(v)) vols[h.ticker] = v; }
-  // Opportunity per ticker = the best (max) live score among the scarcities that name it.
+  // HIGH-3 (no momentum double-count): sizing uses the STATIC (thesis-only) Opportunity — human
+  // priced_in label (static_gate) × quality × contrarian — NOT the blended `score`, whose live gate
+  // folds in price-derived crowding (YTD + distance-to-52w-high). Momentum therefore enters the weight
+  // exactly ONCE, via the regime TSMOM tilt. A committee "crowded" downgrade still lowers static_gate →
+  // shrinks the weight, so the thesis→allocation link is preserved. Per ticker = best (max) across its
+  // scarcities. (LOW-9: a ticker in no scarcity gets no entry → opportunityFactor defaults neutral 1.0.)
   const oppByTicker = {};
   for (const s of scarcities.scarcities) {
-    const sc = scarcity_signals[s.id]?.score;
-    if (!Number.isFinite(sc)) continue;
-    for (const t of s.tickers || []) if (!Number.isFinite(oppByTicker[t]) || sc > oppByTicker[t]) oppByTicker[t] = sc;
+    const ss = scarcity_signals[s.id];
+    if (!ss || !Number.isFinite(ss.static_gate) || !Number.isFinite(ss.quality)) continue;
+    const staticOpp = Math.min(100, 100 * ss.static_gate * ss.quality * (ss.contrarian ? 1.15 : 1));
+    for (const t of s.tickers || []) if (!Number.isFinite(oppByTicker[t]) || staticOpp > oppByTicker[t]) oppByTicker[t] = staticOpp;
   }
   // Live $ per holding (USD) from the optional local positions; when present, sleeve totals follow
   // the actual market value so the plan rebalances what you hold (else it shows ideal vs the plan).
@@ -466,9 +472,16 @@ try {
   // driven and would authorize selling INTO a dislocation (inverting ALPHA.md Edge 3) with permanent
   // tax cost — so it does NOT qualify; signal-driven taxable sells need a human/committee decision.
   const taxableTrimOk = new Set(trimHits.map((t) => t.ticker));
+  // HIGH-5: available dry powder per sleeve = DRY-tier (cash) holdings + any local cash_usd (treated as
+  // taxable). Lets the plan flag "needs new cash" instead of implying taxable buys fund themselves.
+  const cashBySleeve = {};
+  for (const h of portfolio.holdings) {
+    if (h.tier === "DRY" || /^CASH/i.test(h.ticker)) cashBySleeve[h.account] = (cashBySleeve[h.account] || 0) + (h.target_usd || 0);
+  }
+  if (typeof positions?.cash_usd === "number") cashBySleeve.taxable = (cashBySleeve.taxable || 0) + positions.cash_usd;
   rebalance = rebalanceBoth(reHoldings, {
     vols, perName: regime?.per_name || [], posture: regime?.posture, oppByTicker,
-    currentUsd: haveCur ? currentUsd : undefined,
+    currentUsd: haveCur ? currentUsd : undefined, cashBySleeve,
     taxableTrimOk: [...taxableTrimOk], riskCap: 0.15,
   });
   rebalance.basis = haveCur ? "live positions (positions.local.json)" : "static plan (portfolio.json targets)";
@@ -551,6 +564,7 @@ let scorecard = null;
   const fresh = [
     ...makeForecasts({ regime, quotes: enriched }, TODAY),
     ...makeScarcityForecasts(scarcities.scarcities, { quotes: enriched, scarcity_signals }, TODAY, 42, complexTickers),
+    ...makeSizingForecast(rebalance, enriched, TODAY), // CRITICAL-2: grade the G3 tilt vs the research baseline
   ];
   const openIds = new Set(stillOpen.map((f) => f.id));
   store.open = [...stillOpen, ...fresh.filter((f) => !openIds.has(f.id))];
@@ -562,6 +576,13 @@ let scorecard = null;
     console.log(`Forecasts: ${resolved.length} resolved, ${store.open.length} open, hit-rate ${store.scorecard.hit_rate}`);
   }
   scorecard = store.scorecard;
+}
+// CRITICAL-2: surface the tilt's accruing grade on the rebalance block (graded flips true once any
+// sizing_tilt forecast has resolved over its horizon; until then it's recorded-but-not-yet-scored).
+if (rebalance) {
+  const tg = scorecard?.by_signal?.sizing_tilt || null;
+  rebalance.graded = !!(tg && tg.n > 0);
+  rebalance.tilt_grade = tg ? { n: tg.n, hits: tg.hits, hit_rate: tg.n ? +(tg.hits / tg.n).toFixed(3) : null } : null;
 }
 
 // --- Optional free-LLM analyst + red-team digest ---

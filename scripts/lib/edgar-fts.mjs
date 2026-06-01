@@ -20,11 +20,21 @@ export function parseFtsHits(json) {
   return Object.values(tally).sort((a, b) => b.mentions - a.mentions);
 }
 
-export async function searchFts(term) {
+// EDGAR full-text search transiently 500s/429s under rapid sequential requests, which silently
+// dropped whole phrases in scout sweeps. Retry 5xx/429 with backoff; a non-retryable 4xx fails fast.
+// fetchImpl/sleepImpl are injected so the retry path is unit-testable offline.
+export async function searchFts(term, { tries = 3, base = 400, fetchImpl = fetch, sleepImpl = (ms) => new Promise((r) => setTimeout(r, ms)) } = {}) {
   const url = `https://efts.sec.gov/LATEST/search-index?q=${encodeURIComponent(`"${term}"`)}&forms=10-K,10-Q,8-K`;
-  const r = await fetch(url, { headers: { "user-agent": UA, accept: "application/json" }, signal: AbortSignal.timeout(12000) });
-  if (!r.ok) throw new Error(`fts ${r.status}`);
-  return parseFtsHits(await r.json());
+  let last = "";
+  for (let i = 0; i < tries; i++) {
+    let r;
+    try { r = await fetchImpl(url, { headers: { "user-agent": UA, accept: "application/json" }, signal: AbortSignal.timeout(12000) }); }
+    catch (e) { last = e.message; if (i < tries - 1) { await sleepImpl(base * 2 ** i); continue; } throw new Error(`fts ${last}`); }
+    if (r.ok) return parseFtsHits(await r.json());
+    if (r.status === 429 || r.status >= 500) { last = `fts ${r.status}`; if (i < tries - 1) { await sleepImpl(base * 2 ** i); continue; } }
+    throw new Error(`fts ${r.status}`);   // non-retryable 4xx → fail fast
+  }
+  throw new Error(last || "fts failed");
 }
 
 // Discover the most-mentioning public companies across a chokepoint's search terms.

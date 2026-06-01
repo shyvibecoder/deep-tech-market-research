@@ -1,6 +1,33 @@
 import { describe, it } from "node:test";
 import assert from "node:assert/strict";
-import { parseFtsHits, rankProxies, proxyGraph } from "../scripts/lib/edgar-fts.mjs";
+import { parseFtsHits, rankProxies, proxyGraph, searchFts } from "../scripts/lib/edgar-fts.mjs";
+
+// EDGAR full-text search transiently 500s / 429s under rapid sequential requests (observed in a real
+// scout run: 4 of 10 phrases failed with `fts 500`). A single transient error must NOT silently drop
+// a whole phrase — searchFts retries 5xx/429 with backoff (fetch+sleep injected for offline tests).
+describe("edgar-fts: searchFts is resilient to transient 5xx/429", () => {
+  const okBody = { hits: { hits: [{ _source: { display_names: ["Alpha Inc (AAA) (CIK 0000000001)"] } }] } };
+  const res = (status, body) => ({ ok: status >= 200 && status < 300, status, json: async () => body });
+  it("retries on a transient 500 then succeeds", async () => {
+    let n = 0;
+    const fetchImpl = async () => (++n < 3 ? res(500) : res(200, okBody));
+    const out = await searchFts("on allocation", { fetchImpl, sleepImpl: async () => {} });
+    assert.equal(n, 3);                       // 2 failures + 1 success
+    assert.equal(out[0].ticker, "AAA");
+  });
+  it("throws after exhausting retries on persistent 500 (so the caller records the error)", async () => {
+    let n = 0;
+    const fetchImpl = async () => { n++; return res(500); };
+    await assert.rejects(() => searchFts("took-or-pay", { fetchImpl, sleepImpl: async () => {}, tries: 3 }), /fts 500/);
+    assert.equal(n, 3);
+  });
+  it("does NOT retry a non-retryable 4xx (e.g. 400) — fails fast", async () => {
+    let n = 0;
+    const fetchImpl = async () => { n++; return res(400); };
+    await assert.rejects(() => searchFts("x", { fetchImpl, sleepImpl: async () => {} }), /fts 400/);
+    assert.equal(n, 1);
+  });
+});
 
 describe("edgar-fts: proxy exposure graph (second-order / cross-chokepoint structure)", () => {
   // HUB is exposed to 3 chokepoints (a diversified bottleneck-complex play); PURE to one.

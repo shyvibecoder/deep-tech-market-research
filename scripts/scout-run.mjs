@@ -39,7 +39,9 @@ const chair = plan.chair && live[plan.chair.provider] ? seatCaller(plan.chair.pr
 console.log(`scout: committee chair=${plan.chair?.provider} | budget: ${maxSearches} searches, ${maxCandidates} candidates, minPhrases=${minPhrases}`);
 
 // Real FTS sweep: wrap searchFts (pure parse already tested) + be polite to SEC between calls.
-const searchPhrase = async (phrase) => { const hits = await searchFts(phrase); await new Promise((r) => setTimeout(r, 150)); return hits; };
+// 350ms between calls (was 150) — EDGAR FTS sheds load with transient 500s when hit too fast; the
+// gap + searchFts's built-in 5xx retry together stop a phrase being silently dropped.
+const searchPhrase = async (phrase) => { const hits = await searchFts(phrase); await new Promise((r) => setTimeout(r, 350)); return hits; };
 
 // The committee IS the gate (committee-first, SCOUT-DESIGN): gather light evidence for the draft, run
 // the adversarial seats + CIO, and approve only a confident, changed call (mirrors proposeScarcityEdits).

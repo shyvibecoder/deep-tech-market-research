@@ -1,8 +1,29 @@
 {
   "schema_version": 1,
-  "generated": null,
-  "chair": null,
-  "health": { "phrasesSearched": 0, "candidates": 0, "proposals": 0, "droppedKnown": 0, "errors": 0 },
+  "generated": "2026-06-01",
+  "chair": "anthropic",
+  "health": {
+    "phrasesSearched": 6,
+    "candidates": 2,
+    "proposals": 0,
+    "droppedKnown": 1,
+    "errors": 4
+  },
   "candidates": [],
-  "considered": []
+  "considered": [
+    {
+      "id": "scout-hyster-yale-materials-handling-inc-supply-constraint",
+      "tickers": [
+        "HY"
+      ],
+      "reason": "low committee confidence (0.34)"
+    },
+    {
+      "id": "scout-valmont-industries-inc-supply-constraint",
+      "tickers": [
+        "VMI"
+      ],
+      "reason": "low committee confidence (0.45)"
+    }
+  ]
 }

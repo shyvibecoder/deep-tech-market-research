@@ -91,7 +91,36 @@ becoming known.)
 5. **`scout.yml`** — weekly workflow, budget cap, proposals published for review.
 6. **Patent/arXiv engine** — new keyless source module (mirror `marketdata.mjs` keyless-first), last.
 
-## Open questions (resolve before/within build)
-- Constraint-language query list: start hand-curated (~12 phrases) or LLM-generate + human-vet? (Lean: curated v1.)
-- Candidate de-dupe vs the existing 24 + prior rejected candidates (avoid re-proposing a killed idea every week).
-- Proposal surface: extend the existing research-proposals dashboard tier, or a separate "scout" feed?
+## Resolved design decisions
+
+### D1 — Constraint-language queries: LLM-generated, human-vetted, then cached
+The complaint-phrase list is **LLM-generated** (broader/novel phrasings than we'd hand-write) but
+**gated by human approval before it is ever used to search.** Flow: `generate → human approves the
+phrase list (a cheap, reviewable artifact) → only then run the bounded FTS sweep`. The approved list
+is **cached/committed** so a normal weekly run does NOT regenerate (no per-run cost or drift); regen
+is an explicit, occasional action that re-enters the approval gate. This keeps the breadth of LLM
+generation without letting an unvetted/garbage query trigger noisy filing sweeps.
+
+### D2 — Candidate memory: track BOTH proposed and committee-rejected
+Persist a `scout-seen.json` store of every candidate ever surfaced, tagged `proposed` /
+`rejected` / `accepted`. A **rejected** candidate stays suppressed and is NOT re-proposed — UNLESS a
+**re-entry rule** fires: materially new evidence (a new dated filing/contract/policy catalyst not
+present at rejection time). This mirrors the committee's own "burden of proof is on change" rule —
+a killed idea must clear a higher bar to come back, so the weekly feed never re-litigates dead ideas.
+Open sub-question for build: exact re-entry trigger (lean: a new dated evidence item + a bumped
+`evidence_hash` since the rejection).
+
+### D3 — Proposal surface: a SEPARATE scout feed
+Scout candidates (proposed NEW scarcities) get their **own data file + dashboard section**, distinct
+from the committee's re-scores of the existing 24. Rationale: admitting a brand-new scarcity to the
+watchlist is a *different, higher-scrutiny decision* than re-rating a known thesis ("is this even
+real?" vs "has priced_in moved?") and must never be rubber-stamped like a routine edit. The scout
+feed carries scout-specific context the committee tier doesn't: the **legibility tag**
+(`early/contrarian` vs `already-legible`), the **complaining filers** (constraint-shadow evidence),
+and the **ladder path** (for BOM-derived candidates). Reuses the same F9 human-PR approval mechanism,
+just on its own surface.
+
+## Remaining build-time sub-questions (small, decide in-flight)
+- D1: how many phrases to cap the approved list at (lean: ~15–20).
+- D2: precise re-entry trigger (lean: new dated evidence item changes the candidate's evidence_hash).
+- BOM ladder depth cap per seed (budget control; lean: 1–2 layers up).

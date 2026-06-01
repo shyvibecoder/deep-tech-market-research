@@ -41,19 +41,7 @@ edits your book. Discovery widens the funnel → the committee filters it → th
 theses into sized suggestions → you decide. Three engines run themselves on a schedule; you approve the
 gates between them.
 
-```
-  ┌──────────────┐      ┌──────────────────┐      ┌─────────────────┐      ┌──────────────┐
-  │  1. SCOUT    │  →   │  2. COMMITTEE    │  →   │   3. SCAN       │  →   │   4. YOU     │
-  │  (discover)  │ PR✋ │  (adjudicate)    │ PR✋ │  (score+suggest)│      │  (decide)    │
-  └──────────────┘      └──────────────────┘      └─────────────────┘      └──────────────┘
-   weekly, auto          monthly, auto             daily, auto              manual
-   → scout-candidates    → research-proposals      → signals.json           → portfolio.json
-   Scout tab             Research tab              every tab                 triggers.json
-        │                      │                        │                        │
-        └─ proposes NEW ───────┴─ proposes THESIS ──────┴─ proposes WEIGHTS ─────┘
-           scarcities            edits (priced-in…)        (rebalance) + alerts
-                          ↑ the bot only PROPOSES; nothing touches your book without you ↑
-```
+![Puck end-to-end workflow: Scout → Committee → Scan → You](img/workflow.svg)
 
 **1. Scout — *find new scarcities*.** Weekly (auto, Mon), the scout reads SEC filings for "constraint
 shadow" language (downstream firms complaining about supply) and drafts **candidate** new scarcities.

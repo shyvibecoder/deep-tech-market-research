@@ -947,6 +947,13 @@ $("#cfgSaveVars").onclick = saveVariables;
 const HELP = {
   overview: { title: "What is Puck?", body: `
     <p><strong>Puck</strong> tracks structural technology <em>scarcities</em> (chokepoints that bind over 2026–2036) and turns them into a live portfolio view. The philosophy: <strong>alpha from the scarcity research, timing from the tape.</strong></p>
+    <p><strong>How it all connects</strong> — three engines run themselves on a schedule; you approve the gates between them. The bot only <em>proposes</em>; nothing touches your book without you:</p>
+    <img src="img/workflow.svg" alt="Puck workflow: Scout discovers new scarcities, the Committee adjudicates them, the Scan scores and suggests a rebalance, and You decide. Each handoff is a human-approved pull request." style="width:100%;height:auto;border:1px solid var(--line);border-radius:10px;margin:8px 0"/>
+    <ol><li><strong>Scout</strong> (weekly, auto) finds candidate new scarcities → you approve via PR.</li>
+    <li><strong>Committee</strong> (monthly, auto) pressure-tests each thesis → you approve via PR.</li>
+    <li><strong>Scan</strong> (daily, auto) scores everything and suggests a rebalance + fires triggers.</li>
+    <li><strong>You</strong> merge the PRs, read the suggestions, and place the trades. Puck never trades for you.</li></ol>
+    <p>Full walk-through: the <strong>User Guide §1a</strong>.</p>
     <ul><li><strong>Scarcity radar / Timeline</strong> — what's scarce, when it binds, and how priced-in it already is.</li>
     <li><strong>Portfolio &amp; triggers</strong> — your sleeve, the <em>timing posture</em> (when to deploy vs. raise cash), and deploy/exit triggers.</li>
     <li><strong>Filings &amp; news</strong> — free SEC EDGAR + news per holding/scarcity.</li>

@@ -90,6 +90,7 @@
     <button data-tab="chokepoints">Chokepoints</button>
     <button data-tab="options">Options check</button>
     <button data-tab="research">Research</button>
+    <button data-tab="scout">Scout</button>
     <button data-tab="digest">Agent digest</button>
     <button class="help" data-help="overview" title="What is this app?">?</button>
   </nav>
@@ -173,6 +174,10 @@
     <div id="researchReview"></div>
   </section>
 
+  <section id="scout" class="tab">
+    <div id="scoutReview"></div>
+  </section>
+
   <section id="digest" class="tab">
     <h3>Agent digest <button class="help" data-help="digest">?</button></h3>
     <pre id="digestBox"></pre>
@@ -190,5 +195,6 @@
   <script type="module">import { applyShock, SCENARIOS } from "./stress.mjs"; window.PuckStress = { applyShock, SCENARIOS };</script>
   <script type="module">import { targetDeltas } from "./sizing.mjs"; window.targetDeltas = targetDeltas;</script>
   <script type="module">import { proposalDiffs, applyAcceptance, BOT_OWNED_FIELDS } from "./research-review.mjs"; window.PuckResearch = { proposalDiffs, applyAcceptance, BOT_OWNED_FIELDS };</script>
+  <script type="module">import { scoutCandidateView, appendScoutScarcity } from "./scout-review.mjs"; window.PuckScout = { scoutCandidateView, appendScoutScarcity };</script>
 </body>
 </html>

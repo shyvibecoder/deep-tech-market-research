@@ -257,6 +257,35 @@ Each card shows the **before→after** change, the LLM's rationale, its sources,
 The bot only *proposes*; **you approve**, and it can **only ever** touch those three fields — never the
 thesis or tickers (the F9 ownership rule, enforced in the browser *and* the scanner). Not advice.
 
+## 5d. Scout (finding NEW scarcities)
+The Research tab re-scores the *known* scarcities; the **Scout** tab hunts for *new* ones — the
+alpha-generation frontier. It is deliberately **not** a trend-finder: by the time something reads as a
+trend it's already priced, and **ALPHA.md** is explicit that there's no edge in what's priced. Instead
+the scout looks for the **fingerprint of a binding constraint before anyone names it.**
+
+**How it works (constraint-shadow):** a real shortage shows up first as downstream companies
+*complaining* in their SEC filings — *"lead times extended", "unable to secure allocation", "qualified a
+second source"*. The scout searches that complaint language across all filers, **clusters which companies
+are under broad supply stress** (a filer griping under many distinct constraint phrases is a strong
+lead), and infers the candidate chokepoint from the *pattern of who's complaining* — not from a headline.
+Filers already explained by a known scarcity are dropped (novelty filter); candidates already discussed
+widely in financial media are down-weighted (the edge is being early, not loud).
+
+**The same committee vets it.** Each lead is synthesized into a draft scarcity and run through the
+identical **Bull / Bear / Skeptic → CIO + CRO** committee that scores the known 24 — so you only ever
+review *adversarially-vetted* candidates, never raw noise. The Bear seat ("the specific thing that kills
+it — supply response, substitution, policy reversal") does the brutal filtering before anything reaches
+you.
+
+Each card shows the inferred scarcity, the **filer that flagged it** + the constraint phrases that fired,
+the proposed fields, and the committee's confidence:
+- **✓ Accept → open PR (add scarcity)** opens a pull request that *adds* the new scarcity to
+  `scarcities.json`, which you merge. Same token requirement as the Research tab.
+- **✕ Reject** dismisses it.
+
+The scout runs **weekly** and never edits the watchlist itself — it only proposes; **you approve**
+admission (F9). Not advice; every candidate is a lead to investigate, and most should fail the committee.
+
 ## 6. Filings & news
 
 ![Filings and news](img/catalysts.png)

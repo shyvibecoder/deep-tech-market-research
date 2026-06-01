@@ -17,11 +17,11 @@ let DATA = {};
 const bust = () => `?t=${Date.now()}`; // cache-bust signals.json so reloads see fresh commits
 
 async function fetchData() {
-  const [scar, port, trig, sig, dca, proposals] = await Promise.all(
-    ["scarcities", "portfolio", "triggers", "signals", "dca", "research-proposals"].map((f) =>
-      fetch(`data/${f}.json${f === "signals" || f === "research-proposals" ? bust() : ""}`).then((r) => r.json()).catch(() => ({})))
+  const [scar, port, trig, sig, dca, proposals, scout] = await Promise.all(
+    ["scarcities", "portfolio", "triggers", "signals", "dca", "research-proposals", "scout-candidates"].map((f) =>
+      fetch(`data/${f}.json${f === "signals" || f === "research-proposals" || f === "scout-candidates" ? bust() : ""}`).then((r) => r.json()).catch(() => ({})))
   );
-  return { scar, port, trig, sig, dca, proposals };
+  return { scar, port, trig, sig, dca, proposals, scout };
 }
 
 async function load() {
@@ -43,7 +43,7 @@ function render() {
     pill.className = `posture ${reg?.posture || "unknown"}`;
     pill.textContent = reg ? `${lbl}${reg.risk_score != null ? ` ${reg.risk_score}/100` : ""}` : "";
   }
-  renderStale(sig); renderRadar(); renderTimeline(); renderPortfolio(); renderV23(); renderCatalysts(); renderChokepoints(); renderResearch(); renderDigest();
+  renderStale(sig); renderRadar(); renderTimeline(); renderPortfolio(); renderV23(); renderCatalysts(); renderChokepoints(); renderResearch(); renderScout(); renderDigest();
 }
 
 // Research review: show the LLM's proposed scarcity reassessments as before→after diffs with an
@@ -76,6 +76,41 @@ function renderResearch() {
     }).join("");
   $$(".accept-proposal", box).forEach((b) => b.onclick = () => acceptProposal(b.dataset.id));
   $$(".reject-proposal", box).forEach((b) => b.onclick = () => { b.closest(".proposal").style.opacity = 0.4; b.closest(".proposal").querySelectorAll("button").forEach((x) => x.disabled = true); });
+}
+
+// Scout review: the SEPARATE feed of CANDIDATE NEW scarcities the scout surfaced + the committee
+// vetted (SCOUT-DESIGN D3). A higher-scrutiny decision than a research re-score ("is this even a real
+// scarcity?") — so each row shows the constraint evidence (complaining filer + the phrases that fired)
+// and the committee read. Accepting opens a PR that ADDS the new scarcity to scarcities.json (F9).
+function renderScout() {
+  const box = $("#scoutReview"); if (!box) return;
+  const SC = window.PuckScout;
+  const doc = DATA.scout;
+  const head = `<h3>Scout — candidate new scarcities <button class="help" data-help="scout">?</button> <span class="foot">— constraint-shadow leads the committee vetted; you approve admission to the watchlist.</span></h3>`;
+  if (!SC || !doc || !DATA.scar?.scarcities) { box.innerHTML = head; return; }
+  const cands = doc.candidates?.length ? SC.scoutCandidateView(doc, DATA.scar) : [];
+  if (!cands.length) {
+    const considered = (doc.considered || []).length;
+    box.innerHTML = head + `<p class="foot">No open scout candidates (last sweep ${esc(doc.generated || "—")}${considered ? `; ${considered} lead(s) considered, none cleared the committee` : ""}).</p>`;
+    return;
+  }
+  box.innerHTML = head + cands.map((c, i) => {
+    const fields = [c.priced_in ? `priced_in=<strong class="pi-${esc(c.priced_in)}">${esc(c.priced_in)}</strong>` : "", c.bind_window ? `bind=${esc(c.bind_window)}` : ""].filter(Boolean).join(" · ");
+    const phrases = (c.constraint_phrases || []).slice(0, 4).map((p) => `<code>${esc(p)}</code>`).join(" ");
+    const disp = c.dispersion ? ` · ${esc(c.dispersion.level)} conviction` : "";
+    return `<div class="proposal" data-sidx="${i}">
+      <div><strong>${esc(c.scarcity)}</strong> ${c.confidence != null ? `<span class="foot">conf ${Math.round(c.confidence * 100)}%${disp}</span>` : ""}</div>
+      ${fields ? `<div>${fields} · tickers: ${esc((c.tickers || []).join(", ") || "—")}</div>` : ""}
+      ${c.complaining_filer ? `<div class="foot">flagged via filer <code>${esc(c.complaining_filer)}</code>${phrases ? ` — constraint language: ${phrases}` : ""}</div>` : ""}
+      ${c.rationale ? `<div class="foot">${esc(c.rationale)}</div>` : ""}
+      <div class="modal-actions">
+        <button class="accept-scout" data-id="${esc(c.id)}">✓ Accept → open PR (add scarcity)</button>
+        <button class="reject-scout" data-id="${esc(c.id)}">✕ Reject</button>
+      </div>
+    </div>`;
+  }).join("");
+  $$(".accept-scout", box).forEach((b) => b.onclick = () => acceptScoutCandidate(b.dataset.id));
+  $$(".reject-scout", box).forEach((b) => b.onclick = () => { b.closest(".proposal").style.opacity = 0.4; b.closest(".proposal").querySelectorAll("button").forEach((x) => x.disabled = true); });
 }
 
 // V2.3 cross-check + the headline "when to act on a dislocation" verdict.
@@ -702,6 +737,43 @@ async function acceptProposal(id) {
   }
 }
 
+// Accept a SCOUT candidate: append it as a NEW scarcity (F9-guarded, schema-valid fields only, in
+// scout-review.mjs) and open a PR via the user's admin token. Same branch→commit→PR flow as a
+// research proposal; the user merges. This is how a scout-discovered chokepoint joins the watchlist.
+async function acceptScoutCandidate(id) {
+  const SC = window.PuckScout, t = adminToken();
+  if (!t) { alert("Open Settings → Admin and paste a GitHub token first.\n\nClassic token: the 'repo' scope.\nFine-grained token: Contents + Pull requests, both read/write."); return; }
+  const cand = (DATA.scout?.candidates || []).find((c) => c.id === id);
+  if (!cand) return;
+  const updated = SC.appendScoutScarcity(DATA.scar, cand);             // F9-guarded; new doc
+  if (updated === DATA.scar) { alert("Nothing to add (candidate already exists or is invalid)."); return; }
+  const btn = document.querySelector(`.accept-scout[data-id="${CSS.escape(id)}"]`);
+  if (btn) { btn.disabled = true; btn.textContent = "Opening PR…"; }
+  try {
+    const api = `https://api.github.com/repos/${REPO}`;
+    const meta = await (await fetch(`${api}/contents/web/data/scarcities.json`, { headers: ghHeaders(t) })).json();
+    const ref = await (await fetch(`${api}/git/ref/heads/main`, { headers: ghHeaders(t) })).json();
+    const branch = `scout-accept/${id}-${Date.now().toString(36)}`;
+    let r = await fetch(`${api}/git/refs`, { method: "POST", headers: { ...ghHeaders(t), "content-type": "application/json" }, body: JSON.stringify({ ref: `refs/heads/${branch}`, sha: ref.object.sha }) });
+    if (!r.ok) throw new Error(`branch ${r.status}`);
+    const content = btoa(unescape(encodeURIComponent(JSON.stringify(updated, null, 2) + "\n")));
+    r = await fetch(`${api}/contents/web/data/scarcities.json`, { method: "PUT", headers: { ...ghHeaders(t), "content-type": "application/json" },
+      body: JSON.stringify({ message: `scout: admit new scarcity ${id}`, content, sha: meta.sha, branch }) });
+    if (!r.ok) throw new Error(`commit ${r.status}`);
+    const filer = cand.complaining_filer ? ` Flagged via filer ${cand.complaining_filer}.` : "";
+    r = await fetch(`${api}/pulls`, { method: "POST", headers: { ...ghHeaders(t), "content-type": "application/json" },
+      body: JSON.stringify({ title: `Admit scout scarcity: ${id}`, head: branch, base: "main",
+        body: `Accepted from the dashboard's Scout tab — adds a NEW scarcity discovered by the constraint-shadow scout and vetted by the committee.${filer}\n\nConstraint language: ${(cand.constraint_phrases || []).join("; ") || "—"}\nCommittee confidence ${cand.confidence ?? "?"}. New-scarcity admission (F9: human-approved).` }) });
+    const pr = await r.json();
+    if (!r.ok) throw new Error(`PR ${r.status}: ${pr.message || ""}`);
+    if (btn) { btn.textContent = "✓ PR opened"; }
+    window.open(pr.html_url, "_blank", "noopener");
+  } catch (e) {
+    if (btn) { btn.disabled = false; btn.textContent = "✓ Accept → open PR (add scarcity)"; }
+    alert(`Could not open PR: ${e.message}.\n\nThis usually means the token can read but not write. Check it has write access to ${REPO}:\n• Classic token → the 'repo' scope must be ticked\n• Fine-grained token → Contents + Pull requests, both read/write`);
+  }
+}
+
 async function checkConfig() {
   const t = adminToken();
   if (!t) return setMsg("Paste an admin GitHub token (fine-grained: Secrets read, Variables read/write).");
@@ -856,6 +928,11 @@ const HELP = {
       <li><strong>2 · Chief-Risk-Officer (CRO) review:</strong> an independent <strong>frontier-model</strong> pass that does the fuzzy judgment code can't — is every ticker real and correctly attributed? does the thesis actually follow? is it chasing momentum? It can <strong>veto</strong> a proposal or dock its confidence. <strong>This requires an Anthropic or OpenAI key</strong> (a free model grading its own free-tier siblings isn't a real check), so without a frontier key the CRO is disabled and only layer 1 runs.</li>
     </ul>
     <p>Each card shows the <strong>before→after</strong> change, rationale, sources, confidence, any <strong>Checks</strong> flags, and the CRO note. <strong>Accept</strong> opens a GitHub <strong>pull request</strong> with just that change (needs a token in Settings → Admin: Contents + Pull requests read/write) — you merge it. <strong>Reject</strong> dismisses it. The bot can <em>only</em> ever touch those three fields — never the thesis or tickers (F9). Not advice.</p>` },
+  scout: { title: "Scout — finding NEW scarcities", body: `
+    <p>The Research tab re-scores the <em>known</em> scarcities; the <strong>Scout</strong> hunts for <em>new</em> ones. It is deliberately <strong>not</strong> a trend-finder — by the time something reads as a trend it's already priced, and <strong>ALPHA.md</strong> says there's no edge in what's priced. Instead it looks for the <strong>fingerprint of a binding constraint</strong> before anyone names it.</p>
+    <p><strong>How (constraint-shadow):</strong> a real shortage shows up first as downstream companies <em>complaining</em> in their SEC filings — "lead times extended", "unable to secure allocation", "qualified a second source". The scout searches that complaint language across all filers, then <strong>clusters which companies are under broad supply stress</strong>, and infers the candidate chokepoint from the <em>pattern of who's complaining</em> — not from a headline.</p>
+    <p><strong>Then the same committee vets it.</strong> Each lead is synthesized into a draft scarcity and run through the identical <strong>Bull / Bear / Skeptic → CIO + CRO</strong> committee that scores the known 24. Only candidates that survive that adversarial scrutiny appear here — so you review <em>vetted</em> ideas, not raw noise. Candidates already discussed widely in financial media are down-weighted (the edge is being early, not loud).</p>
+    <p>Each card shows the inferred scarcity, the <strong>filer that flagged it</strong> + the constraint phrases that fired, the proposed fields, and the committee's confidence. <strong>Accept</strong> opens a pull request that <em>adds</em> the new scarcity to the watchlist (needs a token in Settings → Admin); you merge it. The scout never edits the watchlist itself (F9) — it only proposes. Runs weekly. Not advice; every candidate is a lead to investigate.</p>` },
   datakeys: { title: "Market-data keys", body: `
     <p>Keyless <strong>Yahoo</strong> (rich history) + <strong>Stooq</strong> (EOD) always run. Adding free keys gives <em>independent cross-check sources</em> so a single bad or synthetic price can't pass silently — when sources disagree &gt;3% the quote is flagged.</p>
     <ul><li><strong>Finnhub</strong> (finnhub.io) — also CORS-friendly, powers the "Check live prices" button here.</li>

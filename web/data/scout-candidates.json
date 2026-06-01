@@ -1,0 +1,8 @@
+{
+  "schema_version": 1,
+  "generated": null,
+  "chair": null,
+  "health": { "phrasesSearched": 0, "candidates": 0, "proposals": 0, "droppedKnown": 0, "errors": 0 },
+  "candidates": [],
+  "considered": []
+}

@@ -5,7 +5,17 @@ name: research
 # own token (F9: bot-owned fields only). No bot PR creation (and no PR permission needed).
 on:
   schedule:
-    - cron: "0 6 1 * *"   # 06:00 UTC on the 1st of each month
+    - cron: "0 9 1 * *"   # 09:00 UTC on the 1st — AFTER the weekly scout (07:00 Mon) so when the 1st
+                          # falls on a Monday, research follows that day's scout rather than racing ahead.
+  # CADENCE CONGRUENCE: the scout runs WEEKLY (Mon) and admits NEW scarcities via human-approved PRs;
+  # research runs MONTHLY to re-score them. Without this trigger a scarcity admitted just after the 1st
+  # would wait ~a month for its first FULL research-grade evaluation (the scout only gives a lighter
+  # committee read). So: re-run research the moment scarcities.json changes (a scout/manual admission),
+  # so a new scarcity is never "missed by a month". Loop-safe — research never writes scarcities.json
+  # (F9) and commits its output with [skip ci], so this can't self-trigger.
+  push:
+    branches: [main]
+    paths: ["web/data/scarcities.json"]
   workflow_dispatch: {}
 permissions:
   contents: write

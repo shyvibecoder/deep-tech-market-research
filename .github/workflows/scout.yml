@@ -6,7 +6,11 @@ name: scout
 # scarcities.json (F9). Weekly + on-demand; hard-budgeted so a sweep can't run away.
 on:
   schedule:
-    - cron: "0 7 * * 1"   # 07:00 UTC every Monday
+    - cron: "0 7 * * 1"   # 07:00 UTC every Monday. CADENCE: the scout (weekly) widens the funnel;
+                          # admitting a candidate (human PR → scarcities.json) triggers the MONTHLY
+                          # research workflow immediately (research.yml `push` trigger), so a scout-
+                          # found scarcity gets a full research-grade evaluation within minutes of
+                          # admission — never waiting up to a month for the next monthly research run.
   workflow_dispatch:
     inputs:
       mode:

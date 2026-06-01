@@ -46,8 +46,8 @@
       "id": "transformers",
       "sector": "Energy",
       "scarcity": "Large power transformers & GSUs",
-      "bind_window": "now",
-      "priced_in": "high",
+      "bind_window": "2028-29",
+      "priced_in": "crowded",
       "durability": "very-high",
       "substitution_risk": "low",
       "tickers": [
@@ -56,7 +56,7 @@
       ],
       "non_consensus": false,
       "news_query": "large power transformer shortage lead time",
-      "last_reviewed": "2026-05-30",
+      "last_reviewed": "2026-06-01",
       "thesis": "128-144wk lead times, ~30% fleet shortfall. No technical substitute. Eases ~2027-29 as plants ramp."
     },
     {

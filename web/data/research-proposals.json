@@ -25,11 +25,9 @@
     "roleAnswered": {
       "bull": 26,
       "bear": 26,
-      "skeptic": 25
+      "skeptic": 26
     },
-    "errors": [
-      "Unexpected end of JSON input"
-    ],
+    "errors": [],
     "degraded": false
   },
   "proposals": []

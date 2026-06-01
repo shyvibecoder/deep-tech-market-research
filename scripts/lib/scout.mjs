@@ -73,12 +73,22 @@ export function approvedPhrases(doc, { fallback = DEFAULT_CONSTRAINT_PHRASES } =
 // across chokepoints rather than naming a specific material we already track.
 export async function generateConstraintPhrases({ complete, count = 18 } = {}) {
   const prompt =
-    `You are building a SEC-filing search list to DISCOVER emerging supply constraints. Output ${count} ` +
-    `short verbatim phrases (3-7 words) that companies use in 10-K/10-Q risk factors and MD&A when an ` +
-    `INPUT they depend on is becoming scarce/bottlenecked — e.g. "lead times extended", "unable to ` +
-    `secure allocation", "qualified a second source", "on allocation", "took-or-pay". Rules: generic ` +
-    `COMPLAINT language only — do NOT name specific materials, companies, or products (the phrase must ` +
-    `generalize across many chokepoints). One phrase per line, no numbering, no commentary.`;
+    `Task: build a SEC full-text search list to DISCOVER emerging STRUCTURAL supply chokepoints — ` +
+    `inputs that are hard to build, qualify, or substitute (multi-year capacity, single-source, ` +
+    `qualification barriers), NOT transient logistics. Output ${count} short phrases (3-6 words) that ` +
+    `appear VERBATIM in 10-K/10-Q risk factors and MD&A when a company's critical input is becoming ` +
+    `scarce.\n\n` +
+    `Aim across these CONSTRAINT TYPES (a few each):\n` +
+    `- hard allocation / sold-out capacity (e.g. "placed on allocation", "capacity remains constrained")\n` +
+    `- single-source dependency (e.g. "rely on a single supplier", "sole source of supply")\n` +
+    `- qualification barriers (e.g. "lengthy qualification process", "qualify an alternative source")\n` +
+    `- multi-year lead times (e.g. "lead times have lengthened", "extended delivery lead times")\n` +
+    `- locked-in / take-or-pay contracts that signal supplier pricing power (e.g. "take-or-pay", "long-term supply agreement")\n\n` +
+    `PRECISION RULES (this is a search query, optimize for it):\n` +
+    `- Specific enough to NOT match generic boilerplate, common enough to actually appear in filings.\n` +
+    `- GENERIC language only — never name a material, product, company, or industry (must generalize).\n` +
+    `- EXCLUDE transient/macro noise: shipping, freight, port, tariff, inflation, pandemic, labor cost, recession.\n\n` +
+    `Output: one phrase per line, lowercase, no numbering, no quotes, no commentary.`;
   return parsePhrases(await complete(prompt));
 }
 

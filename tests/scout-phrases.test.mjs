@@ -63,7 +63,14 @@ describe("scout D1: generateConstraintPhrases (Anthropic generates; injected for
     const complete = async (p) => { prompt = p; return '- lead times extended\n- on allocation'; };
     const out = await generateConstraintPhrases({ complete, count: 15 });
     assert.deepEqual(out, ["lead times extended", "on allocation"]);
-    assert.match(prompt, /SEC|filing|constraint|supply/i);   // prompt is about filing constraint language
+    assert.match(prompt, /SEC|filing|10-K|MD&A/i);             // about filing language
+  });
+  it("the prompt targets STRUCTURAL chokepoints and excludes transient supply-chain noise", async () => {
+    let prompt = "";
+    await generateConstraintPhrases({ complete: async (p) => { prompt = p; return ""; } });
+    assert.match(prompt, /structural|single-source|qualif|allocation/i, "must steer toward durable, hard-to-substitute constraints");
+    assert.match(prompt, /shipping|freight|port|tariff|inflation|pandemic/i, "must explicitly exclude transient/macro noise");
+    assert.match(prompt, /generic|generalize/i, "must forbid naming specific materials/companies");
   });
 });
 

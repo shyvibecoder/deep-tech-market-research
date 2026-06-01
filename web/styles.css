@@ -20,6 +20,8 @@ tr:hover td{background:#11161e}
 .now{background:var(--now)}.y27{background:var(--y27)}.y28{background:var(--y28)}.y30{background:var(--y30)}.floor{background:var(--floor);color:#fff}
 .pi-low{color:var(--good)}.pi-medium{color:var(--y28)}.pi-high{color:var(--y27)}.pi-crowded{color:var(--now);font-weight:700}
 .nc{color:var(--y30);font-size:11px;margin-left:6px}
+.axis2{font-size:10px;margin-left:6px;padding:1px 5px;border-radius:3px;background:var(--line);color:var(--mut);font-weight:600}
+.dv{font-size:11px;color:var(--mut)}
 .cards{display:flex;gap:14px;flex-wrap:wrap;margin:10px 0}
 .card{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:14px 16px;min-width:150px}
 .card b{font-size:22px;display:block}.card span{color:var(--mut);font-size:12px}

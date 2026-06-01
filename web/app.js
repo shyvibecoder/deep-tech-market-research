@@ -219,10 +219,19 @@ function renderRadar() {
         const [cls, lbl] = WIN[s.bind_window] || ["", s.bind_window];
         const sig = DATA.sig?.scarcity_signals?.[s.id];
         const opp = sig?.score;
+        const isDiv = s.axis === "diversifier";
+        // Second axis: held to LOWER the book's drawdown, deliberately NOT scored by the AI-capex
+        // Opportunity model — so show its drawdown/beta evidence in place of the (absent) score.
+        const dv = s.diversifier_evidence;
+        const pctOf = (x) => (x == null ? "—" : `${Math.round(x * 100)}%`);
+        const axisMark = isDiv
+          ? `<span class="axis2" title="Second axis — a diversifier held to reduce drawdown, judged by the AI-capex gate (aiβ must not be positive), not the Opportunity Score${dv?.caveat ? `. ${esc(dv.caveat)}` : ""}">◇ diversifier · 2nd axis</span>` : "";
         // Flag where the live tape materially disagrees with the human priced-in label (informative).
         const diverge = sig && sig.live_gate != null && Math.abs(sig.live_gate - sig.static_gate) >= 0.3
           ? `<span class="diverge" title="tape disagrees with the priced-in label: live gate ${sig.live_gate} vs label ${sig.static_gate}">${sig.live_gate > sig.static_gate ? "↑tape" : "↓tape"}</span>` : "";
-        const oppCell = opp == null ? "—"
+        const oppCell = isDiv
+          ? `<span class="dv" title="Second axis — judged on drawdown reduction, not Opportunity Score.${dv?.blend_with ? ` Blended 50/50 with ${esc(dv.blend_with)}: maxDD ${pctOf(dv.blend_maxDD)} (compρ ${dv.blend_compRho}).` : ""}">maxDD ${pctOf(dv?.maxDD)} · β ${dv?.mktBeta ?? "—"} · aiβ ${dv?.aiBeta ?? "—"}</span>`
+          : opp == null ? "—"
           : `<span class="oppbar" title="gate(not-priced) ${sig.gate} [label ${sig.static_gate}${sig.live_gate != null ? ` · live ${sig.live_gate}` : ""}] × quality ${sig.quality}${sig.contrarian ? " · contrarian +" : ""}"><span style="width:${opp}%"></span></span> <strong>${opp}</strong>${diverge}`;
         const alphaMark = sig && sig.flag !== "none"
           ? `<span class="alpha ${sig.flag}" title="relative strength vs complex ${sig.rs}">${sig.flag === "de-rating" ? "↓ de-rating" : "↑ inflecting"}</span>` : "";
@@ -237,7 +246,7 @@ function renderRadar() {
           ? `<span class="drift" title="since ${dr.since}">▲ drift: priced-in ${dr.priced_in[0]}→${dr.priced_in[1]}</span>`
           : "";
         const tr = document.createElement("tr");
-        tr.innerHTML = `<td><strong>${esc(s.scarcity)}</strong>${s.non_consensus ? '<span class="nc">◆ non-consensus</span>' : ""}${alphaMark}${ffMark}${driftMark}<br><span style="color:var(--mut)">${esc(s.thesis)}</span></td>
+        tr.innerHTML = `<td><strong>${esc(s.scarcity)}</strong>${axisMark}${s.non_consensus ? '<span class="nc">◆ non-consensus</span>' : ""}${alphaMark}${ffMark}${driftMark}<br><span style="color:var(--mut)">${esc(s.thesis)}</span></td>
           <td class="opp-cell">${oppCell}</td>
           <td>${esc(s.sector)}</td><td><span class="pill ${cls}">${lbl}</span></td>
           <td class="pi-${esc(s.priced_in)}">${esc(s.priced_in)}</td><td>${esc(s.durability)}</td><td>${esc(s.substitution_risk)}</td>

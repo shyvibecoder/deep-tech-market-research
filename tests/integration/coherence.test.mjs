@@ -84,6 +84,17 @@ describe("coherence: dashboard↔scanner field contract (no orphan reads)", () =
     const fields = new Set([...app.matchAll(/DATA\.sig\??\.(\w+)/g)].map((m) => m[1]));
     for (const f of fields) assert.ok(emitted.has(f), `app.js reads signals.${f} but the scanner never emits it`);
   });
+  it("every diversifier carries the diversifier_evidence fields the radar renders", () => {
+    const divs = r("scarcities.json").scarcities.filter((s) => s.axis === "diversifier");
+    assert.ok(divs.length > 0, "expected at least one diversifier scarcity");
+    for (const s of divs) {
+      const e = s.diversifier_evidence;
+      assert.ok(e, `${s.id}: missing diversifier_evidence (radar would show blank cells)`);
+      for (const k of ["maxDD", "mktBeta", "aiBeta", "blend_with", "blend_maxDD", "blend_compRho"]) {
+        assert.ok(k in e, `${s.id}: diversifier_evidence missing ${k} (the radar reads it)`);
+      }
+    }
+  });
 });
 
 describe("coherence: shared math is single-source (no mirror drift)", () => {

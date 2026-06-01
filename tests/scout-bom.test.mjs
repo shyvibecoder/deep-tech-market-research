@@ -14,6 +14,10 @@ describe("scout engine 2: bomLadderPrompt", () => {
     assert.match(p, /electricity|water|commodity|common chemicals/i, "must exclude commodity inputs");
     assert.match(p, /one per line|input — why|input -/i, "must specify the parseable one-per-line format");
   });
+  it("asks the model to also name candidate public proxies (hybrid discovery)", () => {
+    assert.match(p, /proxies|tickers/i);
+    assert.match(p, /produce|producer/i, "must ask for actual producers, not mentioners");
+  });
 });
 
 // Engine 2 (SCOUT-DESIGN): walk UP the dependency stack from the 24 KNOWN scarcities — "what does
@@ -100,5 +104,35 @@ describe("scout: searchTerm (verbose subject → searchable proxy-discovery term
   it("handles empty / junk", () => {
     assert.equal(searchTerm(""), "");
     assert.equal(searchTerm(null), "");
+  });
+});
+
+// HYBRID proxy discovery: the BOM model also NAMES candidate public proxies (it knows the real
+// producers), unioned with FTS-discovered tickers; the CRO filters the combined set downstream.
+describe("scout engine 2: hybrid proxies (model-proposed ∪ FTS-discovered)", () => {
+  it("parseLadderResponse extracts an optional 'proxies:' clause of tickers", () => {
+    const out = parseLadderResponse("grain-oriented electrical steel — one US mill — proxies: CLF, X\nturbine blades — concentrated — tickers: PCC");
+    assert.equal(out[0].input, "grain-oriented electrical steel");
+    assert.match(out[0].why, /one US mill/);
+    assert.deepEqual(out[0].tickers, ["CLF", "X"]);
+    assert.deepEqual(out[1].tickers, ["PCC"]);
+  });
+  it("a line with no proxies clause yields empty model tickers (back-compat)", () => {
+    assert.deepEqual(parseLadderResponse("photoresist — lithography input")[0].tickers, []);
+  });
+  it("bomLadderLeads UNIONS model-proposed tickers with FTS-discovered ones", async () => {
+    const scarcities = [{ id: "transformers", scarcity: "Transformers", tickers: ["ETN"] }];
+    const propose = async () => "grain-oriented electrical steel — one US mill — proxies: CLF";
+    const discover = async () => ["X", "ATI"];   // FTS finds (wrong) mentioners; model adds the real producer
+    const { leads } = await bomLadderLeads({ scarcities, propose, discover, maxSeeds: 1, maxPerSeed: 1 });
+    assert.equal(leads[0].subject, "grain-oriented electrical steel");
+    assert.deepEqual([...leads[0].tickers].sort(), ["ATI", "CLF", "X"], "union of model + FTS, deduped");
+  });
+  it("novelty filter still drops a lead whose entire union is already-known tickers", async () => {
+    const scarcities = [{ id: "transformers", scarcity: "Transformers", tickers: ["ETN"] }];
+    const propose = async () => "grain-oriented electrical steel — x — proxies: ETN";
+    const discover = async () => ["ETN"];
+    const { leads } = await bomLadderLeads({ scarcities, propose, discover, knownTickers: ["ETN"], maxSeeds: 1, maxPerSeed: 1 });
+    assert.equal(leads.length, 0);
   });
 });

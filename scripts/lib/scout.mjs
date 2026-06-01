@@ -285,7 +285,9 @@ export function bomLadderPrompt(scarcity) {
     `Each "input" must be a SHORT, searchable common name — 2-4 words, the material/component itself ` +
     `(e.g. "grain-oriented electrical steel", "single-crystal turbine blades", "transformer bushings"). ` +
     `Put grades, voltage/size specs and detail in the WHY, NOT the input, so it matches filing text. ` +
-    `Generic (no company names). Output one per line as: input — why. If none, output nothing.`;
+    `Then append "proxies: T1, T2" — 1-3 PUBLIC tickers (US listings or ADRs) you believe ACTUALLY ` +
+    `PRODUCE this input (not merely mention it); omit the clause if you are unsure (a risk reviewer ` +
+    `verifies them, so do NOT guess). Output one per line as: input — why — proxies: T1, T2. None → nothing.`;
 }
 
 // Normalize a verbose subject into a short, searchable proxy-discovery term (empirical-run finding:
@@ -310,21 +312,27 @@ export function searchTerm(subject) {
 export function parseLadderResponse(text) {
   const trimmed = String(text || "").trim();
   if (trimmed.startsWith("[")) {
-    try { return JSON.parse(trimmed).map((x) => ({ input: String(x.input || "").trim(), why: String(x.why || "").trim() })).filter((x) => x.input.length >= 3); }
-    catch { /* fall through */ }
+    try {
+      return JSON.parse(trimmed).map((x) => ({ input: String(x.input || "").trim(), why: String(x.why || "").trim(), tickers: cleanTickers(x.tickers) })).filter((x) => x.input.length >= 3);
+    } catch { /* fall through */ }
   }
   const out = [];
   for (const raw of trimmed.split(/\r?\n/)) {
-    const line = raw.replace(/^\s*(?:[-*•]|\d+[.)])\s*/, "").trim();
+    let line = raw.replace(/^\s*(?:[-*•]|\d+[.)])\s*/, "").trim();
     if (!line) continue;
+    // HYBRID: pull an optional trailing "proxies: T1, T2" / "tickers: T1" clause (model-named proxies).
+    let tickers = [];
+    const pm = line.match(/\b(?:proxies|tickers)\s*[:=]\s*([A-Za-z0-9 ,.&-]+)$/i);
+    if (pm) { tickers = cleanTickers(pm[1].split(/[,\s]+/)); line = line.slice(0, pm.index).replace(/[\s—:–-]+$/, "").trim(); }
     const m = line.match(/^(.+?)\s*(?:[—:–-]\s+|—)\s*(.+)$/);
     const input = (m ? m[1] : line).trim();
     const why = m ? m[2].trim() : "";
     if (input.length < 3) continue;
-    out.push({ input, why });
+    out.push({ input, why, tickers });
   }
   return out;
 }
+const cleanTickers = (arr) => [...new Set((arr || []).map((t) => String(t).trim().toUpperCase()).filter((t) => /^[A-Z]{1,5}$/.test(t)))];
 
 // Engine-2 lead producer: for each of up to maxSeeds known scarcities, the model proposes upstream
 // inputs; we discover public proxies for each (reusing the chokepoint discovery), and emit a lead.
@@ -337,13 +345,17 @@ export async function bomLadderLeads({ scarcities = [], propose, discover, known
     let inputs = [];
     try { inputs = parseLadderResponse(await propose(s)).slice(0, maxPerSeed); }
     catch (e) { errors.push(`ladder ${s.id}: ${e.message}`); continue; }
-    for (const { input, why } of inputs) {
-      let tickers = [];
-      try { tickers = (await discover(input)) || []; }
+    for (const { input, why, tickers: modelTickers } of inputs) {
+      let fts = [];
+      try { fts = (await discover(input)) || []; }
       catch (e) { errors.push(`discover ${input}: ${e.message}`); }
-      const novel = tickers.filter((t) => !known.has(t));
-      if (tickers.length && !novel.length) continue;           // every proxy already known → not novel
-      leads.push({ engine: "bom-ladder", subject: input, tickers: novel.length ? novel : tickers, lead: { ladder_from: s.id, why } });
+      // HYBRID: union the model-named proxies with the FTS-discovered ones; the CRO filters the
+      // combined set downstream (it reliably vetoes misattributed tickers). Model often knows the real
+      // producer FTS mention-counting misses; FTS catches names the model didn't think of.
+      const union = [...new Set([...(modelTickers || []), ...fts])];
+      const novel = union.filter((t) => !known.has(t));
+      if (union.length && !novel.length) continue;           // every proxy already known → not novel
+      leads.push({ engine: "bom-ladder", subject: input, tickers: novel.length ? novel : union, lead: { ladder_from: s.id, why } });
     }
   }
   return { leads, errors };

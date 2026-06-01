@@ -1355,6 +1355,48 @@
         "ROBO": 89.5999984741211,
         "UFO": 61.61000061035156
       }
+    },
+    {
+      "date": "2026-06-01",
+      "type": "scarcity_rel",
+      "subject": "hvdc",
+      "proxies": [
+        "PRY.MI",
+        "NEX.PA"
+      ],
+      "complex_tickers": [
+        "PAVE",
+        "GRID",
+        "FIW",
+        "SHLD",
+        "SMH",
+        "COPX",
+        "NUKZ",
+        "ROBO",
+        "UFO"
+      ],
+      "basket_at": 153.0500030517578,
+      "complex_at": 149.075803120931,
+      "basket_prices": {
+        "PRY.MI": 149.3000030517578,
+        "NEX.PA": 156.8000030517578
+      },
+      "complex_prices": {
+        "PAVE": 56.084999084472656,
+        "GRID": 193.91990661621094,
+        "FIW": 103.70800018310547,
+        "SHLD": 65.94000244140625,
+        "SMH": 608.4550170898438,
+        "COPX": 90.05000305175781,
+        "NUKZ": 72.5199966430664,
+        "ROBO": 89.67430114746094,
+        "UFO": 61.33000183105469
+      },
+      "horizon_days": 42,
+      "resolve_on": "2026-07-13",
+      "id": "2026-06-01:scarcity_rel:hvdc",
+      "claim": "outperform",
+      "source": "de-rating"
     }
   ],
   "scorecard": {

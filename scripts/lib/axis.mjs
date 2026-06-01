@@ -37,6 +37,39 @@ export function basketReturns(seriesByTicker, tickers) {
   return { dates: dates.slice(1), rets };
 }
 
+// 2-FACTOR gate (the forward-looking metric). Raw correlation conflates two things: generic market beta
+// (everything co-moves in a sell-off, and this only rises as AI permeates the index) and the SPECIFIC
+// AI-capex risk we actually carry. So we orthogonalize the AI-capex complex from the broad market to get
+// an AI-capex factor that is independent of market beta, then regress the candidate on BOTH. The candidate
+// is judged on its RESIDUAL AI-capex beta (`aiBeta`) — its sensitivity to the build-out AFTER controlling
+// for market beta. A basket can have high raw correlation (high mktBeta) yet ~zero aiBeta — that's genuine
+// breadth against an AI-capex air-pocket. `qualifies` when |aiBeta| < aiBetaMax. Returns null on thin overlap.
+export function aiCapexLoading(seriesByTicker, candidateTickers, marketTickers, complexTickers, { aiBetaMax = 0.3, minDays = 60 } = {}) {
+  const mkt = basketReturns(seriesByTicker, marketTickers);
+  const cpx = basketReturns(seriesByTicker, complexTickers);
+  const cand = basketReturns(seriesByTicker, candidateTickers);
+  // Step 1: orthogonalize the complex from the market → AI-capex-specific factor (regression residuals).
+  const a1 = alignByDate({ M: { dates: mkt.dates, values: mkt.rets }, C: { dates: cpx.dates, values: cpx.rets } });
+  if (a1.dates.length < minDays) return null;
+  const f1 = ols(a1.cols.C, [a1.cols.M]);
+  if (!f1) return null;
+  const aiFactor = a1.cols.C.map((c, i) => c - (f1.coef[0] + f1.coef[1] * a1.cols.M[i]));
+  // Step 2: regress candidate on [market, AI-capex factor]; the AI-capex factor's slope is the clean loading.
+  const a2 = alignByDate({ Y: { dates: cand.dates, values: cand.rets }, M: { dates: a1.dates, values: a1.cols.M }, F: { dates: a1.dates, values: aiFactor } });
+  if (a2.dates.length < minDays) return null;
+  const fit = ols(a2.cols.Y, [a2.cols.M, a2.cols.F]);
+  if (!fit) return null;
+  const marketBeta = fit.coef[1], aiBeta = fit.coef[2], aiT = fit.t?.[2] ?? null;
+  const qualifies = Math.abs(aiBeta) < aiBetaMax;
+  return {
+    marketBeta: +marketBeta.toFixed(3), aiBeta: +aiBeta.toFixed(3), aiT: aiT == null ? null : +aiT.toFixed(2),
+    r2: +fit.r2.toFixed(3), n: fit.n, qualifies,
+    note: qualifies
+      ? "low marginal AI-capex loading — genuine breadth vs the build-out (high mktBeta is just market beta)"
+      : "loads on the AI-capex factor even AFTER market beta — not real breadth against a capex air-pocket",
+  };
+}
+
 // Correlation + beta of a candidate-axis basket vs the AI-capex complex, over aligned daily returns.
 // `qualifies` (adds real breadth) when |corr| < corrMax AND |beta| < betaMax. Returns null on thin overlap.
 export function axisCorrelation(seriesByTicker, candidateTickers, complexTickers, { corrMax = 0.5, betaMax = 0.7, minDays = 60 } = {}) {

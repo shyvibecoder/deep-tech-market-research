@@ -1,6 +1,6 @@
 import { describe, it } from "node:test";
 import assert from "node:assert/strict";
-import { basketReturns, axisCorrelation, basketStats } from "../scripts/lib/axis.mjs";
+import { basketReturns, axisCorrelation, basketStats, aiCapexLoading } from "../scripts/lib/axis.mjs";
 
 const DATES = (n) => Array.from({ length: n }, (_, i) => new Date(Date.UTC(2020, 0, 1) + i * 86400000).toISOString().slice(0, 10));
 
@@ -48,6 +48,39 @@ describe("axis: basketStats (returns + risk + explicit window)", () => {
   it("returns null on thin history", () => {
     const dates = DATES(20);
     assert.equal(basketStats({ A: { dates, closes: dates.map(() => 100) } }, ["A"]), null);
+  });
+});
+
+describe("axis: 2-factor AI-capex loading (the forward-looking gate)", () => {
+  // market factor + an independent AI-capex-specific factor. complex = market + aiComp (loads on both).
+  // A high-market-beta basket with NO ai-specific exposure must PASS; a basket that loads on aiComp FAILS,
+  // even if both have similar raw correlation to the complex.
+  const n = 400, dates = DATES(n);
+  const rng = (seed) => () => ((seed = (seed * 1103515245 + 12345) & 0x7fffffff) / 0x7fffffff - 0.5);
+  const mkt = Array.from({ length: n }, rng(7)).map((v) => v * 0.02);
+  const aiComp = Array.from({ length: n }, rng(8)).map((v) => v * 0.02);
+  const noise = (seed) => Array.from({ length: n }, rng(seed)).map((v) => v * 0.01);
+  const px = (rets) => { const p = [100]; for (const r of rets) p.push(p[p.length - 1] * (1 + r)); return p; };
+  const s = {
+    SPY: { dates, closes: px(mkt) },
+    CPX: { dates, closes: px(mkt.map((m, i) => m + aiComp[i])) },          // complex = market + AI-specific
+    MKTONLY: { dates, closes: px(mkt.map((m, i) => 0.9 * m + noise(9)[i])) }, // high market beta, no AI loading
+    AIPLAY: { dates, closes: px(mkt.map((m, i) => 0.5 * m + 0.9 * aiComp[i])) }, // genuine AI-capex loading
+  };
+  it("PASSES a high-market-beta basket with ~zero residual AI-capex loading", () => {
+    const r = aiCapexLoading(s, ["MKTONLY"], ["SPY"], ["CPX"], { aiBetaMax: 0.3 });
+    assert.ok(r && Math.abs(r.aiBeta) < 0.3, `aiBeta ${r?.aiBeta} should be ~0`);
+    assert.ok(r.marketBeta > 0.5, `should still show real market beta, got ${r.marketBeta}`);
+    assert.equal(r.qualifies, true);
+  });
+  it("FAILS a basket that loads on the AI-capex factor after market beta", () => {
+    const r = aiCapexLoading(s, ["AIPLAY"], ["SPY"], ["CPX"], { aiBetaMax: 0.3 });
+    assert.ok(Math.abs(r.aiBeta) > 0.5, `aiBeta ${r.aiBeta} should be high`);
+    assert.equal(r.qualifies, false);
+  });
+  it("returns null on thin overlap", () => {
+    const d = DATES(20);
+    assert.equal(aiCapexLoading({ A: { dates: d, closes: d.map(() => 100) } }, ["A"], ["A"], ["A"]), null);
   });
 });
 

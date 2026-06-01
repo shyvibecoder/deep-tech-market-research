@@ -5,7 +5,7 @@
 // Run with network (GitHub Actions, or local): node scripts/axis-check.mjs
 import { fetchSeries, fetchStooqHistory, fetchTiingoHistory } from "./lib/quotes.mjs";
 import { reconcileSeries } from "./lib/history-reconcile.mjs";
-import { axisCorrelation, basketStats } from "./lib/axis.mjs";
+import { axisCorrelation, basketStats, aiCapexLoading } from "./lib/axis.mjs";
 
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 
@@ -26,9 +26,10 @@ async function deepSeries(ticker) {
   return { ticker, dates: rows.map((r) => r.d), closes: rows.map((r) => r.close) };
 }
 
-// AI-capex complex proxy — long-lived so the correlation window is ~25yr: QQQ (1999) + SMH semis (2000).
-// (Held theme ETFs like NUKZ/PAVE are young and would truncate the window to ~2yr; semis are the cleanest
-//  long-history proxy for the AI/datacenter capex factor.)
+// Broad MARKET factor (long-lived) — used to strip generic market beta out of the AI-capex signal.
+const MARKET = ["SPY"];
+// AI-capex complex proxy — long-lived so the window is ~25yr: QQQ (1999) + SMH semis (2000). Orthogonalized
+// from MARKET (above) to form the AI-capex-SPECIFIC factor. (Held ETFs like NUKZ/PAVE are too young.)
 const COMPLEX = ["QQQ", "SMH"];
 
 // Candidate second axes — LONG-HISTORY pure-plays (intersection window noted), Edge-2 chokepoint logic in mind:
@@ -57,48 +58,52 @@ const pct = (x) => (x == null ? "  —  " : (x * 100).toFixed(1) + "%");
 const sliceFrom = (s, start) => { const i = s.dates.findIndex((d) => d >= start); return i < 0 ? { dates: [], closes: [] } : { dates: s.dates.slice(i), closes: s.closes.slice(i) }; };
 const sliceMap = (m, start) => Object.fromEntries(Object.entries(m).map(([k, v]) => [k, sliceFrom(v, start)]));
 
-// Rank: must qualify on correlation AND reward return. Score = Sharpe penalised by correlation.
-const score = (r) => (r.stats && r.corr ? r.stats.sharpe - Math.abs(r.corr.corr) : -99);
+// Rank: judge on the 2-factor gate (residual AI-capex beta) AND reward return. Score = Sharpe − |aiβ|.
+const score = (r) => (r.stats && r.load ? r.stats.sharpe - Math.abs(r.load.aiBeta) : -99);
 
-function buildRows(complexSeries, candByAxis) {
-  const complexTk = Object.keys(complexSeries);
+function buildRows(marketSeries, complexSeries, candByAxis) {
+  const complexTk = Object.keys(complexSeries), marketTk = Object.keys(marketSeries);
   const rows = [];
   for (const [axis, cand] of Object.entries(candByAxis)) {
     const candTk = Object.keys(cand).filter((t) => cand[t]?.closes?.length);
+    const merged = { ...marketSeries, ...complexSeries, ...cand };
     const stats = candTk.length >= 2 ? basketStats(cand, candTk) : null;
-    const corr = candTk.length >= 2 ? axisCorrelation({ ...complexSeries, ...cand }, candTk, complexTk, { corrMax: 0.5, betaMax: 0.7 }) : null;
-    rows.push({ axis, candTk, stats, corr });
+    const corr = candTk.length >= 2 ? axisCorrelation(merged, candTk, complexTk, { corrMax: 0.5, betaMax: 0.7 }) : null;
+    const load = candTk.length >= 2 ? aiCapexLoading(merged, candTk, marketTk, complexTk, { aiBetaMax: 0.3 }) : null;
+    rows.push({ axis, candTk, stats, corr, load });
   }
   return rows.sort((a, b) => score(b) - score(a));
 }
 
 function printTable(title, cx, rows) {
-  console.log("\n" + "=".repeat(104));
+  console.log("\n" + "=".repeat(112));
   console.log(title + "\n");
   console.log(`  complex: ${cx?.start}..${cx?.end} (${cx?.years}yr)  CAGR ${pct(cx?.cagr)}  maxDD ${pct(cx?.maxDD)}  Sharpe ${cx?.sharpe}\n`);
-  console.log("axis".padEnd(38), "yrs".padStart(5), "CAGR".padStart(7), "maxDD".padStart(7), "Shrp".padStart(6), "corr".padStart(6), "beta".padStart(6), "  gate");
-  for (const { axis, candTk, stats, corr } of rows) {
-    if (!stats || !corr) { console.log(axis.padEnd(38), "  (insufficient data)", candTk.join(",")); continue; }
+  console.log("axis".padEnd(38), "yrs".padStart(5), "CAGR".padStart(7), "maxDD".padStart(7), "Shrp".padStart(6), "mktβ".padStart(6), "aiβ".padStart(6), "rawρ".padStart(6), "  gate(aiβ)");
+  for (const { axis, candTk, stats, corr, load } of rows) {
+    if (!stats || !load) { console.log(axis.padEnd(38), "  (insufficient data)", candTk.join(",")); continue; }
     console.log(axis.padEnd(38), String(stats.years).padStart(5), pct(stats.cagr).padStart(7), pct(stats.maxDD).padStart(7),
-      String(stats.sharpe).padStart(6), String(corr.corr).padStart(6), String(corr.beta).padStart(6), corr.qualifies ? "  ✅ uncorr" : "  ❌ too corr");
+      String(stats.sharpe).padStart(6), String(load.marketBeta).padStart(6), String(load.aiBeta).padStart(6),
+      String(corr?.corr ?? "—").padStart(6), load.qualifies ? "  ✅ low aiβ" : "  ❌ AI-loaded");
   }
 }
 
 function mdTable(title, cx, rows) {
-  let md = `### ${title}\n\n_Complex ${COMPLEX.join("+")}: ${cx?.start}..${cx?.end} (${cx?.years}yr), CAGR ${pct(cx?.cagr)}, maxDD ${pct(cx?.maxDD)}, Sharpe ${cx?.sharpe}._\n\n`;
-  md += "| Axis | yrs | CAGR | maxDD | Sharpe | corr | beta | Gate |\n|---|--:|--:|--:|--:|--:|--:|:--|\n";
-  for (const { axis, candTk, stats, corr } of rows) {
-    md += stats && corr
-      ? `| ${axis} | ${stats.years} | ${pct(stats.cagr)} | ${pct(stats.maxDD)} | ${stats.sharpe} | ${corr.corr} | ${corr.beta} | ${corr.qualifies ? "✅ uncorr" : "❌ too corr"} |\n`
-      : `| ${axis} | — | — | — | — | — | — | ⚠️ insufficient data (${candTk.join(",")}) |\n`;
+  let md = `### ${title}\n\n_Complex ${COMPLEX.join("+")} vs market ${MARKET.join("+")}: ${cx?.start}..${cx?.end} (${cx?.years}yr), CAGR ${pct(cx?.cagr)}, maxDD ${pct(cx?.maxDD)}, Sharpe ${cx?.sharpe}._\n\n`;
+  md += "| Axis | yrs | CAGR | maxDD | Sharpe | mktβ | **aiβ** | rawρ | Gate (aiβ) |\n|---|--:|--:|--:|--:|--:|--:|--:|:--|\n";
+  for (const { axis, candTk, stats, corr, load } of rows) {
+    md += stats && load
+      ? `| ${axis} | ${stats.years} | ${pct(stats.cagr)} | ${pct(stats.maxDD)} | ${stats.sharpe} | ${load.marketBeta} | **${load.aiBeta}** | ${corr?.corr ?? "—"} | ${load.qualifies ? "✅ low aiβ" : "❌ AI-loaded"} |\n`
+      : `| ${axis} | — | — | — | — | — | — | — | ⚠️ insufficient data (${candTk.join(",")}) |\n`;
   }
   return md + "\n";
 }
 
 (async () => {
-  console.log("Fetching AI-capex complex (long-history proxy):", COMPLEX.join(", "));
+  console.log("Fetching market factor:", MARKET.join(", "), "| AI-capex complex:", COMPLEX.join(", "));
+  const marketSeries = await loadSeries(MARKET);
   const complexSeries = await loadSeries(COMPLEX);
-  if (Object.keys(complexSeries).length < 2) { console.error("Not enough complex series — need network."); process.exit(1); }
+  if (!Object.keys(marketSeries).length || Object.keys(complexSeries).length < 2) { console.error("Not enough market/complex series — need network."); process.exit(1); }
 
   const candByAxis = {};
   for (const [axis, tickers] of Object.entries(CANDIDATES)) {
@@ -108,30 +113,32 @@ function mdTable(title, cx, rows) {
 
   // Table A — each basket over its OWN max history (longest available per basket).
   const cxOwn = basketStats(complexSeries, Object.keys(complexSeries));
-  const rowsOwn = buildRows(complexSeries, candByAxis);
+  const rowsOwn = buildRows(marketSeries, complexSeries, candByAxis);
 
   // Table B — APPLES-TO-APPLES: slice every series to the common start (latest IPO across all baskets),
-  // so all correlations are measured on the identical window. Controls for the window-length confound
-  // that flatters longer-history baskets (their pre-AI-era years are trivially uncorrelated).
+  // so all loadings are measured on the identical window. Controls for the window-length confound that
+  // flatters longer-history baskets (their pre-AI-era years are trivially uncorrelated).
   let commonStart = "0000-00-00";
-  for (const m of [complexSeries, ...Object.values(candByAxis)]) for (const s of Object.values(m)) if (s.dates?.[0] > commonStart) commonStart = s.dates[0];
-  const complexC = sliceMap(complexSeries, commonStart);
+  for (const m of [marketSeries, complexSeries, ...Object.values(candByAxis)]) for (const s of Object.values(m)) if (s.dates?.[0] > commonStart) commonStart = s.dates[0];
+  const marketC = sliceMap(marketSeries, commonStart), complexC = sliceMap(complexSeries, commonStart);
   const candByAxisC = Object.fromEntries(Object.entries(candByAxis).map(([a, m]) => [a, sliceMap(m, commonStart)]));
   const cxC = basketStats(complexC, Object.keys(complexC));
-  const rowsCommon = buildRows(complexC, candByAxisC);
+  const rowsCommon = buildRows(marketC, complexC, candByAxisC);
 
   printTable("TABLE A — each basket over its OWN max history (windows differ)", cxOwn, rowsOwn);
   printTable(`TABLE B — APPLES-TO-APPLES, all sliced to common start ${commonStart}`, cxC, rowsCommon);
-  console.log("\nWinner = passes the gate (✅) AND earns its capital — judged on TABLE B (identical window).");
-  console.log("Food/ag was a SHORT-WINDOW mirage; the long window is the honest test.");
+  console.log("\naiβ = residual AI-capex loading AFTER market beta (the forward-looking gate; raw ρ shown for context).");
+  console.log("Winner = LOW aiβ (✅) AND earns its capital (Sharpe/CAGR, contained maxDD) — judged on TABLE B.");
 
   if (process.env.GITHUB_STEP_SUMMARY) {
     const fs = await import("node:fs");
-    let md = "## G2 — second-axis screen (uncorrelated **and** earns its capital)\n\n";
-    md += "**Decide on Table B** (identical window) — Table A's longer-history baskets are flattered by their pre-AI-era years.\n\n";
+    let md = "## G2 — second-axis screen (2-factor: market beta stripped out)\n\n";
+    md += "**aiβ** = the candidate's loading on the AI-capex factor *after* controlling for broad-market beta (mktβ) — ";
+    md += "the forward-looking measure of specific AI-capex risk. **Decide on Table B** (identical window). ";
+    md += "Raw correlation (rawρ) is shown for context but conflates market beta with AI-capex risk.\n\n";
     md += mdTable("Table A — each basket's own max history (windows differ)", cxOwn, rowsOwn);
     md += mdTable(`Table B — apples-to-apples, all from ${commonStart}`, cxC, rowsCommon);
-    md += "_Climate/water is a control (overlaps held FIW). Food/ag looked best over ~2yr but is the worst over a full cycle — high-beta cyclical._\n";
+    md += "_A high mktβ with LOW aiβ = genuine breadth (falls in a broad sell-off, but not specifically tied to the AI build-out). Climate/water is a control (overlaps held FIW)._\n";
     fs.appendFileSync(process.env.GITHUB_STEP_SUMMARY, md);
   }
 })();

@@ -97,21 +97,23 @@ in technicals; (7) trusted-source persist guard (`sanitizePriceRows`) + first-wi
 ### Cross-app hardening — patterns to adopt from "Helm" (sister app; regime-brake design)
 Helm lacks our multi-source consensus + blocking anomaly rejection (our strengths), but its structural
 regime-brake design protects even when corroboration fails. Status mapped against Puck:
-- [ ] **#1 Suppress the overlay when ANY required input is missing/synthetic** (highest value). Puck's
-  `macroStress` evaluates a missing VIX/VIX3M/HYG leg to `false` — a silent false-negative (fails to
-  brake when data is gone). Adopt: suppress the brake entirely + fall back to the safe counterfactual,
-  surface per-input provenance. Complements (doesn't replace) the V2.3 `plausibleNextBar` value-glitch guard.
-- [ ] **#2 Multi-day persistence on the term-structure leg** (3 consecutive days). Puck already has
-  exit-only + AND-of-uncorrelated (VIX-term × HY-credit); add persistence so a lone 1-day spike is inert.
-- [ ] **#3 Drop weekend-dated / pre-inception bars at the write chokepoint.** Puck already funnels writes
-  (incl. `--backfill`) through `sanitizePriceRows` (ticker/date/finite/source); ADD weekend + pre-inception
-  drops + per-guard drop counters (Helm hit a real holiday-bar corruption here).
-- [ ] **#5 No-look-ahead regression test** — Puck's windows are verified trailing; add a test that fails
-  if any window reaches past index i (locks the property).
-- [ ] **#7 Golden-baseline numeric drift monitor** — Puck has schema `selfcheck` but no pinned-numbers
-  baseline; add for the accumulating history warehouse.
-- [ ] **#6 Staleness severity tiers + macro grace** — low until a lag-publishing macro source (FRED HY-OAS)
-  is added; Puck's flat 6-day is fine for daily Yahoo macro for now.
+- [x] **#1 Suppress the overlay when ANY required input is missing/synthetic** — SHIPPED (a9463e3):
+  `macroStress` returns `available:false`+`suppressed` on any missing input; scan marks the overlay
+  unavailable (not fake "calm"). Complements the V2.3 `plausibleNextBar` value-glitch guard.
+- [x] **#2 Multi-day persistence on the term-structure leg** — SHIPPED (c13309a): 3 consecutive inverted
+  days required when history is available; scan wires trailing VIX/VIX3M ratios.
+- [x] **#3 Drop weekend-dated bars at the write chokepoint** — SHIPPED (c13309a): `sanitizePriceRows`
+  rejects Sat/Sun bars (shared by `--backfill`). NOTE: pre-inception drop still TODO (needs an inception map).
+- [x] **#5 No-look-ahead regression test** — SHIPPED (6951f14): `tests/backtest.test.mjs` fails if a
+  changed future bar alters any past position decision.
+- [ ] **#7 Golden-baseline numeric drift monitor** — NOT done (larger infra). Puck has schema `selfcheck`
+  + extensive unit tests (golden values for pure fns), but no scheduled drift check over the accumulated
+  Supabase warehouse. Build deliberately.
+- [ ] **#6 Staleness severity tiers + macro grace** — NOT done (low). Puck's flat 6-day is fine for daily
+  Yahoo macro; revisit when a lag-publishing source (FRED HY-OAS) is added.
+- [ ] **#3b pre-inception drop + per-guard drop counters** — needs a per-ticker inception map.
+- [ ] **dawidd6/action-send-mail SHA pin** — flagged in-workflow (`# SECURITY TODO`); needs the verified
+  upstream SHA (don't guess — a wrong SHA breaks the mail step).
 - ALREADY HAVE: **#8** plausibility at write *and* read (`sanitizePriceRows` + `readSeries`); **#3** single
   chokepoint + mirrored backfill; **#4** degraded→hold (data_quality gate); **#2** exit-only + AND-gate.
 

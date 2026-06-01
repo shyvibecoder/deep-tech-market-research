@@ -33,3 +33,26 @@ describe("options: fairness verdict (IV vs realized)", () => {
   it("flags CHEAP when IV < realized", () => assert.equal(mk(0.22, 0.4).verdict, "cheap"));
   it("calls it FAIR within a normal variance premium", () => assert.equal(mk(0.33, 0.3).verdict, "fair"));
 });
+
+import { bsGreeks } from "../scripts/lib/options.mjs";
+// Audit F1: the theta dividend-yield (q) term had the wrong sign (latent — masked by q=0). Lock it
+// against a central finite-difference of bsPrice in T, which is sign-agnostic ground truth.
+describe("options: bsGreeks theta with dividend yield (F1 sign fix)", () => {
+  const fdTheta = (type, p) => {
+    const h = 1e-4;
+    const up = bsPrice({ ...p, T: p.T + h }), dn = bsPrice({ ...p, T: p.T - h });
+    return -((up - dn) / (2 * h)) / 365;   // per-day, matching bsGreeks convention
+  };
+  for (const type of ["call", "put"]) {
+    it(`${type} theta matches finite-difference with q>0`, () => {
+      const p = { type, S: 100, K: 100, T: 0.5, r: 0.04, sigma: 0.3, q: 0.02 };
+      const g = bsGreeks(p);
+      assert.ok(Math.abs(g.theta - fdTheta(type, p)) < 1e-4, `theta ${g.theta} vs FD ${fdTheta(type, p)}`);
+    });
+  }
+  it("q=0 still correct (the previously-masked path)", () => {
+    const p = { type: "call", S: 100, K: 105, T: 0.25, r: 0.03, sigma: 0.25, q: 0 };
+    const fd = (() => { const h = 1e-4; return -((bsPrice({ ...p, T: p.T + h }) - bsPrice({ ...p, T: p.T - h })) / (2 * h)) / 365; })();
+    assert.ok(Math.abs(bsGreeks(p).theta - fd) < 1e-4);
+  });
+});

@@ -28,8 +28,8 @@ jobs:
   scan:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
         with: { node-version: 20 }
       - name: Run scanner (free data + optional free LLM)
         env:
@@ -84,7 +84,7 @@ jobs:
         if: steps.alerts.outputs.newly != '' && env.SMTP_USER != ''
         env:
           SMTP_USER: ${{ secrets.SMTP_USER }}
-        uses: dawidd6/action-send-mail@v3
+        uses: dawidd6/action-send-mail@v3 # SECURITY TODO: pin to a full commit SHA (3rd-party, gets SMTP creds)
         with:
           server_address: ${{ secrets.SMTP_HOST || 'smtp.gmail.com' }}
           server_port: ${{ secrets.SMTP_PORT || 465 }}

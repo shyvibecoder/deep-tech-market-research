@@ -36,8 +36,8 @@ export function bsGreeks({ type, S, K, T, r = 0.04, sigma, q = 0 }) {
   const vega = S * Math.exp(-q * T) * normPdf(d1) * sq / 100; // per 1 vol-point
   const term = -(S * Math.exp(-q * T) * normPdf(d1) * sigma) / (2 * sq);
   const theta = (type === "put"
-    ? term + q * S * Math.exp(-q * T) * normCdf(-d1) + r * K * Math.exp(-r * T) * normCdf(-d2)
-    : term - q * S * Math.exp(-q * T) * normCdf(d1) - r * K * Math.exp(-r * T) * normCdf(d2)) / 365; // per day
+    ? term - q * S * Math.exp(-q * T) * normCdf(-d1) + r * K * Math.exp(-r * T) * normCdf(-d2)
+    : term + q * S * Math.exp(-q * T) * normCdf(d1) - r * K * Math.exp(-r * T) * normCdf(d2)) / 365; // per day
   return { delta, gamma, vega, theta };
 }
 

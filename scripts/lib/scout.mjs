@@ -95,6 +95,41 @@ export function legibilityTag({ financialCoverage = 0, primaryCoverage = 0 } = {
     : { tag: "early-contrarian", penalty: 0 };
 }
 
+// ORCHESTRATION (SCOUT-DESIGN flow): phrases → bounded FTS sweep → cluster → draft → committee →
+// survivors. All I/O is INJECTED so the funnel is testable offline and the runner stays thin:
+//   searchPhrase(phrase) -> [{ ticker, company, mentions }]   (wrap searchFts in the runner)
+//   evaluate(draft)      -> { approved, proposal?, reason? }  (wrap the committee in the runner)
+// Budget is hard-bounded: maxSearches caps FTS calls, maxCandidates caps committee evaluations — a
+// sweep is open-ended unlike scoring 24 known items, so cost is enforced here (D-cadence/budget).
+export async function runScoutSweep({
+  phrases = DEFAULT_CONSTRAINT_PHRASES, knownTickers = [], minPhrases = 2,
+  maxSearches = 12, maxCandidates = 8, subjectFor = null,
+  searchPhrase, evaluate,
+} = {}) {
+  const errors = [];
+  const toSearch = phrases.slice(0, maxSearches);
+  const results = [];
+  for (const phrase of toSearch) {
+    try { results.push({ phrase, hits: await searchPhrase(phrase) }); }
+    catch (e) { errors.push(`${phrase}: ${e.message}`); }
+  }
+  const { candidates, droppedKnown } = clusterConstraintHits(results, { knownTickers, minPhrases, max: maxCandidates });
+  const proposals = [], considered = [];
+  for (const lead of candidates) {
+    // subjectFor lets the runner name the inferred chokepoint (e.g. via the filer's top phrase or an
+    // LLM label); default to the filer so the draft is always well-formed even without enrichment.
+    const subject = (subjectFor && subjectFor(lead)) || `${lead.company || lead.ticker} supply constraint`;
+    const draft = draftScarcity(lead, { proxies: [lead.ticker], subject });
+    let verdict;
+    try { verdict = await evaluate(draft); }
+    catch (e) { errors.push(`evaluate ${draft.id}: ${e.message}`); considered.push({ id: draft.id, reason: `evaluate error: ${e.message}` }); continue; }
+    if (verdict?.approved) proposals.push({ ...(verdict.proposal || {}), id: draft.id, tickers: draft.tickers, source: "scout", constraint_phrases: lead.phrases });
+    else considered.push({ id: draft.id, tickers: draft.tickers, reason: verdict?.reason || "committee did not approve" });
+  }
+  const health = { phrasesSearched: results.length, candidates: candidates.length, proposals: proposals.length, droppedKnown, errors: errors.length };
+  return { proposals, considered, errors, health };
+}
+
 // D2 memory: split this run's candidates into fresh vs suppressed. A previously-REJECTED candidate
 // stays suppressed UNLESS its evidence_hash changed (materially new dated evidence → re-entry),
 // mirroring the committee's "burden of proof is on change". `proposed`/`accepted` are not re-run.

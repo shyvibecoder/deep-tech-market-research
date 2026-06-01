@@ -1,0 +1,55 @@
+name: scout
+# Scarcity SCOUT (docs/SCOUT-DESIGN.md): surveils SEC full-text for CONSTRAINT-language complaints,
+# clusters filers under broad supply stress into candidate NEW scarcities, and runs each through the
+# SAME investment committee that scores the known 24. Only committee-approved survivors are published
+# to web/data/scout-candidates.json (a SEPARATE feed) for HUMAN PR approval — the bot never writes
+# scarcities.json (F9). Weekly + on-demand; hard-budgeted so a sweep can't run away.
+on:
+  schedule:
+    - cron: "0 7 * * 1"   # 07:00 UTC every Monday
+  workflow_dispatch: {}
+permissions:
+  contents: write
+concurrency: { group: scout, cancel-in-progress: false }
+jobs:
+  scout:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30   # kill-switch: a sweep can't burn hours of Actions minutes
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 20 }
+      - name: "Run the scarcity scout (constraint-shadow FTS → committee)"
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
+          OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          ANTHROPIC_MODEL: ${{ vars.ANTHROPIC_MODEL }}
+          OPENAI_MODEL: ${{ vars.OPENAI_MODEL }}
+          GROQ_MODEL: ${{ vars.GROQ_MODEL }}
+          OPENROUTER_MODEL: ${{ vars.OPENROUTER_MODEL }}
+          GEMINI_MODEL: ${{ vars.GEMINI_MODEL }}
+          # SEC etiquette for the full-text search (set repo variable to "Name email").
+          SEC_USER_AGENT: ${{ vars.SEC_USER_AGENT }}
+          # Budget knobs (defaults in scripts/scout-run.mjs): bound the sweep + committee cost.
+          SCOUT_MAX_SEARCHES: ${{ vars.SCOUT_MAX_SEARCHES }}
+          SCOUT_MAX_CANDIDATES: ${{ vars.SCOUT_MAX_CANDIDATES }}
+          SCOUT_MIN_PHRASES: ${{ vars.SCOUT_MIN_PHRASES }}
+        run: |
+          node scripts/scout-run.mjs | tee scout-run.log
+          echo '```' >> "$GITHUB_STEP_SUMMARY"
+          cat scout-run.log >> "$GITHUB_STEP_SUMMARY"
+          echo '```' >> "$GITHUB_STEP_SUMMARY"
+      - name: "Commit scout candidates (front-end reviews + approves them)"
+        run: |
+          git config user.name "puck-bot"; git config user.email "puck-bot@users.noreply.github.com"
+          git add web/data/scout-candidates.json
+          if git diff --cached --quiet; then echo "no new scout candidates"; exit 0; fi
+          git commit -m "scout candidates $(date +%F) [skip ci]"
+          # Rebase before push so a concurrent commit to main can't reject (R3 race guard).
+          for i in 1 2 3; do git pull --rebase origin main && git push && break || sleep $((i*3)); done
+      - name: Upload scout output (inspect without a PR)
+        uses: actions/upload-artifact@v4
+        with: { name: scout-output, path: web/data/scout-candidates.json, if-no-files-found: ignore }

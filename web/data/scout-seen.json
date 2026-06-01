@@ -1,5 +1,36 @@
 {
   "schema_version": 1,
-  "updated": null,
-  "seen": {}
+  "updated": "2026-06-01",
+  "seen": {
+    "scout-hyster-yale-materials-handling-inc-supply-constraint": {
+      "status": "rejected",
+      "evidence_hash": "hyster-yale materials handling, inc. supply constraint|hy|extended delivery lead times|lead times extended",
+      "updated": "2026-06-01"
+    },
+    "scout-large-frame-gas-turbine-hot-section-castings-directionally-solidified-single-crystal-superalloy-blades-and-vanes": {
+      "status": "rejected",
+      "evidence_hash": "large-frame gas turbine hot-section castings (directionally solidified / single-crystal superalloy blades and vanes)",
+      "updated": "2026-06-01"
+    },
+    "scout-valmont-industries-inc-supply-constraint": {
+      "status": "rejected",
+      "evidence_hash": "valmont industries inc supply constraint|vmi|extended delivery lead times|lead times extended",
+      "updated": "2026-06-01"
+    },
+    "scout-high-voltage-gas-insulated-switchgear-gis-substation-assemblies-rated-345-kv": {
+      "status": "rejected",
+      "evidence_hash": "high-voltage gas-insulated switchgear (gis) substation assemblies rated ≥345 kv",
+      "updated": "2026-06-01"
+    },
+    "scout-grain-oriented-electrical-steel-goes-0-23-0-35-mm-domain-refined-grades": {
+      "status": "rejected",
+      "evidence_hash": "grain-oriented electrical steel (goes), 0.23–0.35 mm domain-refined grades",
+      "updated": "2026-06-01"
+    },
+    "scout-high-voltage-transformer-bushings-rated-345-kv-and-above-porcelain-or-resin-impregnated-paper-rip-type": {
+      "status": "rejected",
+      "evidence_hash": "high-voltage transformer bushings rated 345 kv and above (porcelain or resin-impregnated paper, rip type)",
+      "updated": "2026-06-01"
+    }
+  }
 }

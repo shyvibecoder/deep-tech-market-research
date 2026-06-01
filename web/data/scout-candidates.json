@@ -3,11 +3,15 @@
   "generated": "2026-06-01",
   "chair": "anthropic",
   "health": {
-    "phrasesSearched": 6,
-    "candidates": 2,
+    "engines": [
+      "constraint-shadow",
+      "bom-ladder"
+    ],
+    "leads": 14,
+    "suppressed": 0,
+    "candidates": 14,
     "proposals": 0,
-    "droppedKnown": 1,
-    "errors": 4
+    "errors": 0
   },
   "candidates": [],
   "considered": [
@@ -16,14 +20,40 @@
       "tickers": [
         "HY"
       ],
-      "reason": "low committee confidence (0.34)"
+      "engine": "constraint-shadow",
+      "reason": "low committee confidence (0.38)"
+    },
+    {
+      "id": "scout-large-frame-gas-turbine-hot-section-castings-directionally-solidified-single-crystal-superalloy-blades-and-vanes",
+      "tickers": [],
+      "engine": "bom-ladder",
+      "reason": "low committee confidence (0.21)"
     },
     {
       "id": "scout-valmont-industries-inc-supply-constraint",
       "tickers": [
         "VMI"
       ],
-      "reason": "low committee confidence (0.45)"
+      "engine": "constraint-shadow",
+      "reason": "low committee confidence (0.31)"
+    },
+    {
+      "id": "scout-high-voltage-gas-insulated-switchgear-gis-substation-assemblies-rated-345-kv",
+      "tickers": [],
+      "engine": "bom-ladder",
+      "reason": "low committee confidence (0.18)"
+    },
+    {
+      "id": "scout-grain-oriented-electrical-steel-goes-0-23-0-35-mm-domain-refined-grades",
+      "tickers": [],
+      "engine": "bom-ladder",
+      "reason": "low committee confidence (0.29)"
+    },
+    {
+      "id": "scout-high-voltage-transformer-bushings-rated-345-kv-and-above-porcelain-or-resin-impregnated-paper-rip-type",
+      "tickers": [],
+      "engine": "bom-ladder",
+      "reason": "low committee confidence (0.26)"
     }
   ]
 }

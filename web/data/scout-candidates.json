@@ -8,52 +8,57 @@
       "bom-ladder"
     ],
     "leads": 14,
-    "suppressed": 0,
+    "suppressed": 2,
     "candidates": 14,
     "proposals": 0,
-    "errors": 0
+    "errors": 1
   },
   "candidates": [],
   "considered": [
     {
-      "id": "scout-hyster-yale-materials-handling-inc-supply-constraint",
+      "id": "scout-grain-oriented-electrical-steel",
       "tickers": [
-        "HY"
+        "ATI",
+        "X"
       ],
-      "engine": "constraint-shadow",
-      "reason": "low committee confidence (0.38)"
+      "engine": "bom-ladder",
+      "reason": "low committee confidence (0.34)"
     },
     {
-      "id": "scout-large-frame-gas-turbine-hot-section-castings-directionally-solidified-single-crystal-superalloy-blades-and-vanes",
+      "id": "scout-large-power-transformer-forgings",
       "tickers": [],
       "engine": "bom-ladder",
-      "reason": "low committee confidence (0.21)"
+      "reason": "below threshold after CRO (0.34)"
     },
     {
-      "id": "scout-valmont-industries-inc-supply-constraint",
+      "id": "scout-grain-oriented-electrical-steel",
       "tickers": [
-        "VMI"
+        "ATI",
+        "X"
       ],
-      "engine": "constraint-shadow",
-      "reason": "low committee confidence (0.31)"
+      "engine": "bom-ladder",
+      "reason": "CRO veto: HALLUCINATION/MISATTRIBUTION: ATI (Allegheny Technologies) exited grain-oriented electrical steel; X (US Steel) has no documented GOES/Hi-B capacity. Neither ticker is a qualified Western GOES mill. Citing both as GOES plays without verified production capability is a factual misattribution — automatic veto per CRO mandate."
     },
     {
-      "id": "scout-high-voltage-gas-insulated-switchgear-gis-substation-assemblies-rated-345-kv",
-      "tickers": [],
+      "id": "scout-transformer-bushings",
+      "tickers": [
+        "ACFN",
+        "PNW"
+      ],
       "engine": "bom-ladder",
-      "reason": "low committee confidence (0.18)"
+      "reason": "low committee confidence (0.13)"
     },
     {
-      "id": "scout-grain-oriented-electrical-steel-goes-0-23-0-35-mm-domain-refined-grades",
+      "id": "scout-single-crystal-turbine-blades",
       "tickers": [],
       "engine": "bom-ladder",
-      "reason": "low committee confidence (0.29)"
+      "reason": "low committee confidence (0.33)"
     },
     {
-      "id": "scout-high-voltage-transformer-bushings-rated-345-kv-and-above-porcelain-or-resin-impregnated-paper-rip-type",
+      "id": "scout-turbine-grade-nickel-superalloy-forgings",
       "tickers": [],
       "engine": "bom-ladder",
-      "reason": "low committee confidence (0.26)"
+      "reason": "low committee confidence (0.11)"
     }
   ]
 }

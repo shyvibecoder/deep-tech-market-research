@@ -390,11 +390,15 @@ for (const s of scarcities.scarcities) {
   crowdingById[s.id] = cz.length ? cz.reduce((a, b) => a + b, 0) / cz.length : null;
 }
 const scarcity_signals = {};
-{
-  const etfMoms = portfolio.holdings
-    .filter((h) => securities[h.ticker]?.type === "etf")
+// C2: the "AI-capex complex" 1-month momentum baseline — computed ONCE here and reused by both the
+// de-rating/inflecting alpha signal (below) and the chokepoint-heat baseline, so the two references
+// can't silently diverge (they were separately inlined before).
+const complexMom = (() => {
+  const moms = portfolio.holdings.filter((h) => securities[h.ticker]?.type === "etf")
     .map((h) => enriched[h.ticker]?.mom_1m).filter((x) => typeof x === "number");
-  const complexMom = etfMoms.length ? etfMoms.reduce((a, b) => a + b, 0) / etfMoms.length : null;
+  return moms.length ? moms.reduce((a, b) => a + b, 0) / moms.length : null;
+})();
+{
   for (const s of scarcities.scarcities) {
     const moms = s.tickers.map((t) => enriched[t]?.mom_1m).filter((x) => typeof x === "number");
     const rs = relativeStrength(moms, complexMom);
@@ -454,9 +458,6 @@ let chokepoints = [];
 let proxy_hubs = [];
 {
   let cps = []; try { cps = read("chokepoints.json").chokepoints || []; } catch { /* optional */ }
-  const etfMoms2 = portfolio.holdings.filter((h) => securities[h.ticker]?.type === "etf")
-    .map((h) => enriched[h.ticker]?.mom_1m).filter((x) => typeof x === "number");
-  const complexMom = etfMoms2.length ? etfMoms2.reduce((a, b) => a + b, 0) / etfMoms2.length : null;
   for (const c of cps) {
     const moms = (c.proxies || []).map((t) => enriched[t]?.mom_1m).filter((x) => typeof x === "number");
     const proxyMom = moms.length ? moms.reduce((a, b) => a + b, 0) / moms.length : null;

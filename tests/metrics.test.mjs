@@ -53,3 +53,21 @@ describe("metrics: basket index", () => {
     assert.deepEqual(basketIndex({ A: { dates: ["d1"], closes: [1] } }, { A: 1 }).values, []);
   });
 });
+
+import { annualVol, sharpe } from "../scripts/lib/metrics.mjs";
+// C5: annualVol + sharpe were only covered transitively via portfolioMetrics (no direct numeric assert).
+describe("metrics: annualVol + sharpe (C5 direct coverage)", () => {
+  it("annualVol = sample-stddev × sqrt(periodsPerYear)", () => {
+    // returns [0.02,-0.02]: mean 0, sample var = (0.0004+0.0004)/1 = 0.0008, sd = 0.0282843
+    assert.ok(Math.abs(annualVol([0.02, -0.02], 252) - Math.sqrt(0.0008) * Math.sqrt(252)) < 1e-9);
+  });
+  it("annualVol null on <2 points; sharpe null when vol is 0 (constant returns)", () => {
+    assert.equal(annualVol([0.01], 252), null);
+    assert.equal(sharpe([0.01, 0.01, 0.01], 252), null);   // zero variance → undefined, not Infinity
+  });
+  it("sharpe is positive for a positive-drift series and nets the risk-free rate", () => {
+    const r = [0.01, 0.02, 0.0, 0.015, 0.005];
+    assert.ok(sharpe(r, 252, 0) > 0);
+    assert.ok(sharpe(r, 252, 0.5) < sharpe(r, 252, 0));     // higher rf → lower sharpe
+  });
+});

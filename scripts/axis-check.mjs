@@ -53,4 +53,20 @@ async function loadSeries(tickers) {
   }
   console.log("\nPick the axis with the LOWEST |corr|+beta that also passes the four-edges/objective check.");
   console.log("(Climate/water is a CONTROL — expected to be more correlated since it overlaps the held book.)");
+
+  // When run in GitHub Actions, also emit a phone-readable markdown table to the run summary page.
+  if (process.env.GITHUB_STEP_SUMMARY) {
+    const fs = await import("node:fs");
+    let md = "## G2 — second-axis correlation to the AI-capex complex\n\n";
+    md += "_Lower |corr| + beta = more genuine **risk breadth** (vs just more AI-capex beta)._\n\n";
+    md += "| Axis | corr | beta | R² | n | Verdict |\n|---|---:|---:|---:|---:|:--|\n";
+    for (const { axis, candTk, r } of rows) {
+      md += r
+        ? `| ${axis} | ${r.corr} | ${r.beta} | ${r.r2} | ${r.n} | ${r.qualifies ? "✅ adds breadth" : "❌ too correlated"} |\n`
+        : `| ${axis} | — | — | — | — | ⚠️ insufficient data (${candTk.join(",")}) |\n`;
+    }
+    md += "\n**Pick** the lowest-|corr| axis that also passes the four-edges/objective check. ";
+    md += "Climate/water is a **control** — expected to be more correlated (it overlaps names already held).\n";
+    fs.appendFileSync(process.env.GITHUB_STEP_SUMMARY, md);
+  }
 })();

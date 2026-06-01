@@ -1,0 +1,25 @@
+name: axis-check
+# G2 helper: run the second-axis correlation harness on demand and print a phone-readable table to the
+# run Summary page. Trigger it from the GitHub mobile app / Safari: Actions → axis-check → "Run workflow".
+# No commit, no side effects — read-only research. Needs the same keyless market-data network as `scan`.
+
+on:
+  workflow_dispatch: {}        # manual "Run workflow" button (iPhone-friendly)
+
+permissions:
+  contents: read
+
+jobs:
+  axis-check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with: { node-version: 20 }
+      - name: Measure candidate-axis correlation to the AI-capex complex
+        env:
+          # Optional free-key corroborators (same as scan); the keyless Yahoo/Stooq feed works without them.
+          FINNHUB_API_KEY: ${{ secrets.FINNHUB_API_KEY }}
+          TWELVE_DATA_API_KEY: ${{ secrets.TWELVE_DATA_API_KEY }}
+          ALPHAVANTAGE_API_KEY: ${{ secrets.ALPHAVANTAGE_API_KEY }}
+        run: node scripts/axis-check.mjs

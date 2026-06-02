@@ -28,7 +28,7 @@
     <rect x="269" y="96" width="216" height="216" rx="10" fill="#151a23" stroke="#26303d"/>
     <rect x="269" y="96" width="216" height="4" rx="2" fill="#9775fa"/>
     <text x="285" y="128" fill="#9775fa" font-size="16" font-weight="700">2 · COMMITTEE</text>
-    <text x="285" y="147" fill="#ffd43b" font-size="11.5" font-style="italic">design</text>
+    <text x="285" y="147" fill="#ffd43b" font-size="11.5" font-style="italic">built</text>
     <line x1="285" y1="158" x2="469" y2="158" stroke="#26303d"/>
     <text x="285" y="180" fill="#e6edf3" font-size="12">A drawdown-focused</text>
     <text x="285" y="197" fill="#e6edf3" font-size="12">bull / bear / skeptic panel</text>
@@ -44,7 +44,7 @@
     <rect x="514" y="96" width="216" height="216" rx="10" fill="#151a23" stroke="#26303d"/>
     <rect x="514" y="96" width="216" height="4" rx="2" fill="#51cf66"/>
     <text x="530" y="128" fill="#51cf66" font-size="16" font-weight="700">3 · SIZE</text>
-    <text x="530" y="147" fill="#ffd43b" font-size="11.5" font-style="italic">design</text>
+    <text x="530" y="147" fill="#ffd43b" font-size="11.5" font-style="italic">built</text>
     <line x1="530" y1="158" x2="714" y2="158" stroke="#26303d"/>
     <text x="530" y="180" fill="#e6edf3" font-size="12">weight = conviction</text>
     <text x="530" y="197" fill="#e6edf3" font-size="12">× inverse-volatility,</text>
@@ -60,7 +60,7 @@
     <rect x="759" y="96" width="217" height="216" rx="10" fill="#151a23" stroke="#26303d"/>
     <rect x="759" y="96" width="217" height="4" rx="2" fill="#ffa94d"/>
     <text x="775" y="128" fill="#ffa94d" font-size="16" font-weight="700">4 · PR → PLAN</text>
-    <text x="775" y="147" fill="#ffd43b" font-size="11.5" font-style="italic">design · you merge ✋</text>
+    <text x="775" y="147" fill="#ffd43b" font-size="11.5" font-style="italic">built · you merge ✋</text>
     <line x1="775" y1="158" x2="960" y2="158" stroke="#26303d"/>
     <text x="775" y="180" fill="#e6edf3" font-size="12">A human-merged PR adds</text>
     <text x="775" y="197" fill="#e6edf3" font-size="12">the names + weights to</text>
@@ -79,6 +79,6 @@
 
   <!-- footer -->
   <line x1="24" y1="350" x2="976" y2="350" stroke="#26303d"/>
-  <text x="24" y="378" fill="#8b98a9" font-size="12"><tspan fill="#51cf66" font-weight="700">Stage 1 (screen) is live;</tspan> Stages 2–3 (committee + plan PR) are the agreed design, built next.</text>
+  <text x="24" y="378" fill="#8b98a9" font-size="12"><tspan fill="#51cf66" font-weight="700">Stage 1 (screen) is live;</tspan> Stages 2–3 (committee + plan PR) are now built — the committee runs in CI; you fund via the Diversifier tab.</text>
   <text x="24" y="402" fill="#8b98a9" font-size="12">Health: JNJ / PFE / MRK / ABT / MDT  ·  Water: PHO / AWK / WTRG  (sized around the FIW already in the plan).</text>
 </svg>

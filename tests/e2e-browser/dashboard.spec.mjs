@@ -9,6 +9,7 @@ const TABS = [
   ["options", "#optForm"],
   ["research", "#researchReview"],
   ["scout", "#scoutReview"],
+  ["diversifier", "#diversifierReview"],
   ["digest", "#digestBox"],
 ];
 

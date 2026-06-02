@@ -17,12 +17,12 @@ let DATA = {};
 const bust = () => `?t=${Date.now()}`; // cache-bust signals.json so reloads see fresh commits
 
 async function fetchData() {
-  const live = new Set(["signals", "research-proposals", "scout-candidates", "scout-phrases"]);
-  const [scar, port, trig, sig, dca, proposals, scout, scoutPhrases] = await Promise.all(
-    ["scarcities", "portfolio", "triggers", "signals", "dca", "research-proposals", "scout-candidates", "scout-phrases"].map((f) =>
+  const live = new Set(["signals", "research-proposals", "scout-candidates", "scout-phrases", "diversifier-candidates"]);
+  const [scar, port, trig, sig, dca, proposals, scout, scoutPhrases, diversifier] = await Promise.all(
+    ["scarcities", "portfolio", "triggers", "signals", "dca", "research-proposals", "scout-candidates", "scout-phrases", "diversifier-candidates"].map((f) =>
       fetch(`data/${f}.json${live.has(f) ? bust() : ""}`).then((r) => r.json()).catch(() => ({})))
   );
-  return { scar, port, trig, sig, dca, proposals, scout, scoutPhrases };
+  return { scar, port, trig, sig, dca, proposals, scout, scoutPhrases, diversifier };
 }
 
 async function load() {
@@ -44,7 +44,7 @@ function render() {
     pill.className = `posture ${reg?.posture || "unknown"}`;
     pill.textContent = reg ? `${lbl}${reg.risk_score != null ? ` ${reg.risk_score}/100` : ""}` : "";
   }
-  renderStale(sig); renderRadar(); renderPortfolio(); renderV23(); renderCatalysts(); renderChokepoints(); renderResearch(); renderScout(); renderDigest();
+  renderStale(sig); renderRadar(); renderPortfolio(); renderV23(); renderCatalysts(); renderChokepoints(); renderResearch(); renderScout(); renderDiversifier(); renderDigest();
 }
 
 // Research review: show the LLM's proposed scarcity reassessments as before→after diffs with an
@@ -841,6 +841,71 @@ async function acceptScoutCandidate(id) {
   }
 }
 
+// ---------- Diversifier (2nd-axis) funding review → PR into portfolio.json ----------
+function renderDiversifier() {
+  const box = $("#diversifierReview"); if (!box) return;
+  const DV = window.PuckDiversifier;
+  const pctOf = (x) => (x == null ? "—" : `${Math.round(x * 100)}%`);
+  const head = `<h3>Diversifier sleeve — proposed funding <button class="help" data-help="diversifier">?</button> <span class="foot">— screen → committee conviction → size; you approve a PR into <code>portfolio.json</code> (the plan)</span></h3>`;
+  const v = DV ? DV.diversifierFundingView(DATA.diversifier, DATA.port) : null;
+  if (!v || (!v.funding && !v.qualifiers.length)) {
+    box.innerHTML = head + `<p class="foot">No proposal yet${v?.generated ? ` (last run ${esc(v.generated)})` : ""}. Run the <strong>diversifier</strong> workflow (Actions → diversifier) to screen + size a sleeve.</p>`;
+    return;
+  }
+  const f = v.funding;
+  const fundHtml = f?.newHoldings?.length
+    ? `<table class="mine"><thead><tr><th>Ticker</th><th>Sleeve</th><th>Conviction</th><th>Weight</th><th>Target $</th></tr></thead><tbody>${
+        f.newHoldings.map((h) => `<tr><td><strong>${esc(h.ticker)}</strong></td><td class="foot">${esc(h.sleeve || "")}</td><td>${esc(String(h.conviction ?? "—"))}</td><td>${(h.weight * 100).toFixed(1)}%</td><td>${fmtUsd(h.target_usd)}</td></tr>`).join("")
+      }</tbody></table>
+      <p class="foot">Sleeve target <strong>${pctOf(v.sleeve_pct)}</strong> · existing diversifiers ${pctOf(f.existingDivWeight)} · build-out scaled ×${f.buildoutScale} so the plan stays at 100%. <strong>Advisory</strong> — the bot never edits your plan or trades.</p>
+      <div class="modal-actions"><button class="accept-diversifier">✓ Accept → open PR (fund sleeve in portfolio.json)</button></div>`
+    : `<p class="foot">The screen produced no fundable names this run.</p>`;
+  const qual = v.qualifiers.length
+    ? `<h4>Qualifying sleeves <span class="foot">— machine-computed (no hand-typed numbers)</span></h4><div class="tscroll"><table class="mine"><thead><tr><th>Sleeve</th><th>maxDD</th><th>mkt-β</th><th>build-out β</th><th>Δdrawdown vs plan</th></tr></thead><tbody>${
+        v.qualifiers.map((c) => `<tr><td>${esc(c.scarcity || c.id)}</td><td>${pctOf(c.maxDD)}</td><td>${c.marketBeta ?? "—"}</td><td>${c.buildoutBeta ?? "—"}</td><td class="${c.ddReduction > 0 ? "pos" : ""}">${c.ddReduction != null ? pctOf(c.ddReduction) : "—"}</td></tr>`).join("")
+      }</tbody></table></div>`
+    : "";
+  box.innerHTML = head + (v.generated ? `<p class="foot">last run ${esc(v.generated)}</p>` : "") + fundHtml + qual;
+  const b = box.querySelector(".accept-diversifier"); if (b) b.onclick = () => acceptDiversifierFunding();
+}
+
+// Accept the diversifier funding: apply it to the LIVE plan and open a PR into portfolio.json (the only
+// bot PR that edits the plan). Same branch→commit→PR flow as the scout; you merge. F9: human-approved.
+async function acceptDiversifierFunding() {
+  const DV = window.PuckDiversifier, t = adminToken();
+  if (!t) { alert("Open Settings → Admin and paste a GitHub token first.\n\nClassic token: the 'repo' scope.\nFine-grained token: Contents + Pull requests, both read/write."); return; }
+  const funding = DATA.diversifier?.funding;
+  if (!funding?.newHoldings?.length) { alert("No fundable proposal."); return; }
+  const updated = DV.applyDiversifierFunding(DATA.port, funding);
+  if (!updated || updated === DATA.port) { alert("Nothing to fund."); return; }
+  const pct = Math.round((DATA.diversifier?.sleeve_pct || funding.sleevePct || 0.15) * 100);
+  const btn = document.querySelector(".accept-diversifier");
+  if (btn) { btn.disabled = true; btn.textContent = "Opening PR…"; }
+  try {
+    const api = `https://api.github.com/repos/${REPO}`;
+    const meta = await (await fetch(`${api}/contents/web/data/portfolio.json`, { headers: ghHeaders(t) })).json();
+    const ref = await (await fetch(`${api}/git/ref/heads/main`, { headers: ghHeaders(t) })).json();
+    const branch = `diversifier-fund/${Date.now().toString(36)}`;
+    let r = await fetch(`${api}/git/refs`, { method: "POST", headers: { ...ghHeaders(t), "content-type": "application/json" }, body: JSON.stringify({ ref: `refs/heads/${branch}`, sha: ref.object.sha }) });
+    if (!r.ok) throw new Error(`branch ${r.status}`);
+    const content = btoa(unescape(encodeURIComponent(JSON.stringify(updated, null, 2) + "\n")));
+    r = await fetch(`${api}/contents/web/data/portfolio.json`, { method: "PUT", headers: { ...ghHeaders(t), "content-type": "application/json" },
+      body: JSON.stringify({ message: `diversifier: fund 2nd-axis sleeve (${pct}%)`, content, sha: meta.sha, branch }) });
+    if (!r.ok) throw new Error(`commit ${r.status}`);
+    const names = funding.newHoldings.map((h) => h.ticker).join(", ");
+    r = await fetch(`${api}/pulls`, { method: "POST", headers: { ...ghHeaders(t), "content-type": "application/json" },
+      body: JSON.stringify({ title: `Fund diversifier sleeve (${pct}%)`, head: branch, base: "main",
+        body: `Accepted from the dashboard's Diversifier tab — funds the 2nd-axis (diversifier) sleeve in the PLAN.\n\nAdds **${names}** (conviction × inverse-vol) and scales the build-out by ×${funding.buildoutScale} so the plan still sums to 100% with the diversifier axis at ${pct}%. F9: human-approved — you merge, and you still place the trades.` }) });
+    const pr = await r.json();
+    if (!r.ok) throw new Error(`PR ${r.status}: ${pr.message || ""}`);
+    if (btn) { btn.textContent = "✓ PR opened"; }
+    window.open(pr.html_url, "_blank", "noopener");
+  } catch (e) {
+    if (btn) { btn.disabled = false; btn.textContent = "✓ Accept → open PR (fund sleeve in portfolio.json)"; }
+    alert(`Could not open PR: ${e.message}.\n\nThis usually means the token can read but not write. Check it has write access to ${REPO}:\n• Classic token → the 'repo' scope must be ticked\n• Fine-grained token → Contents + Pull requests, both read/write`);
+  }
+}
+
 // Approve the scout's PENDING constraint phrases (D1 vet-before-search gate): flip pending→approved
 // (in scout-review.mjs) and open a PR updating scout-phrases.json. After merge, the weekly sweep is
 // allowed to search them. Same branch→commit→PR flow as the other accept actions.
@@ -1040,6 +1105,10 @@ const HELP = {
       <li><strong>2 · Chief-Risk-Officer (CRO) review:</strong> an independent <strong>frontier-model</strong> pass that does the fuzzy judgment code can't — is every ticker real and correctly attributed? does the thesis actually follow? is it chasing momentum? It can <strong>veto</strong> a proposal or dock its confidence. <strong>This requires an Anthropic or OpenAI key</strong> (a free model grading its own free-tier siblings isn't a real check), so without a frontier key the CRO is disabled and only layer 1 runs.</li>
     </ul>
     <p>Each card shows the <strong>before→after</strong> change, rationale, sources, confidence, any <strong>Checks</strong> flags, and the CRO note. <strong>Accept</strong> opens a GitHub <strong>pull request</strong> with just that change (needs a token in Settings → Admin: Contents + Pull requests read/write) — you merge it. <strong>Reject</strong> dismisses it. The bot can <em>only</em> ever touch those three fields — never the thesis or tickers (F9). Not advice.</p>` },
+  diversifier: { title: "Diversifier sleeve — funding the 2nd axis", body: `
+    <p>The second axis is a <strong>defensive sleeve</strong> (health, water…) held to <strong>lower the book's drawdown</strong>, not to chase alpha — so it has its own funding pipeline, separate from the build-out Opportunity logic.</p>
+    <p><strong>Screen</strong> (the <code>diversifier</code> workflow) gates candidate defensive baskets on low market β, a non-amplifying <strong>build-out β ≤ 0.3</strong>, and whether they actually <em>lower the drawdown of the plan you already hold</em> (book-aware — water vs the FIW already planned is flagged redundant). <strong>Committee</strong> then scores each surviving name a conviction; <strong>Size</strong> sets <code>weight = conviction × inverse-volatility</code> within the sleeve budget (default 15% of the investable sleeve), netted around what's already planned.</p>
+    <p><strong>Accept</strong> opens a PR that funds the sleeve in <code>portfolio.json</code> — the only bot PR that edits your plan (it scales the build-out so the plan still sums to 100% with the diversifier axis at its target). You merge it; you still place the trades. <strong>F9: the bot never trades or edits your book.</strong> Numbers are machine-computed each run (no hand-typed evidence).</p>` },
   scout: { title: "Scout — finding NEW scarcities", body: `
     <p>The Research tab re-scores the <em>known</em> scarcities; the <strong>Scout</strong> hunts for <em>new</em> ones. It is deliberately <strong>not</strong> a trend-finder — by the time something reads as a trend it's already priced, and <strong>ALPHA.md</strong> says there's no edge in what's priced. Instead it looks for the <strong>fingerprint of a binding constraint</strong> before anyone names it.</p>
     <p><strong>How (constraint-shadow):</strong> a real shortage shows up first as downstream companies <em>complaining</em> in their SEC filings — "lead times extended", "unable to secure allocation", "qualified a second source". The scout searches that complaint language across all filers, then <strong>clusters which companies are under broad supply stress</strong>, and infers the candidate chokepoint from the <em>pattern of who's complaining</em> — not from a headline.</p>

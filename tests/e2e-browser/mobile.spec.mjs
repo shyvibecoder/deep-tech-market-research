@@ -12,7 +12,7 @@ const noHorizontalOverflow = async (page) => {
 test("no horizontal overflow on every tab (iPhone)", async ({ page }) => {
   await page.goto("/");
   await expect(page.locator("h1")).toContainText("Puck");
-  for (const tab of ["radar", "portfolio", "catalysts", "chokepoints", "options", "research", "scout", "digest"]) {
+  for (const tab of ["radar", "portfolio", "catalysts", "chokepoints", "options", "research", "scout", "diversifier", "digest"]) {
     await page.locator(`.tabs button[data-tab="${tab}"]`).click();
     await expect(page.locator(`#${tab}`)).toHaveClass(/active/);
     await noHorizontalOverflow(page);

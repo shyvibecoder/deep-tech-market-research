@@ -18,6 +18,7 @@ const shots = [
   { name: "options", tab: "options" },
   { name: "research", tab: "research" },
   { name: "scout", tab: "scout" },
+  { name: "diversifier", tab: "diversifier" },
   { name: "digest", tab: "digest" },
 ];
 

@@ -87,18 +87,21 @@ pipeline, distinct from the deep-tech build-out Opportunity logic:
 
 ![Diversifier funding pipeline: Screen → Committee conviction → Size → human-merged PR into the plan](img/diversifier.svg)
 
-1. **Screen** *(live)* — every candidate defensive sleeve is gated on low market β, a **near-zero or negative (≤ 0.3 tolerance)
+1. **Screen** — every candidate defensive sleeve is gated on low market β, a **near-zero or negative (≤ 0.3 tolerance)
    deep-tech build-out β** (it must not amplify the build-out), and — crucially — whether it **lowers the drawdown of
    the plan you already hold** (a sleeve that duplicates planned exposure, e.g. water vs the FIW already in
    the plan, is flagged as redundant). Output → `diversifier-candidates.json`.
-2. **Committee** *(design)* — a drawdown-focused bull/bear/skeptic panel assigns each surviving name a
-   **conviction** 0–1. It keeps *all* gate-qualifiers (conviction tilts the weights, it doesn't prune).
-3. **Size** *(design)* — `weight = conviction × inverse-volatility`, within a **sleeve budget** (the
-   diversifier axis as a set % of the plan), with water netted against the FIW already planned.
-4. **PR → plan** *(design)* — a **human-merged PR** adds the names + weights to `portfolio.json` (your
-   *plan*). You then place the trades. As everywhere, **Puck never trades or edits your real book.**
+2. **Committee** — a drawdown-focused bull/bear/skeptic panel assigns each surviving name a
+   **conviction** 0–1 (runs in CI with an LLM key; offline it falls back to equal conviction). It keeps
+   *all* gate-qualifiers (conviction tilts the weights, it doesn't prune).
+3. **Size** — `weight = conviction × inverse-volatility`, within a **sleeve budget** (the
+   diversifier axis as a set % of the plan, default 15%), with water netted against the FIW already planned.
+4. **Fund it (PR → plan)** — the **Diversifier** tab shows the proposal; **Accept** opens a human-merged
+   PR that adds the names + weights to `portfolio.json` (your *plan*) and scales the build-out so the plan
+   still sums to 100%. You merge it; you then place the trades. **Puck never trades or edits your book.**
 
-*Status: the screen (step 1) is built; the committee + plan-PR (steps 2–4) are the agreed design.*
+*Status: all four steps are built — the screen + workflow, the committee (CI), the sizing, and the
+Diversifier tab's Accept→PR. The daily rebalance also holds the sleeve to its budget (per-axis).*
 
 ### What auto-runs vs. what you run
 
@@ -107,7 +110,7 @@ pipeline, distinct from the deep-tech build-out Opportunity logic:
 | **Scout** | `scout` | Mondays 07:00 UTC | Actions → *scout* → Run workflow | `scout-candidates.json` | **Scout** tab — "last sweep ⟨date⟩" + new rows |
 | **Committee** | `research` | 1st of month 09:00 UTC *(and on any `scarcities.json` change)* | Actions → *research* → Run workflow | `research-proposals.json` | **Research** tab — "last run ⟨date⟩" + diffs |
 | **Scan** | `scan` | Weekdays 13:00 UTC | Actions → *scan* → Run workflow, **or ⟳ Refresh** in the UI (§9) | `signals.json` (+ history/forecasts/dca) | Header — "· last scan ⟨time⟩"; updates **every** tab |
-| **Diversifier** | `diversifier` | 1st of month 08:00 UTC | Actions → *diversifier* → Run workflow | `diversifier-candidates.json` | review/funding UI *(in build)* |
+| **Diversifier** | `diversifier` | 1st of month 08:00 UTC | Actions → *diversifier* → Run workflow | `diversifier-candidates.json` | **Diversifier** tab — review + Accept→PR |
 
 **Things only you can do (human-in-the-loop gates):** merge the scout/research PRs; edit
 `portfolio.json` + `triggers.json`; act on rebalance suggestions and fired-trigger issues. Everything

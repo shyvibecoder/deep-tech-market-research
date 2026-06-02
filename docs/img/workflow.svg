@@ -86,6 +86,6 @@
   <circle cx="32" cy="402" r="5" fill="#ffa94d"/>
   <text x="44" y="406" fill="#8b98a9" font-size="12">you run / you decide</text>
   <text x="560" y="382" fill="#ffd43b" font-size="12" font-weight="700">PR ✋</text>
-  <text x="600" y="382" fill="#8b98a9" font-size="12">= a human-approved pull request gate — you review &amp; merge before it goes live.</text>
-  <text x="560" y="406" fill="#8b98a9" font-size="12">Discovery widens the funnel → the committee filters → the scan sizes → you decide.</text>
+  <text x="600" y="382" fill="#8b98a9" font-size="12">= the Scout's &amp; Committee's PRs both land in <tspan fill="#74c0fc" font-family="monospace">scarcities.json</tspan> (the research) — you merge.</text>
+  <text x="560" y="406" fill="#8b98a9" font-size="12">The Scan's rebalance is <tspan fill="#51cf66">advisory</tspan> (no PR — you trade). Diversifier funding is a separate PR → portfolio.json.</text>
 </svg>

@@ -41,6 +41,12 @@ edits your book. Discovery widens the funnel → the committee filters it → th
 theses into sized suggestions → you decide. Three engines run themselves on a schedule; you approve the
 gates between them.
 
+**The whole picture — one plan, two sleeves, and where each PR lands:**
+
+![Portfolio view: two sleeves, each kept current by its own workflow, converging through your PR approvals into the plan](img/portfolio-view.svg)
+
+The detailed deep-tech build-out pipeline (Scout → Committee → Scan → You):
+
 ![Puck end-to-end workflow: Scout → Committee → Scan → You](img/workflow.svg)
 
 **1. Scout — *find new scarcities*.** Weekly (auto, Mon), the scout reads SEC filings for "constraint

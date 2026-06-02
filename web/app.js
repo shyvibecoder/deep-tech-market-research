@@ -493,15 +493,29 @@ function renderPortfolio() {
     ${DATA.sig?.data_quality ? `<div class="card ${DATA.sig.data_quality.ok?'':'dq-bad'}"><b>${DATA.sig.data_quality.ok?'✓ OK':'⚠ degraded'} <button class="help" data-help="dataquality">?</button></b><span>data quality · ${DATA.sig.data_quality.note}</span></div>` : ""}` : "";
 
   const tg = $("#triggers"); tg.innerHTML = "";
+  // Catalyst watch (F11): manual triggers are now auto-watched from news/filings by the committee. The card
+  // shows the live status (monitoring → approaching → likely-met → fired), confidence, the LLM-drafted advisory
+  // action, and its evidence. Auto triggers keep their numeric live status. Advisory only — you act.
+  const CW_STATE = { fired: "fired", "likely-met": "armed", approaching: "monitor", monitoring: "monitor" };
   (DATA.trig?.triggers || []).forEach((t) => {
     const live = DATA.sig?.trigger_status?.[t.id];
-    let state = t.status; if (live?.fired) state = "fired";
-    // Show the value inline only when it's a compact number (e.g. drawdown %); the
-    // note carries formatted dollar figures (sleeve value) to avoid raw long numbers.
+    const cw = DATA.sig?.catalyst_watch?.[t.id];
+    let state = t.status; if (live?.fired) state = "fired"; else if (cw) state = CW_STATE[cw.status] || state;
     const showVal = live?.value != null && Math.abs(live.value) < 1000;
+    const badge = cw ? `${esc(cw.status)}${cw.confidence ? ` · ${Math.round(cw.confidence * 100)}%` : ""}` : `${esc(state)}${showVal ? ` · ${esc(live.value)}` : ""}`;
+    // Catalyst detail: the drafted action + evidence (only once it's elevated above plain monitoring).
+    let extra = "";
+    if (cw && cw.status !== "monitoring") {
+      const ev = [...(cw.evidence?.filings || []).map((f) => `📄 ${f.title}`), ...(cw.evidence?.headlines || []).map((h) => `📰 ${h.title}`)].slice(0, 3);
+      extra = `${cw.suggested_action ? `<br><span class="cw-action">⇒ ${esc(cw.suggested_action)}</span>` : ""}` +
+        `${cw.citations?.length ? ` <span class="foot">(${cw.citations.length} source${cw.citations.length > 1 ? "s" : ""})</span>` : ""}` +
+        `${ev.length ? `<br><span class="foot">${ev.map((e) => esc(e)).join(" · ")}</span>` : ""}`;
+    } else if (cw) {
+      extra = ` <span class="foot">· auto-watched (${cw.evidence?.headlines?.length || 0} headlines scanned)</span>`;
+    }
     const d = document.createElement("div"); d.className = `trig ${state}`;
-    d.innerHTML = `<span class="badge">${esc(state)}${showVal ? ` · ${esc(live.value)}` : ""}</span><strong>${esc(t.name)}</strong><br>
-      <span style="color:var(--mut)">${esc(t.type)} · ${esc(t.action)}${live?.note ? ` <em>(${esc(live.note)})</em>` : ""}</span>`;
+    d.innerHTML = `<span class="badge">${badge}</span><strong>${esc(t.name)}</strong><br>
+      <span style="color:var(--mut)">${esc(t.type)} · ${esc(t.action)}${live?.note ? ` <em>(${esc(live.note)})</em>` : ""}</span>${extra}`;
     tg.appendChild(d);
   });
 
@@ -1146,7 +1160,8 @@ const HELP = {
     <li><strong>Trim rule</strong> (auto) — a name &gt;2× cost basis AND &gt;50× forward P/E → trim ⅓ (needs your cost basis from Settings).</li>
     <li><strong>Sleeve cap</strong> (auto) — sleeve value &gt; ~$1.72mm → trim back (needs your holdings from Settings).</li>
     <li><strong>Policy triggers</strong> (manual) — e.g. rare-earth/uranium policy shifts.</li></ul>
-    <p>When a trigger fires, the scanner opens a GitHub issue (deduped).</p>` },
+    <p><strong>Catalyst watch (auto-monitored manual triggers).</strong> Each policy trigger is now watched for you: every scan the committee judges its condition from fresh <strong>news + SEC filings</strong> and sets a status — <strong>monitoring → approaching → likely-met → fired</strong> — with a confidence, the <strong>evidence</strong> it used, and a drafted <strong>⇒ suggested action</strong> (portfolio- and tax-aware). It only reaches <em>fired</em> when corroborated (a filing or multiple sources, never one headline) <em>and</em> confirmed on two consecutive scans — the same anti-noise discipline as the auto triggers.</p>
+    <p>When any trigger fires, the scanner opens a GitHub issue (deduped). <strong>Advisory only — Puck never trades or edits your book; you confirm and act.</strong></p>` },
   regime: { title: "Timing posture (regime)", body: `
     <p>The <strong>alpha</strong> is the scarcity thesis; this is the <strong>timing</strong> overlay — when to deploy/go-all-in vs. apply the brakes into cash. It is built on <em>independent, replicated research</em> (Faber 200-DMA trend; Moskowitz-Ooi-Pedersen time-series momentum; Moreira-Muir volatility; Hurst-Ooi-Pedersen trend), <strong>not</strong> a curve-fit backtest.</p>
     <ul><li>🟢 <strong>risk-on</strong> — uptrend + momentum, contained vol → deploy / accelerate.</li>

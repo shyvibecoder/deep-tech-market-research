@@ -310,6 +310,16 @@ print or one-day spike can't fire an action:
 - **Sleeve cap** (auto): sleeve value > ~$1.72mm → trim back (needs your holdings from Settings).
 - **Policy triggers** (manual): e.g. rare-earth/uranium policy shifts.
 
+**Catalyst watch — the manual triggers are now auto-monitored.** Each policy trigger carries a `watch` spec
+(news/filing queries); every scan the **committee** judges whether its condition is met from fresh **news +
+SEC filings** and assigns a status — **monitoring → approaching → likely-met → fired** — with a **confidence**,
+the **evidence** it cited, and a drafted **⇒ suggested action** (portfolio- and tax-aware, grounded on the
+canned policy action). It only reaches *fired* when **corroborated** (a filing or ≥2 independent sources —
+never one headline) **and** confirmed on **two consecutive scans**, the same fail-safe as the auto triggers.
+Commodity-price legs (e.g. NdPr < $80/kg, memory pricing) have no free feed, so they're judged *news-inferred*
+and flagged as such. **Advisory only — Puck never trades or edits your book; you confirm and act.** *(Needs an
+LLM key; without one the manual triggers fall back to plain monitor reminders.)*
+
 When a trigger fires, the scanner opens a GitHub issue (deduped — one open issue at a time). You can
 also get an **email** the moment a trigger *newly* fires (a state change, not every run) — turn it on in
 **Settings → Admin** (set the alert email variable) plus the SMTP secrets in `SETUP.md` §3c. **Auto

@@ -69,6 +69,19 @@ jobs:
         run: |
           echo "fired=$(node -e "const s=require('./web/data/signals.json');process.stdout.write((s.alerts?.fired||[]).join(','))")" >> "$GITHUB_OUTPUT"
           echo "newly=$(node -e "const s=require('./web/data/signals.json');process.stdout.write((s.alerts?.newly_fired||[]).join(','))")" >> "$GITHUB_OUTPUT"
+          echo "catalyst_newly=$(node -e "const s=require('./web/data/signals.json');process.stdout.write((s.alerts?.catalyst_newly_fired||[]).join(','))")" >> "$GITHUB_OUTPUT"
+      - name: Open catalyst-watch issue if a manual trigger newly fired (deduped, advisory)
+        if: steps.alerts.outputs.catalyst_newly != ''
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          open=$(gh issue list --state open --search "Catalyst trigger fired in:title" --json number --jq 'length' 2>/dev/null || echo 0)
+          if [ "$open" != "0" ]; then
+            echo "catalyst fired (${{ steps.alerts.outputs.catalyst_newly }}) but an open catalyst issue already exists; skipping"
+          else
+            gh issue create --title "⚠️ Catalyst trigger fired: ${{ steps.alerts.outputs.catalyst_newly }}" \
+              --body "Auto-detected on $(date -u) from news + SEC filings (committee-judged, corroborated + 2-scan-confirmed). See the dashboard **Triggers** panel for the confidence, evidence, and the drafted suggested action. **Advisory only — review before acting; Puck never trades or edits your book.**" || echo "catalyst issue create skipped"
+          fi
       - name: Open alert issue if a trigger fired (deduped)
         if: steps.alerts.outputs.fired != ''
         env:

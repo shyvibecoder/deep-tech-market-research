@@ -19,9 +19,10 @@ import { macroStress } from "./lib/macro.mjs";
 import { toUsd, fetchRates } from "./lib/fx.mjs";
 import { newlyFired, confirmFired } from "./lib/alerts.mjs";
 import { fetchAtmIv } from "./lib/iv.mjs";
-import { analystRedteamDigest, llmAvailable } from "./lib/llm.mjs";
+import { analystRedteamDigest, llmAvailable, availableProviders, seatCaller } from "./lib/llm.mjs";
+import { runCatalystWatch } from "./lib/catalyst.mjs";
 import { validateInputs, validateSignals, validatePositions, validateSecurities, assertValid, SCHEMA_VERSION } from "./lib/schema.mjs";
-import { watchFilings, loadTickerMap } from "./lib/edgar.mjs";
+import { watchFilings, loadTickerMap, searchFilings } from "./lib/edgar.mjs";
 import { getValuation, valuationLabel } from "./lib/valuation.mjs";
 import { watchNews } from "./lib/news.mjs";
 import { getForwardPEs } from "./lib/fundamentals.mjs";
@@ -502,6 +503,24 @@ if (!OFFLINE) console.log(`Forced-flow: ${Object.values(scarcity_signals).filter
 // Per-name relative strength (de-rating −/inflecting +) → the entry read's relStrength leg.
 const relByTicker = tickerRelStrength(scarcities.scarcities, scarcity_signals);
 for (const t in relByTicker) if (enriched[t] && !enriched[t].error) enriched[t].rel_strength = relByTicker[t];
+
+// CATALYST WATCH (F11): automate the MANUAL triggers from evidence (news + EDGAR FTS), judged by the
+// committee, with an LLM-drafted advisory action on a confirmed fire. ADVISORY — never trades/edits the book.
+let catalyst_watch = {};
+if (!OFFLINE && llmAvailable()) {
+  try {
+    const callers = availableProviders().slice(0, 2).map((p) => seatCaller(p));
+    const wByTicker = Object.fromEntries(portfolio.holdings.map((h) => [h.ticker, h.weight]));
+    const primary = { mp_policy: "MP", leu_policy: "LEU", turbine_rollover: "GEV", memory_rollover: "MU", capex_upguides: "GEV" };
+    const actionContext = {};
+    for (const t of triggers.triggers) if (t.watch) actionContext[t.id] = { weightPct: wByTicker[primary[t.id]] ?? null, regime: regime.posture };
+    catalyst_watch = await runCatalystWatch({ triggers: triggers.triggers, news, prevWatch: prevSig.catalyst_watch || {}, callers, searchFilings, actionContext, today: TODAY });
+    alerts.catalyst_fired = Object.entries(catalyst_watch).filter(([, c]) => c.status === "fired").map(([k]) => k);
+    alerts.catalyst_newly_fired = alerts.catalyst_fired.filter((k) => (prevSig.catalyst_watch?.[k]?.status !== "fired"));
+    const elevated = Object.values(catalyst_watch).filter((c) => c.status !== "monitoring").length;
+    console.log(`Catalyst watch: ${alerts.catalyst_fired.length} fired, ${elevated} elevated of ${Object.keys(catalyst_watch).length} manual triggers`);
+  } catch (e) { errors.push(`catalyst: ${e.message}`); }
+}
 if (!OFFLINE) console.log(`Opportunity Score: top = ${opportunities.slice(0, 3).map((o) => `${o.id} ${o.score}`).join(", ")}`);
 
 // --- G3: risk-aware target weights + an account-aware rebalance plan (analysis → allocation) ---
@@ -683,6 +702,7 @@ const out = {
   filings,
   news,
   trigger_status,
+  catalyst_watch,
   alerts,
   regime,
   metrics,

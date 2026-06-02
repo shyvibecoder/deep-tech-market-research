@@ -419,6 +419,12 @@ reported earnings) and Tiingo** — flagged single-source when one is missing, e
 corroboration. *Forward* P/E isn't used because no keyless source provides it (Yahoo's endpoint is
 crumb-gated); the valuation leg fills in once the daily scan resolves it.
 
+Because it's *trailing*, the P/E is **growth-aware**: a high trailing multiple backed by strong revenue
+growth (a recovering cyclical like **MU** — optically ~50× trailing but ~10–12× *forward*) is **not** tagged
+"rich" — it reads "fair (rich on trailing, but +X% rev → forward lower)," so the "went-up-a-lot ≠ expensive"
+correction holds. Implausible momentum prints (split/adjustment glitches, e.g. +900%) are dropped from the
+entry score rather than trusted.
+
 **A true optimizer, not a rule of thumb.** Puck models each name's **after-tax terminal multiple** in every
 account over your horizon — Roth `(1+g)^N` (tax-free forever), Traditional `(1+g)^N·(1−rate)` (ordinary rate
 on withdrawal), taxable `1+((1+g−yield·rate)^N−1)·(1−LTCG)` (annual qualified-dividend drag + a final LTCG

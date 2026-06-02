@@ -23,6 +23,13 @@ describe("entry: per-name entry quality", () => {
     const deepBelow = entryQuality({ pctOffHigh: 0.5, aboveMa200: false, mom12m: 0, relStrength: 0 });
     assert.ok(deepBelow.score < dipAbove.score);
   });
+  it("drops an implausible 12m momentum (data glitch like +972%) instead of trusting it", () => {
+    const e = entryQuality({ pctOffHigh: 0.0, aboveMa200: true, mom12m: 9.72, mom1m: 0.1, relStrength: 0 });
+    assert.ok(!("momentum" in e.legs), "glitch momentum leg dropped");
+    assert.ok(!e.reasons.some((r) => /12m/.test(r)), "glitch not shown in reasons");
+    // a sane +30% IS kept
+    assert.ok("momentum" in entryQuality({ pctOffHigh: 0, aboveMa200: true, mom12m: 0.3 }).legs);
+  });
   it("renormalizes over present legs; missing data → n/a, not a crash", () => {
     assert.equal(entryQuality({}).label, "n/a");
     const partial = entryQuality({ aboveMa200: true });
@@ -93,5 +100,12 @@ describe("valuation: Tiingo parse + corroboration + label", () => {
     assert.equal(valuationLabel({ pe: 30 }, { peerMedianPe: 20 }).tag, "rich");  // 1.5×
     assert.equal(valuationLabel({ pe: 21 }, { peerMedianPe: 20 }).tag, "fair");
     assert.equal(valuationLabel({ pe: null }).tag, null);
+  });
+  it("a high trailing P/E backed by strong revenue growth is NOT 'rich' (cyclical-recovery fix, e.g. MU)", () => {
+    const noGrowth = valuationLabel({ pe: 52, revenue_yoy: 0.02 }, { peerMedianPe: 29 });
+    assert.equal(noGrowth.tag, "rich"); // 1.8× peers, flat growth → genuinely rich
+    const recovering = valuationLabel({ pe: 52, revenue_yoy: 0.49 }, { peerMedianPe: 29 });
+    assert.equal(recovering.tag, "fair"); // same multiple, +49% rev → growth-justified, not penalized
+    assert.match(recovering.label, /forward lower/);
   });
 });

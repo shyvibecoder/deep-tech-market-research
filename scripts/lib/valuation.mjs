@@ -100,15 +100,22 @@ export async function getValuation(ticker, { cik = null, price = null, tiingoKey
 }
 
 // Label P/E relative to the plan's PEER MEDIAN when given (more honest than absolute thresholds across very
-// different businesses); else a crude absolute band. Returns { tag: cheap|fair|rich, label }.
+// different businesses); else a crude absolute band. GROWTH-AWARE: a high TRAILING P/E backed by strong
+// revenue growth isn't "rich" — trailing earnings understate a recovering cyclical (e.g. MU ~52x trailing
+// but ~10–12x forward). We soften rich→fair when revenue growth justifies the multiple, and always label it
+// "trailing" so it's never mistaken for forward. Returns { tag: cheap|fair|rich, label }.
 export function valuationLabel(v, { peerMedianPe = null } = {}) {
   const pe = v?.pe;
   if (!Number.isFinite(pe) || pe <= 0) return { tag: null, label: "no P/E" };
+  const yoy = Number.isFinite(v?.revenue_yoy) ? v.revenue_yoy : null;
+  const growthJustified = yoy != null && yoy >= 0.20; // strong top-line growth → high trailing P/E ≠ overvalued
   if (Number.isFinite(peerMedianPe) && peerMedianPe > 0) {
     const r = pe / peerMedianPe;
-    const tag = r < 0.8 ? "cheap" : r > 1.25 ? "rich" : "fair";
-    return { tag, label: `${tag} (${pe}x · ${r.toFixed(2)}× peers)`, ratio: +r.toFixed(2) };
+    const base = r < 0.8 ? "cheap" : r > 1.25 ? "rich" : "fair";
+    if (base === "rich" && growthJustified) return { tag: "fair", label: `${pe}x trailing · ${r.toFixed(2)}× peers (rich on trailing, but +${Math.round(yoy * 100)}% rev → forward lower)`, ratio: +r.toFixed(2), growth_justified: true };
+    return { tag: base, label: `${base} (${pe}x trailing · ${r.toFixed(2)}× peers)`, ratio: +r.toFixed(2) };
   }
-  const tag = pe < 15 ? "cheap" : pe > 30 ? "rich" : "fair";
-  return { tag, label: `${tag} (${pe}x)` };
+  const base = pe < 15 ? "cheap" : pe > 30 ? "rich" : "fair";
+  const tag = base === "rich" && growthJustified ? "fair" : base;
+  return { tag, label: `${tag} (${pe}x trailing${tag !== base ? `, +${Math.round(yoy * 100)}% rev` : ""})` };
 }

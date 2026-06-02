@@ -209,3 +209,27 @@ describe("sizing G3: coherence with legacy targetDeltas", () => {
     }
   });
 });
+
+describe("sizing: axis-aware budget (the diversifier sleeve stays in its own lane)", () => {
+  const mixed = [
+    { ticker: "PAVE", account: "taxable", target_usd: 500000 },
+    { ticker: "SMH", account: "taxable", target_usd: 430000 },                              // build-out cell = 930k
+    { ticker: "FIW", account: "taxable", target_usd: 40000, role: "Anchor — non-build-out de-correlator" },
+    { ticker: "AWK", account: "taxable", target_usd: 30000, axis: "diversifier" },          // diversifier cell = 70k
+  ];
+  const vols = { PAVE: 0.25, SMH: 0.35, FIW: 0.15, AWK: 0.18 };
+  it("preserves each axis's total under a strong build-out opportunity tilt (no cross-axis drift)", () => {
+    const w = targetWeights(mixed, { mode: "signal", vols, oppByTicker: { PAVE: 100, SMH: 0 } });
+    const sum = (isDiv) => w.filter((r) => (r.axis === "diversifier") === isDiv).reduce((a, r) => a + r.target_usd, 0);
+    assert.equal(sum(true), 70000);   // diversifier sleeve total unchanged by build-out tilts
+    assert.equal(sum(false), 930000); // build-out sleeve total unchanged
+  });
+  it("tags diversifier rows and never applies the opportunity tilt to them (inverse-vol only)", () => {
+    // Opp favors AWK; if it were (wrongly) applied to diversifiers, AWK would outweigh FIW. It must not:
+    // lower-vol FIW keeps the larger inverse-vol weight, proving the opportunity tilt is build-out-only.
+    const w = targetWeights(mixed, { mode: "signal", vols, oppByTicker: { FIW: 0, AWK: 100 } });
+    const fiw = w.find((r) => r.ticker === "FIW"), awk = w.find((r) => r.ticker === "AWK");
+    assert.equal(fiw.axis, "diversifier"); assert.equal(awk.axis, "diversifier");
+    assert.ok(fiw.target_usd > awk.target_usd, `opp tilt must be ignored for diversifiers (FIW ${fiw.target_usd} vs AWK ${awk.target_usd})`);
+  });
+});

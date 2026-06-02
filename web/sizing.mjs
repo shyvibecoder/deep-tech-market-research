@@ -60,8 +60,14 @@ export function regimeFactor(tilt, posture, { cap = 0.15 } = {}) {
   return 1;
 }
 
-// Target-weight vector, normalized PER SLEEVE (accounts funded separately). mode ∈ {research, signal}.
-// Returns [{ ticker, account, base_usd, factor, target_weight, target_usd }].
+// Which sleeve (axis) a holding belongs to — by explicit axis tag or its role. The deep-tech build-out is
+// the default; diversifiers (the 2nd axis) are detected so the rebalance keeps each sleeve in its own lane.
+export const sleeveAxis = (h) => (h?.axis === "diversifier" || /diversifier|de-correlator/i.test(h?.role || "")) ? "diversifier" : "deep-tech";
+
+// Target-weight vector, normalized PER (account × axis) CELL — so the diversifier sleeve is held to its
+// own budget and can't drift into/out of the build-out under the inverse-vol/opportunity tilts. Diversifiers
+// get the inverse-vol risk tilt ONLY (never the opportunity/regime tilt — those are build-out concepts).
+// mode ∈ {research, signal}. Returns [{ ticker, account, axis, base_usd, factor, target_weight, target_usd }].
 export function targetWeights(holdings, {
   mode = "research", vols = {}, perName = [], posture = null, oppByTicker = {},
   sleeveTotals = null, riskCap = 0.15, oppCap = 0.30, regimeCap = 0.15,
@@ -70,21 +76,22 @@ export function targetWeights(holdings, {
   const tilt = Object.fromEntries((perName || []).map((t) => [t.ticker, t.tilt]));
   const rf = riskFactors(hs.map((h) => h.ticker), vols, { cap: riskCap });
   const groups = {};
-  for (const h of hs) (groups[h.account || "ungrouped"] ||= []).push(h);
+  for (const h of hs) (groups[`${h.account || "ungrouped"}|${sleeveAxis(h)}`] ||= []).push(h);
 
   const out = [];
-  for (const [acct, list] of Object.entries(groups)) {
-    const sleeveTotal = Math.round(sleeveTotals?.[acct] ?? list.reduce((a, h) => a + h.target_usd, 0));
+  for (const [key, list] of Object.entries(groups)) {
+    const [acct, axis] = key.split("|");
+    const sleeveTotal = Math.round(sleeveTotals?.[key] ?? list.reduce((a, h) => a + h.target_usd, 0));
     const rows = list.map((h) => {
       let factor = rf[h.ticker] ?? 1;
-      if (mode === "signal") {
+      if (mode === "signal" && axis !== "diversifier") { // the opportunity/regime tilt is build-out-only
         factor *= opportunityFactor(oppByTicker[h.ticker], { cap: oppCap });
         if (acct === "ira") factor *= regimeFactor(tilt[h.ticker], posture, { cap: regimeCap });
       }
       return { h, factor, raw: h.target_usd * factor };
     });
     const sumRaw = rows.reduce((a, r) => a + r.raw, 0) || 1;
-    // Largest-remainder rounding so the sleeve conserves EXACTLY (Σ target_usd === sleeveTotal),
+    // Largest-remainder rounding so the cell conserves EXACTLY (Σ target_usd === sleeveTotal),
     // which keeps the rebalance buy/sell identity exact rather than off-by-rounding.
     const exact = rows.map((r) => ({ r, w: r.raw / sumRaw, usd: sleeveTotal * (r.raw / sumRaw) }));
     const cents = exact.map((e) => Math.floor(e.usd));
@@ -92,7 +99,7 @@ export function targetWeights(holdings, {
     exact.map((e, i) => ({ i, frac: e.usd - cents[i] })).sort((a, b) => b.frac - a.frac)
       .forEach((o) => { if (rem > 0) { cents[o.i] += 1; rem -= 1; } });
     exact.forEach((e, i) => out.push({
-      ticker: e.r.h.ticker, account: acct, base_usd: e.r.h.target_usd, factor: +e.r.factor.toFixed(3),
+      ticker: e.r.h.ticker, account: acct, axis, base_usd: e.r.h.target_usd, factor: +e.r.factor.toFixed(3),
       target_weight: +(e.w * 100).toFixed(1), target_usd: cents[i],
     }));
   }
@@ -144,7 +151,9 @@ export function rebalanceBoth(holdings, inputs = {}) {
   let hs = holdings || [], sleeveTotals = inputs.sleeveTotals;
   if (inputs.currentUsd) {
     hs = hs.filter((h) => Number.isFinite(inputs.currentUsd[h.ticker]));
-    sleeveTotals = hs.reduce((a, h) => { a[h.account] = (a[h.account] || 0) + inputs.currentUsd[h.ticker]; return a; }, {});
+    // Per (account × axis) cell, so the live diversifier sleeve is rebalanced within its own market value
+    // (the axis split is preserved) rather than competing with the build-out for one account budget.
+    sleeveTotals = hs.reduce((a, h) => { const k = `${h.account || "ungrouped"}|${sleeveAxis(h)}`; a[k] = (a[k] || 0) + inputs.currentUsd[h.ticker]; return a; }, {});
   }
   const wInputs = { ...inputs, sleeveTotals };
   const planArgs = { currentUsd: inputs.currentUsd, taxableTrimOk: inputs.taxableTrimOk, cashBySleeve: inputs.cashBySleeve };

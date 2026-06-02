@@ -332,13 +332,19 @@ function renderRebalance() {
   const grade = rb.graded && rb.tilt_grade
     ? `graded: ${rb.tilt_grade.hits}/${rb.tilt_grade.n} tilt-beats-baseline (${Math.round((rb.tilt_grade.hit_rate || 0) * 100)}%)`
     : "<strong>advisory · ungraded</strong> (recording — grades accrue ~42d)";
+  const rowTr = (r) => `<tr><td><strong>${esc(r.ticker)}</strong></td><td>${esc(r.account)}</td><td>${fmtK(r.current_usd)}</td><td>${fmtK(r.target_usd)}</td><td class="${r.delta_usd >= 0 ? "pos" : "neg"}">${r.delta_usd > 0 ? "+" : ""}${fmtK(r.delta_usd)}</td><td class="foot">${resById[r.ticker] ? (resById[r.ticker].delta_usd > 0 ? "+" : "") + fmtK(resById[r.ticker].delta_usd) : "—"}</td><td class="${actClass(r.action)}">${esc(r.action)}</td></tr>`;
+  // Group the plan by axis (sub-headers only when the diversifier sleeve actually has moves), so each
+  // sleeve's buys/sells read separately and you can see the 15% is rebalanced within itself.
+  const divRows = rows.filter((r) => r.axis === "diversifier"), bldRows = rows.filter((r) => r.axis !== "diversifier");
+  const tbody = (divRows.length && bldRows.length)
+    ? [["Deep-tech build-out", bldRows], ["◇ Diversifier · 2nd axis", divRows]].map(([label, rs]) => `<tr class="hgroup"><td colspan="7">${esc(label)}</td></tr>` + rs.map(rowTr).join("")).join("")
+    : rows.map(rowTr).join("");
   box.innerHTML = `<h3>Rebalance plan <button class="help" data-help="rebalance">?</button> <span class="foot">— volatility-tilted target weights → buy/sell · ${grade} · ±${rb.risk_cap_pct}% vol tilt · ${esc(rb.basis || "")}</span></h3>` +
     `<p class="foot">Signal plan: <span class="pos">buy ${fmtK(s.buy_usd)}</span> · <span class="neg">sell ${fmtK(s.sell_usd)}</span> · net ${fmtK(s.net_usd)}` +
       (s.blocked_trim_usd ? ` · <span class="neg">${fmtK(s.blocked_trim_usd)} anchor-trim held</span>` : "") +
       (s.needs_new_cash_usd ? ` · <span class="neg">needs new cash ${fmtK(s.needs_new_cash_usd)}</span>` : "") + `</p>` +
-    (rows.length ? `<table class="mine"><thead><tr><th>Ticker</th><th>Acct</th><th>Now</th><th>Signal →</th><th>Δ (signal)</th><th>Δ (research)</th><th>Action</th></tr></thead><tbody>${
-      rows.map((r) => `<tr><td><strong>${esc(r.ticker)}</strong></td><td>${esc(r.account)}</td><td>${fmtK(r.current_usd)}</td><td>${fmtK(r.target_usd)}</td><td class="${r.delta_usd >= 0 ? "pos" : "neg"}">${r.delta_usd > 0 ? "+" : ""}${fmtK(r.delta_usd)}</td><td class="foot">${resById[r.ticker] ? (resById[r.ticker].delta_usd > 0 ? "+" : "") + fmtK(resById[r.ticker].delta_usd) : "—"}</td><td class="${actClass(r.action)}">${esc(r.action)}</td></tr>`).join("")
-    }</tbody></table>` : `<p class="foot">No rebalancing suggested — current weights are within tolerance of both target vectors.</p>`);
+    (rows.length ? `<table class="mine"><thead><tr><th>Ticker</th><th>Acct</th><th>Now</th><th>Signal →</th><th>Δ (signal)</th><th>Δ (research)</th><th>Action</th></tr></thead><tbody>${tbody}</tbody></table>`
+      : `<p class="foot">No rebalancing suggested — current weights are within tolerance of both target vectors.</p>`);
 }
 
 function renderStress() {

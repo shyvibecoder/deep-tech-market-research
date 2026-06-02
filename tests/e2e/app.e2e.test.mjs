@@ -35,6 +35,9 @@ describe("e2e: static HTML↔JS contract", () => {
       ...[...appjs.matchAll(/data-help="(\w+)"/g)].map((m) => m[1]),
     ]);
     for (const k of refs) assert.ok(keys.has(k), `no HELP entry for "${k}"`);
+    // Reverse: no DEAD help topics either — every HELP entry must be reachable by some "?" button, so
+    // removing a feature can't leave stale/contradictory help copy in the bundle.
+    for (const k of keys) assert.ok(refs.has(k), `orphan HELP topic "${k}" — defined but no data-help="${k}" button references it`);
   });
 });
 

@@ -369,7 +369,7 @@ function renderAssetLocation() {
   box.innerHTML = head + inputs + `
     <p class="foot">Deploying <strong>${fmtUsd(deployTotal)}</strong> cash into the plan, tax-located (Roth ← highest growth · Traditional ← income · taxable ← tax-efficient)${excl.size ? ` · <strong>excluding ${esc([...excl].join(", "))}</strong> (held elsewhere)` : ""} · est. tax drag avoided <strong>$${res.summary.annual_drag_avoided.toLocaleString()}/yr</strong> (~$${res.summary.horizon_drag_avoided.toLocaleString()} over ${res.horizon_years}yr).</p>
     <div class="tscroll"><table class="mine"><thead><tr><th>Buy</th><th>Amount</th><th>Yield</th><th>Tax shelter</th></tr></thead><tbody>${tbody}</tbody></table></div>
-    <p class="foot">Rebalancing from here keeps these locations. Advisory — not tax advice; doesn't model exact bracket arbitrage, RMDs, or estate plan.</p>`;
+    <p class="foot">This <strong>deploys from cash</strong> into the plan, tax-located. A position-aware delta rebalance (net buys + <em>sells</em> vs what you already hold) is the next step. Advisory — not tax advice; doesn't model exact bracket arbitrage, RMDs, or estate plan.</p>`;
   wire();
 }
 
@@ -851,12 +851,15 @@ function renderDiversifier() {
     return;
   }
   const f = v.funding;
+  // Already merged? (the proposal stays in the feed after merge — don't offer to fund it again, which would
+  // double-scale the build-out). Guard the CTA, not just the buy-plan render. [W1]
+  const alreadyFunded = f?.newHoldings?.length && f.newHoldings.every((h) => (DATA.port?.holdings || []).some((ph) => ph.ticker === h.ticker));
   const fundHtml = f?.newHoldings?.length
     ? `<table class="mine"><thead><tr><th>Ticker</th><th>Sleeve</th><th>Conviction</th><th>Weight</th><th>Target $</th></tr></thead><tbody>${
         f.newHoldings.map((h) => `<tr><td><strong>${esc(h.ticker)}</strong></td><td class="foot">${esc(h.sleeve || "")}</td><td>${esc(String(h.conviction ?? "—"))}</td><td>${(h.weight * 100).toFixed(1)}%</td><td>${fmtUsd(h.target_usd)}</td></tr>`).join("")
       }</tbody></table>
       <p class="foot">Sleeve target <strong>${pctOf(v.sleeve_pct)}</strong> · existing diversifiers ${pctOf(f.existingDivWeight)} · build-out scaled ×${f.buildoutScale} so the plan stays at 100%. <strong>Advisory</strong> — the bot never edits your plan or trades.</p>
-      <div class="modal-actions"><button class="accept-diversifier">✓ Accept → open PR (fund sleeve in portfolio.json)</button></div>`
+      <div class="modal-actions">${alreadyFunded ? `<button disabled>✓ Already funded (merged into the plan)</button>` : `<button class="accept-diversifier">✓ Accept → open PR (fund sleeve in portfolio.json)</button>`}</div>`
     : `<p class="foot">The screen produced no fundable names this run.</p>`;
   const qual = v.qualifiers.length
     ? `<h4>Qualifying sleeves <span class="foot">— machine-computed (no hand-typed numbers)</span></h4><div class="tscroll"><table class="mine"><thead><tr><th>Sleeve</th><th>maxDD</th><th>mkt-β</th><th>build-out β</th><th>Δdrawdown vs plan</th></tr></thead><tbody>${
@@ -874,6 +877,7 @@ async function acceptDiversifierFunding() {
   if (!t) { alert("Open Settings → Admin and paste a GitHub token first.\n\nClassic token: the 'repo' scope.\nFine-grained token: Contents + Pull requests, both read/write."); return; }
   const funding = DATA.diversifier?.funding;
   if (!funding?.newHoldings?.length) { alert("No fundable proposal."); return; }
+  if (funding.newHoldings.every((h) => (DATA.port?.holdings || []).some((ph) => ph.ticker === h.ticker))) { alert("Already funded — these names are in portfolio.json. Funding again would double-scale the build-out."); return; } // [W1]
   const updated = DV.applyDiversifierFunding(DATA.port, funding);
   if (!updated || updated === DATA.port) { alert("Nothing to fund."); return; }
   const pct = Math.round((DATA.diversifier?.sleeve_pct || funding.sleevePct || 0.15) * 100);
@@ -1029,7 +1033,7 @@ const HELP = {
     <p><strong>Scarcity → chokepoint → ticker → your portfolio.</strong> A <em>scarcity</em> IS a structural <em>chokepoint</em> — a bottleneck that can't be relieved quickly (merchant power, large transformers, gas-turbine slots, copper, uranium enrichment, HBM…). Each chokepoint maps to the handful of <strong>tradeable tickers</strong> that have pricing power over it (e.g. turbines→GEV, copper→FCX/COPX, enrichment→LEU) — and <em>those tickers are your portfolio holdings</em>. The <strong>Scarcity radar</strong> ranks the chokepoints by where the edge is; the <strong>Holdings plan</strong> is the same chokepoints expressed as positions. Some of the best chokepoints have <em>no clean public proxy</em> (private/foreign/impaired) — the <strong>Chokepoints</strong> tab surfaces those and the discovered proxy plays. So the portfolio is simply the investable expression of the chokepoints, split across the two sleeves below.</p>
     <p><strong>How it all comes together</strong> — one plan, <strong>two sleeves</strong>, each kept current by its own workflow. The bot only <em>proposes</em>; you merge every PR; it never trades:</p>
     <img src="img/portfolio-view.svg" alt="Portfolio view: the Deep-tech build-out sleeve (~85%) is kept current by Scout and Committee PRs into scarcities.json plus the Scan's advisory rebalance; the Diversifier sleeve (~15%) by Screen, Committee conviction, Size, then one PR into portfolio.json. You merge every PR; the bot never trades." style="width:100%;height:auto;border:1px solid var(--line);border-radius:10px;margin:8px 0"/>
-    <ul><li><strong>① Deep-tech build-out (~85%, the alpha)</strong> — Scout finds scarcities, the Committee vets them (both open a PR → <code>scarcities.json</code>), and the daily Scan turns the research into an <em>advisory</em> rebalance (no PR — you trade).</li>
+    <ul><li><strong>① Deep-tech build-out (~85%, the alpha)</strong> — Scout finds scarcities, the Committee vets them (both open a PR → <code>scarcities.json</code>), and the daily Scan scores everything + feeds the tax-located buy plan (advisory — no PR; you trade).</li>
     <li><strong>② Diversifier (~15%, drawdown hedge)</strong> — a screen gates defensive sleeves, a committee scores conviction, sizing fills the 15% budget, and <em>one</em> PR → <code>portfolio.json</code> funds it.</li>
     <li><strong>You</strong> merge every PR and place the trades. <strong>Puck never trades or edits your book.</strong></li></ul>
     <p>The two axes never co-mingle — each is gated, scored, and sized on its own. Detailed per-pipeline diagrams + cadences are in the <strong>User Guide §1a</strong>.</p>
@@ -1057,12 +1061,6 @@ const HELP = {
     <li><strong>Sleeve cap</strong> (auto) — sleeve value &gt; ~$1.72mm → trim back (needs your holdings from Settings).</li>
     <li><strong>Policy triggers</strong> (manual) — e.g. rare-earth/uranium policy shifts.</li></ul>
     <p>When a trigger fires, the scanner opens a GitHub issue (deduped).</p>` },
-  holdings: { title: "Holdings table", body: `
-    <p>Your <em>target</em> plan per holding. <strong>Tier</strong> = deployment pace (A=100% now; B=50% now+months 1–3; C=25% now+DCA to month 9; D=small option; DRY=cash).</p>
-    <ul><li><strong>YTD / % off high</strong> — momentum &amp; drawdown.</li>
-    <li><strong>vs 200-DMA</strong> — trend filter; positive = above the 200-day average (healthier trend).</li>
-    <li><strong>Fwd P/E</strong> — forward earnings multiple (skipped for ETFs). Reminds you "went up a lot" ≠ "expensive".</li></ul>
-    <p>Add your <em>actual</em> holdings in ⚙ Settings to see live market value vs target.</p>` },
   regime: { title: "Timing posture (regime)", body: `
     <p>The <strong>alpha</strong> is the scarcity thesis; this is the <strong>timing</strong> overlay — when to deploy/go-all-in vs. apply the brakes into cash. It is built on <em>independent, replicated research</em> (Faber 200-DMA trend; Moskowitz-Ooi-Pedersen time-series momentum; Moreira-Muir volatility; Hurst-Ooi-Pedersen trend), <strong>not</strong> a curve-fit backtest.</p>
     <ul><li>🟢 <strong>risk-on</strong> — uptrend + momentum, contained vol → deploy / accelerate.</li>
@@ -1155,8 +1153,6 @@ const HELP = {
     <li><strong>Discovered</strong> — public companies whose SEC filings mention the entity (your tradable exposure), with mention counts.</li>
     <li><strong>🕸 Cross-chokepoint hubs</strong> — second-order mapping: public names that show up across <em>multiple</em> bottlenecks (×degree). A <strong>hub</strong> (≥3) is a diversified "picks-and-shovels" way to play the whole complex; a degree-1 name is a concentrated pure play. The exposure structure the market doesn't index.</li></ul>
     <p>This is the differentiated, hard-to-replicate layer — turning "no clean ETF, sorry" into "here's the best obtainable read." Not advice; discovered proxies are leads to research, not recommendations.</p>` },
-  sizing: { title: "Suggested IRA tilts", body: `\n    <p>Turns the per-name <strong>TSMOM tilt</strong> (overweight/underweight) and the <strong>regime</strong> into concrete, bounded allocation deltas: <strong>add</strong> overweights only when the regime is risk-on (don't accelerate into weakness), <strong>trim</strong> underweights in any regime, and leave the <strong>taxable</strong> sleeve as buy-and-hold anchors. Deltas are capped at ±25% of target weight. The <em>tilt direction</em> (over/underweight) is graded by the Track record; the ±25% magnitude itself is advisory. See the fuller <strong>Rebalance plan</strong> below for dollar buy/sell amounts. Not advice.</p>` },
-  rebalance: { title: "Rebalance plan", body: `\n    <p>The last mile from analysis to allocation. Builds two target-weight vectors and turns them into concrete buy/sell amounts: the <strong>research</strong> plan is your <code>portfolio.json</code> weights nudged only by a light <strong>±15% inverse-volatility tilt</strong> (so high-vol names like COPX/LEU don't quietly dominate); the <strong>signal</strong> plan <em>also</em> moves with the live <strong>Opportunity Score</strong> and <strong>regime tilt</strong>, so a research-committee 'crowded' downgrade shrinks a weight and surfaces a trim — closing the thesis→allocation link. Funding rules: the <strong>IRA</strong> (tax-free) self-funds, with trims paying for buys; the <strong>taxable</strong> sleeve stays buy-and-hold, so a taxable trim is only actioned above a higher bar — the <strong>cost-basis trim rule</strong> (>2× cost AND >50× forward); a signal-driven taxable sell needs your own decision (never automated, since selling into a dislocation can invert the forced-flow edge and realizes tax). With <code>positions.local.json</code> it rebalances what you actually hold; without it, it shows the ideal weighting vs your static plan. <strong>Honest scope:</strong> this is a light <em>volatility</em> tilt, not correlation/covariance-aware (true equal-risk sizing waits on a genuinely uncorrelated 2nd axis), and the plan is currently <strong>advisory and ungraded</strong> — not yet scored by the Track record, so don't auto-execute it. It never edits your portfolio or places trades. Not advice.</p>` },
   stress: { title: "Stress test", body: `\n    <p>Applies the thesis's named shocks to YOUR sleeve (your positions × latest prices) and shows the drawdown vs the <strong>−35% objective limit</strong>: the 2027–28 Deep-tech build-out digestion (the basket's shared failure mode), a 2022-style rate shock, a broad recession, and a China rare-earth 'peace' (subsidy-floor names re-rate). Shock vectors are coarse and documented (high-beta assumptions), not fitted — a feel for tail risk, not a prediction. Runs entirely in your browser. Not advice.</p>` },
   dca: { title: "DCA progress", body: `
     <p>Tracks how much of each holding's <strong>target</strong> you've actually <strong>deployed</strong> (shares × cost basis from your Settings positions), against the 9-month dollar-cost-averaging calendar. The bar + % shows progress to target; the card shows the sleeve total deployed. Helps you stay on the plan and see where dry powder still needs to go.</p>` },

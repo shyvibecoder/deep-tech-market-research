@@ -187,7 +187,7 @@ This tab is organized into five labelled blocks, each with its own **?** help:
 
 1. **⏱ Timing** — when to act (the regime posture + the dislocation cross-check). §4.1, §4.1a
 2. **💼 Your book** — your live holdings vs the target plan, summary cards, DCA progress, and the holdings table. §4.2, §4.4, §4.5, §4.6
-3. **🎯 Suggestions — what to buy & where** — the rebalance plan (grouped by sleeve), the **tax-located buy plan** that deploys your cash across Roth / Traditional / taxable, and a stress check. **Advisory only — Puck never trades.** §4.7, §4.9, §4.10
+3. **🎯 Suggestions — what to buy & where** — a **single tax-located buy/rebalance plan** that deploys your cash across Roth / Traditional / taxable (the old standalone Holdings-plan and generic Rebalance-plan tables were folded into this one), plus a stress check. **Advisory only — Puck never trades.** §4.7, §4.10
 4. **🔔 Triggers** — rules that tell you to act. §4.3
 5. **📊 Track record & honesty** — is the edge real? Scorecard, factor attribution, signal backtest. §4.1b–§4.1e
 
@@ -309,14 +309,11 @@ also get an **email** the moment a trigger *newly* fires (a state change, not ev
 **Settings → Admin** (set the alert email variable) plus the SMTP secrets in `SETUP.md` §3c. **Auto
 triggers are held on a degraded-data run** so bad data can't fire an action (§10).
 
-### 4.4 Holdings table
-Your **target plan**: account, target $, weight, **tier** (deployment pace), live price, YTD,
-**% off high**, **vs 200-DMA** (trend), and **Fwd P/E** (the "went up a lot ≠ expensive" check; skipped
-for ETFs). A **⚠** next to a ticker means a data-quality flag (divergent sources, a big jump, or a stale
-quote — hover to see why).
-
-**Tiers:** A = 100% now · B = 50% now + months 1–3 · C = 25% now + DCA to month 9 · D = small option
-sleeve · DRY = cash held for triggers.
+### 4.4 Holdings table → folded into the buy plan
+The standalone Holdings-plan table was **removed** to keep the Portfolio page to one actionable plan. The
+target plan's names/weights now flow directly into the **Tax-located buy plan** (§4.10), which shows what
+to buy of each and in which account. **Tiers** (deployment pace) still drive the DCA calendar (§4.6):
+A = 100% now · B = 50% now + months 1–3 · C = 25% now + DCA to month 9 · D = small option sleeve · DRY = cash.
 
 ### 4.5 Your holdings (live)
 Once you add positions in Settings, this panel shows **market value, gain vs cost, % of target,
@@ -356,8 +353,12 @@ The standalone "Suggested IRA tilts" table was **removed**: the Rebalance plan's
 already applies the same per-name **TSMOM × regime** tilt to the IRA sleeve, so it now lives in one place
 rather than two overlapping ones.
 
-### 4.9 Rebalance plan (G3 — volatility-tilted target weights → buy/sell)
-The fuller allocation engine: it builds **two** target-weight vectors and turns each into a concrete
+### 4.9 Rebalance plan → folded into the tax-located plan
+The standalone Rebalance-plan table was **removed** — the single **Tax-located buy plan** (§4.10) is now the
+one buy/rebalance view. The scanner still computes the underlying weight/funding engine (below) and emits it
+to `signals.json` for the record; the dashboard just no longer renders it as a separate table.
+
+*(Engine, for reference — how the target weights are derived:)* it builds **two** target-weight vectors and turns each into a concrete
 **buy/sell dollar plan**, shown side by side so you can see how the signals move your book:
 - **Research plan** — your `portfolio.json` weights nudged only by a **light ±15% inverse-volatility
   tilt**, so high-vol names (COPX/LEU/MP) don't silently dominate. Your conviction stays primary.
@@ -390,9 +391,18 @@ With a `positions.local.json` it rebalances **what you actually hold**; without 
 weighting vs your static plan. **Advisory only** — it never edits your portfolio or places trades. Not advice.
 
 ### 4.10 Tax-located buy plan (Roth / Traditional / taxable)
-Inside **🎯 Suggestions**. This is the **deployment plan**: it takes the committee's suggested holdings
-(build-out + the diversifier sleeve), spreads your cash across the target weights, and **places each name
-in the account that maximizes after-tax terminal value** — shown as a **buy list grouped by account**.
+Inside **🎯 Suggestions** — the **single** buy/rebalance view (the old Holdings-plan and Rebalance-plan
+tables fold into this one). It takes the committee's suggested holdings (build-out + the diversifier
+sleeve), spreads your cash across the target weights, and **places each name in the account that maximizes
+after-tax terminal value** — shown as a **buy list grouped by account**. Each name's dollars can **split
+across accounts** so capacity is filled exactly (no account is over/under-filled).
+
+**As you accept PRs:** the plan always reads your live `portfolio.json`, so any portfolio-changing PR
+re-reviews it. While the diversifier funding PR is *pending* it previews the funded target; once you
+**merge** it, those names are in `portfolio.json` and the plan uses it as-is (it won't double-count). The
+build-out's plan, by contrast, is changed by editing `portfolio.json` — research/scout PRs edit the
+*research* (`scarcities.json`), not your holdings. *(Today it deploys from cash; netting buy/sell deltas
+against positions you already hold is the next step.)*
 
 Two robust rules: **(1)** shelter the annual **dividend tax drag** — income-heavy names → a tax-advantaged
 account; tax-efficient (low-yield) names → **taxable** (qualified rates, step-up at death, loss-harvesting);

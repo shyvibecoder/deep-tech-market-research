@@ -43,4 +43,4 @@ jobs:
           git add docs/img docs/USER-GUIDE.docx
           git commit -m "docs: regenerate User Guide screenshots + Word [skip ci]" || { echo "no changes"; exit 0; }
           # Rebase on any concurrent commit before pushing so the push can't be rejected (R3).
-          pushed=0; for i in 1 2 3; do git pull --rebase origin main && git push && { pushed=1; break; } || sleep $((i*3)); done; [ "$pushed" = 1 ] || { echo "::error::push failed after 3 retries"; exit 1; }
+          pushed=0; for i in 1 2 3; do git pull --rebase -X theirs origin main && git push && { pushed=1; break; } || { git rebase --abort 2>/dev/null || true; sleep $((i*3)); }; done; [ "$pushed" = 1 ] || { echo "::error::push failed after 3 retries"; exit 1; }

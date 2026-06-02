@@ -60,7 +60,7 @@ jobs:
           if git diff --cached --quiet; then echo "no new research output"; exit 0; fi
           git commit -m "auto-research proposals $(date +%F) [skip ci]"
           # Rebase before push so a concurrent commit to main can't reject (R3 race guard).
-          pushed=0; for i in 1 2 3; do git pull --rebase origin main && git push && { pushed=1; break; } || sleep $((i*3)); done; [ "$pushed" = 1 ] || { echo "::error::push failed after 3 retries"; exit 1; }
+          pushed=0; for i in 1 2 3; do git pull --rebase -X theirs origin main && git push && { pushed=1; break; } || { git rebase --abort 2>/dev/null || true; sleep $((i*3)); }; done; [ "$pushed" = 1 ] || { echo "::error::push failed after 3 retries"; exit 1; }
       - name: "Auto-cleanup stale/superseded research-accept PRs"
         if: always()
         env:

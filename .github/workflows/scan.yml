@@ -59,7 +59,7 @@ jobs:
           git add web/data/signals.json web/data/scarcity-history.json web/data/seen.state.json web/data/dca.json web/data/forecasts.json
           git commit -m "scan: refresh signals [skip ci]" || { echo "no changes"; exit 0; }
           # Rebase on any concurrent commit before pushing so history is never lost (R3).
-          pushed=0; for i in 1 2 3; do git pull --rebase origin main && git push && { pushed=1; break; } || sleep $((i*3)); done; [ "$pushed" = 1 ] || { echo "::error::push failed after 3 retries"; exit 1; }
+          pushed=0; for i in 1 2 3; do git pull --rebase -X theirs origin main && git push && { pushed=1; break; } || { git rebase --abort 2>/dev/null || true; sleep $((i*3)); }; done; [ "$pushed" = 1 ] || { echo "::error::push failed after 3 retries"; exit 1; }
       - name: Read alert state from signals.json
         id: alerts
         run: |

@@ -11,6 +11,14 @@ describe("workflows: pushes to main rebase first (race guard, red-team R3)", () 
       const y = wf(f);
       if (/git push(?!\s+-u)/.test(y)) assert.ok(/pull --rebase/.test(y), `${f} pushes to main without 'git pull --rebase' — commit-race risk`);
     });
+    it(`${f} auto-resolves regenerated-output conflicts (rebase -X theirs + abort guard)`, () => {
+      const y = wf(f);
+      if (!/git push(?!\s+-u)/.test(y)) return;
+      // These jobs only commit their OWN regenerated output, so a same-output race must auto-resolve in
+      // this run's favor — otherwise an add/add (e.g. research/auto/DATE.*) dead-locks the rebase loop.
+      assert.ok(/pull --rebase -X theirs/.test(y), `${f}: rebase must use '-X theirs' so a regenerated-output race resolves instead of dead-locking`);
+      assert.ok(/rebase --abort/.test(y), `${f}: needs a 'git rebase --abort' guard so a failed iteration doesn't block the retry`);
+    });
   }
   it("no workflow uses the inline-flow env trap (env: { X: ${{...}} })", () => {
     for (const f of ["scan.yml", "docs.yml", "research.yml", "ci.yml", "e2e.yml", "scout.yml", "diversifier.yml"]) {

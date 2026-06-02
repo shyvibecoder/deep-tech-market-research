@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "scanned_at": "2026-06-02T12:18:32.469Z",
+  "scanned_at": "2026-06-02T12:26:55.135Z",
   "source": "scripts/scan.mjs",
   "universe_count": 64,
   "quotes": {
@@ -324,8 +324,8 @@
         "single_source": true,
         "revenue_yoy": 0.489,
         "net_margin": 0.228,
-        "tag": "rich",
-        "label": "rich (52.4x · 1.80× peers)"
+        "tag": "fair",
+        "label": "52.4x trailing · 1.80× peers (rich on trailing, but +49% rev → forward lower)"
       }
     },
     "GEV": {
@@ -373,7 +373,7 @@
         "revenue_yoy": 0.09,
         "net_margin": 0.128,
         "tag": "rich",
-        "label": "rich (43.5x · 1.49× peers)"
+        "label": "rich (43.5x trailing · 1.49× peers)"
       }
     },
     "CEG": {
@@ -421,7 +421,7 @@
         "revenue_yoy": 0.195,
         "net_margin": 0.102,
         "tag": "fair",
-        "label": "fair (25.3x · 0.87× peers)"
+        "label": "fair (25.3x trailing · 0.87× peers)"
       }
     },
     "EME": {
@@ -469,7 +469,7 @@
         "revenue_yoy": null,
         "net_margin": null,
         "tag": "fair",
-        "label": "fair (32.7x · 1.12× peers)"
+        "label": "fair (32.7x trailing · 1.12× peers)"
       }
     },
     "MP": {
@@ -560,7 +560,7 @@
         "revenue_yoy": 0.015,
         "net_margin": 0.173,
         "tag": "rich",
-        "label": "rich (49.3x · 1.69× peers)"
+        "label": "rich (49.3x trailing · 1.69× peers)"
       }
     },
     "ROBO": {
@@ -676,7 +676,7 @@
         "revenue_yoy": 0.06,
         "net_margin": 0.285,
         "tag": "cheap",
-        "label": "cheap (22.9x · 0.79× peers)"
+        "label": "cheap (22.9x trailing · 0.79× peers)"
       }
     },
     "WMT": {
@@ -724,7 +724,7 @@
         "revenue_yoy": 0.047,
         "net_margin": 0.031,
         "tag": "rich",
-        "label": "rich (40x · 1.37× peers)"
+        "label": "rich (40x trailing · 1.37× peers)"
       }
     },
     "KO": {
@@ -772,7 +772,7 @@
         "revenue_yoy": 0.019,
         "net_margin": 0.273,
         "tag": "fair",
-        "label": "fair (23.85x · 0.82× peers)"
+        "label": "fair (23.85x trailing · 0.82× peers)"
       }
     },
     "PEP": {
@@ -819,7 +819,7 @@
         "revenue_yoy": 0.023,
         "net_margin": 0.088,
         "tag": "fair",
-        "label": "fair (24.2x · 0.83× peers)"
+        "label": "fair (24.2x trailing · 0.83× peers)"
       }
     },
     "MRK": {
@@ -867,7 +867,7 @@
         "revenue_yoy": 0.013,
         "net_margin": 0.281,
         "tag": "fair",
-        "label": "fair (29.15x · 1.00× peers)"
+        "label": "fair (29.15x trailing · 1.00× peers)"
       }
     },
     "PG": {
@@ -915,7 +915,7 @@
         "revenue_yoy": 0.003,
         "net_margin": 0.19,
         "tag": "cheap",
-        "label": "cheap (19.95x · 0.68× peers)"
+        "label": "cheap (19.95x trailing · 0.68× peers)"
       }
     },
     "VST": {
@@ -1124,22 +1124,22 @@
     },
     "PRY.MI": {
       "ticker": "PRY.MI",
-      "price": 154.25,
+      "price": 154.4499969482422,
       "high52": 156.899994,
-      "pct_off_high": -0.016889701092021665,
-      "ytd": 0.7289685297687806,
-      "ma50": 127.81314088103517,
-      "ma200": 97.8707269252588,
-      "ma20": 149.6500000025879,
-      "pct_vs_ma50": 0.20683991439950222,
-      "pct_vs_ma200": 0.5760585912251016,
+      "pct_off_high": -0.01561502323421252,
+      "ytd": 0.7312102699928359,
+      "ma50": 127.81714082,
+      "ma200": 97.87172690999999,
+      "ma20": 149.65999985,
+      "pct_vs_ma50": 0.20836685875917232,
+      "pct_vs_ma200": 0.5780859480518815,
       "above_ma200": true,
       "above_ma20": true,
       "asof": "2026-06-02",
-      "mom_12m": 1.7455774887494067,
-      "mom_1m": 0.20554907086086138,
-      "vol_3m": 0.5014468201402335,
-      "vol_1y": 0.371104051629728,
+      "mom_12m": 1.7491373404117234,
+      "mom_1m": 0.2071121576364101,
+      "vol_3m": 0.5017280061135297,
+      "vol_1y": 0.37120658804429757,
       "currency": "EUR",
       "source": "yahoo",
       "corroboration": {
@@ -1147,8 +1147,8 @@
           "yahoo"
         ],
         "n": 1,
-        "median": 154.25,
-        "used": 154.25,
+        "median": 154.45,
+        "used": 154.45,
         "spread": 0,
         "ok": null
       },
@@ -1156,26 +1156,26 @@
         "single-source (yahoo) — uncorroborated"
       ],
       "technicals_src": "db",
-      "crowding": 97
+      "crowding": 98
     },
     "NEX.PA": {
       "ticker": "NEX.PA",
-      "price": 160.39999389648438,
+      "price": 160.60000610351562,
       "high52": 164.883209,
-      "pct_off_high": -0.027190246543028034,
-      "ytd": 0.2730690105694921,
-      "ma50": 141.08353057689447,
-      "ma200": 128.5727840642236,
-      "ma20": 159.7198493922363,
-      "pct_vs_ma50": 0.13691508314687295,
-      "pct_vs_ma200": 0.24754235559185447,
+      "pct_off_high": -0.025977192719995938,
+      "ytd": 0.2746564753587453,
+      "ma50": 141.0875308210351,
+      "ma200": 128.57378412525878,
+      "ma20": 159.72985000258788,
+      "pct_vs_ma50": 0.13830049451522017,
+      "pct_vs_ma200": 0.24908827406881287,
       "above_ma200": true,
       "above_ma20": true,
       "asof": "2026-06-02",
-      "mom_12m": 0.5888593958980461,
-      "mom_1m": 0.0331103233854706,
-      "vol_3m": 0.4150470774653638,
-      "vol_1y": 0.3667332847575488,
+      "mom_12m": 0.5908406383327622,
+      "mom_1m": 0.0343985695435125,
+      "vol_3m": 0.41527594633696974,
+      "vol_1y": 0.36680656807829304,
       "currency": "EUR",
       "source": "yahoo",
       "corroboration": {
@@ -1183,8 +1183,8 @@
           "yahoo"
         ],
         "n": 1,
-        "median": 160.4,
-        "used": 160.4,
+        "median": 160.6,
+        "used": 160.6,
         "spread": 0,
         "ok": null
       },
@@ -2304,7 +2304,7 @@
       "date": "2026-05-29",
       "items": [],
       "url": "https://www.sec.gov/Archives/edgar/data/104169/000010416926000102/wmt-20260430.htm",
-      "is_new": true
+      "is_new": false
     },
     {
       "ticker": "MRK",
@@ -2314,7 +2314,7 @@
         "5.07"
       ],
       "url": "https://www.sec.gov/Archives/edgar/data/310158/000110465926067509/tm2615833d1_8k.htm",
-      "is_new": true
+      "is_new": false
     },
     {
       "ticker": "MRK",
@@ -2325,7 +2325,7 @@
         "9.01"
       ],
       "url": "https://www.sec.gov/Archives/edgar/data/310158/000162828026037738/mrk-20260522.htm",
-      "is_new": true
+      "is_new": false
     },
     {
       "ticker": "PEP",
@@ -2336,7 +2336,7 @@
         "9.01"
       ],
       "url": "https://www.sec.gov/Archives/edgar/data/77476/000110465926065758/tm2615167d1_8k.htm",
-      "is_new": true
+      "is_new": false
     },
     {
       "ticker": "GEV",
@@ -2357,7 +2357,7 @@
         "9.01"
       ],
       "url": "https://www.sec.gov/Archives/edgar/data/104169/000010416926000095/wmt-20260521.htm",
-      "is_new": true
+      "is_new": false
     }
   ],
   "news": [
@@ -2520,14 +2520,14 @@
       "title": "Micron and SK Hynix Cross $1 Trillion Valuations as Chip Shortage Fuels AI Boom - 24/7 Wall St.",
       "link": "https://news.google.com/rss/articles/CBMivwFBVV95cUxNenBJeVp2bUxISmVNYjRNWm1IRlU3c0ZMeXNyRFpOdGpjY2VpSkVGMmM0ZlRFczhJVFFyc0xRTkJjRHVqeld3elBMRmlMS1pnaTZmbHF4Y1hpNFVrSlB2RVAxdEpWSnR5N2VjRGJnX05Fbm15TFRMWDBCcWhjUjJ3ckM5VzVpb2NyZk9rRkYyTE9HbnpCSm5kMVFZRHF1aThaVDhEeldsc0JtdE51MGFqWGFQSS02azQ5MTAyVWFKYw?oc=5",
       "date": "2026-06-02",
-      "is_new": true
+      "is_new": false
     },
     {
       "scarcity": "hbm",
       "title": "2 AI Memory Stocks Outperforming NVIDIA With Big Upside Ahead - TradingView",
       "link": "https://news.google.com/rss/articles/CBMiuAFBVV95cUxOa3dycEFBNVJNa2RBZ3ZYd1RCQ3JyMHZIXzgwNk9DVVRjS05JQ3BnZFVBQ0J5eFNteEs0RUw2enJuWGEtanBaNDR4ODZPQ2NoYlFDaDIyY3NpTndRUkdqR3ROdTFlVFBTaERpUU1hb3QtTWJYZk43VmtOYU9nWFFHR2tTS0syV1pjbmpQdWRRT1RvdnhxT3N3dWVieFdNN3JFa3pZWjFfeHUwYTgyRElMdDZhcEJRS0FT?oc=5",
       "date": "2026-06-01",
-      "is_new": true
+      "is_new": false
     }
   ],
   "trigger_status": {
@@ -2770,7 +2770,7 @@
       "missing": [],
       "term_inverted": false,
       "hy_stressed": false,
-      "vix_term": 0.832,
+      "vix_term": 0.831,
       "hy_mom_1m": -0.0036191304813126823,
       "reasons": []
     },
@@ -2788,11 +2788,11 @@
     "note": "trend 20% vs 200-DMA · 12m mom 69% · -6% from highs · vol 1.24x · breadth200 78% · breadth20 78%"
   },
   "metrics": {
-    "cagr": 0.4091,
+    "cagr": 0.4079,
     "max_drawdown": 0.2187,
-    "calmar": 1.8704,
-    "sortino": 2.4498,
-    "sharpe": 1.6346,
+    "calmar": 1.8651,
+    "sortino": 2.4443,
+    "sharpe": 1.631,
     "vol": 0.2254,
     "breaches_35": false,
     "n": 590,
@@ -2813,21 +2813,21 @@
     "backtest": {
       "ma_period": 100,
       "braked": {
-        "cagr": 0.2314,
+        "cagr": 0.2302,
         "max_drawdown": 0.1492,
-        "calmar": 1.5507,
-        "sortino": 1.7262,
-        "sharpe": 1.2091,
+        "calmar": 1.5426,
+        "sortino": 1.7186,
+        "sharpe": 1.2038,
         "vol": 0.1867,
         "breaches_35": false,
         "n": 491
       },
       "unbraked": {
-        "cagr": 0.3789,
+        "cagr": 0.3776,
         "max_drawdown": 0.2187,
-        "calmar": 1.7325,
-        "sortino": 2.1966,
-        "sharpe": 1.4728,
+        "calmar": 1.7262,
+        "sortino": 2.1903,
+        "sharpe": 1.4687,
         "vol": 0.2373,
         "breaches_35": false,
         "n": 491
@@ -2839,12 +2839,12 @@
     }
   },
   "attribution": {
-    "alpha_annual": 0.0504,
-    "alpha_t": 0.69,
+    "alpha_annual": 0.0495,
+    "alpha_t": 0.68,
     "betas": {
-      "MKT": 0.442,
+      "MKT": 0.443,
       "MOM": 0.64,
-      "THEME": 0.012
+      "THEME": 0.011
     },
     "r2": 0.814,
     "n": 499,
@@ -2857,9 +2857,9 @@
       "THEME"
     ],
     "benchmark_qqq": {
-      "asset_return": 0.8523,
-      "benchmark_return": 0.6605,
-      "excess": 0.1918
+      "asset_return": 0.8487,
+      "benchmark_return": 0.6571,
+      "excess": 0.1916
     }
   },
   "signal_backtest": {
@@ -2895,9 +2895,9 @@
     "alpha_label": {
       "verdict": "factor/beta",
       "basis": "factor-adjusted",
-      "alpha_t": 0.69,
+      "alpha_t": 0.68,
       "resolved": 0,
-      "note": "current factor read: return is explained by market + momentum + theme (t=0.69) — NOT alpha"
+      "note": "current factor read: return is explained by market + momentum + theme (t=0.68) — NOT alpha"
     }
   },
   "scarcity_signals": {
@@ -2997,11 +2997,11 @@
     "hvdc": {
       "flag": "inflecting",
       "action": "accumulate",
-      "rs": 0.0301,
+      "rs": 0.0316,
       "score": 50,
-      "gate": 0.48,
+      "gate": 0.47,
       "static_gate": 0.66,
-      "live_gate": 0.2,
+      "live_gate": 0.19,
       "quality": 0.91,
       "contrarian": true,
       "components": {
@@ -3010,7 +3010,7 @@
         "defensibility": 1
       },
       "forced_flow": {
-        "dislocation": 0.033,
+        "dislocation": 0.031,
         "window": null,
         "intact": false,
         "flag": "none",
@@ -3613,9 +3613,9 @@
       "scarcity": "HVDC & HV cable",
       "sector": "Energy",
       "score": 50,
-      "gate": 0.48,
+      "gate": 0.47,
       "static_gate": 0.66,
-      "live_gate": 0.2,
+      "live_gate": 0.19,
       "quality": 0.91,
       "contrarian": true,
       "components": {
@@ -4333,10 +4333,10 @@
       "thrust": true
     },
     "detail": {
-      "price": 744.249877929688,
+      "price": 742.739990234375,
       "sma200": 617.65,
-      "sma20": 712.54,
-      "ret252": 0.4384,
+      "sma20": 712.47,
+      "ret252": 0.4355,
       "vol60": 0.19
     },
     "reasons": [
@@ -4491,7 +4491,7 @@
         {
           "ticker": "MP",
           "company": "MP Materials Corp. / DE",
-          "mentions": 34,
+          "mentions": 35,
           "score": 1,
           "generic": false
         },
@@ -4499,35 +4499,35 @@
           "ticker": "AREC",
           "company": "American Resources Corp",
           "mentions": 16,
-          "score": 0.686,
+          "score": 0.676,
           "generic": false
         },
         {
           "ticker": "EMAT",
           "company": "Evolution Metals & Technologies Corp.",
           "mentions": 13,
-          "score": 0.618,
+          "score": 0.609,
           "generic": false
         },
         {
           "ticker": "REEMF",
           "company": "RARE ELEMENT RESOURCES LTD",
           "mentions": 11,
-          "score": 0.569,
+          "score": 0.561,
           "generic": false
         },
         {
           "ticker": "USAR",
           "company": "USA Rare Earth, Inc.",
           "mentions": 8,
-          "score": 0.485,
+          "score": 0.478,
           "generic": false
         },
         {
           "ticker": "TMRC",
           "company": "Texas Rare Earth Resources Corp.",
           "mentions": 6,
-          "score": 0.42,
+          "score": 0.414,
           "generic": false
         }
       ],
@@ -4861,7 +4861,7 @@
       ]
     }
   },
-  "digest": "_Analyst: groq:openai/gpt-oss-120b · Red-team: gemini:gemini-3.5-flash (cross-model adversarial review)_\n\n## Analyst\n- **GEV (transformers / turbines)** – 8‑K filed 22 May 2026 (Item 5.07) disclosed a $1.2 bn contract to expand its gas‑turbine production line and an order backlog now at 18 months, down from 28 months a year ago. Combined with the “U.S. transformer market faces severe supply constraints” (5 May) and “Natural Gas Turbines aren’t gating data‑center buildouts” (28 May), capacity is beginning to unwind the 4‑yr lead‑time crunch; a **deployment trigger** (capacity‑driven price compression) appears 12‑18 months out.\n\n- **ETN (large power transformers)** – Still listed as “crowded” on the transformers scarcity map; no new filing, but the same transformer‑supply headlines keep the market “priced = crowded”. Because the sector is still bound for 2028‑29, **exit risk** remains low until a major OEM (e.g., Siemens) reports a material capacity lift.\n\n- **EME, PWR, FIX, MYRG (electricians / EPC labor)** – All four saw double‑digit YTD gains (EME +30 %, PWR +56 %, FIX +78 %, MYRG +98 %) while headlines (5 May, 18 May) flag “skilled electrician shortage” driving wages and project delays. No SEC updates yet, so **allocation bias** stays high; monitor any 10‑Q disclosure of labor‑cost escalations for a possible **sell‑on‑margin‑erosion** trigger.\n\n- **MU (HBM / TSV)** – YTD rally of **+228 %** (largest mover in the list) despite no forward‑PE disclosed; scarcity still “high”. The “Micron and SK Hynix cross $1 trn valuations” (2 Jun) signals market‑wide premium, but the lack of a forward‑PE buffer suggests the stock may still be **relatively cheap on earnings‑multiple terms** versus peers, keeping the **deploy trigger** near‑term.\n\n- **MP & LYC (heavy‑RE magnets)** – MP down **‑27 %** YTD while LYC up **+55 %**. The “REalloys locks in Western‑hemisphere heavy‑RE supply” (28 May) could lift MP’s upside if the supply‑chain bottleneck eases; LYC’s price run‑up may be **over‑priced** given its forward‑PE (still modest) – watch for a corrective trigger if new capacity announcements materialize.\n\n- **FCX, COPX, TECK (copper structural deficit)** – Copper news (19 May) shows price pressure from weak China demand, yet the “structural deficit” persists to 2030+. FCX (+29 %), COPX (+23 %), TECK (+41 %) remain “priced = high”. No filing changes, but any 10‑Q note on inventory drawdowns could **activate a short‑term sell trigger** as spot prices retreat.\n\n- **WMT (merchant power exposure – “electrons”)** – 8‑K on 21 May disclosed revised FY‑26 guidance that lifts net‑sales growth to 4.5 % (vs 3.6 % prior) driven by higher utility‑scale solar PPAs. Although WMT’s scarcity tag is “high”, the guidance lift narrows the “pricing‑high” gap; **deployment trigger** for power‑related ETFs moves closer as earnings outlook improves.\n\n- **ASML & TSM (advanced packaging / EUV)** – Both posted strong YTD gains (ASML +40 %, TSM +37 %) while still lacking forward‑PE data. The “HBM + TSV opportunity cost” (2 Jun) reinforces the “high‑priced” label for the advanced‑packaging niche, but the absence of forward‑PE suggests **valuation headroom** remains; keep a **buy‑on‑dip** stance if any earnings miss triggers a price pullback.\n\n## Red-team\nHere is a red-team teardown of the analyst digest, highlighting critical logical leaps, data misinterpretations, and unsubstantiated claims:\n\n*   **Absurd Attribution of Walmart’s (WMT) Guidance:** The claim that Walmart’s 0.9% net-sales guidance raise was \"driven by higher utility-scale solar PPAs\" is a fundamental misunderstanding of WMT's business model. Walmart is a retail giant; Power Purchase Agreements (PPAs) are energy procurement contracts (expenses/hedges), not drivers of retail net sales. \n*   **The \"No Forward-PE = Cheap\" Fallacy (MU, ASML, TSM):** The analyst makes an egregious logical leap by claiming that because forward-PE data is \"not disclosed\" or \"lacking\" in their sheet, these stocks have \"valuation headroom\" or are \"relatively cheap.\" A +228% YTD run-up for Micron (MU) without valuation metrics is highly indicative of an overextended bubble, not a \"relatively cheap\" buying opportunity. \n*   **Inverted Commodity Logic on Copper (FCX, COPX, TECK):** The analyst suggests that \"inventory drawdowns\" in 10-Q filings would activate a \"sell trigger as spot prices retreat.\" In commodity markets, inventory *drawdowns* indicate supply scarcity and high demand, which drives spot prices *up*, not down. \n*   **Contradictory Backlog and Capacity Signals (GEV vs. ETN):** The digest claims ETN’s exit risk is low \"until a major OEM reports a material capacity lift.\" Yet, in the very same digest, GEV (a major OEM) is shown to have slashed its backlog from 28 to 18 months. GEV’s capacity unwinding *is* the sector-wide capacity lift that threatens ETN's \"priced = crowded\" thesis.\n*   **Unsubstantiated Peer Read-Throughs (MP vs. LYC):** The analyst asserts that a headline about \"REalloys locking in Western-hemisphere supply\" will somehow lift MP's upside. In reality, a competitor locking up supply capacity is a negative market-share signal for MP (which is already down 27% YTD), not a positive catalyst.",
+  "digest": "_Analyst: groq:openai/gpt-oss-120b · Red-team: gemini:gemini-3.5-flash (cross-model adversarial review)_\n\n## Analyst\n- **GEV (Transformers / Electrons / Turbines)** – 8‑K filed 5.07 on 2026‑05‑22 disclosed a **price‑increase on new transformer contracts** and a **larger backlog of turbine slots**.  The stock is up ~40% YTD (0.4006) while the forward‑PE field remains blank, indicating it is still “cheap” on a valuation basis despite the rally.  \n\n- **MU (HBM memory)** – YTD return +228% and 100% crowding.  No filing, but the **“HBM stocks hit $1 trillion valuations”** headline (06‑02) reinforces the structural shortage.  Forward‑PE not published, so the massive price run‑up still looks inexpensive versus peers like NVIDIA.  \n\n- **SMH (Semiconductor ETF)** – YTD +63% with 100% crowding; market chatter on **HBM & AI memory demand** (06‑01) suggests the rally is demand‑driven, yet forward multiples are absent, leaving valuation headroom.  \n\n- **TECK (Copper)** – YTD +41.5% and 82% crowding.  Recent **Copper shortage story (Crux, 05‑19)** and price dip below $13.4k/t sharpen the structural deficit case; no filing, but the supply‑tight narrative adds upside to an already strong performer.  \n\n- **FCX (Copper)** – YTD +29.7% (crowding 62).  The same **copper‑supply deficit coverage** (Crux, 05‑19) signals continued demand‑side pressure; forward‑PE still unavailable, implying valuation remains attractive relative to peers.  \n\n- **LEU (Uranium enrichment)** – No SEC filing, but **DOE $2.7 bn enrichment order** (01‑05) and the “crowded” scarcity tag keep the supply‑tight outlook intact; price has been flat, making a potential entry point if guidance improves.  \n\n- **CCJ (Uranium upstream)** – YTD ‑30% (crowding 0) after **Kazakhstan’s 10% production cut** (04‑22).  The drop in supply and “crowded” scarcity rating suggest a **re‑entry trigger** if the company raises guidance or announces new contracts.  \n\n- **PWR (Electricians / EPC labor)** – YTD +57% (crowding 76) and **high‑priced scarcity**; recent headlines on **data‑center electrician shortages** (Reuters 05‑18, Barron’s 05‑05) reinforce demand, yet no filing, so the rally may still be under‑priced on forward metrics.  \n\n- **VRT (AI‑datacenter cooling)** – YTD +84% (crowding 78) with **high scarcity pricing**; cooling‑equipment shortage articles (06‑02) keep upside potential alive.  No 8‑K/10‑Q has altered guidance, so the current price level may still be a buying opportunity given the missing forward‑PE data.  \n\n## Red-team\nHere is a red-team challenge to the analyst digest, highlighting structural flaws, logical fallacies, and misinterpretations of the data:\n\n*   **The \"Missing Data = Cheap\" Fallacy (Systemic):** The analyst repeatedly argues that because forward-PE fields are blank or \"not published\" (for **GEV, MU, SMH, FCX, PWR, and VRT**), these assets are valuation \"coiled springs\" with massive headroom. This is a dangerous database-error fallacy. A blank forward-PE in a screener typically indicates negative consensus earnings, high volatility, or a simple data-feed omission—not cheapness. To claim VRT (+84% YTD) or MU (+228% YTD) are \"inexpensive\" because a database cell is blank ignores basic valuation reality.\n*   **100% Crowding is the Definition of \"Already Priced\" (MU, SMH, VRT):** The analyst treats MU’s +228% YTD run and 100% crowding metric as a buy signal. A 100% crowding score means literally *every* momentum and institutional allocator has already crowded into the trade, and the \"structural shortage\" headlines from June 2 are lagging indicators. There is zero margin of safety; any execution hiccup will trigger a violent unwinding. \n*   **Economic Contradiction on Uranium (CCJ):** The analyst attributes CCJ's -30% YTD drop to \"Kazakhstan’s 10% production cut.\" This is economically backwards. A production cut by Kazatomprom (the world's largest producer) reduces supply, which is highly bullish for uranium spot prices and peer producers like CCJ. If CCJ is down 30% *despite* supply cuts, there are severe, unaddressed company-specific headwinds or broader market rotations that the analyst is ignoring.\n*   **Absurd Copper Pricing Baseline (TECK):** The digest cites a copper price \"dip below $13.4k/t\" as a positive entry point. In physical commodity markets, copper trading anywhere near $13,400 per metric tonne represents an astronomical, unsustainable, all-time high (historical peaks are closer to ~$11,000/t). Labeling this highly inflated price level as a \"dip\" that \"sharpens the deficit case\" ignores that TECK (+41.5% YTD, 82% crowded) is priced for an absolute best-case commodity supercycle.\n*   **Relying on Stale, Non-Event Catalysts (LEU):** The analyst attempts to revive a bullish outlook on LEU using a DOE enrichment order from January 5. In a digest written in June 2026 (per the GEV 8-K date), a five-month-old government order is highly stale news that has long been priced into the flat stock performance. Without fresh, company-specific guidance, calling this a \"re-entry point\" is baseless.",
   "errors": [
     "SMNEY: no quote from any source",
     "4185.T: no quote from any source"

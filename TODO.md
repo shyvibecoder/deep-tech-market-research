@@ -66,25 +66,30 @@ items touch strategy/vision — discuss before building.
   relative return → rank IC + hit-rate + 95% CI. Point-in-time on prices (union date axis, no peek);
   **survivorship caveat baked into the payload + UI** (current-membership universe → IC is an UPPER BOUND).
   Warehouse-gated in `scan.mjs` → `signals.json.signal_backtest`; scorecard line + `?` help + USER-GUIDE 5.1e.
-- [ ] **(G1 follow-up) Ken-French FF5+UMD precision + scorecard auto-relabel.** Feed the source-agnostic OLS
-  core the canonical FF5+UMD factors, and wire the residual-alpha verdict to auto-relabel a signal class as
-  "beta" in the scorecard when its factor-adjusted edge isn't significant. (The attribution read exists; the
-  *automated relabel* of `by_signal` buckets is still manual-eyeball.)
-- [ ] **(G6 follow-up) Point-in-time universe construction.** v1 uses current-membership (IC labeled an
-  explicit upper bound). A fuller version reconstructs the basket→ticker membership as-of each date to
-  remove the survivorship bias — needs versioned `scarcities.json` history (F4 snapshots are a start).
+- [~] **(G1 follow-up) scorecard auto-relabel — SHIPPED.** `alphaEdgeLabel(attribution, by_signal)` in
+  `factor.mjs` (TDD, 4 tests) joins the factor-attribution verdict onto the **Alpha edge** scorecard line
+  (`scorecard.alpha_label` in scan.mjs, rendered + `?` help + USER-GUIDE 4.1d). A strong forward hit-rate now
+  auto-reads "factor-adjusted: beta — NOT alpha" whenever the regression isn't significant — no more manual
+  eyeballing. **Still open: Ken-French FF5+UMD precision** — the OLS core is source-agnostic, but the FF
+  daily files ship as `.zip` (no built-in Node zip parser → fragile new infra) for marginal gain over the
+  current tradeable proxies (SPY/MTUM/QQQ). Deferred deliberately; revisit if a precision need appears.
+- [ ] **(G6 follow-up) Point-in-time universe construction — BLOCKED on history accrual (not code).**
+  Reconstructing as-of-date basket→ticker membership needs versioned `scarcities.json` snapshots;
+  `scarcity-history.json` currently holds only ~2 dates. The F4 snapshot machinery is running, so this just
+  needs calendar time to bank membership history before it's buildable. v1's current-membership IC stays
+  labeled an explicit upper bound meanwhile.
 
 ### 🟠 P1 — fix the structural concentration (the return engine's real risk)
 - [ ] **Gate the scout NOW (cheap; stops the hole deepening).** The scout's own candidates (transformers,
   turbine blades, electrical steel) are *all* AI-capex — it automates concentration as "breadth." Add a
   correlation-screen that REJECTS any candidate loading on AI-capex (needs G1's correlation tooling), or
   pause scout expansion until G2. Reframe its mandate: breadth = *uncorrelated*, not *more names*.
-- [ ] **G2 — Uncorrelated alpha breadth (the mono-factor Achilles heel).** [DESIGN-FIRST] IR ∝ IC × √breadth;
-  IC is high, breadth ≈ 1. Open a structurally-uncorrelated 2nd scarcity axis (candidates to debate:
-  demographic/health-system, food/ag-input security, defense-reshoring decoupled from AI, climate-
-  adaptation/water) — same four-edges + falsifiability. *Review caveat: this is a 2nd research vertical
-  from scratch (new universe/proxies/phrase-maps/calibration), not a config change — scope it properly.*
-  Needs G1's correlation tooling to verify candidates are actually uncorrelated, not just labelled so.
+- [x] **G2 — Uncorrelated alpha breadth — SHIPPED (Diversifier sleeve).** The structurally-uncorrelated 2nd
+  axis is the **Diversifier sleeve** (~15%): scout/screen (book-aware gate on **build-out β ≤ 0.3** = the
+  correlation screen) → committee conviction → inverse-vol sizing → one human-merged PR into `portfolio.json`.
+  Tagged `axis:"diversifier"`, excluded from the Opportunity machinery, surfaced on its own tab + the radar.
+  Candidates realized: regulated-utilities, water/climate, health-defensive, consumer-staples, discount-retail.
+  *Remaining:* deepen the universe + use the FF/correlation tooling to re-verify low correlation periodically.
 
 ### 🟡 P2 — allocate / protect the edge (AFTER it's proven)
 - [x] **G3 — sizing + rebalance plan: SHIPPED + hardened + graded (this session).** Engine in `web/sizing.mjs`
@@ -112,9 +117,13 @@ items touch strategy/vision — discuss before building.
   ONE canonical entry + priority. Run the advertised `coherence.test.mjs` against the *roadmap*, not just code.
 - [ ] **Charge transaction/whipsaw cost in the backtest.** `backtest.mjs` counts `whipsaws` but never costs
   them → every braked Calmar/Sortino improvement is overstated. For a Calmar objective this is a direct bias.
-- [ ] **After-tax return / tax-lot model for the taxable sleeve.** Calmar/Sortino on *pre-tax* returns is
-  the wrong objective for a $700K taxable account; a regime exit that realizes short-term gains can be net-
-  negative after tax. Wash-sale/constructive-sale are mentioned but unmodeled.
+- [~] **After-tax return / tax-lot model for the taxable sleeve — PARTIALLY SHIPPED (asset location).**
+  `web/asset-location.mjs`: per-name after-tax TERMINAL-value optimizer (transportation LP) places each
+  dollar in Roth/Traditional/taxable to maximize after-tax value, plus a position-aware delta rebalance with
+  a **taxable buy-and-hold rule** (only trims a taxable lot when the scan's trim bar is met — won't realize
+  ST gains just to relocate). *Still open:* the **backtest objective is still pre-tax** (Calmar/Sortino on
+  pre-tax returns), and **wash-sale / constructive-sale** are documented but unmodeled — fold into the
+  backtest cost work below.
 
 - **Out of scope by design (not gaps):** live trade execution (F9 keeps humans in the loop), HFT/execution
   edge (retail loses there — correctly disclaimed), paid alt-data (free-tier rule; Edge-2 filing effort is

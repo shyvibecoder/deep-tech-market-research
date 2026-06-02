@@ -1,6 +1,6 @@
 import { describe, it } from "node:test";
 import assert from "node:assert/strict";
-import { returns, alignByDate, ols, factorAttribution, benchmarkRelative } from "../scripts/lib/factor.mjs";
+import { returns, alignByDate, ols, factorAttribution, benchmarkRelative, alphaEdgeLabel } from "../scripts/lib/factor.mjs";
 
 describe("factor: returns", () => {
   it("computes daily simple returns, skipping bad points", () => {
@@ -71,6 +71,32 @@ describe("factor: attribution verdict (the honesty gate's teeth)", () => {
     const a = factorAttribution(asset, { MKT: mkt, THEME: theme });
     assert.notEqual(a.verdict, "alpha");
     assert.ok(a.alpha_annual < 0);
+  });
+});
+
+describe("factor: alphaEdgeLabel (auto-relabel the scorecard from the attribution verdict)", () => {
+  it("stamps 'factor/beta' on the alpha edge when attribution finds no significant alpha", () => {
+    const l = alphaEdgeLabel({ verdict: "factor/beta", alpha_t: 0.4 }, { underperform: { n: 3, hits: 2 }, outperform: { n: 1, hits: 1 } });
+    assert.equal(l.verdict, "factor/beta");
+    assert.equal(l.basis, "factor-adjusted");
+    assert.equal(l.resolved, 4);
+    assert.match(l.note, /NOT alpha/);
+  });
+  it("stamps 'alpha' only when attribution confirms a significant positive residual", () => {
+    const l = alphaEdgeLabel({ verdict: "alpha", alpha_t: 2.6 }, {});
+    assert.equal(l.verdict, "alpha");
+    assert.match(l.note, /genuine edge/);
+  });
+  it("a strong forward hit-rate alone does NOT earn 'alpha' without attribution (no skill masquerade)", () => {
+    const l = alphaEdgeLabel(null, { underperform: { n: 10, hits: 9 }, outperform: { n: 10, hits: 8 } });
+    assert.equal(l.verdict, "unproven");
+    assert.equal(l.basis, "forward-only");
+    assert.equal(l.resolved, 20);
+  });
+  it("reports 'building' when there's neither attribution nor resolved calls", () => {
+    const l = alphaEdgeLabel(null, {});
+    assert.equal(l.verdict, "unproven");
+    assert.equal(l.basis, "building");
   });
 });
 

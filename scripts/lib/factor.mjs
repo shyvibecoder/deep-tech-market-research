@@ -116,3 +116,30 @@ export function benchmarkRelative(assetValues, benchValues) {
   if (ar == null || br == null) return null;
   return { asset_return: +ar.toFixed(4), benchmark_return: +br.toFixed(4), excess: +(ar - br).toFixed(4) };
 }
+
+// G1 follow-up — AUTO-RELABEL the scorecard's alpha edge from the factor-attribution verdict, so a high
+// forward hit-rate can't read as "skill" when the CURRENT factor regression says the basket's return is
+// just market+momentum+theme beta. Previously a human had to eyeball the attribution line and the alpha
+// line and connect them; this stamps the verdict ON the alpha edge. `bySignal` = scorecard.by_signal
+// (the forward-graded de-rating/inflecting calls) is carried for context (resolved count).
+export function alphaEdgeLabel(attribution, bySignal = {}) {
+  const resolved = (bySignal?.underperform?.n || 0) + (bySignal?.outperform?.n || 0);
+  if (attribution && (attribution.verdict === "alpha" || attribution.verdict === "factor/beta")) {
+    const isAlpha = attribution.verdict === "alpha";
+    return {
+      verdict: isAlpha ? "alpha" : "factor/beta",
+      basis: "factor-adjusted",
+      alpha_t: attribution.alpha_t ?? null,
+      resolved,
+      note: isAlpha
+        ? `factor-adjusted residual alpha is positive & significant (t=${attribution.alpha_t}) — genuine edge`
+        : `current factor read: return is explained by market + momentum + theme (t=${attribution.alpha_t}) — NOT alpha`,
+    };
+  }
+  // No attribution this run (offline / too little history) → can't relabel; report the forward ledger state.
+  return {
+    verdict: "unproven", basis: resolved ? "forward-only" : "building", resolved,
+    note: resolved ? "no factor attribution this run — forward calls only, edge unconfirmed"
+      : "building — first relative calls resolve in ~42 days; no factor attribution yet",
+  };
+}

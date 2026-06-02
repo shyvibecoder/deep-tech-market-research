@@ -12,7 +12,7 @@ import { technicalsFromHistory } from "./lib/technicals.mjs";
 import { reconcileSeries } from "./lib/history-reconcile.mjs";
 import { basketIndex, portfolioMetrics } from "./lib/metrics.mjs";
 import { backtestRegime } from "./lib/backtest.mjs";
-import { returns, alignByDate, factorAttribution, benchmarkRelative } from "./lib/factor.mjs";
+import { returns, alignByDate, factorAttribution, benchmarkRelative, alphaEdgeLabel } from "./lib/factor.mjs";
 import { crossSectionalBacktest } from "./lib/xsbacktest.mjs";
 import { getQuotes, providerKeys, dataQualityGate, plausibleNextBar } from "./lib/marketdata.mjs";
 import { macroStress } from "./lib/macro.mjs";
@@ -621,7 +621,10 @@ let scorecard = null;
     writeFileSync(fpath, JSON.stringify(store, null, 2) + "\n");
     console.log(`Forecasts: ${resolved.length} resolved, ${store.open.length} open, hit-rate ${store.scorecard.hit_rate}`);
   }
-  scorecard = store.scorecard;
+  // G1 follow-up: AUTO-RELABEL the alpha edge from this run's factor-attribution verdict, on a COPY so the
+  // derived field never pollutes the persisted forecasts.json store. The scorecard's alpha edge now carries
+  // the factor-adjusted verdict instead of needing a human to eyeball the attribution line next to it.
+  scorecard = { ...store.scorecard, alpha_label: alphaEdgeLabel(attribution, store.scorecard?.by_signal) };
 }
 // CRITICAL-2: surface the tilt's accruing grade on the rebalance block (graded flips true once any
 // sizing_tilt forecast has resolved over its horizon; until then it's recorded-but-not-yet-scored).

@@ -279,6 +279,12 @@ itself. It also shows the blunt absolute check: did the basket beat simply buyin
 limited, partly-foreign history the estimate is noisy for a while (small sample, wide error band) — early
 readings are indicative, not verdicts. This is the layer that keeps the whole "alpha" claim falsifiable.
 
+**Auto-relabel (G1 follow-up).** This verdict is now joined directly onto the **Alpha edge** line above it:
+that line is auto-stamped **factor-adjusted: alpha** or **beta — NOT alpha**. Previously you had to eyeball
+the two lines and connect them; now a strong forward hit-rate is *automatically* shown as **beta** whenever
+the factor regression says the return is explained by market + momentum + theme — so a good track record
+can never masquerade as skill on screen.
+
 ### 4.1e Signal backtest (historical, cross-sectional)
 The Track record is unbiased but slow. This line evidences the same edge on **history**: across the
 scarcity baskets and many past dates, does **trailing relative strength vs the deep-tech build-out complex predict the

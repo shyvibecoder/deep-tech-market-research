@@ -128,18 +128,23 @@ export async function convictionCommittee(tickers, evidenceByTicker = {}, caller
 // already in the plan (e.g. FIW) COUNT toward the budget (so water isn't double-bought); the remaining
 // budget is split across the new gate-qualifying names by conviction × inverse-volatility. The deep-tech build-out
 // holdings are scaled down so the whole plan still sums to 1.0. Pure + deterministic.
-export function fundSleeve({ candidates = [], currentHoldings = [], existingDiversifierTickers = [], sleevePct = 0.15, sleeveUsd = 0, convictions = {}, vols = {}, account = "taxable", tier = "C", defaultConviction = 0.6, defaultVol = 0.25 }) {
+export function fundSleeve({ candidates = [], currentHoldings = [], existingDiversifierTickers = [], sleevePct = 0.15, sleeveUsd = 0, convictions = {}, vols = {}, account = "taxable", tier = "C", defaultConviction = 0.6, defaultVol = 0.25, maxNames = 0 }) {
   const held = new Set(currentHoldings.map((h) => h.ticker));
-  const names = [];
-  for (const c of candidates) for (const t of c.tickers || []) if (!held.has(t) && !names.some((n) => n.ticker === t)) names.push({ ticker: t, sleeve: c.id, scarcity: c.scarcity });
+  let names = [];
+  for (const c of candidates) for (const t of c.tickers || []) if (!held.has(t) && !names.some((n) => n.ticker === t)) names.push({ ticker: t, sleeve: c.id, scarcity: c.scarcity, conviction: +(convictions[t] ?? defaultConviction) });
+  // Cap: fund only the top-N by conviction (then conviction × inverse-vol weights them) so the sleeve is a
+  // FOCUSED set, not dozens of dust positions. maxNames ≤ 0 = no cap. Deterministic tie-break by ticker.
+  if (maxNames > 0 && names.length > maxNames) {
+    names = [...names].sort((a, b) => b.conviction - a.conviction || a.ticker.localeCompare(b.ticker)).slice(0, maxNames);
+  }
 
   const existingDivWeight = currentHoldings.filter((h) => existingDiversifierTickers.includes(h.ticker)).reduce((a, h) => a + (h.weight || 0), 0);
   const budget = Math.max(0, +(sleevePct - existingDivWeight).toFixed(6)); // new-name budget = sleeve minus what existing diversifiers already cover
-  const raw = names.map((n) => (convictions[n.ticker] ?? defaultConviction) * (1 / Math.max(vols[n.ticker] ?? defaultVol, 0.01)));
+  const raw = names.map((n) => n.conviction * (1 / Math.max(vols[n.ticker] ?? defaultVol, 0.01)));
   const sum = raw.reduce((a, b) => a + b, 0) || 1;
   const newHoldings = names.map((n, i) => {
     const weight = +(budget * raw[i] / sum).toFixed(4);
-    return { ticker: n.ticker, name: n.ticker, account, weight, target_usd: Math.round(weight * sleeveUsd), tier, role: `Diversifier (2nd axis) — ${n.scarcity}`, conviction: +(convictions[n.ticker] ?? defaultConviction).toFixed(3), sleeve: n.sleeve };
+    return { ticker: n.ticker, name: n.ticker, account, weight, target_usd: Math.round(weight * sleeveUsd), tier, role: `Diversifier (2nd axis) — ${n.scarcity}`, conviction: n.conviction, sleeve: n.sleeve };
   }).filter((h) => h.weight > 0); // a zero budget (existing diversifiers already at/over target) proposes no $0 buys
   // Reserve only what the diversifier axis ACTUALLY ends at (existing + what we actually funded) — never a
   // phantom full-sleevePct slot. This keeps the plan summing to 1.0 in every case: zero qualifiers (budget

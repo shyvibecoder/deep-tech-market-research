@@ -124,6 +124,16 @@ describe("diversifier Stage 3: sizing fills the sleeve budget around what's plan
     const total = h.reduce((a, x) => a + x.weight, 0);
     assert.ok(Math.abs(total - 1.0) < 1e-3, `sums to ${total}`);
   });
+  it("caps to the top-N by conviction (focused sleeve, not dust) and still fills the budget", () => {
+    const f = fundSleeve({
+      candidates: [{ id: "s", scarcity: "S", tickers: ["A", "B", "C", "D"] }],
+      currentHoldings: portfolio.holdings, existingDiversifierTickers: ["FIW"], sleevePct: 0.15, sleeveUsd: 1_500_000,
+      convictions: { A: 0.9, B: 0.5, C: 0.8, D: 0.4 }, maxNames: 2,
+    });
+    assert.equal(f.newHoldings.length, 2);
+    assert.deepEqual(f.newHoldings.map((h) => h.ticker).sort(), ["A", "C"]); // top-2 by conviction
+    assert.ok(Math.abs(f.newHoldings.reduce((a, h) => a + h.weight, 0) - 0.08) < 1e-3); // budget still filled
+  });
   it("EDGE: existing diversifiers already over the target → sums to 1.0, no build-out scale-up [B1]", () => {
     const over = { sleeve_usd: 1_500_000, holdings: [{ ticker: "FIW", weight: 0.20 }, { ticker: "PAVE", weight: 0.80 }] };
     const f = fundSleeve({ candidates: [{ id: "health", scarcity: "Health", tickers: ["JNJ"] }], currentHoldings: over.holdings, existingDiversifierTickers: ["FIW"], sleevePct: 0.15, sleeveUsd: over.sleeve_usd });

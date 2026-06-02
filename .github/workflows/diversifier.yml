@@ -45,6 +45,7 @@ jobs:
           OPENROUTER_MODEL: ${{ vars.OPENROUTER_MODEL }}
           GEMINI_MODEL: ${{ vars.GEMINI_MODEL }}
           DIVERSIFIER_SLEEVE_PCT: ${{ github.event.inputs.sleeve_pct || vars.DIVERSIFIER_SLEEVE_PCT || '0.15' }}
+          DIVERSIFIER_MAX_NAMES: ${{ vars.DIVERSIFIER_MAX_NAMES || '6' }}   # fund the top-N by conviction (focused sleeve, not dust)
         run: |
           node scripts/diversifier-run.mjs | tee diversifier-run.log
           echo '```' >> "$GITHUB_STEP_SUMMARY"; cat diversifier-run.log >> "$GITHUB_STEP_SUMMARY"; echo '```' >> "$GITHUB_STEP_SUMMARY"

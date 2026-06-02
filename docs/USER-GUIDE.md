@@ -92,8 +92,8 @@ pipeline, distinct from the deep-tech build-out Opportunity logic:
    the plan you already hold** (a sleeve that duplicates planned exposure, e.g. water vs the FIW already in
    the plan, is flagged as redundant). Output → `diversifier-candidates.json`.
 2. **Committee** — a drawdown-focused bull/bear/skeptic panel assigns each surviving name a
-   **conviction** 0–1 (runs in CI with an LLM key; offline it falls back to equal conviction). It keeps
-   *all* gate-qualifiers (conviction tilts the weights, it doesn't prune).
+   **conviction** 0–1 (runs in CI with an LLM key; offline it falls back to equal conviction). The sleeve
+   then funds the **top N by conviction** (default 6) — a focused set, not dozens of dust positions.
 3. **Size** — `weight = conviction × inverse-volatility`, within a **sleeve budget** (the
    diversifier axis as a set % of the plan, default 15%), with water netted against the FIW already planned.
 4. **Fund it (PR → plan)** — the **Diversifier** tab shows the proposal; **Accept** opens a human-merged

@@ -16,6 +16,7 @@ import { availableProviders, planCommittee, seatCaller } from "./lib/llm.mjs";
 const MARKET = ["SPY"];            // broad market factor (strip generic beta)
 const COMPLEX = ["QQQ", "SMH"];    // long-lived deep-tech build-out complex proxy (orthogonalized from MARKET)
 const SLEEVE_PCT = Number(process.env.DIVERSIFIER_SLEEVE_PCT || 0.15);
+const MAX_NAMES = Number(process.env.DIVERSIFIER_MAX_NAMES || 6); // fund only the top-N by conviction (focused sleeve, not dust)
 const today = new Date().toISOString().slice(0, 10);
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 
@@ -71,8 +72,8 @@ async function loadSeries(tickers) {
 
   // Stage 3 — size the sleeve (conviction × inverse-vol, around what's planned).
   const vols = {}; for (const t of tickers) vols[t] = basketStats(series, [t])?.vol ?? 0.25;
-  const funding = fundSleeve({ candidates: qualifiers, currentHoldings: portfolio.holdings || [], existingDiversifierTickers, sleevePct: SLEEVE_PCT, sleeveUsd, convictions, vols });
-  console.log(`Funding: ${funding.newHoldings.length} new name(s) into a ${(SLEEVE_PCT * 100).toFixed(0)}% sleeve (FIW etc. already ${(funding.existingDivWeight * 100).toFixed(1)}%); deep-tech build-out scaled ×${funding.buildoutScale}`);
+  const funding = fundSleeve({ candidates: qualifiers, currentHoldings: portfolio.holdings || [], existingDiversifierTickers, sleevePct: SLEEVE_PCT, sleeveUsd, convictions, vols, maxNames: MAX_NAMES });
+  console.log(`Funding: top ${funding.newHoldings.length} by conviction (cap ${MAX_NAMES}) into a ${(SLEEVE_PCT * 100).toFixed(0)}% sleeve (FIW etc. already ${(funding.existingDivWeight * 100).toFixed(1)}%); deep-tech build-out scaled ×${funding.buildoutScale}`);
 
   // Write the proposal (a SEPARATE feed; never the plan). Computed metrics = the machine-generated evidence.
   const out = {

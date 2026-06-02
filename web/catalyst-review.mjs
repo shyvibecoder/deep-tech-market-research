@@ -23,10 +23,17 @@ export function applyCatalystEdit(portfolioDoc, { affects = [], edit = null } = 
   if (!holdings.length) return portfolioDoc; // M1: never emit an empty plan
   const curAxis = { d: 0, b: 0 };
   for (const h of holdings) curAxis[isDiv(h) ? "d" : "b"] += h.weight;
+  // Per-axis renormalization preserves the 85/15 split ONLY while every axis that originally had weight still
+  // has a survivor. If a cut EMPTIES an axis (no survivor to receive its freed weight), per-axis scaling would
+  // silently drop that weight → the plan sums to <1 and downstream `1−divW` math misallocates. In that case
+  // fall back to a GLOBAL renormalize to 1 (the emptied axis's weight is absorbed by the survivors).
+  const bothSurvive = (origAxis.b === 0 || curAxis.b > 0) && (origAxis.d === 0 || curAxis.d > 0);
+  const tot = holdings.reduce((a, h) => a + h.weight, 0) || 1;
   holdings = holdings.map((h) => {
     const k = isDiv(h) ? "d" : "b";
-    const scale = curAxis[k] > 0 ? origAxis[k] / curAxis[k] : 1; // keep this axis's total constant
-    const w = +(h.weight * scale).toFixed(4);
+    const w = bothSurvive
+      ? +(h.weight * (curAxis[k] > 0 ? origAxis[k] / curAxis[k] : 1)).toFixed(4) // keep each axis's total
+      : +(h.weight / tot).toFixed(4);                                            // an axis emptied → global → sum 1
     return { ...h, weight: w, target_usd: Math.round(w * (portfolioDoc.sleeve_usd || 0)) };
   });
   return { ...portfolioDoc, updated: new Date().toISOString().slice(0, 10), holdings };

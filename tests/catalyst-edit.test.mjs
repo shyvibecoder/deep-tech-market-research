@@ -51,6 +51,17 @@ describe("catalyst-edit: applyCatalystEdit (cut / trim → renormalized plan)", 
     const bld = r.holdings.filter((h) => h.ticker !== "KO").reduce((a, h) => a + h.weight, 0);
     assert.ok(Math.abs(bld - 0.85) < 0.01, `build-out stayed ~85% (got ${bld})`);
   });
+  it("[M2-edge] cutting the ONLY diversifier still sums to 1 (freed weight not lost)", () => {
+    const d = { sleeve_usd: 1000000, holdings: [
+      { ticker: "MP", weight: 0.50, role: "rare earths" },
+      { ticker: "ASML", weight: 0.35, role: "litho" },
+      { ticker: "KO", weight: 0.15, axis: "diversifier" }, // the only diversifier
+    ] };
+    const r = applyCatalystEdit(d, { edit: "cut", affects: ["KO"] });
+    assert.ok(!r.holdings.some((h) => h.ticker === "KO"));
+    assert.ok(Math.abs(r.holdings.reduce((a, h) => a + h.weight, 0) - 1) < 1e-3, "still sums to 1 (global renorm fallback)");
+    assert.ok(Math.abs(r.holdings.reduce((a, h) => a + h.target_usd, 0) - 1000000) < 1500, "target_usd ~ full sleeve");
+  });
   it("[M1] never emits an empty plan (cutting the whole book → unchanged)", () => {
     const d = { sleeve_usd: 1e6, holdings: [{ ticker: "MP", weight: 0.6 }, { ticker: "GEV", weight: 0.4 }] };
     assert.equal(applyCatalystEdit(d, { edit: "cut", affects: ["MP", "GEV"] }), d); // refused → same ref

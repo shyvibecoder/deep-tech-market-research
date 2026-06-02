@@ -808,6 +808,25 @@ if (!OFFLINE && supabaseConfigured()) {
   console.log("Top-off: Supabase not configured (set SUPABASE_URL + SUPABASE_SERVICE_KEY to persist history)");
 }
 
+// The regime-instruments panel read the DB EARLIER in this run — before the top-off/backfill above wrote
+// today's (or freshly-seeded) bars. Re-read any instrument still on the live-1y fallback so a backfill (or a
+// daily top-off that just extended a thin series) reflects in THE SAME run instead of needing a 2nd scan.
+// In steady state (already "db" from the early read) this loop is a no-op.
+if (!OFFLINE && supabaseConfigured() && out.regime_instruments) {
+  const riMin = new Date(Date.now() - 2.2 * 365.25 * 86400000).toISOString().slice(0, 10);
+  let upgraded = 0;
+  for (const t of REGIME_INSTRUMENTS) {
+    const cur = out.regime_instruments[t];
+    if (!cur || cur.error || cur.technicals_src === "db") continue;
+    try {
+      const s = await readSeries(t, { minDate: riMin });
+      const dbt = s ? technicalsFromHistory(s, { date: cur.asof || TODAY, price: cur.price }, { currency: cur.currency ?? null, source: "db+today" }) : null;
+      if (dbt) { out.regime_instruments[t] = { ...cur, ...dbt, price: cur.price, technicals_src: "db" }; upgraded++; }
+    } catch { /* keep the live fallback */ }
+  }
+  if (upgraded) console.log(`Regime instruments: upgraded ${upgraded} to deep DB history after top-off`);
+}
+
 // Validate our own output before writing — never commit a malformed signals.json.
 assertValid("generated signals.json", validateSignals(out));
 

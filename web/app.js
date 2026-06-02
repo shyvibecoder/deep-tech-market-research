@@ -504,12 +504,15 @@ function renderPortfolio() {
     const showVal = live?.value != null && Math.abs(live.value) < 1000;
     const badge = cw ? `${esc(cw.status)}${cw.confidence ? ` · ${Math.round(cw.confidence * 100)}%` : ""}` : `${esc(state)}${showVal ? ` · ${esc(live.value)}` : ""}`;
     // Catalyst detail: the drafted action + evidence (only once it's elevated above plain monitoring).
+    const C = window.PuckCatalyst;
+    const ed = (cw?.status === "fired" && C) ? C.catalystEditable(t) : null; // offer a draft PR only on a confirmed fire
     let extra = "";
     if (cw && cw.status !== "monitoring") {
       const ev = [...(cw.evidence?.filings || []).map((f) => `📄 ${f.title}`), ...(cw.evidence?.headlines || []).map((h) => `📰 ${h.title}`)].slice(0, 3);
       extra = `${cw.suggested_action ? `<br><span class="cw-action">⇒ ${esc(cw.suggested_action)}</span>` : ""}` +
         `${cw.citations?.length ? ` <span class="foot">(${cw.citations.length} source${cw.citations.length > 1 ? "s" : ""})</span>` : ""}` +
-        `${ev.length ? `<br><span class="foot">${ev.map((e) => esc(e)).join(" · ")}</span>` : ""}`;
+        `${ev.length ? `<br><span class="foot">${ev.map((e) => esc(e)).join(" · ")}</span>` : ""}` +
+        `${ed ? `<br><button class="sm" data-catalyst-pr="${esc(t.id)}">Draft PR — ${esc(ed.edit)} ${esc(ed.affects.join("/"))}</button>` : ""}`;
     } else if (cw) {
       extra = ` <span class="foot">· auto-watched (${cw.evidence?.headlines?.length || 0} headlines scanned)</span>`;
     }
@@ -518,6 +521,7 @@ function renderPortfolio() {
       <span style="color:var(--mut)">${esc(t.type)} · ${esc(t.action)}${live?.note ? ` <em>(${esc(live.note)})</em>` : ""}</span>${extra}`;
     tg.appendChild(d);
   });
+  tg.querySelectorAll("[data-catalyst-pr]").forEach((b) => b.onclick = () => draftCatalystPR(b.dataset.catalystPr));
 
   hideEmptyGroups();
 }
@@ -1005,6 +1009,45 @@ async function acceptDiversifierFunding() {
   } catch (e) {
     if (btn) { btn.disabled = false; btn.textContent = "✓ Accept → open PR (fund sleeve in portfolio.json)"; }
     alert(`Could not open PR: ${e.message}.\n\nThis usually means the token can read but not write. Check it has write access to ${REPO}:\n• Classic token → the 'repo' scope must be ticked\n• Fine-grained token → Contents + Pull requests, both read/write`);
+  }
+}
+
+// ---------- Catalyst draft-PR: a fired manual trigger → a reviewable cut/trim PR into portfolio.json ----------
+// F9: drafts a PR you review/adjust/merge — never auto-merged, never trades. Mirrors the diversifier flow.
+async function draftCatalystPR(triggerId) {
+  const C = window.PuckCatalyst, t = adminToken();
+  if (!t) { alert("Open Settings → Admin and paste a GitHub token first (Contents + Pull requests, write)."); return; }
+  const trig = (DATA.trig?.triggers || []).find((x) => x.id === triggerId);
+  const cw = DATA.sig?.catalyst_watch?.[triggerId];
+  const ed = trig && C ? C.catalystEditable(trig) : null;
+  if (!ed) { alert("This trigger has no plan edit."); return; }
+  if (cw?.status !== "fired" && !confirm(`This catalyst is "${cw?.status || "?"}", not a confirmed fire. Draft the ${ed.edit} PR anyway?`)) return;
+  const updated = C.applyCatalystEdit(DATA.port, ed);
+  if (!updated || updated === DATA.port) { alert("Nothing to edit in the plan."); return; }
+  const btn = document.querySelector(`[data-catalyst-pr="${triggerId}"]`);
+  const verb = ed.edit === "cut" ? "Cut" : "Trim", names = ed.affects.join("/");
+  if (btn) { btn.disabled = true; btn.textContent = "Opening PR…"; }
+  try {
+    const api = `https://api.github.com/repos/${REPO}`;
+    const meta = await (await fetch(`${api}/contents/web/data/portfolio.json`, { headers: ghHeaders(t) })).json();
+    const ref = await (await fetch(`${api}/git/ref/heads/main`, { headers: ghHeaders(t) })).json();
+    const branch = `catalyst/${triggerId}-${Date.now().toString(36)}`;
+    let r = await fetch(`${api}/git/refs`, { method: "POST", headers: { ...ghHeaders(t), "content-type": "application/json" }, body: JSON.stringify({ ref: `refs/heads/${branch}`, sha: ref.object.sha }) });
+    if (!r.ok) throw new Error(`branch ${r.status}`);
+    const content = btoa(unescape(encodeURIComponent(JSON.stringify(updated, null, 2) + "\n")));
+    r = await fetch(`${api}/contents/web/data/portfolio.json`, { method: "PUT", headers: { ...ghHeaders(t), "content-type": "application/json" },
+      body: JSON.stringify({ message: `catalyst: ${verb.toLowerCase()} ${names} (${triggerId})`, content, sha: meta.sha, branch }) });
+    if (!r.ok) throw new Error(`commit ${r.status}`);
+    r = await fetch(`${api}/pulls`, { method: "POST", headers: { ...ghHeaders(t), "content-type": "application/json" },
+      body: JSON.stringify({ title: `Catalyst: ${verb} ${names} — ${trig.name}`, head: branch, base: "main",
+        body: `Drafted from the dashboard's Triggers panel after the **${triggerId}** catalyst fired (committee-judged from news + SEC filings, corroborated + 2-scan-confirmed).\n\n**${verb} ${ed.affects.join(", ")}** and renormalize the plan to 100%.\n\nDrafted action: ${cw?.suggested_action || trig.action}\nConfidence: ${cw?.confidence ?? "—"} · sources: ${(cw?.citations || []).join(", ") || "—"}\n\n**F9: advisory — review the weights, adjust if needed, and merge. You still place the trades.**` }) });
+    const pr = await r.json();
+    if (!r.ok) throw new Error(`PR ${r.status}: ${pr.message || ""}`);
+    if (btn) btn.textContent = "✓ PR opened";
+    window.open(pr.html_url, "_blank", "noopener");
+  } catch (e) {
+    if (btn) { btn.disabled = false; btn.textContent = `Draft PR — ${ed.edit} ${names}`; }
+    alert(`Could not open PR: ${e.message}. The token needs Contents + Pull requests write on ${REPO}.`);
   }
 }
 

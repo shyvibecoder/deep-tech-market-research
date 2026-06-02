@@ -320,6 +320,12 @@ Commodity-price legs (e.g. NdPr < $80/kg, memory pricing) have no free feed, so 
 and flagged as such. **Advisory only — Puck never trades or edits your book; you confirm and act.** *(Needs an
 LLM key; without one the manual triggers fall back to plain monitor reminders.)*
 
+When a plan-editing catalyst (a **cut** or **trim**) is *fired*, the card shows a **Draft PR** button: it
+opens a pull request that applies the edit to `portfolio.json` (cut → drop the name; trim → reduce it a third)
+and renormalizes the plan, with the evidence + drafted action in the PR body. **Nothing is auto-merged** —
+you review the weights, adjust, and merge (needs a write token in Settings → Admin), exactly like the
+diversifier "Accept" flow.
+
 When a trigger fires, the scanner opens a GitHub issue (deduped — one open issue at a time). You can
 also get an **email** the moment a trigger *newly* fires (a state change, not every run) — turn it on in
 **Settings → Admin** (set the alert email variable) plus the SMTP secrets in `SETUP.md` §3c. **Auto

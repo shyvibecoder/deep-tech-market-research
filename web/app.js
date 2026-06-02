@@ -355,7 +355,20 @@ function renderAssetLocation() {
   const funding = DATA.diversifier?.funding;
   const alreadyFunded = funding?.newHoldings?.length && funding.newHoldings.some((h) => (p.holdings || []).some((ph) => ph.ticker === h.ticker));
   const combined = (funding && DV && !alreadyFunded) ? DV.applyDiversifierFunding(p, funding) : p;
-  const kept = (combined.holdings || []).filter((h) => h.ticker && (h.weight > 0) && !excl.has(h.ticker) && h.tier !== "DRY" && !/^CASH/i.test(h.ticker));
+  // COMMITTEE-AWARE [D1]: drive the BUILD-OUT names by the scan's signal-adjusted weights (a committee
+  // 'crowded' downgrade → smaller signals.json.rebalance.signal target → smaller buy here), scaled to the
+  // build-out budget; diversifiers keep their funding weights. Signal weights are normalized per
+  // account×axis cell, so we use each row's DOLLAR share of the whole signal plan (not the cell %).
+  const sigRows = DATA.sig?.rebalance?.signal?.rows || [];
+  const sigTot = sigRows.reduce((a, r) => a + (r.target_usd || 0), 0);
+  const sigShare = {}; if (sigTot > 0) for (const r of sigRows) sigShare[r.ticker] = (r.target_usd || 0) / sigTot;
+  const isDivH = (h) => h.axis === "diversifier" || /diversifier|de-correlator/i.test(h.role || "");
+  const all = (combined.holdings || []).filter((h) => h.ticker && h.weight > 0 && h.tier !== "DRY" && !/^CASH/i.test(h.ticker) && !excl.has(h.ticker));
+  const divH = all.filter(isDivH), bldH = all.filter((h) => !isDivH(h));
+  const bldBudget = Math.max(0, 1 - divH.reduce((a, h) => a + (h.weight || 0), 0)); // keep the 85/15 split
+  const bldRel = bldH.map((h) => ({ h, w: (sigShare[h.ticker] ?? h.weight) || 0 }));
+  const bldRelSum = bldRel.reduce((a, x) => a + x.w, 0) || 1;
+  const kept = [...bldRel.map((x) => ({ ...x.h, weight: bldBudget * x.w / bldRelSum })), ...divH];
   const wsum = kept.reduce((a, h) => a + (h.weight || 0), 0) || 1;
   const holdings = kept.map((h) => ({ ...h, target_usd: Math.round((h.weight / wsum) * deployTotal) }));
   const res = L.locateAssets(holdings, { capacities: { roth: cfg.roth, traditional: cfg.traditional, taxable: cfg.taxable }, tax: { ordinary: cfg.ordinary / 100, qualified: cfg.qualified / 100, ltcg: cfg.ltcg / 100 }, horizonYears: cfg.horizon, sleeveUsd: deployTotal });
@@ -367,7 +380,7 @@ function renderAssetLocation() {
       (rs.length ? rs.map((r) => `<tr><td><strong>${esc(r.ticker)}</strong></td><td>${fmtUsd(r.value)}</td><td>${(r.yieldPct * 100).toFixed(1)}%</td><td class="foot">${r.annual_drag_avoided ? "shelters $" + r.annual_drag_avoided.toLocaleString() + "/yr" : "—"}</td></tr>`).join("") : `<tr><td colspan="4" class="foot">— nothing assigned here —</td></tr>`);
   }).join("");
   box.innerHTML = head + inputs + `
-    <p class="foot">Deploying <strong>${fmtUsd(deployTotal)}</strong> cash into the plan, tax-located (Roth ← highest growth · Traditional ← income · taxable ← tax-efficient)${excl.size ? ` · <strong>excluding ${esc([...excl].join(", "))}</strong> (held elsewhere)` : ""} · est. tax drag avoided <strong>$${res.summary.annual_drag_avoided.toLocaleString()}/yr</strong> (~$${res.summary.horizon_drag_avoided.toLocaleString()} over ${res.horizon_years}yr).</p>
+    <p class="foot">Deploying <strong>${fmtUsd(deployTotal)}</strong> cash into the plan${sigTot > 0 ? ", <strong>committee-adjusted</strong> (build-out weights from the scan's signal — a crowded downgrade shrinks that buy)" : ""}, tax-located (Roth ← highest growth · Traditional ← income · taxable ← tax-efficient)${excl.size ? ` · <strong>excluding ${esc([...excl].join(", "))}</strong> (held elsewhere)` : ""} · est. tax drag avoided <strong>$${res.summary.annual_drag_avoided.toLocaleString()}/yr</strong> (~$${res.summary.horizon_drag_avoided.toLocaleString()} over ${res.horizon_years}yr).</p>
     <div class="tscroll"><table class="mine"><thead><tr><th>Buy</th><th>Amount</th><th>Yield</th><th>Tax shelter</th></tr></thead><tbody>${tbody}</tbody></table></div>
     <p class="foot">This <strong>deploys from cash</strong> into the plan, tax-located. A position-aware delta rebalance (net buys + <em>sells</em> vs what you already hold) is the next step. Advisory — not tax advice; doesn't model exact bracket arbitrage, RMDs, or estate plan.</p>`;
   wire();

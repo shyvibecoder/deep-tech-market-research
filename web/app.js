@@ -273,33 +273,35 @@ function renderRegime() {
   box.innerHTML = `<div><strong>Timing posture: ${lbl}${r.risk_score != null ? ` · risk ${esc(r.risk_score)}/100${r.confidence ? ` (${esc(r.confidence)} conf)` : ""}` : ""}${r.version ? ` · v${esc(r.version)}` : ""} <button class="help" data-help="regime">?</button></strong>
       <span>${esc(r.action || "")}</span></div>
     ${apHtml}
-    <div class="rnote">${esc(r.note || "")}<br><em>Alpha = scarcity thesis · timing = trend+momentum+vol+drawdown+macro overlay, on the ETF composite${r.composite_basis?.length ? ` (${esc(r.composite_basis.join(", "))})` : ""}. ${esc(r.basis || "")}. ${r.confidence_note ? "⚠ " + esc(r.confidence_note) + ". " : ""}Not advice.</em></div>
-    ${regimeInstrumentsHtml(r.posture)}`;
+    <div class="rnote">${esc(r.note || "")}<br><em>Alpha = scarcity thesis · timing = trend+momentum+vol+drawdown+macro overlay, on the ETF composite${r.composite_basis?.length ? ` (${esc(r.composite_basis.join(", "))})` : ""}. ${esc(r.basis || "")}. ${r.confidence_note ? "⚠ " + esc(r.confidence_note) + ". " : ""}Not advice.</em></div>`;
 }
 
-// QQQ (the regime's reference underlying) + TQQQ/SQQQ (3× long/short proxies) with daily technicals incl
-// RSI — the signals the regime/V2.3 overlay actually read, tied to the posture so you can see WHY.
-function regimeInstrumentsHtml(posture) {
+// QQQ (the regime's reference underlying) + TQQQ/SQQQ (3× long/short proxies) with daily technicals incl RSI —
+// the signals the regime/V2.3 overlay actually read. Its OWN card (not crammed in the posture banner), with
+// DYNAMIC columns: a metric column only shows when ≥1 instrument has it (so e.g. 12m momentum, which a 1-year
+// fetch can't compute, isn't a broken all-"—" column). Mobile-scrollable.
+function renderRegimeInstruments() {
+  const box = $("#regimeInstruments"); if (!box) return;
   const RI = DATA.sig?.regime_instruments || {};
-  const rows = [
-    ["QQQ", "reference underlying"],
-    ["TQQQ", "3× long · risk-on instrument"],
-    ["SQQQ", "3× short · hedge/brake instrument"],
-  ].filter(([t]) => RI[t] && !RI[t].error).map(([t, desc]) => {
-    const q = RI[t], rsi = q.rsi_14;
-    const rsiCls = rsi == null ? "" : rsi >= 70 ? "neg" : rsi <= 30 ? "pos" : "";
-    const pct = (x) => (x == null ? "—" : `${x >= 0 ? "+" : ""}${(x * 100).toFixed(0)}%`);
-    return `<tr><td><strong>${t}</strong> <span class="foot">${desc}</span></td>
-      <td>${q.price != null ? "$" + q.price.toFixed(2) : "—"}</td>
-      <td class="${rsiCls}">${rsi ?? "—"}</td>
-      <td class="${q.above_ma200 ? "pos" : "neg"}">${pct(q.pct_vs_ma200)}</td>
-      <td>${pct(q.pct_off_high)}</td><td>${pct(q.mom_12m)}</td><td>${pct(q.mom_1m)}</td>
-      <td>${q.vol_1y != null ? (q.vol_1y * 100).toFixed(0) + "%" : "—"}</td></tr>`;
-  }).join("");
-  if (!rows) return "";
-  return `<div class="ri"><h4>Regime instruments <span class="foot">— QQQ + TQQQ/SQQQ, the signals the timing layer reads (daily)</span></h4>
-    <div class="tscroll"><table class="mine"><thead><tr><th>Instrument</th><th>Price</th><th>RSI-14</th><th>vs 200-DMA</th><th>off high</th><th>12m</th><th>1m</th><th>vol</th></tr></thead><tbody>${rows}</tbody></table></div>
-    <p class="foot">QQQ is the regime's reference underlying; <strong>TQQQ/SQQQ are 3× proxies — tactical, leverage decays, not buy-and-hold</strong>. RSI&gt;70 overbought · &lt;30 oversold. Posture now: <strong>${esc(posture)}</strong>.</p></div>`;
+  const rows = [["QQQ", "reference"], ["TQQQ", "3× long"], ["SQQQ", "3× short"]]
+    .filter(([t]) => RI[t] && !RI[t].error).map(([t, desc]) => ({ t, desc, q: RI[t] }));
+  if (!rows.length) { box.innerHTML = ""; return; }
+  const pct = (x) => (x == null ? null : `${x >= 0 ? "+" : ""}${(x * 100).toFixed(0)}%`);
+  const cols = [
+    { h: "Price", get: (q) => (q.price != null ? "$" + q.price.toFixed(2) : null) },
+    { h: "RSI", get: (q) => q.rsi_14, cls: (q) => (q.rsi_14 >= 70 ? "neg" : q.rsi_14 <= 30 ? "pos" : "") },
+    { h: "vs&nbsp;200d", get: (q) => pct(q.pct_vs_ma200), cls: (q) => (q.above_ma200 ? "pos" : "neg") },
+    { h: "off&nbsp;high", get: (q) => pct(q.pct_off_high) },
+    { h: "12m", get: (q) => pct(q.mom_12m) },
+    { h: "1m", get: (q) => pct(q.mom_1m) },
+    { h: "vol", get: (q) => (q.vol_1y != null ? Math.round(q.vol_1y * 100) + "%" : null) },
+  ].filter((c) => rows.some((r) => c.get(r.q) != null)); // drop all-empty columns (e.g. 12m on a 1y fetch)
+  const thead = `<tr><th>Instrument</th>${cols.map((c) => `<th>${c.h}</th>`).join("")}</tr>`;
+  const tbody = rows.map(({ t, desc, q }) => `<tr><td><strong>${t}</strong> <span class="foot">${desc}</span></td>${
+    cols.map((c) => { const v = c.get(q); const cl = v == null ? "foot" : (c.cls ? c.cls(q) : ""); return `<td class="${cl}">${v == null ? "—" : v}</td>`; }).join("")}</tr>`).join("");
+  box.innerHTML = `<h3>Regime instruments <button class="help" data-help="regime">?</button> <span class="foot">— QQQ + TQQQ/SQQQ, the signals the timing layer reads (daily)</span></h3>
+    <div class="tscroll"><table class="mine"><thead>${thead}</thead><tbody>${tbody}</tbody></table></div>
+    <p class="foot">QQQ = reference underlying; <strong>TQQQ/SQQQ are 3× proxies — tactical, leverage decays, not buy-and-hold</strong>. RSI&nbsp;&gt;70 overbought · &lt;30 oversold.</p>`;
 }
 
 function renderDca() {
@@ -502,6 +504,7 @@ function renderStress() {
 
 function renderPortfolio() {
   renderRegime();
+  renderRegimeInstruments();
   renderMetrics();
   renderMyHoldings();
   renderDca();

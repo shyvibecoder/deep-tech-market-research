@@ -215,8 +215,9 @@ actually reads on the **QQQ** complex — **QQQ** (the regime's reference underl
 3× long / 3× short proxies, the actionable risk-on / brake instruments): **price, RSI-14, % vs the 200-DMA
 (green above / red below), % off the 52-week high, 12-month & 1-month momentum, and realized vol**, refreshed
 every scan. RSI > 70 reads overbought, < 30 oversold. **TQQQ/SQQQ are leveraged — tactical only, their value
-decays over time; they are not buy-and-hold.** The panel restates the current posture so you can see *why* the
-regime reads the way it does.
+decays over time; they are not buy-and-hold.** It's its own card beneath the posture, and the columns adapt —
+a metric only appears once it has data (so e.g. 12-month momentum shows only when there's >1 year of history
+for the instrument; it's omitted rather than shown as a blank column).
 
 **Two overlays (Timing v2):**
 - **Macro-stress brake (exit-only).** Forces *defensive* only when **two leading risk signals fire

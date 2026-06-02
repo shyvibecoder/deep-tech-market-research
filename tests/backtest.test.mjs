@@ -30,6 +30,23 @@ describe("backtest: trend brake reduces drawdown (evidence for the dial)", () =>
   });
 });
 
+// Turnover is not free (TODO.md:133): charging a per-switch cost must lower the braked
+// path's return vs. a zero-cost run, and the charge must scale with the number of switches.
+describe("backtest: whipsaw/turnover cost is charged (de-biases Calmar)", () => {
+  const s = upThenCrash();
+  it("reports cost params and total turnover charged", () => {
+    const r = backtestRegime(s, { maPeriod: 20, costPerSwitchBps: 25 });
+    assert.equal(r.cost_per_switch_bps, 25);
+    assert.equal(r.turnover_cost_bps, r.whipsaws * 25);
+  });
+  it("a higher per-switch cost yields a (weakly) lower braked CAGR", () => {
+    const free = backtestRegime(s, { maPeriod: 20, costPerSwitchBps: 0 });
+    const paid = backtestRegime(s, { maPeriod: 20, costPerSwitchBps: 50 });
+    assert.ok(paid.whipsaws >= 1, "need at least one switch to test the charge");
+    assert.ok(paid.braked.cagr <= free.braked.cagr, `${paid.braked.cagr} <= ${free.braked.cagr}`);
+  });
+});
+
 // Helm #5: NO LOOK-AHEAD regression. Each position is decided on the PRIOR close (ma[i-1], values[i-1]).
 // Changing ONLY the final bar's value must not change any position decision (only that bar's return) →
 // time_in_market + whipsaws are invariant. A look-ahead bug (deciding on values[i]) would break this.

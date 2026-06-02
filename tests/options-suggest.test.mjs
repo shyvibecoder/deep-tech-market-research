@@ -1,6 +1,6 @@
 import { describe, it } from "node:test";
 import assert from "node:assert/strict";
-import { suggestOptionStructure } from "../scripts/lib/options.mjs";
+import { suggestOptionStructure, taxableHedgeWarning } from "../scripts/lib/options.mjs";
 
 // Posture -> a DEFINED-RISK options structure with delta/DTE bands. No naked options.
 describe("options: regime-driven suggestion (defined-risk only)", () => {
@@ -28,5 +28,23 @@ describe("options: regime-driven suggestion (defined-risk only)", () => {
       const txt = suggestOptionStructure(p).structures.join(" ").toLowerCase();
       assert.ok(!/naked|short put|short call|sell.*(call|put)/.test(txt), `naked-ish in ${p}`);
     }
+  });
+});
+
+// Tax tripwire: a collar/short-call on a taxable low-basis lot risks §1259/§1092/QDI.
+describe("options: taxable hedge tax-warning gate", () => {
+  it("warns on a collar (defensive posture suggests one)", () => {
+    const w = taxableHedgeWarning(suggestOptionStructure("defensive"));
+    assert.ok(w && /1259/.test(w), "defensive collar should trip the §1259 warning");
+  });
+  it("does NOT warn on a plain protective-put posture (caution: no short leg)", () => {
+    assert.equal(taxableHedgeWarning(suggestOptionStructure("caution")), null);
+  });
+  it("does NOT warn on a long call (risk-on)", () => {
+    assert.equal(taxableHedgeWarning(suggestOptionStructure("risk-on")), null);
+  });
+  it("is null-safe on junk input", () => {
+    assert.equal(taxableHedgeWarning(null), null);
+    assert.equal(taxableHedgeWarning({}), null);
   });
 });

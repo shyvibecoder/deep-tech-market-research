@@ -115,10 +115,14 @@ items touch strategy/vision — discuss before building.
   vs the research baseline). **Still deferred → folds into G2:** correlation-aware / equal-risk-contribution
   sizing (a near-no-op on a 1.0-correlated book; honestly labeled "volatility-tilted," not "risk-aware"
   — needs G2's uncorrelated streams to matter). *Was P3/Visionary#5 — now deduped here.*
-- [ ] **G4 — Sized tail-hedge program (protect the −35%).** [DESIGN-FIRST] Connect the three islands
-  (regime brake / advisory options / browser stress sim): **stress scenario → required hedge notional →
-  a defined-risk structure sized so the named shock stays inside −35%.** Surface "modeled drawdown vs −35%
-  headroom." Defined-risk only. *= Visionary #10 (`web/stress.mjs` wire-in) — deduped here. Build AFTER G1.*
+- [x] **G4 — Drawdown-defense doctrine (protect the −35%). SHIPPED — reframed, not a sizing panel.**
+  A 3-cycle adversarial design killed the "stress → size puts → carry into Calmar" pipeline as dishonest
+  (puts priced at realized not implied vol; single-period shock ≠ path drawdown; ~59% of the book has no
+  clean hedge; the regime brake already IS the zero-premium drawdown control but is continuation-only and
+  unproven vs a real tail). Shipped instead: **`docs/DRAWDOWN-DEFENSE.md`** (the defense hierarchy + the
+  hedgeability map + the named ~38% taxable/cyclical/unhedgeable core that has *no active defense*),
+  **`taxableHedgeWarning()`** §1259/§1092/QDI gate in the options UI, and the backtest-honesty fixes below.
+  *Open follow-on (the only thing that closes the hole): trim/restructure the 38% core.*
 - [ ] **G5 — Rates / real-yield regime leg.** Add a coarse real-yield/10y trend leg to the macro overlay
   (exit-only, AND-gated). Free: Yahoo `^TNX`, FRED `DFII10`/`DGS10`. **NOTE: this is the SAME item as
   "Timing v2 — cross-asset trend (rates/USD)" and REGIME.md's "no rates/credit/USD" gap — merge, don't
@@ -130,8 +134,11 @@ items touch strategy/vision — discuss before building.
   duplicates: G5↔Timing-v2-cross-asset↔REGIME-gap; G3↔Visionary#5↔"wire de-rating+TSMOM into a target
   vector"; G4↔Visionary#10; G6↔the missing alpha-half of the existing regime backtest. Collapse each to
   ONE canonical entry + priority. Run the advertised `coherence.test.mjs` against the *roadmap*, not just code.
-- [ ] **Charge transaction/whipsaw cost in the backtest.** `backtest.mjs` counts `whipsaws` but never costs
-  them → every braked Calmar/Sortino improvement is overstated. For a Calmar objective this is a direct bias.
+- [x] **Charge transaction/whipsaw cost in the backtest. SHIPPED.** `backtest.mjs` now charges
+  `costPerSwitchBps` (default 10bps) on the braked path per regime flip and reports `turnover_cost_bps`,
+  so the braked Calmar/Sortino are no longer overstated by uncosted whipsaws. `scan.mjs` also now runs the
+  backtest at the **live 200-DMA** (was a faster 100/50 proxy) and emits `metrics.backtest_unproven` when the
+  basket lacks enough post-MA history — i.e. it no longer prints a bull-window tail claim it can't support.
 - [~] **After-tax return / tax-lot model for the taxable sleeve — PARTIALLY SHIPPED (asset location).**
   `web/asset-location.mjs`: per-name after-tax TERMINAL-value optimizer (transportation LP) places each
   dollar in Roth/Traditional/taxable to maximize after-tax value, plus a position-aware delta rebalance with

@@ -597,10 +597,17 @@ volatility (IV)** from its market price (Black-Scholes) and compares it to the u
 2. Choose **call/put**, enter **strike**, **days to expiry**, and the **option price** (premium).
 3. Click **Evaluate**.
 
-**What you get:** IV, realized vol, **IV ÷ realized**, the **fair value at realized vol**, the **edge
-vs fair**, a **verdict**, and the greeks (delta/vega/theta). When the scan has it, the result also shows
+**What you get:** IV, realized vol, **IV ÷ realized**, the **model floor @ realized vol**, the **market −
+floor**, a **verdict**, and the greeks (delta/vega/theta). When the scan has it, the result also shows
 the underlying's **market ATM implied vol** (from the free Yahoo options chain) next to your option's IV —
 a quick check of whether your contract is priced rich/cheap vs the at-the-money market.
+
+> The realized-vol value is a **floor, not the price you'll pay** — for out-of-the-money puts (the
+> tail-hedge case) real premiums trade *richer* than realized vol implies (downside skew + variance
+> premium), so don't budget a hedge off it. If the suggested structure involves a **collar or short
+> call** on a **taxable** low-basis lot, the panel flags **IRC §1259 / §1092 / QDI** tax risk — confirm
+> with your CPA before writing calls against taxable anchors. See `docs/DRAWDOWN-DEFENSE.md` for how
+> options fit (last and least) into this book's −35% defense.
 
 | Verdict | Meaning |
 |---|---|

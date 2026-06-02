@@ -366,10 +366,20 @@ if (!OFFLINE) {
       metrics = { ...portfolioMetrics(idx.values), basis: Object.keys(series), window: `${idx.dates[0]}..${idx.dates[idx.dates.length - 1]}`, source: fromDb ? `accumulated DB (${fromDb}/${Object.keys(series).length} tickers)` : "live", note: `trailing ~${years}y, target-weighted strategy basket${fromDb ? " (from accumulated history)" : ""}` };
       console.log(`Metrics: CAGR ${metrics.cagr}, maxDD ${metrics.max_drawdown} (breaches35=${metrics.breaches_35}), Calmar ${metrics.calmar}, Sortino ${metrics.sortino} [${years}y, ${fromDb} from DB]`);
       // Falsifiable evidence: does a trend brake cut drawdown on this basket vs buy-and-hold?
-      if (idx.values.length > 120) {
-        const mp = idx.values.length > 220 ? 100 : 50; // ~1y window → shorter trend than the live 200-DMA dial
-        const bt = backtestRegime(idx.values, { maPeriod: mp });
-        if (bt) { metrics.backtest = bt; console.log(`Backtest(ma${mp}): braked maxDD ${bt.braked.max_drawdown} vs ${bt.unbraked.max_drawdown}, dd_reduction ${bt.dd_reduction}, whipsaws ${bt.whipsaws}`); }
+      // Match the LIVE 200-DMA dial — not a faster proxy. basketIndex takes the date
+      // INTERSECTION of all holdings, so the series truncates to the youngest holding;
+      // a 200-DMA brake then often has too little post-MA history to mean anything.
+      // Emit a number ONLY with a real post-MA sample (n>=120), else flag the brake's
+      // tail protection as UNPROVEN on this book's own history (it is provable only on a
+      // long-history proxy like QQQ/SOXX at range=max — which the book doesn't hold).
+      const maPeriod = 200;
+      const bt = backtestRegime(idx.values, { maPeriod });
+      if (bt && bt.n >= 120) {
+        metrics.backtest = bt;
+        console.log(`Backtest(ma${maPeriod}): braked maxDD ${bt.braked.max_drawdown} vs ${bt.unbraked.max_drawdown}, dd_reduction ${bt.dd_reduction}, whipsaws ${bt.whipsaws}, turnover ${bt.turnover_cost_bps}bps`);
+      } else {
+        metrics.backtest_unproven = `Insufficient history to backtest the live ${maPeriod}-DMA brake (basket truncates to its youngest holding; ${bt ? bt.n : 0} usable days < 120). Brake tail-protection is UNPROVEN on this book's own price history — assessable only on a long-history proxy (QQQ/SOXX, range=max).`;
+        console.log(metrics.backtest_unproven);
       }
       // G1: regress the basket on tradeable factors — MARKET (SPY), MOMENTUM (MTUM), and crucially a
       // THEME proxy (QQQ). The intercept is residual alpha BEYOND market+momentum+theme exposure — the

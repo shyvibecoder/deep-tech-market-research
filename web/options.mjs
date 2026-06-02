@@ -78,6 +78,9 @@ export function evaluateOption({ type, S, K, daysToExpiry, r = 0.04, marketPrice
   if (marketPrice < intrinsic - 1e-6) notes.push("market price below intrinsic — check inputs");
   if (daysToExpiry < 7) notes.push("very short-dated: IV is noisy");
   if (refVol == null) notes.push("no realized-vol reference — fairness is indeterminate");
+  // Downside skew: OTM puts (the tail-hedge case) trade RICHER than realized vol implies,
+  // so "fair value @ realized" is a FLOOR, not the price you'll pay — don't budget off it.
+  if (type === "put" && K < S) notes.push("OTM put: realized-vol fair value is a FLOOR — tail puts trade richer (downside skew + variance premium)");
   return {
     type, S, K, days: daysToExpiry, T, intrinsic: +intrinsic.toFixed(2),
     market_price: marketPrice,
@@ -112,4 +115,18 @@ export function suggestOptionStructure(posture, { macroStressed = false } = {}) 
     dte: "90-365d", delta: "call ~0.25-0.40",
   };
   return { stance: "none", structures: ["no options action — follow the DCA calendar"], rationale: "neutral regime", dte: "-", delta: "-" };
+}
+
+// Tax tripwire (NOT a rules engine, NOT tax advice): a collar or short-call overlay on an
+// APPRECIATED, LOW-BASIS lot in a TAXABLE account can (a) trigger a constructive sale under
+// IRC §1259 — gain recognized NOW; (b) defer/disallow losses under the straddle rules §1092;
+// (c) suspend the qualified-dividend holding period (poisoning QDI on dividend payers). The
+// app's own account policy already routes the taxable sleeve to buy-and-hold, so this is the
+// one place an options suggestion could quietly push the user into an expensive, irreversible
+// move. Protective puts and debit put spreads do NOT raise §1259. Returns null if benign.
+export function taxableHedgeWarning(sug) {
+  if (!sug || !Array.isArray(sug.structures)) return null;
+  const txt = sug.structures.join(" ").toLowerCase();
+  if (!/collar|short call|covered call|sell.*call|risk reversal/.test(txt)) return null;
+  return "⚠ Taxable account: a collar / short-call on a low-basis appreciated lot can trigger a constructive sale (IRC §1259 — taxable gain now), defer losses under the straddle rules (§1092), and suspend the qualified-dividend holding period. Confirm with your CPA before writing calls against taxable anchors. (Protective puts / debit put spreads do not raise §1259.)";
 }

@@ -137,9 +137,15 @@
 
     <div class="group">
       <h2 class="group-h">🎯 Suggestions — what to change <button class="help" data-help="rebalance">?</button></h2>
-      <p class="group-sub">Advisory only — Puck never trades or edits your book. Buy/sell to reach target weights, the tactical IRA tilts, and a stress check.</p>
+      <p class="group-sub">Advisory only — Puck never trades or edits your book. Buy/sell to reach target weights (grouped by sleeve), plus a stress check.</p>
       <div id="rebalanceBox"></div>
       <div id="stressTest"></div>
+    </div>
+
+    <div class="group">
+      <h2 class="group-h">💰 Tax &amp; asset location <button class="help" data-help="location">?</button></h2>
+      <p class="group-sub">Which account each name should sit in to maximize after-tax terminal value — highest-growth → Roth, income → Traditional, tax-efficient → taxable. Advisory.</p>
+      <div id="assetLocation"></div>
     </div>
 
     <div class="group">
@@ -220,5 +226,6 @@
   <script type="module">import { proposalDiffs, applyAcceptance, BOT_OWNED_FIELDS } from "./research-review.mjs"; window.PuckResearch = { proposalDiffs, applyAcceptance, BOT_OWNED_FIELDS };</script>
   <script type="module">import { scoutCandidateView, appendScoutScarcity, approvePendingPhrases } from "./scout-review.mjs"; window.PuckScout = { scoutCandidateView, appendScoutScarcity, approvePendingPhrases };</script>
   <script type="module">import { diversifierFundingView, applyDiversifierFunding } from "./diversifier-review.mjs"; window.PuckDiversifier = { diversifierFundingView, applyDiversifierFunding };</script>
+  <script type="module">import { locateAssets } from "./asset-location.mjs"; window.PuckLocation = { locateAssets };</script>
 </body>
 </html>

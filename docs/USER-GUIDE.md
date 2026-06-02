@@ -183,13 +183,14 @@ theses. The durable edge is **low priced-in + high durability + low substitution
 
 ![Portfolio and triggers](img/portfolio.png)
 
-This tab is organized into five labelled blocks, each with its own **?** help:
+This tab is organized into six labelled blocks, each with its own **?** help:
 
 1. **⏱ Timing** — when to act (the regime posture + the dislocation cross-check). §4.1, §4.1a
 2. **💼 Your book** — your live holdings vs the target plan, summary cards, DCA progress, and the holdings table. §4.2, §4.4, §4.5, §4.6
-3. **🎯 Suggestions** — *what to change*: the rebalance plan (with the tactical IRA tilts folded in) and a stress check. **Advisory only — Puck never trades.** §4.7, §4.8, §4.9
-4. **🔔 Triggers** — rules that tell you to act. §4.3
-5. **📊 Track record & honesty** — is the edge real? Scorecard, factor attribution, signal backtest. §4.1b–§4.1e
+3. **🎯 Suggestions** — *what to change*: the rebalance plan (grouped by sleeve, IRA tilts folded into its signal column) and a stress check. **Advisory only — Puck never trades.** §4.7, §4.9
+4. **💰 Tax & asset location** — which account (Roth / Traditional / taxable) each name should sit in to maximize after-tax terminal value. §4.10
+5. **🔔 Triggers** — rules that tell you to act. §4.3
+6. **📊 Track record & honesty** — is the edge real? Scorecard, factor attribution, signal backtest. §4.1b–§4.1e
 
 ### 4.1 Timing posture (the regime)
 The colored banner at the top is the **timing posture** — the heart of "when to act":
@@ -351,10 +352,10 @@ limit**: 2027–28 deep-tech build-out digestion, a 2022-style rate shock, a bro
 rare-earth "peace." Coarse, documented high-beta shock vectors (not fitted) — a feel for tail risk.
 Runs entirely in your browser on your stored positions.
 
-### 4.8 Suggested IRA tilts
-The last mile from analysis to allocation: per-name **TSMOM tilt × regime** → concrete, bounded (±25%)
-weight deltas. **Add** overweights only in a risk-on regime; **trim** underweights in any regime; the
-**taxable** sleeve stays buy-and-hold. Graded over time by the Track record. Not advice.
+### 4.8 Suggested IRA tilts → merged into the Rebalance plan
+The standalone "Suggested IRA tilts" table was **removed**: the Rebalance plan's *signal* column (§4.9)
+already applies the same per-name **TSMOM × regime** tilt to the IRA sleeve, so it now lives in one place
+rather than two overlapping ones.
 
 ### 4.9 Rebalance plan (G3 — volatility-tilted target weights → buy/sell)
 The fuller allocation engine: it builds **two** target-weight vectors and turns each into a concrete
@@ -388,6 +389,23 @@ falsifiable *"signal weights beat the research baseline"* claim into the Track r
 ~42 days — the header shows **"ungraded (recording…)"** until the first resolves, then the live hit-rate.
 With a `positions.local.json` it rebalances **what you actually hold**; without it, it shows the ideal
 weighting vs your static plan. **Advisory only** — it never edits your portfolio or places trades. Not advice.
+
+### 4.10 Asset location (Roth / Traditional / taxable)
+Same holdings, smarter **accounts** — where a name sits changes its **after-tax terminal value**. This
+suggests the account for each name on two robust rules: **(1)** shelter the annual **tax drag** (high
+dividend-yield / high-turnover names → a tax-advantaged account; tax-efficient names → **taxable**, where
+they get qualified rates, step-up at death, and loss-harvesting); **(2)** within tax-advantaged, the
+**highest-growth** names go to **Roth** (the biggest balance compounds tax-free forever), income/lower-
+growth to **Traditional**.
+
+Enter your **Roth / Traditional / taxable balances** + marginal rate + horizon in the inline inputs. Until
+you split Roth vs Traditional it runs a **2-way** (tax-advantaged vs taxable) split and says so. The table
+shows each name's current vs **suggested** account (rows to move are highlighted), its yield, and the
+**tax drag avoided per year** by sheltering it — summed and compounded over your horizon. Growth (build-out
+~9%, defensive ~4%) and yield use per-axis defaults where live data is absent.
+
+**Advisory, not tax advice.** It's the robust *location* lever; it does **not** model your exact bracket
+arbitrage (withdrawal vs contribution rate), RMDs, or estate plan. Inputs live only in your browser.
 
 ## 4c. Research (LLM proposals you approve)
 The **Research** tab surfaces the monthly research engine's proposed reassessments. The engine runs the

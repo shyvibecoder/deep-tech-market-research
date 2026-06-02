@@ -83,6 +83,9 @@ button.hiw:hover{border-color:var(--y30)}
 .group h3:first-of-type{margin-top:4px}
 /* Axis sub-group subtotal rows in the holdings plan table (AI-capex vs ◇ diversifier, each with a % subtotal). */
 tr.hgroup td{background:#11161e;color:var(--ink);font-weight:700;border-top:2px solid var(--line);font-size:12px}
+/* Asset-location: compact inputs row + highlight rows whose account should change. */
+.aloc-inputs{flex-wrap:wrap;gap:10px}.aloc-inputs input{width:90px}
+tr.aloc-move td{background:#1d2530}
 .help-body{font-size:13.5px;line-height:1.6}.help-body ul{padding-left:18px;margin:8px 0}.help-body li{margin:4px 0}.help-body code{font-size:12px}
 .optgrid{display:flex;gap:12px;flex-wrap:wrap;align-items:flex-end;margin:10px 0}
 .optgrid label{display:flex;flex-direction:column;color:var(--mut);font-size:12px;gap:3px}

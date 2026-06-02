@@ -314,8 +314,12 @@ print or one-day spike can't fire an action:
 (news/filing queries); every scan the **committee** judges whether its condition is met from fresh **news +
 SEC filings** and assigns a status — **monitoring → approaching → likely-met → fired** — with a **confidence**,
 the **evidence** it cited, and a drafted **⇒ suggested action** (portfolio- and tax-aware, grounded on the
-canned policy action). It only reaches *fired* when **corroborated** (a filing or ≥2 independent sources —
-never one headline) **and** confirmed on **two consecutive scans**, the same fail-safe as the auto triggers.
+canned policy action). It only reaches *fired* when **≥2 different models independently** judge it met, it's **corroborated by the
+real fetched evidence** (an actual SEC filing, or ≥2 distinct news sources — the model's self-reported
+citations are shown but never trusted to gate it), **and** it's confirmed on **two consecutive scans** — the
+same fail-safe as the auto triggers. Evidence is treated as **untrusted** text in the prompt (it can't
+instruct the judge). Once you act (the cut/trim PR merges and the name leaves the plan), the **Draft PR**
+button stops being offered so you can't open a duplicate.
 Commodity-price legs (e.g. NdPr < $80/kg, memory pricing) have no free feed, so they're judged *news-inferred*
 and flagged as such. **Advisory only — Puck never trades or edits your book; you confirm and act.** *(Needs an
 LLM key; without one the manual triggers fall back to plain monitor reminders.)*

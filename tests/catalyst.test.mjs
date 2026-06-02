@@ -2,34 +2,41 @@ import { describe, it } from "node:test";
 import assert from "node:assert/strict";
 import { catalystConsensus, catalystFires, suggestedActionFallback, watchableTriggers, matchNews, catalystPrompt, parseCatalystVerdict, runCatalystWatch } from "../scripts/lib/catalyst.mjs";
 
-describe("catalyst: consensus (corroboration + 2-run confirmation, like the auto triggers)", () => {
+describe("catalyst: consensus (≥2 seats + evidence-grounded corroboration + 2-run confirm)", () => {
   const metBoth = [{ met: true, confidence: 0.8, citations: ["sec:8-K", "reuters"] }, { met: true, confidence: 0.7, citations: ["reuters"] }];
-  it("two corroborated met seats → likely-met (first run), not yet fired", () => {
-    const c = catalystConsensus(metBoth, null);
+  const ev = { filings: [{ title: "MP 8-K" }], headlines: [{ title: "h1", link: "u1" }, { title: "h2", link: "u2" }] };
+  it("two met seats + real evidence → likely-met (first run), not yet fired", () => {
+    const c = catalystConsensus(metBoth, null, { evidence: ev });
     assert.equal(c.status, "likely-met");
     assert.equal(c.met, true);
     assert.equal(c.confidence, 0.75);
-    assert.deepEqual(c.citations.sort(), ["reuters", "sec:8-K"]);
   });
   it("a SECOND consecutive elevated run confirms → fired", () => {
-    const c = catalystConsensus(metBoth, { status: "likely-met" });
+    const c = catalystConsensus(metBoth, { status: "likely-met" }, { evidence: ev });
     assert.equal(c.status, "fired");
     assert.ok(catalystFires(c));
   });
-  it("met but only ONE source → not corroborated → approaching, never fires on one headline", () => {
-    const c = catalystConsensus([{ met: true, confidence: 0.9, citations: ["x"] }, { met: true, confidence: 0.9, citations: ["x"] }], { status: "likely-met" });
+  it("[C1] fabricated/extra CITATIONS can't manufacture corroboration — only REAL evidence counts", () => {
+    // both seats claim many citations, but no filing and <2 distinct real news sources exist → not corroborated
+    const c = catalystConsensus([{ met: true, confidence: 0.9, citations: ["a", "b", "c"] }, { met: true, confidence: 0.9, citations: ["d", "e"] }],
+      { status: "likely-met" }, { evidence: { filings: [], headlines: [{ title: "only one", link: "u1" }] } });
     assert.equal(c.corroborated, false);
     assert.equal(c.met, false);
     assert.equal(c.status, "approaching");
-    assert.ok(!catalystFires(c));
   });
-  it("high corroboration but low confidence → approaching (below the bar)", () => {
-    const c = catalystConsensus([{ met: true, confidence: 0.45, citations: ["a", "b"] }, { met: false, confidence: 0.2, citations: ["c"] }], { status: "likely-met" });
-    assert.ok(c.confidence < 0.6 || c.status !== "fired");
+  it("[C2] a SINGLE seat cannot self-certify a fire, even with strong evidence", () => {
+    const c = catalystConsensus([{ met: true, confidence: 0.95, citations: ["x"] }], { status: "likely-met" }, { evidence: ev });
+    assert.equal(c.met_seats, 1);
+    assert.equal(c.met, false);
+    assert.notEqual(c.status, "fired");
+  });
+  it("low confidence → not met even with 2 seats + evidence", () => {
+    const c = catalystConsensus([{ met: true, confidence: 0.45 }, { met: true, confidence: 0.5 }], { status: "likely-met" }, { evidence: ev });
+    assert.equal(c.met, false);
     assert.notEqual(c.status, "fired");
   });
   it("minority met → not met", () => {
-    const c = catalystConsensus([{ met: true, confidence: 0.9, citations: ["a", "b"] }, { met: false, confidence: 0.1, citations: [] }, { met: false, confidence: 0.1, citations: [] }]);
+    const c = catalystConsensus([{ met: true, confidence: 0.9 }, { met: false, confidence: 0.1 }, { met: false, confidence: 0.1 }], null, { evidence: ev });
     assert.equal(c.met, false);
   });
   it("no verdicts → monitoring (no crash)", () => assert.equal(catalystConsensus([], null).status, "monitoring"));
@@ -98,9 +105,9 @@ describe("catalyst: evidence + committee plumbing (pure)", () => {
   it("runCatalystWatch: a single-source 'met' does NOT fire (corroboration gate); no LLM keys → no crash", async () => {
     const triggers = [{ id: "leu_policy", type: "manual", name: "LEU exit", action: "Cut LEU.", watch: { queries: ["Russia uranium enrichment sanctions"] } }];
     const oneSeat = async () => '{"met":true,"confidence":0.9,"citations":["onlyone"]}';
-    const r = await runCatalystWatch({ triggers, news: [{ title: "Russia uranium enrichment sanctions eased by US", date: "2026-06-01" }], callers: [oneSeat, oneSeat] });
+    const r = await runCatalystWatch({ triggers, news: [{ title: "Russia uranium enrichment sanctions eased by US", date: "2026-06-01" }], callers: [oneSeat, oneSeat], today: "2026-06-02" });
     assert.notEqual(r.leu_policy.status, "fired");
-    const none = await runCatalystWatch({ triggers, news, callers: [] }); // no LLM available
+    const none = await runCatalystWatch({ triggers, news, callers: [], today: "2026-06-02" }); // no LLM available
     assert.equal(none.leu_policy.status, "monitoring");
   });
 });

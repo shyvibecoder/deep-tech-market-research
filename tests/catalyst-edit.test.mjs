@@ -34,6 +34,27 @@ describe("catalyst-edit: applyCatalystEdit (cut / trim → renormalized plan)", 
     assert.deepEqual(applyCatalystEdit(doc(), {}).holdings.length, 3);
     assert.deepEqual(applyCatalystEdit(doc(), { edit: "cut", affects: [] }).holdings.length, 3);
   });
+  it("[H3] cutting an ABSENT name returns the SAME reference (no-op → no duplicate PR)", () => {
+    const d = doc();
+    assert.equal(applyCatalystEdit(d, { edit: "cut", affects: ["NOPE"] }), d); // same ref, not a fresh object
+  });
+  it("[M2] a build-out cut preserves the 85/15 axis split (doesn't inflate the diversifier sleeve)", () => {
+    const d = { sleeve_usd: 1000000, holdings: [
+      { ticker: "MP", weight: 0.10, role: "rare earths" },        // build-out
+      { ticker: "GEV", weight: 0.25, role: "turbines" },          // build-out
+      { ticker: "ASML", weight: 0.50, role: "litho" },            // build-out  (build-out total 0.85)
+      { ticker: "KO", weight: 0.15, axis: "diversifier" },        // diversifier total 0.15
+    ] };
+    const r = applyCatalystEdit(d, { edit: "cut", affects: ["MP"] });
+    const div = r.holdings.find((h) => h.ticker === "KO").weight;
+    assert.ok(Math.abs(div - 0.15) < 0.01, `diversifier stayed ~15% (got ${div})`);
+    const bld = r.holdings.filter((h) => h.ticker !== "KO").reduce((a, h) => a + h.weight, 0);
+    assert.ok(Math.abs(bld - 0.85) < 0.01, `build-out stayed ~85% (got ${bld})`);
+  });
+  it("[M1] never emits an empty plan (cutting the whole book → unchanged)", () => {
+    const d = { sleeve_usd: 1e6, holdings: [{ ticker: "MP", weight: 0.6 }, { ticker: "GEV", weight: 0.4 }] };
+    assert.equal(applyCatalystEdit(d, { edit: "cut", affects: ["MP", "GEV"] }), d); // refused → same ref
+  });
 });
 
 describe("catalyst-edit: catalystEditable (which fired triggers offer a draft PR)", () => {

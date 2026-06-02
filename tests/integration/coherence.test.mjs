@@ -25,7 +25,7 @@ describe("coherence: scanner emits every section the system depends on", () => {
   it("signals.json carries all cross-cutting sections", () => {
     const s = r("signals.json");
     for (const k of ["schema_version", "scanned_at", "quotes", "filings", "news", "trigger_status",
-      "alerts", "regime", "metrics", "scorecard", "scarcity_signals", "opportunities", "v23",
+      "catalyst_watch", "alerts", "regime", "metrics", "scorecard", "scarcity_signals", "opportunities", "v23",
       "dislocation_entry", "chokepoints", "proxy_hubs", "data_quality", "digest", "errors"]) {
       assert.ok(k in s, `signals.json missing section: ${k}`);
     }

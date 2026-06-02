@@ -505,7 +505,10 @@ function renderPortfolio() {
     const badge = cw ? `${esc(cw.status)}${cw.confidence ? ` · ${Math.round(cw.confidence * 100)}%` : ""}` : `${esc(state)}${showVal ? ` · ${esc(live.value)}` : ""}`;
     // Catalyst detail: the drafted action + evidence (only once it's elevated above plain monitoring).
     const C = window.PuckCatalyst;
-    const ed = (cw?.status === "fired" && C) ? C.catalystEditable(t) : null; // offer a draft PR only on a confirmed fire
+    let ed = (cw?.status === "fired" && C) ? C.catalystEditable(t) : null; // offer a draft PR only on a confirmed fire
+    // …and only while the affected names are still in the plan — once a cut/trim PR is merged they're gone, so
+    // don't keep offering a no-op/duplicate PR (idempotency, H3).
+    if (ed && !ed.affects.some((a) => (DATA.port?.holdings || []).some((h) => h.ticker === a && (h.weight || 0) > 0))) ed = null;
     let extra = "";
     if (cw && cw.status !== "monitoring") {
       const ev = [...(cw.evidence?.filings || []).map((f) => `📄 ${f.title}`), ...(cw.evidence?.headlines || []).map((h) => `📰 ${h.title}`)].slice(0, 3);
@@ -1021,6 +1024,9 @@ async function draftCatalystPR(triggerId) {
   const cw = DATA.sig?.catalyst_watch?.[triggerId];
   const ed = trig && C ? C.catalystEditable(trig) : null;
   if (!ed) { alert("This trigger has no plan edit."); return; }
+  // Idempotency (H3): if the affected names are already gone (a prior PR merged), don't open a duplicate/no-op.
+  const present = ed.affects.filter((a) => (DATA.port?.holdings || []).some((h) => h.ticker === a && (h.weight || 0) > 0));
+  if (!present.length) { alert(`Already applied — ${ed.affects.join("/")} ${ed.affects.length > 1 ? "are" : "is"} not in the plan (a prior PR likely merged).`); return; }
   if (cw?.status !== "fired" && !confirm(`This catalyst is "${cw?.status || "?"}", not a confirmed fire. Draft the ${ed.edit} PR anyway?`)) return;
   const updated = C.applyCatalystEdit(DATA.port, ed);
   if (!updated || updated === DATA.port) { alert("Nothing to edit in the plan."); return; }

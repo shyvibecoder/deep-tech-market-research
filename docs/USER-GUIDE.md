@@ -210,6 +210,14 @@ noisy single names); it's **account-aware** — the posture drives your **IRA/Ro
 tax-free turnover) while **taxable** stays buy-and-hold anchors (shown under the posture); and it carries
 a **per-name TSMOM tilt** (which names to lean into vs. trim).
 
+**Regime instruments panel.** Under the posture, a small table shows the daily technicals the timing layer
+actually reads on the **QQQ** complex — **QQQ** (the regime's reference underlying) plus **TQQQ / SQQQ** (the
+3× long / 3× short proxies, the actionable risk-on / brake instruments): **price, RSI-14, % vs the 200-DMA
+(green above / red below), % off the 52-week high, 12-month & 1-month momentum, and realized vol**, refreshed
+every scan. RSI > 70 reads overbought, < 30 oversold. **TQQQ/SQQQ are leveraged — tactical only, their value
+decays over time; they are not buy-and-hold.** The panel restates the current posture so you can see *why* the
+regime reads the way it does.
+
 **Two overlays (Timing v2):**
 - **Macro-stress brake (exit-only).** Forces *defensive* only when **two leading risk signals fire
   together** — the **VIX term-structure inverts** (front VIX ≥ VIX3M) **AND high-yield credit widens

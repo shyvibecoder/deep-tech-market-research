@@ -1,6 +1,24 @@
 import { describe, it } from "node:test";
 import assert from "node:assert/strict";
-import { computeTechnicals, technicalsFromHistory } from "../scripts/lib/technicals.mjs";
+import { computeTechnicals, technicalsFromHistory, rsi } from "../scripts/lib/technicals.mjs";
+
+describe("technicals: Wilder RSI-14", () => {
+  it("all-up → 100, all-down → 0, too-short → null", () => {
+    assert.equal(rsi(Array.from({ length: 30 }, (_, i) => 100 + i)), 100);
+    assert.equal(rsi(Array.from({ length: 30 }, (_, i) => 100 - i)), 0);
+    assert.equal(rsi([1, 2, 3]), null);
+  });
+  it("a balanced oscillation sits near the midline (≈ 30–70)", () => {
+    const c = []; for (let i = 0; i < 60; i++) c.push(100 + (i % 2 === 0 ? 1 : -1));
+    const r = rsi(c);
+    assert.ok(r > 30 && r < 70, `RSI ${r} should be mid-range`);
+  });
+  it("computeTechnicals surfaces rsi_14", () => {
+    const closes = Array.from({ length: 260 }, (_, i) => 100 + i * 0.1);
+    const dates = closes.map((_, i) => `2025-${String(1 + (i % 12)).padStart(2, "0")}-01`);
+    assert.ok(Number.isFinite(computeTechnicals(dates, closes).rsi_14));
+  });
+});
 
 describe("technicals: technicalsFromHistory (DB series + today's price)", () => {
   const base = { dates: [], closes: [] };

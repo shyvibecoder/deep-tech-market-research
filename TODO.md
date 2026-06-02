@@ -30,7 +30,11 @@ chokepoints. Real alpha is spotting the *next* bottleneck before consensus.
   - [x] Exit-only, **AND-gated macro-stress overlay**: VIX/VIX3M ≥1.0 **and** HYG 1m ≤ −3% → force defensive. Keyless Yahoo `^VIX`/`^VIX3M`/`HYG`. (`scripts/lib/macro.mjs`; TDD-tested.)
   - [x] **Fast re-entry override** — ≥60% of names above 20-DMA → re-risk one notch (macro brake wins). TDD-tested.
   - [ ] Compute regime on a **clean composite underlying**, not an average of 19 noisy names.
-  - [ ] **Regime instruments panel — QQQ / TQQQ / SQQQ daily technicals (USER-REQUESTED).** The regime +
+  - [x] **Regime instruments panel — QQQ / TQQQ / SQQQ daily technicals (USER-REQUESTED) — SHIPPED.**
+    Wilder **RSI-14** added to `technicals.mjs` (so all quotes carry `rsi_14`); the scan fetches QQQ/TQQQ/SQQQ
+    (`signals.regime_instruments`) and the **Timing** card renders a panel — price, RSI-14, %vs 200-DMA,
+    off-high, 12m/1m momentum, vol — tied to the posture, with the leverage-decay caveat. Tests: RSI unit +
+    surfaced in computeTechnicals. Original spec below for reference: The regime +
     V2.3 macro overlay factor the **QQQ** complex, but the underlying technicals aren't surfaced anymore — the
     user wants daily sight of them. Build a **Regime UI panel** (on the Timing/regime view, where it makes most
     sense) showing, per instrument, the technicals the regime reads: **price, % vs 200/50/20-DMA, above/below

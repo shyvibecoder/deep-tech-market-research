@@ -12,6 +12,23 @@ const SESSIONS_1M = 22;
 
 const sma = (a, n) => (a.length >= n ? a.slice(-n).reduce((x, y) => x + y, 0) / n : null);
 
+// Wilder's RSI over `period` (default 14): seed avg gain/loss with the first `period` changes, then
+// Wilder-smooth through the rest. Returns 0..100, or null without enough history. Pure.
+export function rsi(closes, period = 14) {
+  if (!Array.isArray(closes) || closes.length < period + 1) return null;
+  let gain = 0, loss = 0;
+  for (let i = 1; i <= period; i++) { const d = closes[i] - closes[i - 1]; if (d >= 0) gain += d; else loss -= d; }
+  let avgG = gain / period, avgL = loss / period;
+  for (let i = period + 1; i < closes.length; i++) {
+    const d = closes[i] - closes[i - 1];
+    avgG = (avgG * (period - 1) + (d > 0 ? d : 0)) / period;
+    avgL = (avgL * (period - 1) + (d < 0 ? -d : 0)) / period;
+  }
+  if (avgL === 0) return 100;            // no losses → maximally overbought
+  const rs = avgG / avgL;
+  return +(100 - 100 / (1 + rs)).toFixed(1);
+}
+
 // Annualized realized vol from the last n daily log-returns.
 function realizedVol(closes, n) {
   const c = closes.slice(-(n + 1));
@@ -45,7 +62,7 @@ export function computeTechnicals(dates, closes, { currency = null, source = "db
   const empty = {
     price: null, high52: null, pct_off_high: null, ytd: null, ma50: null, ma200: null, ma20: null,
     pct_vs_ma50: null, pct_vs_ma200: null, above_ma200: null, above_ma20: null, asof: null,
-    mom_12m: null, mom_1m: null, vol_3m: null, vol_1y: null, currency, source,
+    mom_12m: null, mom_1m: null, rsi_14: null, vol_3m: null, vol_1y: null, currency, source,
   };
   if (!Array.isArray(closes) || !closes.length) return empty;
   const price = closes[closes.length - 1];
@@ -78,7 +95,7 @@ export function computeTechnicals(dates, closes, { currency = null, source = "db
     pct_vs_ma200: ma200 ? (price - ma200) / ma200 : null,
     above_ma200: ma200 != null ? price >= ma200 : null,
     above_ma20: ma20 != null ? price >= ma20 : null,
-    asof, mom_12m, mom_1m,
+    asof, mom_12m, mom_1m, rsi_14: rsi(closes, 14),
     vol_3m: realizedVol(closes, 63), vol_1y: realizedVol(closes, 252),
     currency, source,
   };

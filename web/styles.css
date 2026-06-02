@@ -29,6 +29,7 @@ tr:hover td{background:#11161e}
 .trig.fired{border-left-color:var(--now)}.trig.armed{border-left-color:var(--good)}.trig.monitor{border-left-color:var(--y28)}
 .trig .badge{float:right;font-size:11px;font-weight:700;text-transform:uppercase}
 .cw-action{display:inline-block;margin-top:5px;color:var(--ink);font-weight:600;font-size:12.5px}
+.ri{margin-top:12px}.ri h4{margin:0 0 6px;font-size:13px}.ri table.mine{font-size:12.5px}
 .tcol{display:grid;grid-template-columns:repeat(5,1fr);gap:12px}
 .tcol h4{margin:0 0 8px;padding-bottom:6px;border-bottom:2px solid var(--line)}
 .tcol .item{background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:8px 10px;margin-bottom:8px;font-size:12px}

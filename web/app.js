@@ -273,7 +273,33 @@ function renderRegime() {
   box.innerHTML = `<div><strong>Timing posture: ${lbl}${r.risk_score != null ? ` · risk ${esc(r.risk_score)}/100${r.confidence ? ` (${esc(r.confidence)} conf)` : ""}` : ""}${r.version ? ` · v${esc(r.version)}` : ""} <button class="help" data-help="regime">?</button></strong>
       <span>${esc(r.action || "")}</span></div>
     ${apHtml}
-    <div class="rnote">${esc(r.note || "")}<br><em>Alpha = scarcity thesis · timing = trend+momentum+vol+drawdown+macro overlay, on the ETF composite${r.composite_basis?.length ? ` (${esc(r.composite_basis.join(", "))})` : ""}. ${esc(r.basis || "")}. ${r.confidence_note ? "⚠ " + esc(r.confidence_note) + ". " : ""}Not advice.</em></div>`;
+    <div class="rnote">${esc(r.note || "")}<br><em>Alpha = scarcity thesis · timing = trend+momentum+vol+drawdown+macro overlay, on the ETF composite${r.composite_basis?.length ? ` (${esc(r.composite_basis.join(", "))})` : ""}. ${esc(r.basis || "")}. ${r.confidence_note ? "⚠ " + esc(r.confidence_note) + ". " : ""}Not advice.</em></div>
+    ${regimeInstrumentsHtml(r.posture)}`;
+}
+
+// QQQ (the regime's reference underlying) + TQQQ/SQQQ (3× long/short proxies) with daily technicals incl
+// RSI — the signals the regime/V2.3 overlay actually read, tied to the posture so you can see WHY.
+function regimeInstrumentsHtml(posture) {
+  const RI = DATA.sig?.regime_instruments || {};
+  const rows = [
+    ["QQQ", "reference underlying"],
+    ["TQQQ", "3× long · risk-on instrument"],
+    ["SQQQ", "3× short · hedge/brake instrument"],
+  ].filter(([t]) => RI[t] && !RI[t].error).map(([t, desc]) => {
+    const q = RI[t], rsi = q.rsi_14;
+    const rsiCls = rsi == null ? "" : rsi >= 70 ? "neg" : rsi <= 30 ? "pos" : "";
+    const pct = (x) => (x == null ? "—" : `${x >= 0 ? "+" : ""}${(x * 100).toFixed(0)}%`);
+    return `<tr><td><strong>${t}</strong> <span class="foot">${desc}</span></td>
+      <td>${q.price != null ? "$" + q.price.toFixed(2) : "—"}</td>
+      <td class="${rsiCls}">${rsi ?? "—"}</td>
+      <td class="${q.above_ma200 ? "pos" : "neg"}">${pct(q.pct_vs_ma200)}</td>
+      <td>${pct(q.pct_off_high)}</td><td>${pct(q.mom_12m)}</td><td>${pct(q.mom_1m)}</td>
+      <td>${q.vol_1y != null ? (q.vol_1y * 100).toFixed(0) + "%" : "—"}</td></tr>`;
+  }).join("");
+  if (!rows) return "";
+  return `<div class="ri"><h4>Regime instruments <span class="foot">— QQQ + TQQQ/SQQQ, the signals the timing layer reads (daily)</span></h4>
+    <div class="tscroll"><table class="mine"><thead><tr><th>Instrument</th><th>Price</th><th>RSI-14</th><th>vs 200-DMA</th><th>off high</th><th>12m</th><th>1m</th><th>vol</th></tr></thead><tbody>${rows}</tbody></table></div>
+    <p class="foot">QQQ is the regime's reference underlying; <strong>TQQQ/SQQQ are 3× proxies — tactical, leverage decays, not buy-and-hold</strong>. RSI&gt;70 overbought · &lt;30 oversold. Posture now: <strong>${esc(posture)}</strong>.</p></div>`;
 }
 
 function renderDca() {

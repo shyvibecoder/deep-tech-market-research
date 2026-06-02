@@ -441,6 +441,16 @@ if (!OFFLINE) {
 const regime = computeRegime(enriched, portfolio.holdings, { macro, securities });
 console.log(`Regime: ${regime.posture}${regime.risk_score != null ? ` (risk ${regime.risk_score}/100)` : ""}`);
 
+// Regime instruments panel: QQQ (the regime's reference underlying) + TQQQ/SQQQ (the 3× long/short proxies)
+// with full daily technicals incl RSI-14 — so the dashboard can show, daily, the signals the regime reads.
+let regime_instruments = {};
+if (!OFFLINE) {
+  try {
+    regime_instruments = await getQuotes(["QQQ", "TQQQ", "SQQQ"], { keys: providerKeys() });
+    console.log(`Regime instruments: ${Object.values(regime_instruments).filter((q) => q && !q.error).length}/3 resolved (QQQ/TQQQ/SQQQ)`);
+  } catch (e) { errors.push(`regime_instruments: ${e.message}`); }
+}
+
 // --- F4: append scarcity history + surface drift; F7: mark new filings/news ---
 // P6: a corrupt append-only history file now THROWS (rather than silently wiping). Capture it so the
 // scan continues (prices/regime/triggers still update) but the corrupt file is preserved + flagged.
@@ -705,6 +715,7 @@ const out = {
   catalyst_watch,
   alerts,
   regime,
+  regime_instruments,
   metrics,
   attribution,
   signal_backtest,

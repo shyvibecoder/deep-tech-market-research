@@ -29,7 +29,7 @@ import { computeRegime } from "./lib/regime.mjs";
 import { updateScarcityHistory, applySeenState } from "./lib/history.mjs";
 import { writeDcaPlan } from "./lib/dca.mjs";
 import { makeForecasts, resolveDue, updateScorecard, makeScarcityForecasts, makeSizingForecast } from "./lib/forecast.mjs";
-import { relativeStrength, deRatingSignal } from "./lib/derating.mjs";
+import { relativeStrength, deRatingSignal, tickerRelStrength } from "./lib/derating.mjs";
 import { newsForQuery } from "./lib/news.mjs";
 import { chokepointHeat } from "./lib/chokepoints.mjs";
 import { rankOpportunities, opportunityScore, buildoutOnly } from "./lib/opportunity.mjs";
@@ -499,6 +499,9 @@ for (const s of buildoutScarcities) {
 }
 const anyDislocation = Object.values(scarcity_signals).some((x) => x.forced_flow?.flag === "accumulate");
 if (!OFFLINE) console.log(`Forced-flow: ${Object.values(scarcity_signals).filter((x) => x.forced_flow?.flag === "accumulate").length} thesis-intact dislocation(s) (accumulate)`);
+// Per-name relative strength (de-rating −/inflecting +) → the entry read's relStrength leg.
+const relByTicker = tickerRelStrength(scarcities.scarcities, scarcity_signals);
+for (const t in relByTicker) if (enriched[t] && !enriched[t].error) enriched[t].rel_strength = relByTicker[t];
 if (!OFFLINE) console.log(`Opportunity Score: top = ${opportunities.slice(0, 3).map((o) => `${o.id} ${o.score}`).join(", ")}`);
 
 // --- G3: risk-aware target weights + an account-aware rebalance plan (analysis → allocation) ---

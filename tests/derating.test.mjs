@@ -1,6 +1,25 @@
 import { describe, it } from "node:test";
 import assert from "node:assert/strict";
-import { relativeStrength, deRatingSignal } from "../scripts/lib/derating.mjs";
+import { relativeStrength, deRatingSignal, tickerRelStrength } from "../scripts/lib/derating.mjs";
+
+describe("derating: tickerRelStrength (per-scarcity rs → per-ticker mean for the entry read)", () => {
+  const scarcities = [
+    { id: "a", tickers: ["CEG", "GEV"] },
+    { id: "b", tickers: ["GEV", "MP"] },
+    { id: "c", tickers: ["XYZ"] }, // no signal → excluded
+  ];
+  const signals = { a: { rs: -0.12 }, b: { rs: 0.20 }, c: {} };
+  it("averages rs across the baskets a ticker belongs to", () => {
+    const r = tickerRelStrength(scarcities, signals);
+    assert.equal(r.CEG, -0.12);          // only in a
+    assert.equal(r.GEV, 0.04);           // mean(-0.12, 0.20)
+    assert.equal(r.MP, 0.20);            // only in b
+  });
+  it("omits tickers whose scarcity has no finite rs", () => {
+    assert.ok(!("XYZ" in tickerRelStrength(scarcities, signals)));
+  });
+  it("empty inputs → empty map (no crash)", () => assert.deepEqual(tickerRelStrength(null, null), {}));
+});
 
 // True-alpha signal: operationalize the thesis claim — crowded theses DE-RATE first
 // (relative weakness vs the deep-tech build-out complex), under-priced ones INFLECT (relative

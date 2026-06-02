@@ -411,7 +411,8 @@ account. A small legend sits above the table.
 **Per-name entry timing (is it a good time to buy *this* name?).** The composite Dislocation card says
 "deploy in general"; each buy row also carries its **own** read — **good entry** / **fair** / **stretched** —
 blending **dislocation** (% off the 52-week high), **trend** (vs the 200-DMA, a gate not a reward),
-**momentum** (12-month, penalized when the name just ran up in the last month), and **valuation**. A
+**momentum** (12-month, inverted-U — see below), **relative strength** (its scarcity basket de-rating − vs
+inflecting + against the build-out complex — the alpha signal, per name), and **valuation**. A
 *stretched* name is **staged**: only part deploys now and the rest is **DCA'd** (shown as "$X now · DCA $Y"),
 so a lump-sum doesn't buy the top; the header totals "deploy now" vs "DCA'd." Hover a pill for its reasons +
 0–100 score. **Valuation is trailing P/E corroborated across two sources — SEC EDGAR XBRL (authoritative

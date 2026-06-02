@@ -395,20 +395,34 @@ function renderPortfolio() {
   });
 
   const tb = $("#holdings tbody"); tb.innerHTML = "";
-  (p.holdings || []).forEach((h) => {
+  const isDiv = (h) => h.axis === "diversifier" || /diversifier|de-correlator/i.test(h.role || "");
+  const rowHtml = (h) => {
     const Q = q(h.ticker);
     const ytd = Q?.ytd, off = Q?.pct_off_high;
-    const tr = document.createElement("tr");
     const warn = Q?.flags?.length ? `<span class="dq-warn" title="${esc(Q.flags.join("; "))}">⚠</span>` : "";
-    tr.innerHTML = `<td><strong>${esc(h.ticker)}</strong>${warn}</td><td>${esc(h.name)}</td><td>${esc(h.account)}</td>
+    return `<td><strong>${esc(h.ticker)}</strong>${warn}</td><td>${esc(h.name)}</td><td>${esc(h.account)}</td>
       <td>${fmtUsd(h.target_usd)}</td><td>${(h.weight*100).toFixed(1)}%</td><td>${esc(h.tier)}</td>
       <td>${Q?.price ? "$" + Q.price.toFixed(2) : "—"}</td>
       <td class="${ytd>=0?'pos':'neg'}">${fmtPct(ytd)}</td>
       <td class="${off<0?'neg':''}">${fmtPct(off)}</td>
       <td class="${Q?.pct_vs_ma200>=0?'pos':'neg'}">${fmtPct(Q?.pct_vs_ma200)}</td>
       <td>${Q?.forward_pe ? Q.forward_pe.toFixed(1) + "x" : "—"}</td><td style="color:var(--mut)">${esc(h.role)}</td>`;
-    tb.appendChild(tr);
-  });
+  };
+  // Group the plan by axis with a subtotal header per group, so the diversifier sleeve reads as a labelled
+  // sub-section whose weight subtotal = its sleeve % (7% today with just FIW; 15% once the sleeve is funded).
+  const groups = [
+    { label: "AI-capex", rows: (p.holdings || []).filter((h) => !isDiv(h)) },
+    { label: "◇ Diversifier · 2nd axis", rows: (p.holdings || []).filter(isDiv) },
+  ];
+  for (const g of groups) {
+    if (!g.rows.length) continue;
+    const wt = g.rows.reduce((a, h) => a + (h.weight || 0), 0);
+    const usd = g.rows.reduce((a, h) => a + (h.target_usd || 0), 0);
+    const hr = document.createElement("tr"); hr.className = "hgroup";
+    hr.innerHTML = `<td colspan="3">${esc(g.label)}</td><td>${fmtUsd(usd)}</td><td>${(wt * 100).toFixed(1)}%</td><td colspan="7"></td>`;
+    tb.appendChild(hr);
+    g.rows.forEach((h) => { const tr = document.createElement("tr"); tr.innerHTML = rowHtml(h); tb.appendChild(tr); });
+  }
   hideEmptyGroups();
 }
 

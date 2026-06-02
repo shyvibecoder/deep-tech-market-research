@@ -1,4 +1,8 @@
 name: diversifier
+# Bridge Node20 JS actions (checkout/setup-node) onto Node 24 before GitHub's Jun 16 2026 cutover, WITHOUT
+# changing our SHA pins (new action SHAs cannot be verified from here; this is GitHub's official opt-in).
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
 # Second-axis (diversifier) scout + funding. Productionizes the old axis-check screen: fetch deep history,
 # screen the candidate defensive sleeves BOOK-AWARE against the current plan, score per-name conviction via
 # the committee, size a 15% sleeve, and commit a PROPOSAL to web/data/diversifier-candidates.json for HUMAN

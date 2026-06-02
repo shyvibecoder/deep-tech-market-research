@@ -1,4 +1,8 @@
 name: ci
+# Bridge Node20 JS actions (checkout/setup-node) onto Node 24 before GitHub's Jun 16 2026 cutover, WITHOUT
+# changing our SHA pins (new action SHAs cannot be verified from here; this is GitHub's official opt-in).
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
 # Reliability gate on PRs and pushes: runs the scanner in offline mode (no network,
 # pure logic) and asserts the data files + generated signals.json are schema-valid
 # and that every portfolio ticker resolved or errored explicitly. No secrets needed.

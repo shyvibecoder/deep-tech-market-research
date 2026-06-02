@@ -1,4 +1,8 @@
 name: scout
+# Bridge Node20 JS actions (checkout/setup-node) onto Node 24 before GitHub's Jun 16 2026 cutover, WITHOUT
+# changing our SHA pins (new action SHAs cannot be verified from here; this is GitHub's official opt-in).
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
 # Scarcity SCOUT (docs/SCOUT-DESIGN.md): surveils SEC full-text for CONSTRAINT-language complaints,
 # clusters filers under broad supply stress into candidate NEW scarcities, and runs each through the
 # SAME investment committee that scores the known 24. Only committee-approved survivors are published

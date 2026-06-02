@@ -1,6 +1,9 @@
 # Personal, local-only position data (real cost basis / shares) — never commit.
 web/data/positions.local.json
 
+# Integration-test scan lock (serializes the two suites that run the offline scanner)
+web/data/.scan.lock/
+
 # Node
 node_modules/
 npm-debug.log*

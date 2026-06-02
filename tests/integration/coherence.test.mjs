@@ -7,6 +7,7 @@ import assert from "node:assert/strict";
 import { execFileSync } from "node:child_process";
 import { readFileSync, copyFileSync, existsSync } from "node:fs";
 import { fileURLToPath } from "node:url";
+import { acquireScanLock, releaseScanLock } from "./_scanlock.mjs";
 
 const root = fileURLToPath(new URL("../../", import.meta.url));
 const r = (f) => JSON.parse(readFileSync(root + "web/data/" + f));
@@ -14,10 +15,11 @@ const touched = ["signals.json", "scarcity-history.json", "seen.state.json", "dc
 const baks = new Map();
 
 before(() => {
+  acquireScanLock(); // serialize vs pipeline.test.mjs — both rewrite the shared web/data/*.json (no race)
   for (const f of touched) if (existsSync(f)) { baks.set(f, f + ".cbak"); copyFileSync(f, f + ".cbak"); }
   execFileSync("node", ["scripts/scan.mjs", "--offline"], { cwd: root, stdio: "pipe" });
 });
-after(() => { for (const [orig, bak] of baks) { copyFileSync(bak, orig); execFileSync("rm", ["-f", bak]); } });
+after(() => { for (const [orig, bak] of baks) { copyFileSync(bak, orig); execFileSync("rm", ["-f", bak]); } releaseScanLock(); });
 
 describe("coherence: scanner emits every section the system depends on", () => {
   it("signals.json carries all cross-cutting sections", () => {

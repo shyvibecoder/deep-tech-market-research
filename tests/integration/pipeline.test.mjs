@@ -6,6 +6,7 @@ import assert from "node:assert/strict";
 import { execFileSync } from "node:child_process";
 import { readFileSync, copyFileSync, existsSync } from "node:fs";
 import { fileURLToPath } from "node:url";
+import { acquireScanLock, releaseScanLock } from "./_scanlock.mjs";
 
 const root = fileURLToPath(new URL("../../", import.meta.url));
 // All tracked files the offline scan writes MUST be backed up/restored, else the test mutates the repo
@@ -15,10 +16,11 @@ const backups = new Map();
 const read = (f) => JSON.parse(readFileSync(root + "web/data/" + f));
 
 before(() => {
+  acquireScanLock(); // serialize vs coherence.test.mjs — both rewrite the shared web/data/*.json (no race)
   for (const f of dataFiles) if (existsSync(f)) { backups.set(f, f + ".bak"); copyFileSync(f, f + ".bak"); }
   execFileSync("node", ["scripts/scan.mjs", "--offline"], { cwd: root, stdio: "pipe" });
 });
-after(() => { for (const [orig, bak] of backups) { copyFileSync(bak, orig); execFileSync("rm", ["-f", bak]); } });
+after(() => { for (const [orig, bak] of backups) { copyFileSync(bak, orig); execFileSync("rm", ["-f", bak]); } releaseScanLock(); });
 
 describe("integration: offline scan pipeline", () => {
   it("writes a schema-valid signals.json with the expected sections", () => {

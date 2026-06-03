@@ -49,18 +49,20 @@ describe("forced-flow: thesis-intact dislocation vs broken thesis", () => {
 // (pace), never contradict it. Scenario matrix — same "accumulate", different regimes.
 describe("forced-flow × timing overlay: compose, don't contradict", () => {
   const acc = { flag: "accumulate", dislocation: 0.8, intact: true, window: "selling" };
-  it("CRASH (macro-stress / defensive): accumulate becomes deploy-ON-TRIGGER, never 'buy now'", () => {
-    for (const regime of [{ posture: "defensive" }, { posture: "caution" }, { posture: "risk-on", macro_stressed: true }]) {
+  it("BRAKES ON (F+C Thrust DEFENSIVE or macro-stress): accumulate becomes deploy-ON-TRIGGER, never 'buy now'", () => {
+    for (const regime of [{ posture: "defensive" }, { posture: "risk-on", macro_stressed: true }]) {
       const out = reconcileWithTiming(acc, regime);
       assert.equal(out.subordinate_to_timing, true, JSON.stringify(regime));
       assert.match(out.guidance, /trigger/i);
       assert.match(out.guidance, /don't buy now/i); // explicitly NOT a buy-now instruction
     }
   });
-  it("RISK-ON (no brakes): accumulate is actionable now", () => {
-    const out = reconcileWithTiming(acc, { posture: "risk-on" });
-    assert.equal(out.subordinate_to_timing, false);
-    assert.match(out.guidance, /timing permits/i);
+  it("NOT braked (TREND risk-on / THRUST neutral re-entry): accumulate is actionable now", () => {
+    for (const posture of ["risk-on", "neutral"]) {
+      const out = reconcileWithTiming(acc, { posture });
+      assert.equal(out.subordinate_to_timing, false, posture);
+      assert.match(out.guidance, /timing permits/i);
+    }
   });
   it("only touches accumulate signals (broken/none pass through untouched)", () => {
     const broken = { flag: "broken", dislocation: 0.8 };

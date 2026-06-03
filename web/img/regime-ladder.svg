@@ -1,0 +1,59 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 470" font-family="-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif" role="img" aria-label="Timing engine — the F+C Thrust ladder. Computed on the theme-ETF composite, first match wins top to bottom: 1) CRASH_OFF (252-day return below zero AND 60-day vol above 25%) goes DEFENSIVE / cash. 2) TREND (composite above its 200-DMA) goes RISK-ON / deploy / accelerate. 3) THRUST (close above a rising 20-DMA while still below trend) goes NEUTRAL — the fast re-entry, re-risk and resume deploys. 4) else (below trend, no thrust, no crash) goes DEFENSIVE / cash. On top, an exit-only composite-stress overlay (VIX-term inversion for 3 days AND HY-velocity in the top 5%) forces DEFENSIVE — it can only de-risk. The same v23.mjs rule the backtest runs.">
+  <rect x="0" y="0" width="1000" height="470" fill="#0b0e14"/>
+  <text x="24" y="32" fill="#e6edf3" font-size="18" font-weight="700">Timing engine — the F+C Thrust ladder (the brake <tspan fill="#8b98a9">and</tspan> the fast re-entry)</text>
+  <text x="24" y="53" fill="#8b98a9" font-size="12">Run on the theme-ETF <tspan fill="#74c0fc">composite</tspan> — the <tspan fill="#e6edf3">same</tspan> <tspan fill="#74c0fc" font-family="monospace">v23.mjs</tspan> rule the backtest runs &amp; the V2.3 panel cross-checks. <tspan fill="#ffd43b">First match wins, top → bottom.</tspan></text>
+
+  <defs>
+    <marker id="rl" markerWidth="9" markerHeight="9" refX="6.5" refY="3" orient="auto"><path d="M0,0 L7,3 L0,6 Z" fill="#8b98a9"/></marker>
+  </defs>
+
+  <!-- first-match-wins rail -->
+  <line x1="40" y1="98" x2="40" y2="338" stroke="#3b4756" stroke-width="1.5" marker-end="url(#rl)"/>
+  <text x="30" y="220" fill="#8b98a9" font-size="11" transform="rotate(-90 30 220)" text-anchor="middle">first match wins ↓</text>
+
+  <!-- Row 1: CRASH_OFF → DEFENSIVE -->
+  <rect x="64" y="92" width="430" height="52" rx="8" fill="#151a23" stroke="#ff6b6b"/>
+  <text x="80" y="114" fill="#ff6b6b" font-size="13" font-weight="700">① CRASH_OFF</text>
+  <text x="80" y="132" fill="#8b98a9" font-size="11">252-day return &lt; 0  AND  60-day vol &gt; 25%  <tspan fill="#5b6675">(Daniel-Moskowitz)</tspan></text>
+  <line x1="494" y1="118" x2="556" y2="118" stroke="#8b98a9" stroke-width="1.5" marker-end="url(#rl)"/>
+  <rect x="560" y="92" width="416" height="52" rx="8" fill="#2a1618" stroke="#ff6b6b"/>
+  <circle cx="584" cy="118" r="7" fill="#ff6b6b"/><text x="600" y="115" fill="#ff6b6b" font-size="13" font-weight="700">DEFENSIVE</text>
+  <text x="600" y="132" fill="#8b98a9" font-size="11">raise cash · deploy only into the drawdown trigger</text>
+
+  <!-- Row 2: TREND → RISK-ON -->
+  <rect x="64" y="158" width="430" height="52" rx="8" fill="#151a23" stroke="#51cf66"/>
+  <text x="80" y="180" fill="#51cf66" font-size="13" font-weight="700">② TREND</text>
+  <text x="80" y="198" fill="#8b98a9" font-size="11">composite close &gt; its 200-DMA  <tspan fill="#5b6675">(Faber)</tspan></text>
+  <line x1="494" y1="184" x2="556" y2="184" stroke="#8b98a9" stroke-width="1.5" marker-end="url(#rl)"/>
+  <rect x="560" y="158" width="416" height="52" rx="8" fill="#16341f" stroke="#51cf66"/>
+  <circle cx="584" cy="184" r="7" fill="#51cf66"/><text x="600" y="181" fill="#51cf66" font-size="13" font-weight="700">RISK-ON</text>
+  <text x="600" y="198" fill="#8b98a9" font-size="11">deploy on schedule · accelerate low-regret anchors</text>
+
+  <!-- Row 3: THRUST → NEUTRAL (fast re-entry) -->
+  <rect x="64" y="224" width="430" height="52" rx="8" fill="#151a23" stroke="#ffd43b"/>
+  <text x="80" y="246" fill="#ffd43b" font-size="13" font-weight="700">③ THRUST <tspan fill="#8b98a9" font-weight="400">— the fast re-entry</tspan></text>
+  <text x="80" y="264" fill="#8b98a9" font-size="11">close &gt; a <tspan fill="#e6edf3">rising</tspan> 20-DMA, still below the 200-DMA</text>
+  <line x1="494" y1="250" x2="556" y2="250" stroke="#8b98a9" stroke-width="1.5" marker-end="url(#rl)"/>
+  <rect x="560" y="224" width="416" height="52" rx="8" fill="#33300f" stroke="#ffd43b"/>
+  <circle cx="584" cy="250" r="7" fill="#e6edf3" stroke="#8b98a9"/><text x="600" y="247" fill="#ffd43b" font-size="13" font-weight="700">NEUTRAL</text>
+  <text x="600" y="264" fill="#8b98a9" font-size="11">re-risk &amp; resume deploys (no acceleration — re-risk, not lever up)</text>
+
+  <!-- Row 4: else → DEFENSIVE -->
+  <rect x="64" y="290" width="430" height="52" rx="8" fill="#151a23" stroke="#3b4756"/>
+  <text x="80" y="312" fill="#8b98a9" font-size="13" font-weight="700">④ else</text>
+  <text x="80" y="330" fill="#8b98a9" font-size="11">below trend · no thrust · no crash</text>
+  <line x1="494" y1="316" x2="556" y2="316" stroke="#8b98a9" stroke-width="1.5" marker-end="url(#rl)"/>
+  <rect x="560" y="290" width="416" height="52" rx="8" fill="#2a1618" stroke="#ff6b6b"/>
+  <circle cx="584" cy="316" r="7" fill="#ff6b6b"/><text x="600" y="313" fill="#ff6b6b" font-size="13" font-weight="700">DEFENSIVE</text>
+  <text x="600" y="330" fill="#8b98a9" font-size="11">favor cash / dry powder</text>
+
+  <!-- exit-only overlay strip -->
+  <rect x="64" y="356" width="912" height="40" rx="8" fill="#1a1320" stroke="#9775fa"/>
+  <text x="80" y="381" fill="#9775fa" font-size="12" font-weight="700">⛔ Exit-only composite-stress overlay</text>
+  <text x="300" y="381" fill="#8b98a9" font-size="11">VIX/VIX3M ≥ 1.0 for 3 days (inverted) <tspan fill="#e6edf3">AND</tspan> HY-velocity in the top 5% → <tspan fill="#9775fa" font-weight="700">forces DEFENSIVE</tspan> (can only de-risk, never lever up)</text>
+
+  <!-- footer -->
+  <line x1="24" y1="416" x2="976" y2="416" stroke="#26303d"/>
+  <text x="24" y="440" fill="#8b98a9" font-size="11">The posture drives your <tspan fill="#e6edf3">IRA/Roth</tspan> deploy pace (taxable stays buy-and-hold) and the buy-plan's <tspan fill="#e6edf3">SIGNAL weights</tspan> — overweights accelerate only in <tspan fill="#51cf66">TREND</tspan>. A separate per-name TSMOM tilt picks <tspan fill="#e6edf3">which</tspan> names.</text>
+  <text x="24" y="458" fill="#5b6675" font-size="10.5">Independently-replicated research (Faber trend · Daniel-Moskowitz crash · rising-20-DMA thrust), not a curve fit · see REGIME.md / FABER-CRASH-STRATEGY.md</text>
+</svg>

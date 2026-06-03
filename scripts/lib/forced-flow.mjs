@@ -52,13 +52,14 @@ export function forcedFlowSignal({ quotes = {}, tickers = [], opportunity = null
 
 // Overlay composition ("alpha → timing → cash"): forced-flow governs SELECTION (what to deploy
 // into), the regime/timing overlay governs PACE (whether to deploy now). They must never
-// contradict on screen. When timing has the brakes ON (defensive/caution or macro-stress), an
-// "accumulate" is reframed as a deploy-ON-TRIGGER priority — not a buy-now call — so the two
-// overlays stay ONE coherent system across scenarios (e.g. a crash: brakes on AND many intact
-// names dislocated → "buy these WHEN the drawdown trigger releases dry powder", not "buy now").
+// contradict on screen. When the F+C Thrust regime has the brakes ON (DEFENSIVE — CRASH_OFF or
+// below-trend-no-thrust — or the macro-stress overlay), an "accumulate" is reframed as a deploy-ON-TRIGGER
+// priority — not a buy-now call — so the two overlays stay ONE coherent system across scenarios (e.g. a
+// crash: brakes on AND many intact names dislocated → "buy these WHEN the drawdown trigger releases dry
+// powder", not "buy now"). A TREND (risk-on) or THRUST (neutral) re-entry is NOT braked → accumulate now.
 export function reconcileWithTiming(ff, regime = {}) {
   if (!ff || ff.flag !== "accumulate") return ff;
-  const brakesOn = regime.posture === "defensive" || regime.posture === "caution" || !!regime.macro_stressed;
+  const brakesOn = regime.posture === "defensive" || !!regime.macro_stressed; // F+C Thrust: brakes = DEFENSIVE only
   return {
     ...ff,
     subordinate_to_timing: brakesOn,

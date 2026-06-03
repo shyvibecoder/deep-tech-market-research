@@ -491,7 +491,7 @@ if (!OFFLINE) {
 
 // --- Timing layer: trend/momentum/vol/drawdown + 20-DMA re-entry + macro overlay ---
 const regime = computeRegime(enriched, portfolio.holdings, { macro, securities, compositeCloses: regimeComposite });
-console.log(`Regime: ${regime.posture}${regime.risk_score != null ? ` (risk ${regime.risk_score}/100)` : ""}`);
+console.log(`Regime: ${regime.posture}${regime.fc_thrust ? ` (TREND ${regime.fc_thrust.trend ? "✓" : "✗"} · CRASH ${regime.fc_thrust.crash_off ? "ON" : "off"} · THRUST ${regime.fc_thrust.thrust ? "✓" : "✗"})` : ""}`);
 
 // Regime instruments panel: QQQ (reference underlying) + TQQQ/SQQQ (3× long/short proxies) with full daily
 // technicals incl RSI-14 and 12m momentum — sourced from the DEEP DB HISTORY (2.2y → real 12m), falling back

@@ -207,7 +207,8 @@ independently-replicated research, not a curve fit. Ladder order (first match wi
 It's a **risk dial that paces your DCA**, not an all-in/all-out switch. An **exit-only composite-stress
 overlay** (VIX term-structure inverted **AND** high-yield credit widening fast) can force defensive on top.
 Full detail: `REGIME.md` / `FABER-CRASH-STRATEGY.md`. The posture carries a **confidence** label
-(sample-size based).
+(sample-size based). The **?** help on the posture opens a **diagram of the F+C Thrust ladder** (the four
+legs, their outcomes, and the exit-only overlay).
 
 It's **account-aware** — the posture drives your **IRA/Roth** sleeve (tactical, tax-free turnover) while
 **taxable** stays buy-and-hold anchors (shown under the posture) — and it carries a separate **per-name

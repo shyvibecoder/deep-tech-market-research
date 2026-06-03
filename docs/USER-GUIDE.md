@@ -454,12 +454,17 @@ the account that maximizes after-tax terminal value** — grouped by account. Ea
 across accounts** so capacity is filled exactly.
 
 A **Timing overlay banner** sits at the top of the plan so the regime is visible *where the money moves*,
-not just in the posture panel: it shows the current **posture**, whether the **brakes are on** (deploy into
-the drawdown trigger, not now) or **clear** (deploy on schedule), and whether **⚡ fast re-entry is armed**
-(a breadth thrust cleared the brake). The buy weights themselves are **regime-tilted** in the IRA sleeve
-(`web/sizing.mjs`): overweights only *accelerate* in a risk-on posture, trims bite in any posture, and the
-taxable sleeve stays buy-and-hold. So both the **pace** (banner + the Radar's ⏳/✚ forced-flow badges) and
-the **size** (the weights) reflect the brake + fast-re-entry — the timing layer is wired through end to end.
+not just in the posture panel: it shows the current **posture**, whether the **brakes are on** or **clear**,
+and whether **⚡ THRUST fast re-entry** fired. Two things now reflect the brake mechanically, not just in text:
+- **Size** — the buy weights are **regime-tilted** (`web/sizing.mjs`): overweights only *accelerate* when the
+  composite is in **TREND** (risk-on); trims bite in any posture; taxable stays buy-and-hold.
+- **Pace (the IRA brake)** — when the posture is **DEFENSIVE** (or macro-stress), the tactical **IRA/Roth**
+  sleeve **stops deploying**: its buys are reframed as **⏳ on-trigger** (held until the drawdown trigger
+  fires) and removed from the "buy now" total, so the plan's *numbers* match the posture. The **taxable**
+  sleeve keeps deploying into anchors (buy-and-hold). A THRUST/TREND re-entry clears the brake → buys resume.
+
+So both the size and the pace reflect the F+C Thrust brake + re-entry — the timing layer is wired through end
+to end (the banner, the Radar's ⏳/✚ forced-flow badges, and now the IRA buy/hold numbers all agree).
 
 **Each row shows its sleeve** with a colored tag (matching the overview-diagram colors): a green
 **Build-out** pill (the alpha engine, ~85%) or a purple **◇ Diversifier** pill (the drawdown hedge, ~15%),

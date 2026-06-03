@@ -480,36 +480,47 @@ function renderAssetLocation() {
   const entryFor = (t) => { if (!E) return null; if (!(t in entryCache)) { const Q = q(t) || {}; entryCache[t] = E.entryQuality({ pctOffHigh: Q.pct_off_high, aboveMa200: Q.above_ma200, mom12m: Q.mom_12m, mom1m: Q.mom_1m, relStrength: Q.rel_strength ?? null, valuation: Q.valuation?.tag ? { tag: Q.valuation.tag, label: Q.valuation.label } : null }); } return entryCache[t]; };
   const entryPill = (e) => (e && e.label !== "n/a") ? `<span class="epill ${e.label}" title="${esc((e.reasons || []).join(" · "))} — entry score ${e.score}/100">${e.label === "good" ? "good entry" : e.label}</span>` : "";
   const stageOf = (t, amt) => (E ? E.stageBuy(entryFor(t)?.label || "good", amt) : { now: amt, dca: 0 });
-  let deployNow = 0, dcaLater = 0;
-  for (const r of res.rows) if (r.action === "buy") { const st = stageOf(r.ticker, r.amount); deployNow += st.now; dcaLater += st.dca; }
+  // Mechanical IRA brake: when the F+C Thrust posture is DEFENSIVE (or macro-stress), the tactical IRA/Roth
+  // sleeve stops deploying — its buys become "deploy-ON-TRIGGER" (held until the drawdown trigger fires),
+  // matching the account policy. Taxable stays buy-and-hold (deploy into anchors). So the plan's NUMBERS
+  // now match the posture, not just the banner text.
+  const reg = DATA.sig?.regime;
+  const brakesOn = reg && (reg.posture === "defensive" || reg.macro_stressed);
+  const iraBraked = (r) => brakesOn && r.action === "buy" && (r.account === "roth" || r.account === "traditional");
+  let deployNow = 0, dcaLater = 0, onTrigger = 0;
+  for (const r of res.rows) if (r.action === "buy") {
+    if (iraBraked(r)) { onTrigger += r.amount; continue; } // braked IRA deploy → held on-trigger, not bought now
+    const st = stageOf(r.ticker, r.amount); deployNow += st.now; dcaLater += st.dca;
+  }
   const legend = `<p class="foot spill-legend"><span class="spill bld">Build-out</span> alpha engine (~85%) · <span class="spill div">◇ Diversifier</span> drawdown hedge (~15%) · <span class="epill good">good entry</span><span class="epill fair">fair</span><span class="epill stretched">stretched</span> = per-name timing (stretched names are staged/DCA'd)</p>`;
   // Group BUY + SELL/trim by account. Buys show the tax shelter; sells/trims show why (or why blocked).
   const ACT_RANK = { buy: 0, trim: 1, "sell (not in plan)": 1 };
   const tbody = [["roth", "Roth", cfg.roth], ["traditional", "Traditional", cfg.traditional], ["taxable", "Taxable", cfg.taxable]].filter(([, , b]) => b > 0).map(([key, label, bal]) => {
     const rs = res.rows.filter((r) => r.account === key).sort((a, b) => (ACT_RANK[a.action] ?? 2) - (ACT_RANK[b.action] ?? 2) || b.amount - a.amount);
-    const buy = rs.filter((r) => r.action === "buy").reduce((a, r) => a + r.amount, 0);
+    const buy = rs.filter((r) => r.action === "buy" && !iraBraked(r)).reduce((a, r) => a + r.amount, 0);
+    const braked = rs.filter(iraBraked).reduce((a, r) => a + r.amount, 0);
     const sell = rs.filter((r) => !r.blocked && r.action !== "buy").reduce((a, r) => a + r.amount, 0);
-    return `<tr class="hgroup"><td colspan="4">${esc(label)} — buy ${fmtUsd(buy)}${sell ? ` · sell ${fmtUsd(sell)}` : ""} of ${fmtUsd(bal)}</td></tr>` +
+    return `<tr class="hgroup"><td colspan="4">${esc(label)} — buy ${fmtUsd(buy)}${braked ? ` · <span style="color:#b45309">⏳ ${fmtUsd(braked)} on-trigger (brakes on)</span>` : ""}${sell ? ` · sell ${fmtUsd(sell)}` : ""} of ${fmtUsd(bal)}</td></tr>` +
       (rs.length ? rs.map((r) => {
-        const isBuy = r.action === "buy";
+        const onTrig = iraBraked(r);
+        const isBuy = r.action === "buy" && !onTrig;
         const e = isBuy ? entryFor(r.ticker) : null;
         const st = isBuy ? stageOf(r.ticker, r.amount) : null;
-        const tag = isBuy ? entryPill(e) : ` <span class="${r.blocked ? "foot" : "neg"}">${esc(r.action)}</span>`;
-        const amtCell = isBuy
-          ? (st && st.dca > 0 ? `${fmtUsd(st.now)} <span class="foot">now · DCA ${fmtUsd(st.dca)}</span>` : fmtUsd(r.amount))
+        const tag = onTrig ? ` <span class="foot" style="color:#b45309">⏳ on-trigger (brakes on)</span>`
+          : isBuy ? entryPill(e) : ` <span class="${r.blocked ? "foot" : "neg"}">${esc(r.action)}</span>`;
+        const amtCell = onTrig ? `<span class="foot">hold ${fmtUsd(r.amount)}</span>`
+          : isBuy ? (st && st.dca > 0 ? `${fmtUsd(st.now)} <span class="foot">now · DCA ${fmtUsd(st.dca)}</span>` : fmtUsd(r.amount))
           : `−${fmtUsd(r.amount)}`;
-        const note = isBuy ? (r.annual_drag_avoided ? "shelters $" + r.annual_drag_avoided.toLocaleString() + "/yr" : "—") : (r.blocked ? "held (no trim)" : "frees cash");
-        return `<tr class="sleeve-${sleeveOf[r.ticker] || "na"}"><td><strong>${esc(r.ticker)}</strong> ${sleevePill(r.ticker)}${isBuy ? " " + tag : tag}</td><td class="${isBuy ? "pos" : "neg"}">${amtCell}</td><td>${r.yieldPct ? (r.yieldPct * 100).toFixed(1) + "%" : "—"}</td><td class="foot">${note}</td></tr>`;
+        const note = onTrig ? "deploy when the drawdown trigger fires" : isBuy ? (r.annual_drag_avoided ? "shelters $" + r.annual_drag_avoided.toLocaleString() + "/yr" : "—") : (r.blocked ? "held (no trim)" : "frees cash");
+        return `<tr class="sleeve-${sleeveOf[r.ticker] || "na"}"><td><strong>${esc(r.ticker)}</strong> ${sleevePill(r.ticker)}${isBuy || onTrig ? " " + tag : tag}</td><td class="${onTrig ? "" : isBuy ? "pos" : "neg"}">${amtCell}</td><td>${r.yieldPct ? (r.yieldPct * 100).toFixed(1) + "%" : "—"}</td><td class="foot">${note}</td></tr>`;
       }).join("") : `<tr><td colspan="4" class="foot">— nothing assigned here —</td></tr>`);
   }).join("");
   const sm = res.summary;
-  // Make the TIMING overlay visible right on the plan (it is baked into the signal weights via
-  // web/sizing.mjs regimeFactor, but was previously only surfaced in the separate posture panel).
-  const reg = DATA.sig?.regime;
-  const brakesOn = reg && (reg.posture === "defensive" || reg.macro_stressed);
-  const regimeBanner = reg && reg.posture && reg.posture !== "unknown" ? `<p class="foot">Timing overlay on this plan (F+C Thrust): posture <strong>${esc(reg.posture)}</strong> → <strong class="${brakesOn ? "neg" : "pos"}">${brakesOn ? "brakes on — deploy into the drawdown trigger, not now" : "clear — deploy on schedule"}</strong>${reg.fast_reentry ? ` · <span class="pos">⚡ THRUST fast re-entry (rising 20-DMA reclaimed below trend)</span>` : ""}. Buy weights below are <strong>regime-tilted</strong> (IRA sleeve): overweights only accelerate when the composite is in TREND (risk-on), trims bite in any posture; taxable stays buy-and-hold. <button class="help" data-help="regime">?</button></p>` : "";
+  // Timing overlay visible right on the plan — posture, pace, and the mechanical IRA brake (above).
+  const regimeBanner = reg && reg.posture && reg.posture !== "unknown" ? `<p class="foot">Timing overlay on this plan (F+C Thrust): posture <strong>${esc(reg.posture)}</strong> → <strong class="${brakesOn ? "neg" : "pos"}">${brakesOn ? "brakes on — IRA deploys held for the drawdown trigger" : "clear — deploy on schedule"}</strong>${reg.fast_reentry ? ` · <span class="pos">⚡ THRUST fast re-entry (rising 20-DMA reclaimed below trend)</span>` : ""}. Buy weights are <strong>regime-tilted</strong> (overweights accelerate only in TREND; trims bite in any posture); when braked, the tactical <strong>IRA/Roth</strong> sleeve stops deploying (⏳ on-trigger) while <strong>taxable</strong> stays buy-and-hold. <button class="help" data-help="regime">?</button></p>` : "";
+  const buyNow = Math.max(0, (sm.buy_usd || 0) - onTrigger);
   box.innerHTML = head + regimeBanner + inputs + `
-    <p class="foot">${hasHeld ? "Rebalancing your book toward" : "Deploying <strong>" + fmtUsd(deployTotal) + "</strong> cash into"} the plan${sigTot > 0 ? ", <strong>committee- and regime-adjusted</strong> (a crowded downgrade or a braked posture shrinks the buy)" : ""}, tax-located (Roth ← highest after-tax growth · Traditional ← income · taxable ← tax-efficient)${excl.size ? ` · <strong>excluding ${esc([...excl].join(", "))}</strong> (held elsewhere)` : ""}. Buy <strong>${fmtUsd(sm.buy_usd)}</strong>${dcaLater > 0 ? ` (<strong>${fmtUsd(deployNow)}</strong> now · <strong>${fmtUsd(dcaLater)}</strong> DCA'd — stretched entries staged)` : ""}${sm.sell_usd ? ` · sell <strong>${fmtUsd(sm.sell_usd)}</strong>` : ""}${sm.blocked_usd ? ` · <span class="foot">${fmtUsd(sm.blocked_usd)} held (taxable anchor — trim bar not met)</span>` : ""}${sm.needs_new_cash_usd ? ` · <span class="neg">needs ${fmtUsd(sm.needs_new_cash_usd)} more cash</span>` : ""} · shelters <strong>$${(sm.annual_drag_avoided || 0).toLocaleString()}/yr</strong> of tax drag.</p>
+    <p class="foot">${hasHeld ? "Rebalancing your book toward" : "Deploying <strong>" + fmtUsd(deployTotal) + "</strong> cash into"} the plan${sigTot > 0 ? ", <strong>committee- and regime-adjusted</strong> (a crowded downgrade or a braked posture shrinks the buy)" : ""}, tax-located (Roth ← highest after-tax growth · Traditional ← income · taxable ← tax-efficient)${excl.size ? ` · <strong>excluding ${esc([...excl].join(", "))}</strong> (held elsewhere)` : ""}. Buy <strong>${fmtUsd(buyNow)}</strong>${dcaLater > 0 ? ` (<strong>${fmtUsd(deployNow)}</strong> now · <strong>${fmtUsd(dcaLater)}</strong> DCA'd — stretched entries staged)` : ""}${onTrigger ? ` · <span style="color:#b45309">⏳ ${fmtUsd(onTrigger)} IRA held by the brake (deploy on the drawdown trigger)</span>` : ""}${sm.sell_usd ? ` · sell <strong>${fmtUsd(sm.sell_usd)}</strong>` : ""}${sm.blocked_usd ? ` · <span class="foot">${fmtUsd(sm.blocked_usd)} held (taxable anchor — trim bar not met)</span>` : ""}${sm.needs_new_cash_usd ? ` · <span class="neg">needs ${fmtUsd(sm.needs_new_cash_usd)} more cash</span>` : ""} · shelters <strong>$${(sm.annual_drag_avoided || 0).toLocaleString()}/yr</strong> of tax drag.</p>
     ${legend}
     <div class="tscroll"><table class="mine"><thead><tr><th>Trade</th><th>Amount</th><th>Yield</th><th>Tax shelter / note</th></tr></thead><tbody>${tbody}</tbody></table></div>
     <p class="foot">${hasHeld ? "Position-aware: net buys + tax-aware sells vs your held lots (taxable lots are buy-and-hold unless the scan's trim bar is met). " : "All-cash deploy — once you add holdings in Settings, this nets sells too. "}Advisory — not tax advice; doesn't model exact bracket arbitrage, RMDs, or estate plan.</p>`;

@@ -49,10 +49,15 @@ decline. It is real and worth having — but:
   ran at a faster MA than the live dial. As of this doc, `scripts/scan.mjs` runs the backtest at
   the **live 200-DMA** and emits `metrics.backtest_unproven` when the basket lacks enough history
   — because `basketIndex` takes the **date intersection** of all holdings (`web/metrics.mjs`),
-  truncating the series to the *youngest* holding (e.g. GEV, spun off 2024). **Conclusion: the
-  brake's tail protection is not just unproven, it is unprovable on this book's own price
-  history** — assessable only on a long-history proxy (QQQ/SOXX at `range=max`), which the book
-  does not hold.
+  truncating the series to the *youngest* holding (e.g. GEV, spun off 2024). It is therefore
+  unprovable on this book's own price history — so the scanner now runs the **same brake on
+  long-history proxies** (SPY/QQQ/SOXX at `range=max`) through real ≥20% drawdowns
+  (2000/2008/2020/2022) and surfaces it as the **"Brake proof"** block in the scorecard
+  (`brakeProof()` in `scripts/lib/backtest.mjs`). That is *methodology* evidence (Faber-style
+  trend following), **not** a backtest of this book, and it reports two falsifiable verdicts
+  per proxy — *does it cut max drawdown* and *does it improve Calmar* — plus a per-crash table
+  flagging where the brake **whipsawed** (⚠, typically fast V-bottoms like 2020) rather than
+  helped (slow bears like 2000/2008). Read the dial's tail claim off that block, not off faith.
 - The whipsaw cost the brake pays is now charged in `scripts/lib/backtest.mjs`
   (`costPerSwitchBps`, TODO.md:133) — so the brake is not "free," and its Calmar is no longer
   overstated by uncosted turnover.
@@ -112,9 +117,11 @@ dynamic tool that protects it once a correlated drawdown starts.
 
 ## What would change this doctrine
 
-- A backtest of the **live 200-DMA brake through an actual ≥35% drawdown** (2008/2020/2022),
-  run on a long-history **proxy** series decoupled from `basketIndex`. Until that exists, layer 3's
-  tail claim stays "unproven."
+- ~~A backtest of the **live 200-DMA brake through an actual ≥35% drawdown**, on a long-history
+  proxy decoupled from `basketIndex`.~~ **Done** — the "Brake proof" block now reports it from the
+  scan. Its *result* can still change the doctrine: if the brake fails to cut max drawdown or
+  whipsaws away its Calmar edge across the proxies, layer 3 should be demoted from "defense" to
+  "noise reduction."
 - A material **trim of the 38% core**, which would shrink the undefended block and is the single
   highest-leverage risk action available.
 - A liquid, basis-matched hedge appearing for the currently-unhedgeable clusters (none today).

@@ -341,6 +341,13 @@ function renderMetrics() {
   // G6: historical cross-sectional backtest of the relative-strength signal (upper bound — survivorship).
   const sb = DATA.sig?.signal_backtest;
   const scBt = sb ? `<p class="foot">Signal backtest (history, ${sb.n} obs): rank IC <strong>${sb.ic}</strong>, hit-rate <strong>${Math.round((sb.hit_rate || 0) * 100)}%</strong>${sb.hit_rate_ci95 ? ` (95% CI ${Math.round(sb.hit_rate_ci95[0] * 100)}–${Math.round(sb.hit_rate_ci95[1] * 100)}%)` : ""} — <em>upper bound (survivorship)</em> <button class="help" data-help="sigbacktest">?</button></p>` : "";
+  // Brake PROOF: the live 200-DMA brake run on long-history proxies, tested against real
+  // ≥20% drawdowns — methodology evidence (NOT this book). ✓/⚠ per claim and per crash.
+  const bp = m && Array.isArray(m.brake_proof) ? m.brake_proof : null;
+  const scProof = bp && bp.length ? `<p class="foot"><strong>Brake proof</strong> — the live 200-DMA brake tested on long-history proxies through real crashes (methodology evidence, <em>not</em> this book): ${bp.map((p) => {
+    const eps = (p.episodes || []).map((e) => `${String(e.from || "").slice(0, 4)} −${(e.buyhold_dd * 100).toFixed(0)}%→−${(e.braked_dd * 100).toFixed(0)}%${e.helped ? "" : "⚠"}`).join(", ");
+    return `<br>• <strong>${esc(p.proxy)}</strong> (${p.years}y): maxDD −${(p.buyhold.max_drawdown * 100).toFixed(0)}%→−${(p.braked.max_drawdown * 100).toFixed(0)}% ${p.reduces_tail ? "✓" : "✗"}, Calmar ${num(p.buyhold.calmar)}→${num(p.braked.calmar)} ${p.improves_calmar ? "✓" : "✗"}, CAGR cost ${(p.cagr_cost * 100).toFixed(1)}pts${eps ? ` — crashes: ${eps}` : ""}`;
+  }).join("")}<br><span class="foot">⚠ = brake whipsawed / didn't cut that crash. See <code>docs/DRAWDOWN-DEFENSE.md</code>.</span></p>` : "";
   if (!m) { box.innerHTML = `<h3>Track record <button class="help" data-help="scorecard">?</button></h3>${scLine}${scAlpha}${scAttr}${scBt}`; return; }
   box.innerHTML = `<h3>Objective scorecard <button class="help" data-help="metrics">?</button> <span class="foot">— ${esc(m.note || "")} ${esc(m.window || "")}</span></h3>
     <div class="cards">
@@ -348,7 +355,7 @@ function renderMetrics() {
       <div class="card ${m.breaches_35 ? "dq-bad" : ""}"><b>${pct(m.max_drawdown)}</b><span>max drawdown ${m.breaches_35 ? "⚠ &gt;35%" : "✓ &lt;35%"}</span></div>
       <div class="card"><b>${num(m.calmar)}</b><span>Calmar (CAGR÷maxDD)</span></div>
       <div class="card"><b>${num(m.sortino)}</b><span>Sortino</span></div>
-    </div>${m.backtest ? `<p class="foot">Trend-brake backtest (${m.backtest.n}d, ${m.backtest.ma_period}-day MA, no look-ahead): max-DD <strong>${(m.backtest.braked.max_drawdown*100).toFixed(0)}%</strong> braked vs ${(m.backtest.unbraked.max_drawdown*100).toFixed(0)}% buy&amp;hold (−${(m.backtest.dd_reduction*100).toFixed(0)} pts); Calmar ${num(m.backtest.braked.calmar)} vs ${num(m.backtest.unbraked.calmar)}; ${m.backtest.whipsaws} switches${m.backtest.turnover_cost_bps != null ? `, −${m.backtest.turnover_cost_bps}bps turnover` : ""}, ${Math.round(m.backtest.time_in_market*100)}% in market.</p>` : (m.backtest_unproven ? `<p class="foot">Trend-brake backtest: <strong>unproven</strong> — ${esc(m.backtest_unproven)}</p>` : "")}${scLine}${scAlpha}${scAttr}${scBt}`;
+    </div>${m.backtest ? `<p class="foot">Trend-brake backtest (${m.backtest.n}d, ${m.backtest.ma_period}-day MA, no look-ahead): max-DD <strong>${(m.backtest.braked.max_drawdown*100).toFixed(0)}%</strong> braked vs ${(m.backtest.unbraked.max_drawdown*100).toFixed(0)}% buy&amp;hold (−${(m.backtest.dd_reduction*100).toFixed(0)} pts); Calmar ${num(m.backtest.braked.calmar)} vs ${num(m.backtest.unbraked.calmar)}; ${m.backtest.whipsaws} switches${m.backtest.turnover_cost_bps != null ? `, −${m.backtest.turnover_cost_bps}bps turnover` : ""}, ${Math.round(m.backtest.time_in_market*100)}% in market.</p>` : (m.backtest_unproven ? `<p class="foot">Trend-brake backtest: <strong>unproven</strong> — ${esc(m.backtest_unproven)}</p>` : "")}${scProof}${scLine}${scAlpha}${scAttr}${scBt}`;
 }
 
 // (Removed: "Suggested IRA tilts" — its per-name TSMOM × regime tilt is already applied to the IRA sleeve

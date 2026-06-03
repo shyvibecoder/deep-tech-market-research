@@ -11,7 +11,7 @@ import { isTradeable, fetchYahoo, fetchSeries, fetchStooqHistory, fetchTiingoHis
 import { technicalsFromHistory } from "./lib/technicals.mjs";
 import { reconcileSeries } from "./lib/history-reconcile.mjs";
 import { basketIndex, portfolioMetrics } from "./lib/metrics.mjs";
-import { backtestRegime } from "./lib/backtest.mjs";
+import { backtestRegime, brakeProof } from "./lib/backtest.mjs";
 import { returns, alignByDate, factorAttribution, benchmarkRelative, alphaEdgeLabel } from "./lib/factor.mjs";
 import { crossSectionalBacktest } from "./lib/xsbacktest.mjs";
 import { getQuotes, providerKeys, dataQualityGate, plausibleNextBar } from "./lib/marketdata.mjs";
@@ -378,9 +378,28 @@ if (!OFFLINE) {
         metrics.backtest = bt;
         console.log(`Backtest(ma${maPeriod}): braked maxDD ${bt.braked.max_drawdown} vs ${bt.unbraked.max_drawdown}, dd_reduction ${bt.dd_reduction}, whipsaws ${bt.whipsaws}, turnover ${bt.turnover_cost_bps}bps`);
       } else {
-        metrics.backtest_unproven = `Insufficient history to backtest the live ${maPeriod}-DMA brake (basket truncates to its youngest holding; ${bt ? bt.n : 0} usable days < 120). Brake tail-protection is UNPROVEN on this book's own price history — assessable only on a long-history proxy (QQQ/SOXX, range=max).`;
+        metrics.backtest_unproven = `Insufficient history to backtest the live ${maPeriod}-DMA brake (basket truncates to its youngest holding; ${bt ? bt.n : 0} usable days < 120). Brake tail-protection is UNPROVEN on this book's own price history — see the long-history proxy proof below.`;
         console.log(metrics.backtest_unproven);
       }
+      // Brake PROOF: run the SAME live 200-DMA brake on long-history PROXIES (decoupled from
+      // this book's short, intersection-truncated basket) so the dial's tail claim is TESTED
+      // against real ≥20% drawdowns (2000/2008/2020/2022), not asserted. Methodology evidence
+      // on a proxy, NOT a backtest of this book. Best-effort; never breaks the scan.
+      try {
+        const proofs = [];
+        for (const px of ["SPY", "QQQ", "SOXX"]) {
+          try {
+            const s = await fetchSeries(px, "max");
+            const bp = brakeProof(s.dates, s.closes, { maPeriod });
+            if (bp) {
+              proofs.push({ proxy: px, ...bp });
+              console.log(`Brake proof ${px} (${bp.years}y): maxDD ${(bp.buyhold.max_drawdown * 100).toFixed(0)}%→${(bp.braked.max_drawdown * 100).toFixed(0)}%, Calmar ${bp.buyhold.calmar}→${bp.braked.calmar}, CAGR cost ${(bp.cagr_cost * 100).toFixed(1)}pts, ${bp.episodes.filter((e) => e.helped).length}/${bp.episodes.length} crashes cut`);
+            }
+          } catch (e) { console.log(`Brake proof ${px} skipped: ${e.message}`); }
+          await new Promise((r) => setTimeout(r, 200));
+        }
+        if (proofs.length) metrics.brake_proof = proofs;
+      } catch { /* proof is best-effort */ }
       // G1: regress the basket on tradeable factors — MARKET (SPY), MOMENTUM (MTUM), and crucially a
       // THEME proxy (QQQ). The intercept is residual alpha BEYOND market+momentum+theme exposure — the
       // test that can actually fail (without the theme leg, this deep-tech build-out book's beta would look like alpha).

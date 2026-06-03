@@ -139,6 +139,12 @@ items touch strategy/vision — discuss before building.
   so the braked Calmar/Sortino are no longer overstated by uncosted whipsaws. `scan.mjs` also now runs the
   backtest at the **live 200-DMA** (was a faster 100/50 proxy) and emits `metrics.backtest_unproven` when the
   basket lacks enough post-MA history — i.e. it no longer prints a bull-window tail claim it can't support.
+- [x] **Brake PROOF on long-history proxies (turns "unproven" into tested). SHIPPED.** `backtest.mjs`
+  `brakeProof()` runs the same live 200-DMA brake on SPY/QQQ/SOXX at `range=max` through real ≥20% drawdowns
+  (2000/2008/2020/2022), turnover-costed, and reports two falsifiable verdicts (cuts maxDD? improves Calmar?)
+  + a per-crash episode table flagging whipsaws. Wired into scan (`metrics.brake_proof`) and the scorecard UI.
+  Methodology evidence on a proxy, NOT a backtest of this book — labeled as such. Live numbers populate from CI
+  (the session's network allowlist blocks Yahoo); the brake's tail verdict is now data-driven, not asserted.
 - [~] **After-tax return / tax-lot model for the taxable sleeve — PARTIALLY SHIPPED (asset location).**
   `web/asset-location.mjs`: per-name after-tax TERMINAL-value optimizer (transportation LP) places each
   dollar in Roth/Traditional/taxable to maximize after-tax value, plus a position-aware delta rebalance with

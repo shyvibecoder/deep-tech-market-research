@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated": "2026-06-02",
+  "updated": "2026-06-03",
   "open": [
     {
       "id": "2026-05-31:tsmom_tilt:PAVE",
@@ -2354,6 +2354,921 @@
       "price_at": 139.22000122070312,
       "resolve_on": "2026-06-23",
       "basis": "underweight"
+    },
+    {
+      "id": "2026-06-03:tsmom_tilt:PAVE",
+      "date": "2026-06-03",
+      "type": "tsmom_tilt",
+      "subject": "PAVE",
+      "claim": "up",
+      "horizon_days": 21,
+      "price_at": 56.88999938964844,
+      "resolve_on": "2026-06-24",
+      "basis": "overweight"
+    },
+    {
+      "id": "2026-06-03:tsmom_tilt:GRID",
+      "date": "2026-06-03",
+      "type": "tsmom_tilt",
+      "subject": "GRID",
+      "claim": "up",
+      "horizon_days": 21,
+      "price_at": 197.47999572753906,
+      "resolve_on": "2026-06-24",
+      "basis": "overweight"
+    },
+    {
+      "id": "2026-06-03:tsmom_tilt:FIW",
+      "date": "2026-06-03",
+      "type": "tsmom_tilt",
+      "subject": "FIW",
+      "claim": "down",
+      "horizon_days": 21,
+      "price_at": 104.05000305175781,
+      "resolve_on": "2026-06-24",
+      "basis": "underweight"
+    },
+    {
+      "id": "2026-06-03:tsmom_tilt:ASML",
+      "date": "2026-06-03",
+      "type": "tsmom_tilt",
+      "subject": "ASML",
+      "claim": "up",
+      "horizon_days": 21,
+      "price_at": 1705.3699951171875,
+      "resolve_on": "2026-06-24",
+      "basis": "overweight"
+    },
+    {
+      "id": "2026-06-03:tsmom_tilt:SMH",
+      "date": "2026-06-03",
+      "type": "tsmom_tilt",
+      "subject": "SMH",
+      "claim": "up",
+      "horizon_days": 21,
+      "price_at": 632.2100219726562,
+      "resolve_on": "2026-06-24",
+      "basis": "overweight"
+    },
+    {
+      "id": "2026-06-03:tsmom_tilt:COPX",
+      "date": "2026-06-03",
+      "type": "tsmom_tilt",
+      "subject": "COPX",
+      "claim": "up",
+      "horizon_days": 21,
+      "price_at": 93.66000366210938,
+      "resolve_on": "2026-06-24",
+      "basis": "overweight"
+    },
+    {
+      "id": "2026-06-03:tsmom_tilt:NUKZ",
+      "date": "2026-06-03",
+      "type": "tsmom_tilt",
+      "subject": "NUKZ",
+      "claim": "up",
+      "horizon_days": 21,
+      "price_at": 73.86000061035156,
+      "resolve_on": "2026-06-24",
+      "basis": "overweight"
+    },
+    {
+      "id": "2026-06-03:tsmom_tilt:MU",
+      "date": "2026-06-03",
+      "type": "tsmom_tilt",
+      "subject": "MU",
+      "claim": "up",
+      "horizon_days": 21,
+      "price_at": 1064.0999755859375,
+      "resolve_on": "2026-06-24",
+      "basis": "overweight"
+    },
+    {
+      "id": "2026-06-03:tsmom_tilt:GEV",
+      "date": "2026-06-03",
+      "type": "tsmom_tilt",
+      "subject": "GEV",
+      "claim": "up",
+      "horizon_days": 21,
+      "price_at": 969.6699829101562,
+      "resolve_on": "2026-06-24",
+      "basis": "overweight"
+    },
+    {
+      "id": "2026-06-03:tsmom_tilt:CEG",
+      "date": "2026-06-03",
+      "type": "tsmom_tilt",
+      "subject": "CEG",
+      "claim": "down",
+      "horizon_days": 21,
+      "price_at": 272.6499938964844,
+      "resolve_on": "2026-06-24",
+      "basis": "underweight"
+    },
+    {
+      "id": "2026-06-03:tsmom_tilt:EME",
+      "date": "2026-06-03",
+      "type": "tsmom_tilt",
+      "subject": "EME",
+      "claim": "up",
+      "horizon_days": 21,
+      "price_at": 827.280029296875,
+      "resolve_on": "2026-06-24",
+      "basis": "overweight"
+    },
+    {
+      "id": "2026-06-03:tsmom_tilt:MP",
+      "date": "2026-06-03",
+      "type": "tsmom_tilt",
+      "subject": "MP",
+      "claim": "up",
+      "horizon_days": 21,
+      "price_at": 72.23999786376953,
+      "resolve_on": "2026-06-24",
+      "basis": "overweight"
+    },
+    {
+      "id": "2026-06-03:tsmom_tilt:ROBO",
+      "date": "2026-06-03",
+      "type": "tsmom_tilt",
+      "subject": "ROBO",
+      "claim": "up",
+      "horizon_days": 21,
+      "price_at": 90.33999633789062,
+      "resolve_on": "2026-06-24",
+      "basis": "overweight"
+    },
+    {
+      "id": "2026-06-03:tsmom_tilt:UFO",
+      "date": "2026-06-03",
+      "type": "tsmom_tilt",
+      "subject": "UFO",
+      "claim": "up",
+      "horizon_days": 21,
+      "price_at": 61.220001220703125,
+      "resolve_on": "2026-06-24",
+      "basis": "overweight"
+    },
+    {
+      "id": "2026-06-03:tsmom_tilt:JNJ",
+      "date": "2026-06-03",
+      "type": "tsmom_tilt",
+      "subject": "JNJ",
+      "claim": "up",
+      "horizon_days": 21,
+      "price_at": 222.88999938964844,
+      "resolve_on": "2026-06-24",
+      "basis": "overweight"
+    },
+    {
+      "id": "2026-06-03:tsmom_tilt:KO",
+      "date": "2026-06-03",
+      "type": "tsmom_tilt",
+      "subject": "KO",
+      "claim": "up",
+      "horizon_days": 21,
+      "price_at": 78.41000366210938,
+      "resolve_on": "2026-06-24",
+      "basis": "overweight"
+    },
+    {
+      "id": "2026-06-03:tsmom_tilt:MRK",
+      "date": "2026-06-03",
+      "type": "tsmom_tilt",
+      "subject": "MRK",
+      "claim": "up",
+      "horizon_days": 21,
+      "price_at": 115.6500015258789,
+      "resolve_on": "2026-06-24",
+      "basis": "overweight"
+    },
+    {
+      "id": "2026-06-03:tsmom_tilt:PG",
+      "date": "2026-06-03",
+      "type": "tsmom_tilt",
+      "subject": "PG",
+      "claim": "down",
+      "horizon_days": 21,
+      "price_at": 140.82000732421875,
+      "resolve_on": "2026-06-24",
+      "basis": "underweight"
+    },
+    {
+      "date": "2026-06-03",
+      "type": "scarcity_rel",
+      "subject": "electrons",
+      "proxies": [
+        "CEG",
+        "VST",
+        "TLN",
+        "GEV"
+      ],
+      "complex_tickers": [
+        "PAVE",
+        "GRID",
+        "FIW",
+        "SHLD",
+        "SMH",
+        "COPX",
+        "NUKZ",
+        "ROBO",
+        "UFO"
+      ],
+      "basket_at": 446.4499969482422,
+      "complex_at": 152.73000250922308,
+      "basket_prices": {
+        "CEG": 272.6499938964844,
+        "VST": 157.97000122070312,
+        "TLN": 385.510009765625,
+        "GEV": 969.6699829101562
+      },
+      "complex_prices": {
+        "PAVE": 56.88999938964844,
+        "GRID": 197.47999572753906,
+        "FIW": 104.05000305175781,
+        "SHLD": 64.86000061035156,
+        "SMH": 632.2100219726562,
+        "COPX": 93.66000366210938,
+        "NUKZ": 73.86000061035156,
+        "ROBO": 90.33999633789062,
+        "UFO": 61.220001220703125
+      },
+      "horizon_days": 42,
+      "resolve_on": "2026-07-15",
+      "id": "2026-06-03:scarcity_rel:electrons",
+      "claim": "underperform",
+      "source": "de-rating"
+    },
+    {
+      "date": "2026-06-03",
+      "type": "scarcity_rel",
+      "subject": "transformers",
+      "proxies": [
+        "ETN",
+        "GEV"
+      ],
+      "complex_tickers": [
+        "PAVE",
+        "GRID",
+        "FIW",
+        "SHLD",
+        "SMH",
+        "COPX",
+        "NUKZ",
+        "ROBO",
+        "UFO"
+      ],
+      "basket_at": 693.6449890136719,
+      "complex_at": 152.73000250922308,
+      "basket_prices": {
+        "ETN": 417.6199951171875,
+        "GEV": 969.6699829101562
+      },
+      "complex_prices": {
+        "PAVE": 56.88999938964844,
+        "GRID": 197.47999572753906,
+        "FIW": 104.05000305175781,
+        "SHLD": 64.86000061035156,
+        "SMH": 632.2100219726562,
+        "COPX": 93.66000366210938,
+        "NUKZ": 73.86000061035156,
+        "ROBO": 90.33999633789062,
+        "UFO": 61.220001220703125
+      },
+      "horizon_days": 42,
+      "resolve_on": "2026-07-15",
+      "id": "2026-06-03:scarcity_rel:transformers",
+      "claim": "underperform",
+      "source": "de-rating"
+    },
+    {
+      "date": "2026-06-03",
+      "type": "scarcity_rel",
+      "subject": "turbines",
+      "proxies": [
+        "GEV",
+        "SMNEY"
+      ],
+      "complex_tickers": [
+        "PAVE",
+        "GRID",
+        "FIW",
+        "SHLD",
+        "SMH",
+        "COPX",
+        "NUKZ",
+        "ROBO",
+        "UFO"
+      ],
+      "basket_at": 969.6699829101562,
+      "complex_at": 152.73000250922308,
+      "basket_prices": {
+        "GEV": 969.6699829101562
+      },
+      "complex_prices": {
+        "PAVE": 56.88999938964844,
+        "GRID": 197.47999572753906,
+        "FIW": 104.05000305175781,
+        "SHLD": 64.86000061035156,
+        "SMH": 632.2100219726562,
+        "COPX": 93.66000366210938,
+        "NUKZ": 73.86000061035156,
+        "ROBO": 90.33999633789062,
+        "UFO": 61.220001220703125
+      },
+      "horizon_days": 42,
+      "resolve_on": "2026-07-15",
+      "id": "2026-06-03:scarcity_rel:turbines",
+      "claim": "underperform",
+      "source": "de-rating"
+    },
+    {
+      "date": "2026-06-03",
+      "type": "scarcity_rel",
+      "subject": "electricians",
+      "proxies": [
+        "EME",
+        "PWR",
+        "FIX",
+        "MYRG"
+      ],
+      "complex_tickers": [
+        "PAVE",
+        "GRID",
+        "FIW",
+        "SHLD",
+        "SMH",
+        "COPX",
+        "NUKZ",
+        "ROBO",
+        "UFO"
+      ],
+      "basket_at": 966.7275085449219,
+      "complex_at": 152.73000250922308,
+      "basket_prices": {
+        "EME": 827.280029296875,
+        "PWR": 706.0599975585938,
+        "FIX": 1883.260009765625,
+        "MYRG": 450.30999755859375
+      },
+      "complex_prices": {
+        "PAVE": 56.88999938964844,
+        "GRID": 197.47999572753906,
+        "FIW": 104.05000305175781,
+        "SHLD": 64.86000061035156,
+        "SMH": 632.2100219726562,
+        "COPX": 93.66000366210938,
+        "NUKZ": 73.86000061035156,
+        "ROBO": 90.33999633789062,
+        "UFO": 61.220001220703125
+      },
+      "horizon_days": 42,
+      "resolve_on": "2026-07-15",
+      "id": "2026-06-03:scarcity_rel:electricians",
+      "claim": "underperform",
+      "source": "de-rating"
+    },
+    {
+      "date": "2026-06-03",
+      "type": "scarcity_rel",
+      "subject": "hvdc",
+      "proxies": [
+        "PRY.MI",
+        "NEX.PA"
+      ],
+      "complex_tickers": [
+        "PAVE",
+        "GRID",
+        "FIW",
+        "SHLD",
+        "SMH",
+        "COPX",
+        "NUKZ",
+        "ROBO",
+        "UFO"
+      ],
+      "basket_at": 157.52499389648438,
+      "complex_at": 152.73000250922308,
+      "basket_prices": {
+        "PRY.MI": 154.64999389648438,
+        "NEX.PA": 160.39999389648438
+      },
+      "complex_prices": {
+        "PAVE": 56.88999938964844,
+        "GRID": 197.47999572753906,
+        "FIW": 104.05000305175781,
+        "SHLD": 64.86000061035156,
+        "SMH": 632.2100219726562,
+        "COPX": 93.66000366210938,
+        "NUKZ": 73.86000061035156,
+        "ROBO": 90.33999633789062,
+        "UFO": 61.220001220703125
+      },
+      "horizon_days": 42,
+      "resolve_on": "2026-07-15",
+      "id": "2026-06-03:scarcity_rel:hvdc",
+      "claim": "outperform",
+      "source": "de-rating"
+    },
+    {
+      "date": "2026-06-03",
+      "type": "scarcity_rel",
+      "subject": "enrichment",
+      "proxies": [
+        "LEU",
+        "CCJ"
+      ],
+      "complex_tickers": [
+        "PAVE",
+        "GRID",
+        "FIW",
+        "SHLD",
+        "SMH",
+        "COPX",
+        "NUKZ",
+        "ROBO",
+        "UFO"
+      ],
+      "basket_at": 159.82000350952148,
+      "complex_at": 152.73000250922308,
+      "basket_prices": {
+        "LEU": 199.1300048828125,
+        "CCJ": 120.51000213623047
+      },
+      "complex_prices": {
+        "PAVE": 56.88999938964844,
+        "GRID": 197.47999572753906,
+        "FIW": 104.05000305175781,
+        "SHLD": 64.86000061035156,
+        "SMH": 632.2100219726562,
+        "COPX": 93.66000366210938,
+        "NUKZ": 73.86000061035156,
+        "ROBO": 90.33999633789062,
+        "UFO": 61.220001220703125
+      },
+      "horizon_days": 42,
+      "resolve_on": "2026-07-15",
+      "id": "2026-06-03:scarcity_rel:enrichment",
+      "claim": "underperform",
+      "source": "de-rating"
+    },
+    {
+      "date": "2026-06-03",
+      "type": "scarcity_rel",
+      "subject": "uranium",
+      "proxies": [
+        "CCJ",
+        "U.UN"
+      ],
+      "complex_tickers": [
+        "PAVE",
+        "GRID",
+        "FIW",
+        "SHLD",
+        "SMH",
+        "COPX",
+        "NUKZ",
+        "ROBO",
+        "UFO"
+      ],
+      "basket_at": 74.21000099182129,
+      "complex_at": 152.73000250922308,
+      "basket_prices": {
+        "CCJ": 120.51000213623047,
+        "U.UN": 27.90999984741211
+      },
+      "complex_prices": {
+        "PAVE": 56.88999938964844,
+        "GRID": 197.47999572753906,
+        "FIW": 104.05000305175781,
+        "SHLD": 64.86000061035156,
+        "SMH": 632.2100219726562,
+        "COPX": 93.66000366210938,
+        "NUKZ": 73.86000061035156,
+        "ROBO": 90.33999633789062,
+        "UFO": 61.220001220703125
+      },
+      "horizon_days": 42,
+      "resolve_on": "2026-07-15",
+      "id": "2026-06-03:scarcity_rel:uranium",
+      "claim": "underperform",
+      "source": "de-rating"
+    },
+    {
+      "date": "2026-06-03",
+      "type": "scarcity_rel",
+      "subject": "gallium",
+      "proxies": [
+        "WOLF",
+        "NVTS",
+        "QRVO"
+      ],
+      "complex_tickers": [
+        "PAVE",
+        "GRID",
+        "FIW",
+        "SHLD",
+        "SMH",
+        "COPX",
+        "NUKZ",
+        "ROBO",
+        "UFO"
+      ],
+      "basket_at": 63.21999994913737,
+      "complex_at": 152.73000250922308,
+      "basket_prices": {
+        "WOLF": 61.060001373291016,
+        "NVTS": 25.860000610351562,
+        "QRVO": 102.73999786376953
+      },
+      "complex_prices": {
+        "PAVE": 56.88999938964844,
+        "GRID": 197.47999572753906,
+        "FIW": 104.05000305175781,
+        "SHLD": 64.86000061035156,
+        "SMH": 632.2100219726562,
+        "COPX": 93.66000366210938,
+        "NUKZ": 73.86000061035156,
+        "ROBO": 90.33999633789062,
+        "UFO": 61.220001220703125
+      },
+      "horizon_days": 42,
+      "resolve_on": "2026-07-15",
+      "id": "2026-06-03:scarcity_rel:gallium",
+      "claim": "outperform",
+      "source": "de-rating"
+    },
+    {
+      "date": "2026-06-03",
+      "type": "scarcity_rel",
+      "subject": "graphite",
+      "proxies": [
+        "SYR.AX",
+        "NVX"
+      ],
+      "complex_tickers": [
+        "PAVE",
+        "GRID",
+        "FIW",
+        "SHLD",
+        "SMH",
+        "COPX",
+        "NUKZ",
+        "ROBO",
+        "UFO"
+      ],
+      "basket_at": 0.40849999710917473,
+      "complex_at": 152.73000250922308,
+      "basket_prices": {
+        "SYR.AX": 0.12200000137090683,
+        "NVX": 0.6949999928474426
+      },
+      "complex_prices": {
+        "PAVE": 56.88999938964844,
+        "GRID": 197.47999572753906,
+        "FIW": 104.05000305175781,
+        "SHLD": 64.86000061035156,
+        "SMH": 632.2100219726562,
+        "COPX": 93.66000366210938,
+        "NUKZ": 73.86000061035156,
+        "ROBO": 90.33999633789062,
+        "UFO": 61.220001220703125
+      },
+      "horizon_days": 42,
+      "resolve_on": "2026-07-15",
+      "id": "2026-06-03:scarcity_rel:ff:graphite",
+      "claim": "outperform",
+      "source": "forced-flow",
+      "dislocation": 0.818
+    },
+    {
+      "date": "2026-06-03",
+      "type": "scarcity_rel",
+      "subject": "specialty-materials",
+      "proxies": [
+        "4185.T",
+        "6988.T"
+      ],
+      "complex_tickers": [
+        "PAVE",
+        "GRID",
+        "FIW",
+        "SHLD",
+        "SMH",
+        "COPX",
+        "NUKZ",
+        "ROBO",
+        "UFO"
+      ],
+      "basket_at": 3124,
+      "complex_at": 152.73000250922308,
+      "basket_prices": {
+        "6988.T": 3124
+      },
+      "complex_prices": {
+        "PAVE": 56.88999938964844,
+        "GRID": 197.47999572753906,
+        "FIW": 104.05000305175781,
+        "SHLD": 64.86000061035156,
+        "SMH": 632.2100219726562,
+        "COPX": 93.66000366210938,
+        "NUKZ": 73.86000061035156,
+        "ROBO": 90.33999633789062,
+        "UFO": 61.220001220703125
+      },
+      "horizon_days": 42,
+      "resolve_on": "2026-07-15",
+      "id": "2026-06-03:scarcity_rel:opp:specialty-materials",
+      "claim": "outperform",
+      "source": "opportunity",
+      "opportunity": 100
+    },
+    {
+      "date": "2026-06-03",
+      "type": "scarcity_rel",
+      "subject": "reducers",
+      "proxies": [
+        "6324.T",
+        "6268.T"
+      ],
+      "complex_tickers": [
+        "PAVE",
+        "GRID",
+        "FIW",
+        "SHLD",
+        "SMH",
+        "COPX",
+        "NUKZ",
+        "ROBO",
+        "UFO"
+      ],
+      "basket_at": 6510.5,
+      "complex_at": 152.73000250922308,
+      "basket_prices": {
+        "6324.T": 7500,
+        "6268.T": 5521
+      },
+      "complex_prices": {
+        "PAVE": 56.88999938964844,
+        "GRID": 197.47999572753906,
+        "FIW": 104.05000305175781,
+        "SHLD": 64.86000061035156,
+        "SMH": 632.2100219726562,
+        "COPX": 93.66000366210938,
+        "NUKZ": 73.86000061035156,
+        "ROBO": 90.33999633789062,
+        "UFO": 61.220001220703125
+      },
+      "horizon_days": 42,
+      "resolve_on": "2026-07-15",
+      "id": "2026-06-03:scarcity_rel:reducers",
+      "claim": "outperform",
+      "source": "de-rating"
+    },
+    {
+      "date": "2026-06-03",
+      "type": "scarcity_rel",
+      "subject": "space-power",
+      "proxies": [
+        "RKLB"
+      ],
+      "complex_tickers": [
+        "PAVE",
+        "GRID",
+        "FIW",
+        "SHLD",
+        "SMH",
+        "COPX",
+        "NUKZ",
+        "ROBO",
+        "UFO"
+      ],
+      "basket_at": 123.31999969482422,
+      "complex_at": 152.73000250922308,
+      "basket_prices": {
+        "RKLB": 123.31999969482422
+      },
+      "complex_prices": {
+        "PAVE": 56.88999938964844,
+        "GRID": 197.47999572753906,
+        "FIW": 104.05000305175781,
+        "SHLD": 64.86000061035156,
+        "SMH": 632.2100219726562,
+        "COPX": 93.66000366210938,
+        "NUKZ": 73.86000061035156,
+        "ROBO": 90.33999633789062,
+        "UFO": 61.220001220703125
+      },
+      "horizon_days": 42,
+      "resolve_on": "2026-07-15",
+      "id": "2026-06-03:scarcity_rel:space-power",
+      "claim": "outperform",
+      "source": "de-rating"
+    },
+    {
+      "date": "2026-06-03",
+      "type": "scarcity_rel",
+      "subject": "cryogenics",
+      "proxies": [
+        "OXIG.L"
+      ],
+      "complex_tickers": [
+        "PAVE",
+        "GRID",
+        "FIW",
+        "SHLD",
+        "SMH",
+        "COPX",
+        "NUKZ",
+        "ROBO",
+        "UFO"
+      ],
+      "basket_at": 3232,
+      "complex_at": 152.73000250922308,
+      "basket_prices": {
+        "OXIG.L": 3232
+      },
+      "complex_prices": {
+        "PAVE": 56.88999938964844,
+        "GRID": 197.47999572753906,
+        "FIW": 104.05000305175781,
+        "SHLD": 64.86000061035156,
+        "SMH": 632.2100219726562,
+        "COPX": 93.66000366210938,
+        "NUKZ": 73.86000061035156,
+        "ROBO": 90.33999633789062,
+        "UFO": 61.220001220703125
+      },
+      "horizon_days": 42,
+      "resolve_on": "2026-07-15",
+      "id": "2026-06-03:scarcity_rel:cryogenics",
+      "claim": "outperform",
+      "source": "de-rating"
+    },
+    {
+      "date": "2026-06-03",
+      "type": "scarcity_rel",
+      "subject": "bio-data",
+      "proxies": [
+        "DHR",
+        "TMO"
+      ],
+      "complex_tickers": [
+        "PAVE",
+        "GRID",
+        "FIW",
+        "SHLD",
+        "SMH",
+        "COPX",
+        "NUKZ",
+        "ROBO",
+        "UFO"
+      ],
+      "basket_at": 329.0949935913086,
+      "complex_at": 152.73000250922308,
+      "basket_prices": {
+        "DHR": 176.11000061035156,
+        "TMO": 482.0799865722656
+      },
+      "complex_prices": {
+        "PAVE": 56.88999938964844,
+        "GRID": 197.47999572753906,
+        "FIW": 104.05000305175781,
+        "SHLD": 64.86000061035156,
+        "SMH": 632.2100219726562,
+        "COPX": 93.66000366210938,
+        "NUKZ": 73.86000061035156,
+        "ROBO": 90.33999633789062,
+        "UFO": 61.220001220703125
+      },
+      "horizon_days": 42,
+      "resolve_on": "2026-07-15",
+      "id": "2026-06-03:scarcity_rel:ff:bio-data",
+      "claim": "outperform",
+      "source": "forced-flow",
+      "dislocation": 0.595
+    },
+    {
+      "date": "2026-06-03",
+      "type": "scarcity_rel",
+      "subject": "rl-data",
+      "proxies": [
+        "(private: Scale, Surge, Mercor)",
+        "RDDT"
+      ],
+      "complex_tickers": [
+        "PAVE",
+        "GRID",
+        "FIW",
+        "SHLD",
+        "SMH",
+        "COPX",
+        "NUKZ",
+        "ROBO",
+        "UFO"
+      ],
+      "basket_at": 169.1300048828125,
+      "complex_at": 152.73000250922308,
+      "basket_prices": {
+        "RDDT": 169.1300048828125
+      },
+      "complex_prices": {
+        "PAVE": 56.88999938964844,
+        "GRID": 197.47999572753906,
+        "FIW": 104.05000305175781,
+        "SHLD": 64.86000061035156,
+        "SMH": 632.2100219726562,
+        "COPX": 93.66000366210938,
+        "NUKZ": 73.86000061035156,
+        "ROBO": 90.33999633789062,
+        "UFO": 61.220001220703125
+      },
+      "horizon_days": 42,
+      "resolve_on": "2026-07-15",
+      "id": "2026-06-03:scarcity_rel:rl-data",
+      "claim": "outperform",
+      "source": "de-rating"
+    },
+    {
+      "id": "2026-06-03:sizing_tilt",
+      "date": "2026-06-03",
+      "type": "sizing_tilt",
+      "subject": "portfolio",
+      "claim": "signal_beats_research",
+      "horizon_days": 42,
+      "resolve_on": "2026-07-15",
+      "signal_weights": {
+        "PAVE": 0.15680351630577166,
+        "GRID": 0.11494344522787074,
+        "SHLD": 0.0522676014625645,
+        "ASML": 0.027784026836463874,
+        "FIW": 0.07476634848674693,
+        "JNJ": 0.01623457985442699,
+        "WMT": 0.013137736214418334,
+        "KO": 0.015166702737182626,
+        "PEP": 0.014419188755111572,
+        "MRK": 0.011931035071932203,
+        "PG": 0.014525976466836009,
+        "SMH": 0.13152330535020673,
+        "COPX": 0.08402270733902109,
+        "NUKZ": 0.07404019204702077,
+        "MU": 0.05032264127302343,
+        "GEV": 0.03757574808351653,
+        "CEG": 0.027773348065291432,
+        "EME": 0.018787518082719185,
+        "MP": 0.014176424690458019,
+        "LEU": 0.012327573441468943,
+        "ROBO": 0.027399591074255904,
+        "UFO": 0.01007079313369252
+      },
+      "research_weights": {
+        "PAVE": 0.15328392292090412,
+        "GRID": 0.1123632655051825,
+        "SHLD": 0.0510948800408518,
+        "ASML": 0.030245828037994475,
+        "FIW": 0.07532123461961059,
+        "JNJ": 0.01635506645590501,
+        "WMT": 0.013235239272814902,
+        "KO": 0.015279263978977385,
+        "PEP": 0.01452620224512805,
+        "MRK": 0.012019582473886688,
+        "PG": 0.014633782492820812,
+        "SMH": 0.11830026077452041,
+        "COPX": 0.09098061547376907,
+        "NUKZ": 0.06659647653172757,
+        "MU": 0.05454820599178947,
+        "GEV": 0.036432409481979594,
+        "CEG": 0.036431692280328304,
+        "EME": 0.018216204740989797,
+        "MP": 0.018216204740989797,
+        "LEU": 0.018216204740989797,
+        "ROBO": 0.02464520034310927,
+        "UFO": 0.009058256855730584
+      },
+      "prices": {
+        "PAVE": 56.88999938964844,
+        "GRID": 197.47999572753906,
+        "SHLD": 64.86000061035156,
+        "ASML": 1705.3699951171875,
+        "FIW": 104.05000305175781,
+        "JNJ": 222.88999938964844,
+        "WMT": 113.05999755859375,
+        "KO": 78.41000366210938,
+        "PEP": 142,
+        "MRK": 115.6500015258789,
+        "PG": 140.82000732421875,
+        "SMH": 632.2100219726562,
+        "COPX": 93.66000366210938,
+        "NUKZ": 73.86000061035156,
+        "MU": 1064.0999755859375,
+        "GEV": 969.6699829101562,
+        "CEG": 272.6499938964844,
+        "EME": 827.280029296875,
+        "MP": 72.23999786376953,
+        "LEU": 199.1300048828125,
+        "ROBO": 90.33999633789062,
+        "UFO": 61.220001220703125
+      }
     }
   ],
   "scorecard": {

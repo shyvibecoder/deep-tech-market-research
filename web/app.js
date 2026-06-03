@@ -31,8 +31,8 @@ async function load() {
 }
 
 const POSTURE = {
-  "risk-on": ["pos", "🟢 RISK-ON"], neutral: ["", "⚪ NEUTRAL"],
-  caution: ["", "🟠 CAUTION — brakes"], defensive: ["neg", "🔴 DEFENSIVE — cash"], unknown: ["", "POSTURE —"],
+  "risk-on": ["pos", "🟢 RISK-ON — trend"], neutral: ["", "⚪ NEUTRAL — thrust re-entry"],
+  defensive: ["neg", "🔴 DEFENSIVE — cash"], unknown: ["", "POSTURE —"],
 };
 
 function render() {
@@ -42,7 +42,7 @@ function render() {
   if (pill) {
     const [cls, lbl] = POSTURE[reg?.posture] || POSTURE.unknown;
     pill.className = `posture ${reg?.posture || "unknown"}`;
-    pill.textContent = reg ? `${lbl}${reg.risk_score != null ? ` ${reg.risk_score}/100` : ""}` : "";
+    pill.textContent = reg ? lbl : "";
   }
   renderStale(sig); renderRadar(); renderPortfolio(); renderV23(); renderCatalysts(); renderChokepoints(); renderResearch(); renderScout(); renderDiversifier(); renderDigest();
 }
@@ -140,7 +140,7 @@ function renderV23() {
   // V2.3 cross-check vs Puck's regime posture.
   let cross = "";
   if (v && v.state !== "UNAVAILABLE") {
-    const brakes = reg?.posture === "defensive" || reg?.posture === "caution" || reg?.macro_stressed;
+    const brakes = reg?.posture === "defensive" || reg?.macro_stressed;
     const puckRisk = !brakes; // risk-on-ish
     const v23Risk = v.state === "FULL";
     const agree = puckRisk === v23Risk;
@@ -270,19 +270,19 @@ function renderRegime() {
   box.className = `regime ${r.posture}`;
   const ap = r.account_policy;
   const apHtml = ap ? `<div class="acctpol"><span><strong>IRA/Roth:</strong> ${esc(ap.ira)}</span><span><strong>Taxable:</strong> ${esc(ap.taxable)}</span></div>` : "";
-  // Explicit overlay state so BOTH dials show up at a glance: the BRAKE (200-DMA trend → brakes
-  // on/off) and FAST RE-ENTRY (20-DMA breadth vs its 60% trigger → armed, and whether it re-risked).
-  const c = r.components || {};
-  const brakesOn = r.posture === "defensive" || r.posture === "caution" || r.macro_stressed;
-  const reFired = /fast re-?entry/i.test(r.action || "");
-  const overlay = `<div class="rnote"><strong>Overlays:</strong> `
-    + `Brake (200-DMA trend) ${c.trend_vs_200dma != null ? `${c.trend_vs_200dma >= 0 ? "+" : ""}${esc(c.trend_vs_200dma)}%` : "n/a"}`
-    + `${c.breadth_above_200dma != null ? `, breadth ${esc(c.breadth_above_200dma)}% &gt;200-DMA` : ""} → `
-    + `${brakesOn ? `<strong class="neg">brakes on</strong>` : `<strong class="pos">clear</strong>`}`
-    + ` &nbsp;·&nbsp; Fast re-entry: breadth ${c.breadth_above_20dma != null ? `${esc(c.breadth_above_20dma)}%` : "n/a"} vs 60% trigger → `
-    + `${r.fast_reentry ? `<strong class="pos">confirmed${reFired ? " · cleared the brake to neutral ↑" : ""}</strong>` : (r.fast_reentry_armed ? `<span style="color:#b45309">thrust forming — needs a 2nd day to confirm</span>` : `<span style="color:var(--mut)">not armed</span>`)}`
-    + ` &nbsp;·&nbsp; Macro: ${r.macro_stressed ? `<strong class="neg">STRESS</strong>` : (r.macro_available ? "clear" : "⚠ unavailable")}</div>`;
-  box.innerHTML = `<div><strong>Timing posture: ${lbl}${r.risk_score != null ? ` · risk ${esc(r.risk_score)}/100${r.confidence ? ` (${esc(r.confidence)} conf)` : ""}` : ""}${r.version ? ` · v${esc(r.version)}` : ""} <button class="help" data-help="regime">?</button></strong>
+  // The F+C Thrust ladder IS the brake + re-entry — show its three signals and the resulting decision.
+  const fc = r.fc_thrust;
+  const decision = !fc ? "—"
+    : fc.crash_off ? `<strong class="neg">brakes — CRASH_OFF</strong>`
+    : fc.trend ? `<strong class="pos">risk-on — TREND</strong>`
+    : fc.thrust ? `<strong class="pos">fast re-entry — THRUST→neutral</strong>`
+    : `<strong class="neg">brakes — below trend</strong>`;
+  const overlay = `<div class="rnote"><strong>F+C Thrust ladder:</strong> `
+    + (fc
+      ? `TREND ${fc.trend ? "✓" : "✗"} · CRASH_OFF ${fc.crash_off ? "ON" : "off"} · THRUST ${fc.thrust ? "✓" : "✗"} → ${decision}`
+      : `awaiting composite price history`)
+    + ` &nbsp;·&nbsp; Macro overlay: ${r.macro_stressed ? `<strong class="neg">STRESS — forced defensive</strong>` : (r.macro_available ? "clear" : "⚠ unavailable")}</div>`;
+  box.innerHTML = `<div><strong>Timing posture: ${lbl}${r.confidence ? ` · ${esc(r.confidence)} conf` : ""}${r.version ? ` · v${esc(r.version)}` : ""} <button class="help" data-help="regime">?</button></strong>
       <span>${esc(r.action || "")}</span></div>
     ${apHtml}
     ${overlay}
@@ -357,21 +357,15 @@ function renderMetrics() {
   // G6: historical cross-sectional backtest of the relative-strength signal (upper bound — survivorship).
   const sb = DATA.sig?.signal_backtest;
   const scBt = sb ? `<p class="foot">Signal backtest (history, ${sb.n} obs): rank IC <strong>${sb.ic}</strong>, hit-rate <strong>${Math.round((sb.hit_rate || 0) * 100)}%</strong>${sb.hit_rate_ci95 ? ` (95% CI ${Math.round(sb.hit_rate_ci95[0] * 100)}–${Math.round(sb.hit_rate_ci95[1] * 100)}%)` : ""} — <em>upper bound (survivorship)</em> <button class="help" data-help="sigbacktest">?</button></p>` : "";
-  // Brake PROOF: the live 200-DMA brake run on long-history proxies, tested against real
-  // ≥20% drawdowns — methodology evidence (NOT this book). ✓/⚠ per claim and per crash.
-  const bp = m && Array.isArray(m.brake_proof) ? m.brake_proof : null;
-  const scProof = bp && bp.length ? `<p class="foot"><strong>Brake proof</strong> — the live 200-DMA brake tested on long-history proxies through real crashes (methodology evidence, <em>not</em> this book): ${bp.map((p) => {
-    const eps = (p.episodes || []).map((e) => `${String(e.from || "").slice(0, 4)} −${(e.buyhold_dd * 100).toFixed(0)}%→−${(e.braked_dd * 100).toFixed(0)}%${e.helped ? "" : "⚠"}`).join(", ");
-    return `<br>• <strong>${esc(p.proxy)}</strong> (${p.years}y${p.src ? `, ${esc(p.src)}` : ""}): maxDD −${(p.buyhold.max_drawdown * 100).toFixed(0)}%→−${(p.braked.max_drawdown * 100).toFixed(0)}% ${p.reduces_tail ? "✓" : "✗"}, Calmar ${num(p.buyhold.calmar)}→${num(p.braked.calmar)} ${p.improves_calmar ? "✓" : "✗"}, CAGR cost ${(p.cagr_cost * 100).toFixed(1)}pts${eps ? ` — crashes: ${eps}` : ""}`;
-  }).join("")}<br><span class="foot">⚠ = brake whipsawed / didn't cut that crash. See <code>docs/DRAWDOWN-DEFENSE.md</code>.</span></p>` : "";
-  // Fast-RE-ENTRY proof: the breadth-based "fast entry" overlay vs a plain 200-DMA brake, on the book's own names.
-  const fr = m && m.fast_reentry_proof ? m.fast_reentry_proof : null;
-  const b35 = fr?.breach_35 || {};
+  // F+C THRUST BACKTEST — the EXACT live timing design (Faber trend + Daniel-Moskowitz crash + rising-20-DMA
+  // thrust re-entry; the same v23.mjs rule the regime runs) on deep benchmark history vs buy-&-hold. Per
+  // instrument: did it cut maxDD (✓/✗), hold the −35% mandate, improve Calmar, and which crashes it cut.
+  const fcp = m && Array.isArray(m.fc_thrust_proof) ? m.fc_thrust_proof : null;
   const mand = (v) => v ? `<span class="neg">✗ breaches −35%</span>` : `<span class="pos">✓ holds −35%</span>`;
-  const scFast = fr ? `<p class="foot"><strong>System backtest (as designed)</strong> — the full timing overlay (200-DMA brake + breadth fast-entry: re-risk a notch when ≥${Math.round(fr.breadth_threshold * 100)}% of ${fr.names.length} names reclaim their 20-DMA) on the book's own deep history (${fr.years}y), vs the do-nothing baseline. Selection held fixed (committed weights).<br>
-    • <strong>Buy &amp; hold</strong>: CAGR ${fr.buyhold ? (fr.buyhold.cagr * 100).toFixed(1) : "—"}%, maxDD −${fr.buyhold ? (fr.buyhold.max_drawdown * 100).toFixed(0) : "—"}% ${mand(b35.buyhold)}<br>
-    • <strong>+ Brake</strong>: CAGR ${(fr.plain.cagr * 100).toFixed(1)}%, maxDD −${(fr.plain.max_drawdown * 100).toFixed(0)}%, Calmar ${num(fr.plain.calmar)}, ${Math.round(fr.time_in_market_plain * 100)}% in mkt ${mand(b35.brake)}<br>
-    • <strong>+ Brake + fast re-entry</strong>: CAGR ${(fr.fast.cagr * 100).toFixed(1)}% (${fr.cagr_gain >= 0 ? "+" : ""}${(fr.cagr_gain * 100).toFixed(1)}pts), maxDD −${(fr.fast.max_drawdown * 100).toFixed(0)}% (${fr.maxdd_cost >= 0 ? "+" : ""}${(fr.maxdd_cost * 100).toFixed(0)}pts), Calmar ${num(fr.fast.calmar)}, ${Math.round(fr.time_in_market_fast * 100)}% in mkt ${mand(b35.fast)} → fast-entry <strong class="${fr.worth_it ? "pos" : "neg"}">${fr.worth_it ? "worth it" : "not worth it"}</strong></p>` : "";
+  const scFc = fcp && fcp.length ? `<p class="foot"><strong>F+C Thrust backtest (the live design)</strong> — the exact Faber + Crash + Thrust ladder (the same rule the regime runs), on deep benchmark history vs buy-&amp;-hold, no look-ahead, turnover-costed: ${fcp.map((p) => {
+    const eps = (p.episodes || []).map((e) => `${String(e.from || "").slice(0, 4)} −${(e.buyhold_dd * 100).toFixed(0)}%→−${(e.fc_dd * 100).toFixed(0)}%${e.helped ? "" : "⚠"}`).join(", ");
+    return `<br>• <strong>${esc(p.proxy)}</strong> (${p.years}y${p.src ? `, ${esc(p.src)}` : ""}): maxDD −${(p.buyhold.max_drawdown * 100).toFixed(0)}%→−${(p.fc_thrust.max_drawdown * 100).toFixed(0)}% ${p.reduces_tail ? "✓" : "✗"} ${mand(p.breach_35?.fc_thrust)}, Calmar ${num(p.buyhold.calmar)}→${num(p.fc_thrust.calmar)} ${p.improves_calmar ? "✓" : "✗"}, CAGR cost ${(p.cagr_cost * 100).toFixed(1)}pts${eps ? ` — crashes: ${eps}` : ""}`;
+  }).join("")}<br><span class="foot">⚠ = the ladder didn't cut that crash. Methodology evidence on deep proxies, not a forecast of your book. See <code>docs/DRAWDOWN-DEFENSE.md</code>.</span></p>` : "";
   if (!m) { box.innerHTML = `<h3>Track record <button class="help" data-help="scorecard">?</button></h3>${scLine}${scKill}${scAlpha}${scAttr}${scBt}`; return; }
   box.innerHTML = `<h3>Objective scorecard <button class="help" data-help="metrics">?</button> <span class="foot">— ${esc(m.note || "")} ${esc(m.window || "")}</span></h3>
     <div class="cards">
@@ -379,7 +373,7 @@ function renderMetrics() {
       <div class="card ${m.breaches_35 ? "dq-bad" : ""}"><b>${pct(m.max_drawdown)}</b><span>max drawdown ${m.breaches_35 ? "⚠ &gt;35%" : "✓ &lt;35%"}</span></div>
       <div class="card"><b>${num(m.calmar)}</b><span>Calmar (CAGR÷maxDD)</span></div>
       <div class="card"><b>${num(m.sortino)}</b><span>Sortino</span></div>
-    </div>${m.backtest ? `<p class="foot">Trend-brake backtest (${m.backtest.n}d, ${m.backtest.ma_period}-day MA, no look-ahead): max-DD <strong>${(m.backtest.braked.max_drawdown*100).toFixed(0)}%</strong> braked vs ${(m.backtest.unbraked.max_drawdown*100).toFixed(0)}% buy&amp;hold (−${(m.backtest.dd_reduction*100).toFixed(0)} pts); Calmar ${num(m.backtest.braked.calmar)} vs ${num(m.backtest.unbraked.calmar)}; ${m.backtest.whipsaws} switches${m.backtest.turnover_cost_bps != null ? `, −${m.backtest.turnover_cost_bps}bps turnover` : ""}, ${Math.round(m.backtest.time_in_market*100)}% in market.</p>` : (m.backtest_unproven ? `<p class="foot">Trend-brake backtest: <strong>unproven</strong> — ${esc(m.backtest_unproven)}</p>` : "")}${scProof}${scFast}${scLine}${scKill}${scAlpha}${scAttr}${scBt}`;
+    </div>${scFc}${scLine}${scKill}${scAlpha}${scAttr}${scBt}`;
 }
 
 // (Removed: "Suggested IRA tilts" — its per-name TSMOM × regime tilt is already applied to the IRA sleeve
@@ -512,8 +506,8 @@ function renderAssetLocation() {
   // Make the TIMING overlay visible right on the plan (it is baked into the signal weights via
   // web/sizing.mjs regimeFactor, but was previously only surfaced in the separate posture panel).
   const reg = DATA.sig?.regime;
-  const brakesOn = reg && (reg.posture === "defensive" || reg.posture === "caution" || reg.macro_stressed);
-  const regimeBanner = reg && reg.posture && reg.posture !== "unknown" ? `<p class="foot">Timing overlay on this plan: posture <strong>${esc(reg.posture)}</strong>${reg.risk_score != null ? ` (${esc(reg.risk_score)}/100)` : ""} → <strong class="${brakesOn ? "neg" : "pos"}">${brakesOn ? "brakes on — deploy into the drawdown trigger, not now" : "clear — deploy on schedule"}</strong>${reg.fast_reentry ? ` · <span class="pos">⚡ fast re-entry armed (breadth thrust cleared the brake)</span>` : ""}. Buy weights below are <strong>regime-tilted</strong> (IRA sleeve): overweights only accelerate in a risk-on posture, trims bite in any posture; taxable stays buy-and-hold. <button class="help" data-help="regime">?</button></p>` : "";
+  const brakesOn = reg && (reg.posture === "defensive" || reg.macro_stressed);
+  const regimeBanner = reg && reg.posture && reg.posture !== "unknown" ? `<p class="foot">Timing overlay on this plan (F+C Thrust): posture <strong>${esc(reg.posture)}</strong> → <strong class="${brakesOn ? "neg" : "pos"}">${brakesOn ? "brakes on — deploy into the drawdown trigger, not now" : "clear — deploy on schedule"}</strong>${reg.fast_reentry ? ` · <span class="pos">⚡ THRUST fast re-entry (rising 20-DMA reclaimed below trend)</span>` : ""}. Buy weights below are <strong>regime-tilted</strong> (IRA sleeve): overweights only accelerate when the composite is in TREND (risk-on), trims bite in any posture; taxable stays buy-and-hold. <button class="help" data-help="regime">?</button></p>` : "";
   box.innerHTML = head + regimeBanner + inputs + `
     <p class="foot">${hasHeld ? "Rebalancing your book toward" : "Deploying <strong>" + fmtUsd(deployTotal) + "</strong> cash into"} the plan${sigTot > 0 ? ", <strong>committee- and regime-adjusted</strong> (a crowded downgrade or a braked posture shrinks the buy)" : ""}, tax-located (Roth ← highest after-tax growth · Traditional ← income · taxable ← tax-efficient)${excl.size ? ` · <strong>excluding ${esc([...excl].join(", "))}</strong> (held elsewhere)` : ""}. Buy <strong>${fmtUsd(sm.buy_usd)}</strong>${dcaLater > 0 ? ` (<strong>${fmtUsd(deployNow)}</strong> now · <strong>${fmtUsd(dcaLater)}</strong> DCA'd — stretched entries staged)` : ""}${sm.sell_usd ? ` · sell <strong>${fmtUsd(sm.sell_usd)}</strong>` : ""}${sm.blocked_usd ? ` · <span class="foot">${fmtUsd(sm.blocked_usd)} held (taxable anchor — trim bar not met)</span>` : ""}${sm.needs_new_cash_usd ? ` · <span class="neg">needs ${fmtUsd(sm.needs_new_cash_usd)} more cash</span>` : ""} · shelters <strong>$${(sm.annual_drag_avoided || 0).toLocaleString()}/yr</strong> of tax drag.</p>
     ${legend}
@@ -1279,14 +1273,13 @@ const HELP = {
     <p><strong>Catalyst watch (auto-monitored manual triggers).</strong> Each policy trigger is now watched for you: every scan the committee judges its condition from fresh <strong>news + SEC filings</strong> and sets a status — <strong>monitoring → approaching → likely-met → fired</strong> — with a confidence, the <strong>evidence</strong> it used, and a drafted <strong>⇒ suggested action</strong> (portfolio- and tax-aware). It only reaches <em>fired</em> when corroborated (a filing or multiple sources, never one headline) <em>and</em> confirmed on two consecutive scans — the same anti-noise discipline as the auto triggers.</p>
     <p>When any trigger fires, the scanner opens a GitHub issue (deduped). <strong>Advisory only — Puck never trades or edits your book; you confirm and act.</strong></p>` },
   regime: { title: "Timing posture (regime)", body: `
-    <p>The <strong>alpha</strong> is the scarcity thesis; this is the <strong>timing</strong> overlay — when to deploy/go-all-in vs. apply the brakes into cash. It is built on <em>independent, replicated research</em> (Faber 200-DMA trend; Moskowitz-Ooi-Pedersen time-series momentum; Moreira-Muir volatility; Hurst-Ooi-Pedersen trend), <strong>not</strong> a curve-fit backtest.</p>
-    <ul><li>🟢 <strong>risk-on</strong> — uptrend + momentum, contained vol → deploy / accelerate.</li>
-    <li>⚪ <strong>neutral</strong> — stick to the DCA calendar.</li>
-    <li>🟠 <strong>caution</strong> — tap the brakes, build dry powder.</li>
-    <li>🔴 <strong>defensive</strong> — favor cash; deploy only into the drawdown trigger.</li></ul>
-    <p>Two overlays sit on top (Timing v2): a <strong>macro-stress brake</strong> that forces defensive only when the <strong>VIX term-structure is inverted AND high-yield credit is widening fast</strong> (a rare, leading combined signal — exit-only, it can only de-risk), and a <strong>20-DMA fast re-entry</strong> that <strong>clears the deploy-brake to neutral</strong> when ≥60% of names reclaim their 20-day average <strong>for a 2nd day</strong> (a <em>confirmed</em> thrust — a single-day pop is a bear-rally head-fake, so it must persist). It works even out of a deep <em>defensive</em> regime (so you don't stay in cash through a V-shaped bottom), capped at neutral so it lifts the brake without levering up.</p>
-    <p><strong>v2</strong> refinements: the signal is computed on the <em>theme ETFs</em> (a cleaner composite than averaging 19 noisy single names); it's <strong>account-aware</strong> — the posture drives your <strong>IRA/Roth</strong> (tactical, tax-free turnover) while <strong>taxable</strong> stays buy-and-hold anchors; and it carries a <strong>per-name TSMOM tilt</strong> (which names to lean into vs. trim).</p>
-    <p>It's a risk dial that paces your DCA, not an all-in/all-out switch. Full detail: REGIME.md.</p>` },
+    <p>The <strong>alpha</strong> is the scarcity thesis; this is the <strong>timing</strong> overlay — when to deploy/go-all-in vs. apply the brakes into cash. The brake and the fast re-entry <strong>are the canonical F+C Thrust ladder</strong> (the owner's production rule), computed on the theme-ETF composite — the same rule the backtest runs and the V2.3 cross-check replicates. Each leg is independently-replicated research, not a curve fit:</p>
+    <ul><li><strong>TREND</strong> (Faber 2007) — composite above its 200-DMA → <strong>🟢 risk-on</strong> (deploy / accelerate).</li>
+    <li><strong>CRASH_OFF</strong> (Daniel-Moskowitz 2016) — trailing 252-day return &lt; 0 <em>and</em> 60-day vol &gt; 25% → <strong>🔴 defensive</strong> (raise cash).</li>
+    <li><strong>THRUST</strong> — close above a <em>rising</em> 20-DMA while still below the 200-DMA → <strong>⚪ neutral</strong>, the <strong>fast re-entry</strong> (re-risk after a bottom without waiting for the slow 200-DMA). The rising-MA requirement is the built-in confirmation against bear-rally head-fakes.</li>
+    <li>else (below trend, no thrust, no crash) → <strong>🔴 defensive</strong> (cash).</li></ul>
+    <p>Ladder order (first match wins): CRASH_OFF → TREND → THRUST → cash. On top sits an <strong>exit-only composite-stress overlay</strong> — it forces defensive when the <strong>VIX term-structure is inverted AND high-yield credit is widening fast</strong> (rare, leading; can only de-risk).</p>
+    <p>It's <strong>account-aware</strong> — the posture drives your <strong>IRA/Roth</strong> (tactical, tax-free turnover) while <strong>taxable</strong> stays buy-and-hold anchors — and it carries a separate <strong>per-name TSMOM tilt</strong> (which names to lean into vs. trim). A risk dial that paces your DCA, not an all-in/all-out switch. Full detail: REGIME.md / FABER-CRASH-STRATEGY.md.</p>` },
   myholdings: { title: "Your holdings (live)", body: `
     <p>Computed from the positions you entered in ⚙ Settings × the latest scan prices — stored only in your browser. Shows market value, gain vs cost, % of target, per-account subtotals, and your sleeve value vs the ~$1.72mm cap. The <strong>Rebalance</strong> column flags any holding &gt;±25% from its target weight (⚖ trim/add). Foreign-currency lots are <em>excluded</em> from this browser total (no FX rates client-side; the scanner's server-side sleeve value FX-converts them). Export to <code>positions.local.json</code> to also enable the server-side trim/sleeve triggers.</p>` },
   filings: { title: "Filings &amp; news", body: `

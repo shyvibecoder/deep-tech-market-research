@@ -14,17 +14,19 @@ describe("regime v2: engine version", () => {
   });
 });
 
-describe("regime v2: clean-composite signal (ETFs denoise single names)", () => {
+const trendUp = () => { const a = []; let p = 100; for (let i = 0; i < 260; i++) { p *= 1.002; a.push(p); } return a; };
+
+describe("regime v2: composite basis is the ETFs (the F+C Thrust ladder runs on the composite)", () => {
   const securities = { PAVE: { type: "etf" }, GRID: { type: "etf" }, SMH: { type: "etf" }, GEV: { type: "stock" }, MP: { type: "stock" } };
   const holdings = [{ ticker: "PAVE" }, { ticker: "GRID" }, { ticker: "SMH" }, { ticker: "GEV" }, { ticker: "MP" }];
-  it("follows the ETF composite even when noisy single names disagree", () => {
+  it("uses the ETF composite as the basis and follows the composite price series for posture", () => {
     const quotes = {
       PAVE: q(0.15, 0.4, -0.03, 0.9, true, true), GRID: q(0.12, 0.35, -0.04, 0.95, true, true), SMH: q(0.18, 0.45, -0.02, 0.9, true, true),
-      GEV: q(-0.4, -0.6, -0.6, 2, false, false), MP: q(-0.5, -0.7, -0.7, 2, false, false), // noisy single names, bearish
+      GEV: q(-0.4, -0.6, -0.6, 2, false, false), MP: q(-0.5, -0.7, -0.7, 2, false, false), // noisy single names — they don't drive posture
     };
-    const r = computeRegime(quotes, holdings, { securities });
+    const r = computeRegime(quotes, holdings, { securities, compositeCloses: trendUp() });
     assert.deepEqual(r.composite_basis.sort(), ["GRID", "PAVE", "SMH"]);
-    assert.equal(r.posture, "risk-on"); // driven by the ETF composite, not the noisy singles
+    assert.equal(r.posture, "risk-on"); // driven by the composite price series (TREND), not the noisy singles
   });
   it("compositeHoldings picks ETFs, falls back to all when <3 ETFs", () => {
     assert.equal(compositeHoldings(holdings, securities).length, 3);

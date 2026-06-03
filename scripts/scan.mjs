@@ -11,7 +11,7 @@ import { isTradeable, fetchYahoo, fetchSeries, fetchStooqHistory, fetchTiingoHis
 import { technicalsFromHistory } from "./lib/technicals.mjs";
 import { reconcileSeries } from "./lib/history-reconcile.mjs";
 import { basketIndex, portfolioMetrics } from "./lib/metrics.mjs";
-import { backtestRegime, brakeProof, fastReentryProof } from "./lib/backtest.mjs";
+import { fcThrustBacktest } from "./lib/backtest.mjs";
 import { returns, alignByDate, factorAttribution, benchmarkRelative, alphaEdgeLabel } from "./lib/factor.mjs";
 import { crossSectionalBacktest } from "./lib/xsbacktest.mjs";
 import { getQuotes, providerKeys, dataQualityGate, plausibleNextBar } from "./lib/marketdata.mjs";
@@ -382,6 +382,7 @@ if (BACKFILL && !OFFLINE && supabaseConfigured()) {
 
 // --- Objective metrics: trailing CAGR / maxDD / Calmar / Sortino on the strategy basket ---
 let metrics = null;
+let regimeComposite = null; // the composite price series the LIVE F+C Thrust regime runs on (hoisted from the basket)
 let attribution = null; // G1: factor attribution — is the basket return alpha or just factor/beta?
 if (!OFFLINE) {
   try {
@@ -399,56 +400,27 @@ if (!OFFLINE) {
       const years = ((Date.parse(idx.dates[idx.dates.length - 1]) - Date.parse(idx.dates[0])) / (365.25 * 86400000)).toFixed(1);
       metrics = { ...portfolioMetrics(idx.values), basis: Object.keys(series), window: `${idx.dates[0]}..${idx.dates[idx.dates.length - 1]}`, source: fromDb ? `accumulated DB (${fromDb}/${Object.keys(series).length} tickers)` : "live", note: `trailing ~${years}y, target-weighted strategy basket${fromDb ? " (from accumulated history)" : ""}` };
       console.log(`Metrics: CAGR ${metrics.cagr}, maxDD ${metrics.max_drawdown} (breaches35=${metrics.breaches_35}), Calmar ${metrics.calmar}, Sortino ${metrics.sortino} [${years}y, ${fromDb} from DB]`);
-      // Falsifiable evidence: does a trend brake cut drawdown on this basket vs buy-and-hold?
-      // Match the LIVE 200-DMA dial — not a faster proxy. basketIndex takes the date
-      // INTERSECTION of all holdings, so the series truncates to the youngest holding;
-      // a 200-DMA brake then often has too little post-MA history to mean anything.
-      // Emit a number ONLY with a real post-MA sample (n>=120), else flag the brake's
-      // tail protection as UNPROVEN on this book's own history (it is provable only on a
-      // long-history proxy like QQQ/SOXX at range=max — which the book doesn't hold).
-      const maPeriod = 200;
-      const bt = backtestRegime(idx.values, { maPeriod });
-      if (bt && bt.n >= 120) {
-        metrics.backtest = bt;
-        console.log(`Backtest(ma${maPeriod}): braked maxDD ${bt.braked.max_drawdown} vs ${bt.unbraked.max_drawdown}, dd_reduction ${bt.dd_reduction}, whipsaws ${bt.whipsaws}, turnover ${bt.turnover_cost_bps}bps`);
-      } else {
-        metrics.backtest_unproven = `Insufficient history to backtest the live ${maPeriod}-DMA brake (basket truncates to its youngest holding; ${bt ? bt.n : 0} usable days < 120). Brake tail-protection is UNPROVEN on this book's own price history — see the long-history proxy proof below.`;
-        console.log(metrics.backtest_unproven);
-      }
-      // Brake PROOF: run the SAME live 200-DMA brake on long-history instruments (decoupled from
-      // this book's short, intersection-truncated basket) so the dial's tail claim is TESTED
-      // against real ≥20% drawdowns (2000/2008/2020/2022), not asserted. Reads DEEP history
-      // DB-FIRST (seriesFor) — SPY/QQQ/SOXX are deep-seeded BENCHMARKS, so this reaches the
-      // dot-com/GFC tails the live `range=max` fallback misses (run a --backfill once to seed them).
-      // Methodology evidence on a proxy, NOT a backtest of this book. Best-effort; never breaks the scan.
+      // Hoist the composite series for the LIVE regime — the F+C Thrust ladder runs on it.
+      regimeComposite = idx.values;
+      // BACKTEST THE EXACT LIVE DESIGN: the F+C Thrust ladder (Faber 200-DMA trend + Daniel-Moskowitz
+      // 252d-return/60d-vol crash + rising-20-DMA THRUST re-entry) — the SAME v23.mjs functions the live
+      // regime uses — on DEEP, DB-first benchmark history (SPY/QQQ/SOXX; seed once with --backfill so it
+      // reaches the 2000/2008/2020/2022 tails the live basket can't). This tests the real rule, not a proxy.
       try {
         const proofs = [];
         for (const px of ["SPY", "QQQ", "SOXX"]) {
           try {
             const s = await seriesFor(px, { liveRange: "max", years: 40 }); // DB-first deep, live only on a miss
-            const bp = brakeProof(s.dates, s.closes, { maPeriod });
-            if (bp) {
-              proofs.push({ proxy: px, src: s.src, ...bp });
-              console.log(`Brake proof ${px} (${bp.years}y, ${s.src}): maxDD ${(bp.buyhold.max_drawdown * 100).toFixed(0)}%→${(bp.braked.max_drawdown * 100).toFixed(0)}%, Calmar ${bp.buyhold.calmar}→${bp.braked.calmar}, CAGR cost ${(bp.cagr_cost * 100).toFixed(1)}pts, ${bp.episodes.filter((e) => e.helped).length}/${bp.episodes.length} crashes cut`);
+            const fc = fcThrustBacktest(s.closes, { dates: s.dates });
+            if (fc) {
+              proofs.push({ proxy: px, src: s.src, ...fc });
+              console.log(`F+C Thrust ${px} (${fc.years}y, ${s.src}): maxDD ${(fc.buyhold.max_drawdown * 100).toFixed(0)}%→${(fc.fc_thrust.max_drawdown * 100).toFixed(0)}%, Calmar ${fc.buyhold.calmar}→${fc.fc_thrust.calmar}, CAGR cost ${(fc.cagr_cost * 100).toFixed(1)}pts, ${fc.episodes.filter((e) => e.helped).length}/${fc.episodes.length} crashes cut`);
             }
-          } catch (e) { console.log(`Brake proof ${px} skipped: ${e.message}`); }
+          } catch (e) { console.log(`F+C Thrust ${px} skipped: ${e.message}`); }
           await new Promise((r) => setTimeout(r, 200));
         }
-        if (proofs.length) metrics.brake_proof = proofs;
-      } catch { /* proof is best-effort */ }
-      // Fast-RE-ENTRY PROOF: put the dial's breadth-based "fast entry" overlay (regime.mjs:123 —
-      // re-risk a notch when ≥60% of names reclaim their 20-DMA) to a falsifiable test on the book's
-      // OWN names from deep DB history. Needs many names (for breadth), so reuse the basket series and
-      // keep those with enough history; compares a plain 200-DMA brake vs brake+fast-reentry. Best-effort.
-      try {
-        const byName = {};
-        for (const [tk, s] of Object.entries(series)) if (s?.closes?.length >= 1500) byName[tk] = { dates: s.dates, closes: s.closes };
-        const fr = fastReentryProof(byName, { maPeriod });
-        if (fr) {
-          metrics.fast_reentry_proof = fr;
-          console.log(`Fast-reentry proof (${fr.years}y, ${fr.names.length} names): CAGR ${(fr.plain.cagr * 100).toFixed(1)}%→${(fr.fast.cagr * 100).toFixed(1)}% (+${(fr.cagr_gain * 100).toFixed(1)}pts), maxDD ${(fr.plain.max_drawdown * 100).toFixed(0)}%→${(fr.fast.max_drawdown * 100).toFixed(0)}%, Calmar ${fr.plain.calmar}→${fr.fast.calmar}, worth_it=${fr.worth_it}`);
-        }
-      } catch { /* proof is best-effort */ }
+        if (proofs.length) metrics.fc_thrust_proof = proofs;
+      } catch { /* best-effort */ }
       // G1: regress the basket on tradeable factors — MARKET (SPY), MOMENTUM (MTUM), and crucially a
       // THEME proxy (QQQ). The intercept is residual alpha BEYOND market+momentum+theme exposure — the
       // test that can actually fail (without the theme leg, this deep-tech build-out book's beta would look like alpha).
@@ -518,8 +490,7 @@ if (!OFFLINE) {
 }
 
 // --- Timing layer: trend/momentum/vol/drawdown + 20-DMA re-entry + macro overlay ---
-const prevBreadth20 = prevSig.regime?.components?.breadth_above_20dma != null ? prevSig.regime.components.breadth_above_20dma / 100 : null; // for the fast-re-entry 2-scan confirm
-const regime = computeRegime(enriched, portfolio.holdings, { macro, securities, prevBreadth20 });
+const regime = computeRegime(enriched, portfolio.holdings, { macro, securities, compositeCloses: regimeComposite });
 console.log(`Regime: ${regime.posture}${regime.risk_score != null ? ` (risk ${regime.risk_score}/100)` : ""}`);
 
 // Regime instruments panel: QQQ (reference underlying) + TQQQ/SQQQ (3× long/short proxies) with full daily

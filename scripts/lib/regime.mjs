@@ -24,8 +24,9 @@
 const mean = (a) => (a.length ? a.reduce((x, y) => x + y, 0) / a.length : null);
 
 import { suggestOptionStructure } from "./options.mjs";
+import { v23Signals } from "./v23.mjs";
 
-export const REGIME_VERSION = 2;
+export const REGIME_VERSION = 3; // v3: brake + re-entry ARE the F+C Thrust ladder (was a composite risk-score)
 
 // Clean-composite: aggregate the regime signal over the theme ETFs (themselves
 // diversified composites) instead of 19 noisy single names. Falls back to all
@@ -50,7 +51,7 @@ export function perNameTilt(quotes, holdings) {
 }
 
 function accountPolicy(posture) {
-  const brakes = posture === "defensive" || posture === "caution";
+  const brakes = posture === "defensive"; // F+C Thrust: brakes = CRASH_OFF or below-trend-no-thrust → DEFENSIVE
   return {
     ira: brakes
       ? "Tactical sleeve — apply the brakes here: slow/stop deploys, raise cash (tax-free turnover)."
@@ -61,88 +62,52 @@ function accountPolicy(posture) {
   };
 }
 
-export function computeRegime(quotes, holdings, { macro, securities = {}, prevBreadth20 = null } = {}) {
+export function computeRegime(quotes, holdings, { macro, securities = {}, compositeCloses = null } = {}) {
   const sigHoldings = compositeHoldings(holdings, securities);
   const composite_basis = sigHoldings.map((h) => h.ticker);
-  const per_name = perNameTilt(quotes, holdings);
+  const per_name = perNameTilt(quotes, holdings); // per-name TSMOM tilt — SELECTION (kept; separate from the brake)
   const qs = sigHoldings.map((h) => quotes[h.ticker]).filter((q) => q && !q.error);
 
-  // Per-name signal components, then portfolio-aggregate them.
-  const vsMa200 = qs.map((q) => q.pct_vs_ma200).filter((x) => x != null);
-  const mom = qs.map((q) => q.mom_12m).filter((x) => x != null);
-  const offs = qs.map((q) => q.pct_off_high).filter((x) => x != null);
+  // Aggregate per-name technicals — DISPLAYED CONTEXT ONLY (these no longer drive posture; the ladder does).
+  const avgVsMa200 = mean(qs.map((q) => q.pct_vs_ma200).filter((x) => x != null));
+  const avgMom = mean(qs.map((q) => q.mom_12m).filter((x) => x != null));
+  const avgOffHigh = mean(qs.map((q) => q.pct_off_high).filter((x) => x != null));
   const breadthArr = qs.map((q) => q.above_ma200).filter((x) => x != null);
-  // Fast re-entry breadth: % of names that have reclaimed their 20-DMA (Daniel-Moskowitz fix).
+  const breadth = breadthArr.length ? breadthArr.filter(Boolean).length / breadthArr.length : null;
   const ma20Arr = qs.map((q) => q.above_ma20).filter((x) => x != null);
   const breadth20 = ma20Arr.length ? ma20Arr.filter(Boolean).length / ma20Arr.length : null;
-  // Volatility state: median(3m vol / 1y vol) across names; >1 = vol rising (de-risk).
   const volRatios = qs.map((q) => (q.vol_3m && q.vol_1y ? q.vol_3m / q.vol_1y : null)).filter((x) => x != null);
-
-  const avgVsMa200 = mean(vsMa200);
-  const avgMom = mean(mom);
-  const avgOffHigh = mean(offs);
-  const breadth = breadthArr.length ? breadthArr.filter(Boolean).length / breadthArr.length : null;
   const volState = volRatios.length ? volRatios.slice().sort((a, b) => a - b)[Math.floor(volRatios.length / 2)] : null;
 
-  if (avgVsMa200 == null && avgMom == null && avgOffHigh == null) {
-    return { version: REGIME_VERSION, posture: "unknown", risk_score: null, components: {},
-      composite_basis, per_name, account_policy: accountPolicy("unknown"),
-      macro_available: macro != null, macro_stressed: !!macro?.stressed, fast_reentry: false, confidence: "low", confidence_note: "no usable price history",
-      action: "Insufficient price history — fall back to the DCA calendar.",
-      note: "timing layer needs live quotes (runs in GitHub Actions)" };
-  }
-
-  // Each component -> 0..100 (50 = neutral). Round constants on purpose (anti-overfit).
-  const trendScore = avgVsMa200 == null ? 50 : clamp(50 + avgVsMa200 * 250);     // +20% vs 200dma -> 100
-  const momScore = avgMom == null ? 50 : clamp(50 + avgMom * 100);               // +50% 12m -> 100, -50% -> 0
-  const ddScore = avgOffHigh == null ? 50 : clamp(100 + avgOffHigh * 250);       // at highs ->100, -20% ->50
-  const volScore = volState == null ? 50 : clamp(100 - (volState - 1) * 150);    // vol flat ->100ish, +33% ->50
-  const breadthScore = breadth == null ? 50 : breadth * 100;
-
-  // Trend + absolute momentum are the load-bearing, best-evidenced signals (35%/30%);
-  // drawdown + volatility are the brakes (15%/15%); breadth a 5% confirmation.
-  const risk = Math.round(
-    0.35 * trendScore + 0.30 * momScore + 0.15 * ddScore + 0.15 * volScore + 0.05 * breadthScore
-  );
-
-  // Honesty: the risk_score is NOT precise (O2). Down-rate confidence on thin samples
-  // or when risk sits near a band edge (where a 1% move flips the posture / whipsaws).
-  const nearEdge = Math.min(...[25, 45, 70].map((b) => Math.abs(risk - b)));
-  const confidence = qs.length < 3 ? "low" : nearEdge < 5 ? "low" : qs.length < 6 ? "medium" : "high";
-  const confidence_note = nearEdge < 5 ? "risk_score near a band edge — posture may whipsaw; treat as a coarse dial"
-    : qs.length < 3 ? "thin sample — low confidence" : "";
-
-  let posture = "neutral", action = "Stick to the DCA calendar; no acceleration.";
-  if (risk >= 70) { posture = "risk-on"; action = "Uptrend + positive 12m momentum, contained vol — deploy on schedule / accelerate low-regret anchors."; }
-  else if (risk < 25) { posture = "defensive"; action = "Brakes on — favor cash/dry powder; deploy only into the drawdown trigger."; }
-  else if (risk < 45) { posture = "caution"; action = "Tap the brakes — slow deploys, build dry powder, wait for trend/vol to confirm."; }
-
-  // --- Overlays (order matters): a broad fast-re-entry thrust CLEARS the deploy-brake; macro
-  // stress is exit-only and ALWAYS wins (forces defensive, overriding the thrust below). ---
-  // DESIGN (adversarially iterated): a broad ≥60% 20-DMA breadth thrust clears a braked posture to NEUTRAL
-  // — but only when CONFIRMED. A single-scan ≥60% pop is a classic bear-market-rally head-fake; re-risking
-  // on it whipsaws (fast-in on a noisy 20-DMA vs slow-out on the 200-DMA is the wrong asymmetry). So require
-  // the thrust to PERSIST a 2nd scan (mirrors the 2-scan drawdown-confirm) before it acts. `armed` = today's
-  // thrust; `fast_reentry` = confirmed → clears the brake. Capped at neutral: lifts the deploy-brake (pace)
-  // but never reaches risk-on, so it does NOT trigger overweight ACCELERATION in sizing — re-risk, not lever up.
-  const fast_reentry_armed = breadth20 != null && breadth20 >= 0.6;
-  const fast_reentry = fast_reentry_armed && prevBreadth20 != null && prevBreadth20 >= 0.6;
-  if (fast_reentry && (posture === "defensive" || posture === "caution")) {
-    posture = "neutral";
-    action = `Fast re-entry: ≥60% of names reclaimed their 20-DMA for a 2nd scan — confirmed thrust clears the brake to neutral. ${action}`;
-  }
+  // THE TIMING ENGINE — the canonical F+C THRUST ladder (Faber 200-DMA trend + Daniel-Moskowitz 252-day-return
+  // / 60-day-vol crash + rising-20-DMA THRUST re-entry), computed on the composite price series via the SAME
+  // v23.mjs functions the backtest runs and the V2.3 cross-check replicates. ONE design, end to end. The brake
+  // and the fast re-entry ARE this ladder — no separate composite risk-score, no breadth re-entry.
+  const fc = (Array.isArray(compositeCloses) && compositeCloses.length >= 211) ? v23Signals(compositeCloses) : null;
   const macroStressed = !!macro?.stressed;
-  const macroAvailable = macro != null; // R1: was the exit-only brake actually computed?
-  if (macroStressed) {
-    posture = "defensive";
-    action = `Macro-stress overlay ON (${(macro.reasons || []).join("; ")}) — brakes: raise cash, deploy only into the drawdown trigger.`;
+  const macroAvailable = macro != null;
+
+  let posture, action, fast_reentry = false, fast_reentry_armed = false;
+  if (!fc) {
+    posture = "unknown";
+    action = "Timing needs the composite price history (built in the scan) — fall back to the DCA calendar.";
+  } else {
+    fast_reentry_armed = fc.thrust; // a rising-20-DMA reclaim is in progress
+    if (fc.crash_off) { posture = "defensive"; action = "CRASH_OFF (Faber-Crash): trailing 252-day return negative AND 60-day vol > 25% — brakes: raise cash, deploy only into the drawdown trigger."; }
+    else if (fc.trend) { posture = "risk-on"; action = "TREND (Faber): the composite is above its 200-DMA — deploy on schedule / accelerate low-regret anchors."; }
+    else if (fc.thrust) { posture = "neutral"; fast_reentry = true; action = "THRUST (fast re-entry): the composite reclaimed a RISING 20-DMA while still below its 200-DMA — re-risk to neutral, resume deploys."; }
+    else { posture = "defensive"; action = "Below the 200-DMA with no thrust and no crash — brakes: favor cash / dry powder."; }
+    // V2.3 composite-stress overlay (exit-only) — always wins, forces a full brake.
+    if (macroStressed) { posture = "defensive"; fast_reentry = false; action = `Composite-stress overlay ON (${(macro.reasons || []).join("; ")}) — exit-only brake: raise cash, deploy only into the drawdown trigger.`; }
   }
 
+  const confidence = !fc ? "low" : (qs.length >= 6 ? "high" : qs.length >= 3 ? "medium" : "low");
   const pct = (x) => (x == null ? "n/a" : (x * 100).toFixed(0) + "%");
   return {
     version: REGIME_VERSION,
-    posture, risk_score: risk, confidence, confidence_note, fast_reentry, fast_reentry_armed, macro_stressed: macroStressed, macro_available: macroAvailable,
+    posture, fast_reentry, fast_reentry_armed, macro_stressed: macroStressed, macro_available: macroAvailable, confidence,
     composite_basis, per_name, account_policy: accountPolicy(posture),
+    fc_thrust: fc ? { trend: fc.trend, crash_off: fc.crash_off, thrust: fc.thrust, detail: fc.detail } : null,
     components: {
       trend_vs_200dma: round1(avgVsMa200), momentum_12m: round1(avgMom),
       avg_off_high: round1(avgOffHigh), vol_state: volState == null ? null : +volState.toFixed(2),
@@ -152,10 +117,11 @@ export function computeRegime(quotes, holdings, { macro, securities = {}, prevBr
     macro: macro || null,
     options_suggestion: suggestOptionStructure(posture, { macroStressed }),
     action,
-    basis: "trend(200-DMA)+abs-momentum(12m)+vol-state+drawdown, +20-DMA fast re-entry +VIX/HY macro overlay; see REGIME.md",
-    note: `trend ${pct(avgVsMa200)} vs 200-DMA · 12m mom ${pct(avgMom)} · ${pct(avgOffHigh)} from highs · vol ${volState == null ? "n/a" : volState.toFixed(2) + "x"} · breadth200 ${pct(breadth)} · breadth20 ${pct(breadth20)}${macroStressed ? " · MACRO-STRESS" : (macroAvailable ? "" : " · ⚠ macro overlay unavailable")}`,
+    basis: "F+C Thrust ladder (Faber 200-DMA trend + Daniel-Moskowitz 252d-return/60d-vol crash + rising-20-DMA thrust re-entry) on the composite, + exit-only composite-stress overlay — see v23.mjs / FABER-CRASH-STRATEGY.md",
+    note: fc
+      ? `TREND ${fc.trend ? "✓" : "✗"} · CRASH_OFF ${fc.crash_off ? "ON" : "off"} · THRUST ${fc.thrust ? "✓" : "✗"} (composite ${pct(avgVsMa200)} vs 200-DMA, ${pct(breadth)} of names above their 200-DMA)${macroStressed ? " · COMPOSITE-STRESS" : (macroAvailable ? "" : " · ⚠ macro overlay unavailable")}`
+      : "awaiting composite price history (runs in the scan)",
   };
 }
 
-const clamp = (x) => Math.max(0, Math.min(100, x));
 const round1 = (x) => (x == null ? null : +(x * 100).toFixed(1));

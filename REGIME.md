@@ -34,27 +34,32 @@ Acknowledged failure mode: **momentum/trend crashes** — Daniel & Moskowitz, *M
 this is a *dial that biases the DCA pace*, not an all-or-nothing switch, and why the drawdown
 **deploy** trigger is independent (we still buy the deep dip).
 
-## How the score is built (`scripts/lib/regime.mjs`)
+## How the posture is built (`scripts/lib/regime.mjs`, v3)
 
-Each signal maps to 0–100 (50 = neutral) using **round, non-tuned constants** on purpose, then a
-weighted blend → `risk_score` (0–100):
+**The brake and the fast re-entry ARE the canonical F+C Thrust ladder** — the owner's production rule
+(`v23.mjs` / `FABER-CRASH-STRATEGY.md`), computed on the theme-ETF **composite price series** (the same rule
+the backtest runs and the V2.3 panel cross-checks). There is no separate composite risk-score and no
+breadth re-entry — one design, end to end. Three independently-replicated signals, each one obvious
+parameter:
 
 ```
-risk = 0.35·trend(200-DMA) + 0.30·abs-momentum(12m) + 0.15·drawdown + 0.15·vol-state + 0.05·breadth
+TREND     = composite close > its 200-DMA                                 (Faber 2007)
+CRASH_OFF = trailing 252-day return < 0  AND  60-day annualized vol > 25%  (Daniel-Moskowitz 2016)
+THRUST    = close > 20-DMA  AND  20-DMA today > 20-DMA 10 sessions ago     (rising-20-DMA fast re-entry)
 ```
 
-Weights reflect the evidence hierarchy (trend + absolute momentum are the load-bearing, best-replicated
-signals; drawdown + volatility are the brakes; breadth is a minor confirm). They are coarse by design —
-no optimizer chose them.
+**Ladder (first match wins) → posture** (paces DCA, not a trade signal):
 
-**Posture ladder** (drives DCA pace, not a trade signal):
-
-| risk_score | posture | what it means for deployment |
+| Leg | posture | what it means for deployment |
 |---|---|---|
-| ≥ 70 | 🟢 **risk-on** | uptrend + positive 12m momentum, contained vol → deploy on schedule / accelerate low-regret anchors |
-| 45–69 | ⚪ **neutral** | stick to the 9-month DCA calendar; no acceleration |
-| 25–44 | 🟠 **caution** | tap the brakes — slow deploys, build dry powder, wait for trend/vol to confirm |
-| < 25 | 🔴 **defensive** | favor cash; deploy only into the independent drawdown trigger |
+| CRASH_OFF | 🔴 **defensive** | crash regime → favor cash; deploy only into the independent drawdown trigger |
+| TREND | 🟢 **risk-on** | above the 200-DMA → deploy on schedule / accelerate low-regret anchors |
+| THRUST | ⚪ **neutral** | reclaimed a rising 20-DMA below trend → **fast re-entry**, resume deploys (no acceleration) |
+| else | 🔴 **defensive** | below trend, no thrust → favor cash / dry powder |
+
+On top sits an **exit-only composite-stress overlay** (VIX/VIX3M ≥ 1.0 for 3 days **AND** HY-velocity in the
+top 5% of its trailing year) which can only force defensive. The posture carries a **per-name TSMOM tilt**
+(selection — which names to lean into vs trim) that is separate from the brake.
 
 ## Honest limitations / what would make it better (tracked in TODO.md)
 
@@ -66,21 +71,18 @@ no optimizer chose them.
   cross-asset trend (bonds, USD) per the trend-following papers.
 - **No transaction-cost / whipsaw dampening** — intentionally, since this paces DCA rather than trades.
 
-## Lessons from an adjacent system (the "V2.3 F+C Thrust on QLD" strategy)
+## The F+C Thrust rule IS the regime (v3 — adopted, not "adjacent")
 
-A separate, more mature tactical strategy (Faber 200-DMA trend + Daniel-Moskowitz crash break +
-20-DMA fast re-entry, plus an *exit-only* composite-stress overlay, trading QLD in the tax-advantaged
-sleeve and buy-and-hold VGT in taxable) shares our evidence base and suggests four upgrades — and two
-cautions about what does **not** port to a thematic single-stock basket.
-
-**Status:** an on-basket backtest now ships (`scripts/lib/backtest.mjs`, surfaced in the Objective scorecard): it tests whether a moving-average brake cut drawdown vs. buy-and-hold on the strategy basket, no look-ahead — turning the dial's premise from asserted to evidenced (caveat: trailing-~1y window for now, grows with history). Items 1–2 below are **implemented** (Timing v2, `scripts/lib/macro.mjs` + the overlays in
-`computeRegime`, TDD-tested). Concrete thresholds (coarse, economically-motivated, *not* fitted):
-macro-stress = **VIX/VIX3M ≥ 1.0** (inverted) **AND HYG 1-month ≤ −3%**; fast re-entry = **≥60% of
-holdings above their 20-DMA for a 2nd consecutive scan** — a *confirmed* broad thrust that **clears a braked
-posture to neutral** (works even out of defensive; capped at neutral so it lifts the deploy-brake without
-triggering position acceleration). The 2-scan confirm guards against single-day bear-market-rally head-fakes
-(fast-in on a noisy 20-DMA vs slow-out on the 200-DMA is the wrong asymmetry). The macro brake is exit-only
-and always wins over re-entry. Items 3–4 (clean-composite signal, per-name TSMOM sizing) remain queued.
+Earlier versions ran a separate composite **risk_score** (a weighted blend of trend/momentum/vol/drawdown/
+breadth) and a breadth-based fast re-entry, treating the owner's **V2.3 F+C Thrust** rule as a *cross-check*.
+**v3 throws that out:** the F+C Thrust ladder (Faber 200-DMA trend + Daniel-Moskowitz crash break +
+rising-20-DMA thrust re-entry, + the exit-only composite-stress overlay) — the same `v23.mjs` functions the
+backtest and the V2.3 panel use — now **drives the live brake and fast re-entry directly**, computed on the
+ETF composite. One design, one rule, end to end. The backtest (`fcThrustBacktest`, surfaced in the Objective
+scorecard) runs that *exact* ladder on deep benchmark history (SPY/QQQ/SOXX through 2000/2008/2020/2022), no
+look-ahead, turnover-costed. Concrete overlay thresholds (coarse, economically-motivated, *not* fitted):
+composite-stress = **VIX/VIX3M ≥ 1.0 for 3 days** (inverted) **AND HY-velocity in the top 5%** of its
+trailing-year distribution — exit-only, it always wins over the re-entry.
 
 **Architecture worth adopting (→ Timing v2 in TODO):**
 1. **Exit-only, AND-gated macro-stress overlay.** It flips defensive only when *two independent* stress

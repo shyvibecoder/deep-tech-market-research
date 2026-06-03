@@ -10,6 +10,7 @@
 // (realized cap-gains on every exit) — which is exactly why de-risking is routed
 // to the IRA sleeve in docs/DRAWDOWN-DEFENSE.md, not modeled as free here.
 import { portfolioMetrics, maxDrawdown } from "./metrics.mjs";
+import { v23Signals, fcThrustLadder } from "./v23.mjs";
 
 export function backtestRegime(values, { maPeriod = 200, periodsPerYear = 252, costPerSwitchBps = 10 } = {}) {
   if (!Array.isArray(values) || values.length < maPeriod + 2) return null;
@@ -243,5 +244,53 @@ export function fastReentryProof(seriesByName, { maPeriod = 200, breadthMa = 20,
     // The two claims fast-entry lives or dies on:
     improves_cagr: (fastM.cagr ?? -Infinity) > (plainM.cagr ?? -Infinity),
     worth_it: (fastM.calmar ?? -Infinity) > (plainM.calmar ?? -Infinity),  // net risk-adjusted improvement
+  };
+}
+
+// F+C THRUST BACKTEST — runs the EXACT canonical production rule (the owner's Faber-Crash-Thrust design)
+// over a price series, reusing the live v23.mjs functions so the backtest tests the REAL design, not a
+// proxy: TREND (>200-DMA) / CRASH_OFF (252-day return<0 AND 60-day vol>25%) / THRUST (>a RISING 20-DMA —
+// the fast re-entry) / else cash. No look-ahead — the ladder decides on closes through the PRIOR bar; the
+// next bar's return accrues only when invested. Models 1× the underlying (NOT 2× QLD — leverage would
+// breach the −35% mandate) vs cash. Turnover-costed. The composite-stress overlay (VIX/VIX3M/HYG) is
+// exit-only and omitted here (it would only ADD defense), so this is a clean test of the ladder itself.
+export function fcThrustBacktest(closes, { dates = null, periodsPerYear = 252, costPerSwitchBps = 10, minEpisodeDd = 0.20 } = {}) {
+  if (!Array.isArray(closes) || closes.length < 211 + 30) return null; // v23Signals needs ≥211 bars + a usable sample
+  const cost = Math.max(0, costPerSwitchBps) / 10000;
+  const inv = [], bh = [], eqDates = [];
+  let e = 100, h = 100, prevPos = null, switches = 0;
+  for (let i = 211; i < closes.length; i++) {
+    const sig = v23Signals(closes.slice(0, i)); // PRIOR bars only (decide on yesterday's close) — no look-ahead
+    const pos = sig && fcThrustLadder(sig).instrument === "QLD" ? 1 : 0; // invested when the ladder is risk-on, else cash
+    const switched = prevPos !== null && pos !== prevPos;
+    if (switched) switches++;
+    prevPos = pos;
+    const ret = closes[i] / closes[i - 1];
+    h *= ret;
+    let ne = e * (pos ? ret : 1);
+    if (switched) ne *= (1 - cost);
+    e = ne;
+    inv.push(e); bh.push(h); if (dates) eqDates.push(dates[i]);
+  }
+  if (inv.length < 60) return null;
+  const invM = portfolioMetrics(inv, { periodsPerYear });
+  const bhM = portfolioMetrics(bh, { periodsPerYear });
+  const episodes = dates ? drawdownEpisodes(bh, minEpisodeDd).map((ep) => {
+    const fcDd = maxDdWindow(inv, ep.iPeak, ep.iTrough);
+    return { from: eqDates[ep.iPeak], to: eqDates[ep.iTrough], buyhold_dd: +ep.dd.toFixed(4), fc_dd: +fcDd.toFixed(4), helped: fcDd < ep.dd - 0.005 };
+  }) : [];
+  const years = dates ? (Date.parse(eqDates[eqDates.length - 1]) - Date.parse(eqDates[0])) / (365.25 * 86400000) : inv.length / periodsPerYear;
+  return {
+    rule: "F+C Thrust (Faber + Crash + Thrust, canonical)",
+    window: dates ? `${eqDates[0]}..${eqDates[eqDates.length - 1]}` : null,
+    years: +years.toFixed(1),
+    switches, turnover_cost_bps: switches * costPerSwitchBps,
+    buyhold: bhM, fc_thrust: invM,
+    max_dd_reduction: +(bhM.max_drawdown - invM.max_drawdown).toFixed(4), // >0 ⇒ the rule cut maxDD
+    cagr_cost: +((bhM.cagr ?? 0) - (invM.cagr ?? 0)).toFixed(4),          // >0 ⇒ gave up CAGR for the protection
+    breach_35: { buyhold: bhM.breaches_35, fc_thrust: invM.breaches_35 },
+    reduces_tail: invM.max_drawdown < bhM.max_drawdown,
+    improves_calmar: (invM.calmar ?? -Infinity) > (bhM.calmar ?? -Infinity),
+    episodes,
   };
 }

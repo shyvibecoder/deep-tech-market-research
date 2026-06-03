@@ -8,63 +8,58 @@ const q = (vsMa200, mom12, off, volRatio, aboveMa200, aboveMa20) => ({
 });
 const holds = (n) => Array.from({ length: n }, (_, i) => ({ ticker: "T" + i }));
 const bull = { T0: q(0.15, 0.4, -0.03, 0.9, true, true), T1: q(0.12, 0.35, -0.04, 0.95, true, true) };
-const bear = { T0: q(-0.15, -0.3, -0.35, 1.5, false, false), T1: q(-0.2, -0.4, -0.4, 1.6, false, false) };
 
-describe("regime v2: exit-only macro-stress overlay", () => {
-  it("forces DEFENSIVE in a bull tape when macro stress is active (overlay wins)", () => {
-    const r = computeRegime(bull, holds(2), { macro: { stressed: true, reasons: ["x"] } });
+// Composite price series driving the F+C Thrust ladder:
+const trendUp = () => { const a = []; let p = 100; for (let i = 0; i < 260; i++) { p *= 1.002; a.push(p); } return a; };       // TREND → risk-on
+const thrustSeries = () => { const a = []; let p = 200; for (let i = 0; i < 220; i++) { p *= 0.992; a.push(p); } for (let i = 0; i < 25; i++) { p *= 1.01; a.push(p); } return a; }; // THRUST → neutral re-entry
+
+describe("regime v2: exit-only composite-stress overlay", () => {
+  it("forces DEFENSIVE in a TREND tape when macro stress is active (overlay wins)", () => {
+    const r = computeRegime(bull, holds(2), { compositeCloses: trendUp(), macro: { stressed: true, reasons: ["x"] } });
     assert.equal(r.posture, "defensive");
-    assert.ok(/macro/i.test(r.action + r.note));
+    assert.ok(/composite-stress|macro/i.test(r.action));
   });
-  it("does NOT change posture when macro stress is inactive", () => {
-    const r = computeRegime(bull, holds(2), { macro: { stressed: false, reasons: [] } });
+  it("does NOT change posture when macro stress is inactive (TREND → risk-on)", () => {
+    const r = computeRegime(bull, holds(2), { compositeCloses: trendUp(), macro: { stressed: false, reasons: [] } });
     assert.equal(r.posture, "risk-on");
   });
 });
 
-describe("regime v2: fast re-entry (20-DMA breadth) override", () => {
-  const reclaim = { T0: q(-0.15, -0.3, -0.30, 1.2, false, true), T1: q(-0.18, -0.35, -0.32, 1.2, false, true) };
-  it("a CONFIRMED (2-scan) breadth thrust clears a defensive base to NEUTRAL (works from defensive)", () => {
-    const r = computeRegime(reclaim, holds(2), { prevBreadth20: 0.7 }); // yesterday also ≥60% → confirmed
-    assert.equal(r.fast_reentry_armed, true);
+describe("regime v2: THRUST fast re-entry (the canonical Faber-thrust leg)", () => {
+  it("a THRUST (rising 20-DMA reclaimed below the 200-DMA) sets NEUTRAL + fast_reentry", () => {
+    const r = computeRegime(bull, holds(2), { compositeCloses: thrustSeries() });
+    assert.equal(r.posture, "neutral");
     assert.equal(r.fast_reentry, true);
-    assert.equal(r.posture, "neutral"); // cleared the deploy-brake, but capped at neutral (no acceleration)
+    assert.equal(r.fc_thrust.thrust, true);
+    assert.equal(r.fc_thrust.trend, false);
   });
-  it("a SINGLE-scan thrust does NOT clear the brake — needs a 2nd day (anti-bear-rally-whipsaw)", () => {
-    const r = computeRegime(reclaim, holds(2)); // no prior breadth → unconfirmed
-    assert.equal(r.fast_reentry_armed, true);
-    assert.equal(r.fast_reentry, false);
-    assert.equal(r.posture, "defensive"); // brake stays on until the thrust persists
-  });
-  it("macro stress beats fast re-entry (brakes win)", () => {
-    const reclaim = { T0: q(-0.15, -0.3, -0.30, 1.2, false, true), T1: q(-0.18, -0.35, -0.32, 1.2, false, true) };
-    const r = computeRegime(reclaim, holds(2), { macro: { stressed: true, reasons: ["x"] } });
+  it("the composite-stress overlay beats the thrust re-entry (exit-only always wins)", () => {
+    const r = computeRegime(bull, holds(2), { compositeCloses: thrustSeries(), macro: { stressed: true, reasons: ["x"] } });
     assert.equal(r.posture, "defensive");
+    assert.equal(r.fast_reentry, false);
   });
 });
 
 describe("regime: surfaces a disabled macro overlay (red-team R1)", () => {
   it("flags macro_available=false and notes it when macro inputs are unavailable", () => {
-    const r = computeRegime(bull, holds(2), { macro: null });
+    const r = computeRegime(bull, holds(2), { compositeCloses: trendUp(), macro: null });
     assert.equal(r.macro_available, false);
     assert.match(r.note, /macro.*unavailable/i);
   });
   it("macro_available=true when the overlay computed (even if not stressed)", () => {
-    const r = computeRegime(bull, holds(2), { macro: { stressed: false, reasons: [] } });
+    const r = computeRegime(bull, holds(2), { compositeCloses: trendUp(), macro: { stressed: false, reasons: [] } });
     assert.equal(r.macro_available, true);
   });
 });
 
-describe("regime: honest confidence (O2 — score isn't precise)", () => {
-  it("labels low confidence on a thin sample", () => {
-    const r = computeRegime(bull, holds(2)); // 2 names < 3
+describe("regime: confidence reflects sample size", () => {
+  it("low confidence on a thin sample", () => {
+    const r = computeRegime(bull, holds(2), { compositeCloses: trendUp() }); // 2 names < 3
     assert.equal(r.confidence, "low");
-    assert.ok("confidence_note" in r);
   });
-  it("labels low confidence near a band edge (whipsaw risk)", () => {
-    // construct ~neutral/edge: flat trend/mom → risk ~50 (not near edge); make it ~44/46 area
-    const edge = {}; for (let i = 0; i < 6; i++) edge["T"+i] = q(0, 0.0, -0.10, 1, true, true); // ddScore lower → risk near 45
-    const r = computeRegime(edge, holds(6));
-    assert.ok(["low","medium","high"].includes(r.confidence));
+  it("high confidence with a deep cross-section", () => {
+    const many = {}; for (let i = 0; i < 8; i++) many["T" + i] = q(0.1, 0.2, -0.05, 1, true, true);
+    const r = computeRegime(many, holds(8), { compositeCloses: trendUp() });
+    assert.equal(r.confidence, "high");
   });
 });

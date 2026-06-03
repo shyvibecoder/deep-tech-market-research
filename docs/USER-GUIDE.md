@@ -192,30 +192,33 @@ This tab is organized into five labelled blocks, each with its own **?** help:
 5. **📊 Track record & honesty** — is the edge real? Scorecard, factor attribution, signal backtest. §4.1b–§4.1e
 
 ### 4.1 Timing posture (the regime)
-The colored banner at the top is the **timing posture** — the heart of "when to act":
+The colored banner at the top is the **timing posture** — the heart of "when to act". The brake **and** the
+fast re-entry are the canonical **F+C Thrust ladder** (the owner's production rule), computed on the
+theme-ETF composite — the *same* rule the backtest runs and the V2.3 panel cross-checks. Each leg is
+independently-replicated research, not a curve fit. Ladder order (first match wins):
 
-| Posture | Meaning | What to do |
+| Leg → Posture | Rule (on the composite) | What to do |
 |---|---|---|
-| 🟢 **risk-on** (score ≥70) | Uptrend + positive 12-month momentum, contained volatility | Deploy on schedule / accelerate low-regret anchors |
-| ⚪ **neutral** (45–69) | Mixed | Stick to the DCA calendar; no acceleration |
-| 🟠 **caution** (25–44) | Trend/vol deteriorating | Tap the brakes — slow deploys, build dry powder |
-| 🔴 **defensive** (<25) | Downtrend, drawdown, rising vol | Favor cash; deploy only into the drawdown trigger |
+| **CRASH_OFF** → 🔴 defensive | trailing 252-day return < 0 **AND** 60-day vol > 25% (Daniel-Moskowitz) | Favor cash; deploy only into the drawdown trigger |
+| **TREND** → 🟢 risk-on | composite above its 200-DMA (Faber) | Deploy on schedule / accelerate low-regret anchors |
+| **THRUST** → ⚪ neutral | close above a **rising 20-DMA** while still below the 200-DMA | **Fast re-entry** — re-risk after a bottom without waiting for the slow 200-DMA |
+| else → 🔴 defensive | below trend, no thrust, no crash | Favor cash / dry powder |
 
-It's a **risk dial that paces your DCA**, not an all-in/all-out switch. It's built on *independent,
-replicated* research (Faber 200-DMA trend; Moskowitz-Ooi-Pedersen time-series momentum; Moreira-Muir
-volatility; Hurst-Ooi-Pedersen trend) — **not** a curve-fit backtest. Full detail: `REGIME.md`. The posture shows a **confidence** label (low/medium/high) and warns when the score sits near a band edge — it's a coarse dial, not a precise number.
+It's a **risk dial that paces your DCA**, not an all-in/all-out switch. An **exit-only composite-stress
+overlay** (VIX term-structure inverted **AND** high-yield credit widening fast) can force defensive on top.
+Full detail: `REGIME.md` / `FABER-CRASH-STRATEGY.md`. The posture carries a **confidence** label
+(sample-size based).
 
-**v2 refinements:** the score is computed on the **theme ETFs** (a cleaner composite than averaging 19
-noisy single names); it's **account-aware** — the posture drives your **IRA/Roth** sleeve (tactical,
-tax-free turnover) while **taxable** stays buy-and-hold anchors (shown under the posture); and it carries
-a **per-name TSMOM tilt** (which names to lean into vs. trim).
+It's **account-aware** — the posture drives your **IRA/Roth** sleeve (tactical, tax-free turnover) while
+**taxable** stays buy-and-hold anchors (shown under the posture) — and it carries a separate **per-name
+TSMOM tilt** (which names to lean into vs. trim).
 
-**Overlays line.** Directly under the account policy, an **Overlays** row makes both dials explicit at a
-glance: the **Brake** (trend vs the 200-DMA + breadth above it → *brakes on / clear*) and **Fast re-entry**
-(breadth above the 20-DMA vs its **60% trigger** → *armed* / *not armed*, and whether it **re-risked one
-notch**), plus the macro overlay state. The tilt + posture flow into the **buy plan's SIGNAL weights**
-(`web/sizing.mjs` `regimeFactor` — overweights only accelerate in a risk-on posture; trims bite in any
-posture) and into the forced-flow accumulate badges (⏳ on-trigger when the brakes are on).
+**F+C Thrust ladder line.** Directly under the account policy, a row shows the three ladder signals live —
+**TREND ✓/✗ · CRASH_OFF on/off · THRUST ✓/✗** — and the resulting decision (risk-on / fast re-entry /
+brakes), plus the exit-only macro-stress overlay state. The posture + per-name tilt flow into the **buy
+plan's SIGNAL weights** (`web/sizing.mjs` `regimeFactor` — overweights only accelerate in a risk-on / TREND
+posture; trims bite in any posture) and into the forced-flow accumulate badges (⏳ on-trigger when the
+brakes are on).
 
 **Regime instruments panel.** Under the posture, a small table shows the daily technicals the timing layer
 actually reads on the **QQQ** complex — **QQQ** (the regime's reference underlying) plus **TQQQ / SQQQ** (the
@@ -228,18 +231,15 @@ adapt — a metric only appears once it has data, so a freshly-added instrument 
 until the one-time `--backfill` runs) simply omits 12m rather than showing a blank column, and the footnote
 calls out any instrument still on the 1-year fetch. QQQ (already in the DB) shows the full set immediately.
 
-**Two overlays (Timing v2):**
-- **Macro-stress brake (exit-only).** Forces *defensive* only when **two leading risk signals fire
-  together** — the **VIX term-structure inverts** (front VIX ≥ VIX3M) **AND high-yield credit widens
-  fast** (HYG ~1-month return ≤ −3%). Requiring both makes false alarms rare; being exit-only means it
-  can only de-risk, never add. When it's on, the posture note shows **MACRO-STRESS**.
-- **20-DMA fast re-entry.** When ≥60% of holdings reclaim their 20-day average **for a 2nd day** — a
-  *confirmed* broad thrust — it **clears the deploy-brake to neutral**, even out of a deep *defensive*
-  regime, so you don't stay in cash through a V-shaped bottom (the momentum-crash fix). The 2-day
-  confirmation matters: a single-day ≥60% pop is a classic **bear-market-rally head-fake**, so the thrust
-  must *persist* before it re-risks (the overlay shows *"thrust forming — needs a 2nd day"* until then).
-  It's **capped at neutral**: it lifts the brake (deploy pace) without triggering position *acceleration* —
-  re-risk, not lever up. The macro-stress brake always wins over it.
+**The fast re-entry is the THRUST leg** of the ladder above (close above a *rising* 20-DMA while still below
+the 200-DMA → neutral): you re-risk after a bottom without waiting for the slow 200-DMA, and the
+rising-MA requirement is the built-in guard against single-day bear-rally head-fakes.
+
+**Exit-only macro-stress overlay.** On top of the ladder, this forces *defensive* only when **two leading
+risk signals fire together** — the **VIX term-structure inverts** (front VIX ≥ VIX3M, 3 days) **AND
+high-yield credit widens fast** (HY-velocity top-5%). Requiring both makes false alarms rare; being
+exit-only means it can only de-risk, never add — and it always wins over the thrust re-entry. When it's on,
+the posture note shows **COMPOSITE-STRESS**.
 
 ### 4.1a Dislocation timing + V2.3 cross-check
 Just under the posture, the **Dislocation timing** card answers a single question: *when should I take

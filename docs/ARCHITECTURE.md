@@ -29,9 +29,10 @@ holistic end-to-end review. Anchors: `file:line` throughout.
  └────────────────────────┘
 
  ┌─────────────────────────────────────── DAILY SCAN  scan.mjs (20 stages) ───────────────────────────────────────┐
- │ quotes/technicals(+crowding) → [backfill seed if --backfill] → REGIME(trend+mom+vol+dd+breadth, macro overlay,  │
- │ fast-reentry, per-name TSMOM tilt) → ALPHA(de-rating, opportunity = static_gate×quality×contrarian, forced-flow)│
- │ → rank → METRICS+BACKTESTS(portfolioMetrics, brakeProof, fastReentryProof, factorAttribution, xs-backtest)      │
+ │ quotes/technicals(+crowding) → [backfill seed if --backfill] → REGIME = F+C THRUST ladder (TREND/CRASH_OFF/   │
+ │ THRUST on the composite) + exit-only macro overlay + per-name TSMOM tilt → ALPHA(de-rating, opportunity =      │
+ │ static_gate×quality×contrarian, forced-flow) → rank → METRICS+BACKTESTS(portfolioMetrics, fcThrustBacktest,    │
+ │ factorAttribution, xs-backtest)                                                                                │
  │ → SIZING rebalanceBoth(research | signal = research×opportunity×regimeFactor) → forced-flow×timing reconcile    │
  │ → V2.3 cross-check → dislocation entry → chokepoints → FORECASTS+SCORECARD(TSMOM 21d, scarcity 42d, sizing 42d, │
  │ resolveDue, updateScorecard) → triggers/alerts → catalyst watch → LLM digest → DB top-off → signals.json        │
@@ -79,14 +80,14 @@ holistic end-to-end review. Anchors: `file:line` throughout.
 ### 🟡 C. Wiring gaps / dead code (code ≠ claim)
 7. **Diversifier `axis`/gate is dead code** — `draftFromLead` stamps `axis` only if an engine sets
    it; no engine does. Documented diversifier-sleeve gating is non-functional. → Pass 2.
-8. **`fast_reentry` — adversarially iterated (2 rounds).** Round 1 found it (a) *inert from defensive*
-   (one-notch nudge → caution, still braked) and (b) **unconfirmed** — a single-day ≥60% breadth pop is a
-   bear-market-rally head-fake, and re-risking on a fast/noisy signal while exiting on a slow one is the
-   wrong asymmetry (the validating backtest never saw a bear). Fix: a broad thrust now **clears the brake to
-   `neutral` only when CONFIRMED over 2 scans** (mirrors the 2-scan drawdown-confirm); capped at neutral →
-   moves **pace, not size** (no overweight acceleration). `fastReentryProof` tightened to the same 2-bar
-   confirm so the backtest tests the real rule. *Open validation gap:* run the proof on a **bear-market
-   window** (now possible via the backfilled deep benchmarks) to truly stress the whipsaw case.
+8. **Brake + fast re-entry — REPLACED with the canonical F+C Thrust ladder (regime v3).** The earlier
+   composite risk-score brake and the breadth-based fast re-entry (and their iterations) were the wrong
+   design: the owner's production rule (`v23.mjs`, F+C Thrust) was sitting right there. v3 throws them out —
+   the live brake + re-entry ARE the F+C Thrust ladder (TREND/CRASH_OFF/THRUST) computed on the composite,
+   the same `v23.mjs` functions the `fcThrustBacktest` runs and the V2.3 panel cross-checks. THRUST (close
+   above a rising 20-DMA below trend) IS the fast re-entry; the rising-MA requirement is the built-in
+   bear-rally guard. One design, end to end. *Open validation:* a deep bear-market window for `fcThrustBacktest`
+   (now seeded via the backfilled benchmarks).
 9. **`rel_strength` computed but only a UI label** — never enters sizing/scoring. → Pass 2.
 
 ### 🟢 D. Robustness / safety

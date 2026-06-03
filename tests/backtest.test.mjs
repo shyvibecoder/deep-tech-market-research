@@ -1,6 +1,29 @@
 import { describe, it } from "node:test";
 import assert from "node:assert/strict";
-import { backtestRegime, brakeProof, fastReentryProof } from "../scripts/lib/backtest.mjs";
+import { backtestRegime, brakeProof, fastReentryProof, fcThrustBacktest } from "../scripts/lib/backtest.mjs";
+
+// fcThrustBacktest runs the EXACT live F+C Thrust ladder (v23.mjs) over a price series. Build a long
+// uptrend → sharp crash → recovery; the ladder (TREND/CRASH_OFF/THRUST/cash) should cut the crash.
+describe("fcThrustBacktest: the canonical F+C Thrust rule vs buy-&-hold", () => {
+  const dates = [], closes = []; const start = Date.UTC(2000, 0, 1);
+  let p = 100;
+  for (let i = 0; i < 240; i++) { p *= 1.002; dates.push(new Date(start + dates.length * 864e5).toISOString().slice(0, 10)); closes.push(p); } // uptrend (TREND)
+  for (let i = 0; i < 50; i++) { p *= (i % 2 ? 0.95 : 1.0); dates.push(new Date(start + dates.length * 864e5).toISOString().slice(0, 10)); closes.push(p); } // volatile crash (CRASH_OFF)
+  for (let i = 0; i < 120; i++) { p *= 1.003; dates.push(new Date(start + dates.length * 864e5).toISOString().slice(0, 10)); closes.push(p); } // recovery (THRUST then TREND)
+  const r = fcThrustBacktest(closes, { dates });
+  it("returns the 3-way verdicts + −35% mandate flags", () => {
+    assert.ok(r && r.buyhold && r.fc_thrust);
+    assert.ok(r.breach_35 && typeof r.breach_35.buyhold === "boolean" && typeof r.breach_35.fc_thrust === "boolean");
+    assert.equal(r.rule.startsWith("F+C Thrust"), true);
+  });
+  it("the ladder does not have a DEEPER drawdown than buy-&-hold (it brakes the crash)", () => {
+    assert.ok(r.fc_thrust.max_drawdown <= r.buyhold.max_drawdown + 1e-9, `${r.fc_thrust.max_drawdown} <= ${r.buyhold.max_drawdown}`);
+    assert.equal(r.reduces_tail, r.fc_thrust.max_drawdown < r.buyhold.max_drawdown);
+  });
+  it("returns null when the series is too short to warm up (needs ≥211 bars)", () => {
+    assert.equal(fcThrustBacktest(closes.slice(0, 150)), null);
+  });
+});
 
 // Build a series: smooth uptrend, then a sharp crash. A trend brake (exit below the
 // moving average) should avoid most of the crash → smaller max drawdown.

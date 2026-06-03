@@ -29,12 +29,47 @@ export function makeForecasts(signals, today, horizon = 21) {
   return out;
 }
 
+// Register each accepted scarcity's pre-registered KILL-CRITERION ("wrong if {condition} by {by_date}")
+// as a DEADLINE-TRACKED claim. We deliberately do NOT NLP-grade the free-text condition; instead we hold
+// the system to its OWN falsification deadline: at by_date we record whether the thesis SURVIVED (still on
+// the watchlist) or was KILLED (removed), and flag it for the human to adjudicate the condition. This turns
+// a "recorded and forgotten" promise into a tracked, surfaced commitment — closing the accountability loop.
+function killResolveDate(by) {
+  if (typeof by !== "string") return null;
+  const m = by.trim();
+  if (/^\d{4}$/.test(m)) return `${m}-12-31`;                                   // year → year-end
+  if (/^\d{4}-\d{2}$/.test(m)) { const [y, mo] = m.split("-").map(Number); return new Date(Date.UTC(y, mo, 0)).toISOString().slice(0, 10); } // month → month-end
+  if (/^\d{4}-\d{2}-\d{2}$/.test(m)) return m;
+  return null;
+}
+export function makeKillForecasts(scarcities, today) {
+  const out = [];
+  for (const s of scarcities || []) {
+    const k = s.kill_criterion;
+    if (!k || typeof k !== "object" || !k.condition || !k.by_date) continue;
+    const resolve_on = killResolveDate(k.by_date);
+    if (!resolve_on) continue;
+    out.push({
+      id: `kill:${s.id}:${k.by_date}`, date: today, type: "kill_criterion", subject: s.id,
+      condition: String(k.condition).slice(0, 300), by_date: k.by_date, claim: "thesis_survives", resolve_on,
+    });
+  }
+  return out;
+}
+
 // Resolve claims whose horizon has matured, using the current price vs the anchor.
-export function resolveDue(open, currentPrices, today) {
+// scarcityIds (optional Set): the CURRENT watchlist IDs — used to resolve kill-criteria as survived/killed.
+export function resolveDue(open, currentPrices, today, { scarcityIds = null } = {}) {
   const resolved = [], stillOpen = [];
   for (const f of open || []) {
     if (today < f.resolve_on) { stillOpen.push(f); continue; }
-    if (f.type === "scarcity_rel") {
+    if (f.type === "kill_criterion") {
+      // Deadline reached. The free-text condition isn't machine-gradable, so record the MECHANICAL
+      // outcome (did the thesis survive to its own kill-date?) and flag for human adjudication. correct
+      // stays null so it never pollutes the price-based hit-rate.
+      const survived = scarcityIds ? scarcityIds.has(f.subject) : null;
+      resolved.push({ ...f, resolved_on: today, outcome: survived == null ? "unknown" : (survived ? "survived" : "killed"), correct: null, needs_review: true });
+    } else if (f.type === "scarcity_rel") {
       // P4/F2: equal-weight per-ticker returns over fixed membership (new forecasts carry basket_prices);
       // fall back to the legacy price-weighted mean-ratio for forecasts created before this change.
       let bRet, cRet;
@@ -99,6 +134,15 @@ export function updateScorecard(sc, resolved) {
     : { by_tilt: { overweight: { n: 0, hits: 0 }, underweight: { n: 0, hits: 0 } }, total: { n: 0, hits: 0 } };
   if (!s.by_signal) s.by_signal = {};
   for (const r of resolved || []) {
+    if (r.type === "kill_criterion") {
+      // Falsification-deadline accountability, tracked SEPARATELY from the price-based hit-rate (the
+      // free-text condition is human-adjudicated, never auto-scored as a hit/miss).
+      s.kill ||= { matured: 0, survived: 0, killed: 0, needs_review: 0 };
+      s.kill.matured++;
+      if (r.outcome === "survived") s.kill.survived++; else if (r.outcome === "killed") s.kill.killed++;
+      if (r.needs_review) s.kill.needs_review++;
+      continue;
+    }
     s.total.n++; if (r.correct) s.total.hits++;
     if (r.type === "scarcity_rel") {
       (s.by_signal[r.claim] ||= { n: 0, hits: 0 }); s.by_signal[r.claim].n++; if (r.correct) s.by_signal[r.claim].hits++;

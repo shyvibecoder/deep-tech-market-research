@@ -277,6 +277,13 @@ underweight → down) and, when the horizon matures, **resolves** it against the
 is graded on whether its calls came true, turning opinions into a verifiable, compounding record. A
 hit-rate persistently below ~50% means the signal isn't working (which is what you want to know).
 
+A **Kill-criteria** line closes the accountability loop on the *research committee*. When the CIO accepts
+a thesis it must pre-register a **falsifiable, dated kill-criterion** ("wrong if X by date"); Puck now
+carries that onto the watchlist and **deadline-tracks** it — at the by-date it records whether the thesis
+**survived** (still held) or was **killed** (removed) and flags it for you to **adjudicate** the condition.
+The free-text condition is never machine-graded, so it can't inflate the price-based hit-rate; this simply
+stops the system from recording a falsification promise and quietly forgetting it.
+
 A second **Alpha edge** line grades the harder claim. Each **de-rating / inflecting** flag becomes a
 42-day *relative* forecast — does the flagged scarcity basket actually under/out-perform the deep-tech build-out
 complex (the theme ETFs)? That relative move, not raw direction, is the thesis's real edge, so it is

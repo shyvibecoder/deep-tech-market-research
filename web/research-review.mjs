@@ -57,6 +57,13 @@ export function applyAcceptance(scarcitiesDoc, proposal, { today = new Date().to
         next[field] = proposal[field]; changed = true;
       }
     }
+    // kill_criterion is DESCRIPTIVE, not a gate: carry the committee's pre-registered, dated
+    // falsification onto the watchlist so the daily scan can deadline-track it (accountability loop).
+    const k = proposal.kill_criterion;
+    if (k && typeof k === "object" && typeof k.condition === "string" && /^\d{4}(-\d{2}(-\d{2})?)?$/.test(String(k.by_date || "").trim())) {
+      const kc = { condition: k.condition.slice(0, 300), by_date: k.by_date.trim() };
+      if (JSON.stringify(next.kill_criterion) !== JSON.stringify(kc)) { next.kill_criterion = kc; changed = true; }
+    }
     if (changed) { next.last_reviewed = today; touched = true; }
     return next;
   });

@@ -29,7 +29,7 @@ import { getForwardPEs } from "./lib/fundamentals.mjs";
 import { computeRegime } from "./lib/regime.mjs";
 import { updateScarcityHistory, applySeenState } from "./lib/history.mjs";
 import { writeDcaPlan } from "./lib/dca.mjs";
-import { makeForecasts, resolveDue, updateScorecard, makeScarcityForecasts, makeSizingForecast } from "./lib/forecast.mjs";
+import { makeForecasts, resolveDue, updateScorecard, makeScarcityForecasts, makeSizingForecast, makeKillForecasts } from "./lib/forecast.mjs";
 import { relativeStrength, deRatingSignal, tickerRelStrength } from "./lib/derating.mjs";
 import { newsForQuery } from "./lib/news.mjs";
 import { chokepointHeat } from "./lib/chokepoints.mjs";
@@ -759,8 +759,12 @@ let scorecard = null;
     if (existsSync(fpath)) { forecastsCorrupt = true; errors.push(`forecasts.json corrupt — PRESERVED (not overwritten): ${e.message}`); }
     store = { schema_version: SCHEMA_VERSION, open: [], scorecard: updateScorecard(null, []) };
   }
-  const { resolved, stillOpen } = resolveDue(store.open, enriched, TODAY);
+  const scarcityIds = new Set(scarcities.scarcities.map((s) => s.id)); // for kill-criterion survived/killed
+  const { resolved, stillOpen } = resolveDue(store.open, enriched, TODAY, { scarcityIds });
   store.scorecard = updateScorecard(store.scorecard, resolved);
+  // kill-criteria carry a STABLE id (kill:<scarcity>:<by_date>) and resolve once at their deadline —
+  // remember resolved ones so the next scan can't re-register and double-count them.
+  store.kills_resolved = [...new Set([...(store.kills_resolved || []), ...resolved.filter((r) => r.type === "kill_criterion").map((r) => r.id)])];
   // The deep-tech build-out "complex" = the diversified theme ETFs we hold; the de-rating/inflecting
   // alpha calls are graded RELATIVE to it (does the flagged basket really under/out-perform?).
   const complexTickers = portfolio.holdings
@@ -769,10 +773,14 @@ let scorecard = null;
     ...makeForecasts({ regime, quotes: enriched }, TODAY),
     ...makeScarcityForecasts(buildoutScarcities, { quotes: enriched, scarcity_signals }, TODAY, 42, complexTickers),
     ...makeSizingForecast(rebalance, enriched, TODAY), // CRITICAL-2: grade the G3 tilt vs the research baseline
+    ...makeKillForecasts(scarcities.scarcities, TODAY), // close the loop: deadline-track each committee kill-criterion
   ];
-  const openIds = new Set(stillOpen.map((f) => f.id));
-  store.open = [...stillOpen, ...fresh.filter((f) => !openIds.has(f.id))];
+  const seen = new Set([...stillOpen.map((f) => f.id), ...(store.kills_resolved || [])]);
+  store.open = [...stillOpen, ...fresh.filter((f) => !seen.has(f.id))];
   store.updated = TODAY;
+  // Surface pending (registered, deadline not yet reached) kill-criteria alongside the matured tally.
+  const pendingKills = store.open.filter((f) => f.type === "kill_criterion").length;
+  if (store.scorecard) store.scorecard.kill = { ...(store.scorecard.kill || { matured: 0, survived: 0, killed: 0, needs_review: 0 }), pending: pendingKills };
   if (forecastsCorrupt) {
     console.log("Forecasts: store CORRUPT — preserved last committed version, skipped write (recover from git history).");
   } else {

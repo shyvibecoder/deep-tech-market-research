@@ -1,6 +1,48 @@
 import { describe, it } from "node:test";
 import assert from "node:assert/strict";
-import { makeForecasts, resolveDue, updateScorecard, addDays, makeScarcityForecasts, meanPrice, makeSizingForecast, weightedReturn } from "../scripts/lib/forecast.mjs";
+import { makeForecasts, resolveDue, updateScorecard, addDays, makeScarcityForecasts, meanPrice, makeSizingForecast, weightedReturn, makeKillForecasts } from "../scripts/lib/forecast.mjs";
+
+describe("forecast: kill-criterion deadline accountability", () => {
+  const scs = [
+    { id: "rare-earth", kill_criterion: { condition: "China lifts export controls", by_date: "2027" } },
+    { id: "no-kill", priced_in: "low" },
+    { id: "bad-date", kill_criterion: { condition: "x", by_date: "someday" } },
+  ];
+  it("registers only valid kill-criteria; year by-date → year-end resolve", () => {
+    const f = makeKillForecasts(scs, "2026-06-03");
+    assert.equal(f.length, 1);
+    assert.equal(f[0].type, "kill_criterion");
+    assert.equal(f[0].subject, "rare-earth");
+    assert.equal(f[0].resolve_on, "2027-12-31");
+  });
+  it("month/day by-dates resolve to month-end / that day", () => {
+    assert.equal(makeKillForecasts([{ id: "a", kill_criterion: { condition: "c", by_date: "2027-03" } }], "2026-01-01")[0].resolve_on, "2027-03-31");
+    assert.equal(makeKillForecasts([{ id: "b", kill_criterion: { condition: "c", by_date: "2027-03-15" } }], "2026-01-01")[0].resolve_on, "2027-03-15");
+  });
+  it("keeps unmatured open; matured resolves survived/killed (needs_review, correct=null)", () => {
+    const open = makeKillForecasts(scs, "2026-06-03"); // resolve_on 2027-12-31
+    const r1 = resolveDue(open, {}, "2027-01-01", { scarcityIds: new Set(["rare-earth"]) });
+    assert.equal(r1.resolved.length, 0);
+    assert.equal(r1.stillOpen.length, 1);
+    const r2 = resolveDue(open, {}, "2028-01-01", { scarcityIds: new Set(["rare-earth"]) });
+    assert.equal(r2.resolved.length, 1);
+    assert.equal(r2.resolved[0].outcome, "survived");
+    assert.equal(r2.resolved[0].correct, null);
+    assert.equal(r2.resolved[0].needs_review, true);
+    const r3 = resolveDue(open, {}, "2028-01-01", { scarcityIds: new Set(["other"]) });
+    assert.equal(r3.resolved[0].outcome, "killed");
+  });
+  it("scorecard tracks kill SEPARATELY and never pollutes the price-based hit-rate", () => {
+    const sc = updateScorecard(null, [
+      { type: "kill_criterion", outcome: "survived", correct: null, needs_review: true },
+      { type: "kill_criterion", outcome: "killed", correct: null, needs_review: true },
+      { claim: "up", correct: true }, // a normal tsmom resolution
+    ]);
+    assert.equal(sc.total.n, 1, "only the price-based call counts toward hit-rate");
+    assert.equal(sc.total.hits, 1);
+    assert.deepEqual(sc.kill, { matured: 2, survived: 1, killed: 1, needs_review: 2 });
+  });
+});
 
 const signals = {
   regime: { per_name: [

@@ -408,14 +408,20 @@ if (!OFFLINE) {
       console.log(`Metrics: CAGR ${metrics.cagr}, maxDD ${metrics.max_drawdown} (breaches35=${metrics.breaches_35}), Calmar ${metrics.calmar}, Sortino ${metrics.sortino} [${years}y, ${fromDb} from DB]`);
       // Hoist the composite series for the LIVE regime — the F+C Thrust ladder runs on it.
       regimeComposite = idx.values;
+      // REALISM: only the IRA sleeve is timed. The TAXABLE sleeve is buy-and-hold for regime purposes — it
+      // changes only on scarcity/thesis decisions, never on the timing dial. So a combo's realistic
+      // drawdown-cut is the IRA share of the fully-timed cut. iraFrac = IRA tradeable non-cash $ / all of it.
+      const _tw = portfolio.holdings.filter((h) => isTradeable(h.ticker) && h.tier !== "DRY" && !/^CASH/i.test(h.ticker));
+      const _twTot = _tw.reduce((a, h) => a + (h.target_usd || 0), 0) || 1;
+      const iraFrac = +(_tw.filter((h) => h.account === "ira").reduce((a, h) => a + (h.target_usd || 0), 0) / _twTot).toFixed(3);
       // THE COMBO: F+C Thrust timing applied to THE SCARCITY-ALPHA BOOK itself (this target-weighted basket)
       // vs buy-&-hold the same book — i.e. "alpha from scarcities" WITH the timing overlay. Honest caveat:
       // the basket truncates to its youngest holding, so this window is short and (so far) bull-only — it
       // can't show the timing's tail benefit until the book lives through a real drawdown; the deep-proxy
       // fc_thrust_proof below is where the timing edge is actually tested against 2000/2008/2020/2022.
       try {
-        const fcb = fcThrustBacktest(idx.values, { dates: idx.dates });
-        if (fcb) { metrics.fc_thrust_book = fcb; console.log(`F+C Thrust on the BOOK (${fcb.years}y): buy&hold maxDD ${(fcb.buyhold.max_drawdown * 100).toFixed(0)}% CAGR ${(fcb.buyhold.cagr * 100).toFixed(0)}% → timed maxDD ${(fcb.fc_thrust.max_drawdown * 100).toFixed(0)}% CAGR ${(fcb.fc_thrust.cagr * 100).toFixed(0)}%`); }
+        const fcb = fcThrustBacktest(idx.values, { dates: idx.dates, timeableFrac: iraFrac });
+        if (fcb) { metrics.fc_thrust_book = fcb; console.log(`F+C Thrust on the BOOK (${fcb.years}y, IRA-timed ${Math.round(iraFrac * 100)}%): buy&hold maxDD ${(fcb.buyhold.max_drawdown * 100).toFixed(0)}% → realistic maxDD ${(fcb.realistic ? fcb.realistic.max_drawdown * 100 : fcb.fc_thrust.max_drawdown * 100).toFixed(0)}% (fully-timed ${(fcb.fc_thrust.max_drawdown * 100).toFixed(0)}%)`); }
       } catch { /* best-effort */ }
       // BACKTEST THE EXACT LIVE DESIGN: the F+C Thrust ladder (Faber 200-DMA trend + Daniel-Moskowitz
       // 252d-return/60d-vol crash + rising-20-DMA THRUST re-entry) — the SAME v23.mjs functions the live
@@ -451,7 +457,7 @@ if (!OFFLINE) {
         }
         if (Object.keys(pseries).length >= 5) {
           const pidx = basketIndex(pseries, BOOK_PROXY);
-          const fcp = pidx.values.length > 250 ? fcThrustBacktest(pidx.values, { dates: pidx.dates }) : null;
+          const fcp = pidx.values.length > 250 ? fcThrustBacktest(pidx.values, { dates: pidx.dates, timeableFrac: iraFrac }) : null;
           if (fcp) {
             metrics.fc_thrust_book_proxy = { ...fcp, basis: Object.keys(pseries), map: BOOK_PROXY };
             console.log(`Combo (build-out analogue, ${fcp.years}y ${fcp.window}): buy&hold maxDD ${(fcp.buyhold.max_drawdown * 100).toFixed(0)}% CAGR ${(fcp.buyhold.cagr * 100).toFixed(0)}% → timed maxDD ${(fcp.fc_thrust.max_drawdown * 100).toFixed(0)}% CAGR ${(fcp.fc_thrust.cagr * 100).toFixed(0)}%, ${fcp.episodes.filter((e) => e.helped).length}/${fcp.episodes.length} crashes cut`);

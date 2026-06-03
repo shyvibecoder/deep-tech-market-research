@@ -28,6 +28,15 @@ describe("fcThrustBacktest: the canonical F+C Thrust rule vs buy-&-hold", () => 
     const r2 = fcThrustBacktest(alt, { dates });
     assert.equal(r.switches, r2.switches); // every decision used only prior bars; only the last return differs
   });
+  it("REALISM: timeableFrac<1 (only the IRA sleeve timed) → realistic maxDD sits between buy-&-hold and fully-timed", () => {
+    const rf = fcThrustBacktest(closes, { dates, timeableFrac: 0.5 });
+    assert.equal(rf.timeable_frac, 0.5);
+    assert.ok(rf.realistic, "realistic path present when frac<1");
+    // only timing half the book gives ~half the drawdown protection
+    assert.ok(rf.fc_thrust.max_drawdown <= rf.realistic.max_drawdown + 1e-9 && rf.realistic.max_drawdown <= rf.buyhold.max_drawdown + 1e-9,
+      `${rf.fc_thrust.max_drawdown} ≤ ${rf.realistic.max_drawdown} ≤ ${rf.buyhold.max_drawdown}`);
+    assert.equal(fcThrustBacktest(closes, { dates }).realistic, null); // frac=1 default → no separate realistic path
+  });
 });
 
 // Build a series: smooth uptrend, then a sharp crash. A trend brake (exit below the

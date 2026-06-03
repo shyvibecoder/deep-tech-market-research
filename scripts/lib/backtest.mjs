@@ -254,7 +254,11 @@ export function fastReentryProof(seriesByName, { maPeriod = 200, breadthMa = 20,
 // next bar's return accrues only when invested. Models 1× the underlying (NOT 2× QLD — leverage would
 // breach the −35% mandate) vs cash. Turnover-costed. The composite-stress overlay (VIX/VIX3M/HYG) is
 // exit-only and omitted here (it would only ADD defense), so this is a clean test of the ladder itself.
-export function fcThrustBacktest(closes, { dates = null, periodsPerYear = 252, costPerSwitchBps = 10, minEpisodeDd = 0.20 } = {}) {
+// REALISM (adversarial): `timeableFrac` < 1 models that only PART of the book can actually be timed — the
+// tax-free IRA sleeve. The rest (taxable anchors) can't be timed without crippling cap-gains, so it stays
+// buy-and-hold. The `realistic` result blends frac×timed + (1−frac)×buy&hold (no daily IRA-vs-taxable
+// rebalance) — so the drawdown-cut the WHOLE book actually gets is roughly `frac` of the fully-timed cut.
+export function fcThrustBacktest(closes, { dates = null, periodsPerYear = 252, costPerSwitchBps = 10, minEpisodeDd = 0.20, timeableFrac = 1 } = {}) {
   if (!Array.isArray(closes) || closes.length < 211 + 30) return null; // v23Signals needs ≥211 bars + a usable sample
   const cost = Math.max(0, costPerSwitchBps) / 10000;
   const inv = [], bh = [], eqDates = [];
@@ -273,11 +277,16 @@ export function fcThrustBacktest(closes, { dates = null, periodsPerYear = 252, c
     inv.push(e); bh.push(h); if (dates) eqDates.push(dates[i]);
   }
   if (inv.length < 60) return null;
+  const frac = Math.max(0, Math.min(1, timeableFrac));
+  const real = frac < 1 ? inv.map((v, i) => frac * v + (1 - frac) * bh[i]) : null; // only the IRA sleeve is timed
   const invM = portfolioMetrics(inv, { periodsPerYear });
   const bhM = portfolioMetrics(bh, { periodsPerYear });
+  const realM = real ? portfolioMetrics(real, { periodsPerYear }) : null;
   const episodes = dates ? drawdownEpisodes(bh, minEpisodeDd).map((ep) => {
     const fcDd = maxDdWindow(inv, ep.iPeak, ep.iTrough);
-    return { from: eqDates[ep.iPeak], to: eqDates[ep.iTrough], buyhold_dd: +ep.dd.toFixed(4), fc_dd: +fcDd.toFixed(4), helped: fcDd < ep.dd - 0.005 };
+    const e2 = { from: eqDates[ep.iPeak], to: eqDates[ep.iTrough], buyhold_dd: +ep.dd.toFixed(4), fc_dd: +fcDd.toFixed(4), helped: fcDd < ep.dd - 0.005 };
+    if (real) e2.realistic_dd = +maxDdWindow(real, ep.iPeak, ep.iTrough).toFixed(4);
+    return e2;
   }) : [];
   const years = dates ? (Date.parse(eqDates[eqDates.length - 1]) - Date.parse(eqDates[0])) / (365.25 * 86400000) : inv.length / periodsPerYear;
   return {
@@ -286,9 +295,10 @@ export function fcThrustBacktest(closes, { dates = null, periodsPerYear = 252, c
     years: +years.toFixed(1),
     switches, turnover_cost_bps: switches * costPerSwitchBps,
     buyhold: bhM, fc_thrust: invM,
-    max_dd_reduction: +(bhM.max_drawdown - invM.max_drawdown).toFixed(4), // >0 ⇒ the rule cut maxDD
+    realistic: realM, timeable_frac: real ? +frac.toFixed(2) : null, // only the IRA sleeve is timed (taxable can't, tax)
+    max_dd_reduction: +(bhM.max_drawdown - invM.max_drawdown).toFixed(4), // >0 ⇒ the rule cut maxDD (fully timed)
     cagr_cost: +((bhM.cagr ?? 0) - (invM.cagr ?? 0)).toFixed(4),          // >0 ⇒ gave up CAGR for the protection
-    breach_35: { buyhold: bhM.breaches_35, fc_thrust: invM.breaches_35 },
+    breach_35: { buyhold: bhM.breaches_35, fc_thrust: invM.breaches_35, ...(realM ? { realistic: realM.breaches_35 } : {}) },
     reduces_tail: invM.max_drawdown < bhM.max_drawdown,
     improves_calmar: (invM.calmar ?? -Infinity) > (bhM.calmar ?? -Infinity),
     episodes,

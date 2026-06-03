@@ -130,10 +130,14 @@ real bears (`fc_thrust_book_proxy`). Red-teaming their realism, honestly:
 
 - **No look-ahead** — positions decide on the *prior* bar's close; only the next bar's return accrues.
   Regression-tested (changing the final bar can't change any prior position). ✅
-- **Tax is NOT modeled.** The timing backtest charges only a flat `costPerSwitchBps` (≈liquid-ETF spread).
-  In a **taxable** account every exit realizes capital gains — a large, real drag the backtest omits. So
-  these results implicitly assume the **tax-free (IRA) sleeve** — which is exactly why the doctrine routes
-  timing to the IRA and keeps taxable buy-and-hold. On the taxable sleeve the timing edge is much smaller.
+- **Only the IRA sleeve is timed (now modeled).** Timing the **taxable** sleeve would realize capital gains
+  on every exit, so by design **taxable is buy-and-hold *for timing*** — it changes only on **scarcity/thesis**
+  decisions (the selection layer), never on the timing dial. The combo backtests now model this with
+  `timeableFrac` = the IRA share of the book: the **realistic** result blends `frac × timed + (1−frac) ×
+  buy-&-hold`, so the drawdown-cut the *whole book* actually gets is ~`frac` of the fully-timed cut (it shows
+  *realistic* next to *fully-timed* in the scorecard). The taxable sleeve's scarcity-driven changes are a
+  **fundamental/committee** signal — **not** mechanically reproducible in a price-only timing backtest — so
+  their value is measured *separately* by the cross-sectional **signal backtest** (rank IC) and the live ledger.
 - **Execution optimism.** Decide-on-`t-1` / earn-return-`t` is the standard MA convention, but in a gappy
   crash you don't actually exit at the prior close — so the avoided-drawdown is a mild **upper bound**. The
   flat cost only partly covers slippage.

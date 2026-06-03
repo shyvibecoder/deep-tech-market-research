@@ -3269,6 +3269,101 @@
         "ROBO": 90.33999633789062,
         "UFO": 61.220001220703125
       }
+    },
+    {
+      "id": "2026-06-03:tsmom_tilt:WMT",
+      "date": "2026-06-03",
+      "type": "tsmom_tilt",
+      "subject": "WMT",
+      "claim": "up",
+      "horizon_days": 21,
+      "price_at": 116.30000305175781,
+      "resolve_on": "2026-06-24",
+      "basis": "overweight"
+    },
+    {
+      "date": "2026-06-03",
+      "type": "scarcity_rel",
+      "subject": "rare-earth-magnets",
+      "proxies": [
+        "MP",
+        "LYC"
+      ],
+      "complex_tickers": [
+        "PAVE",
+        "GRID",
+        "FIW",
+        "SHLD",
+        "SMH",
+        "COPX",
+        "NUKZ",
+        "ROBO",
+        "UFO"
+      ],
+      "basket_at": 44.164998054504395,
+      "complex_at": 152.4558096991645,
+      "basket_prices": {
+        "MP": 68.83999633789062,
+        "LYC": 19.489999771118164
+      },
+      "complex_prices": {
+        "PAVE": 57.310001373291016,
+        "GRID": 197.66209411621094,
+        "FIW": 104.2699966430664,
+        "SHLD": 63.564998626708984,
+        "SMH": 639.0405883789062,
+        "COPX": 90.72000122070312,
+        "NUKZ": 72.12460327148438,
+        "ROBO": 89.41000366210938,
+        "UFO": 58
+      },
+      "horizon_days": 42,
+      "resolve_on": "2026-07-15",
+      "id": "2026-06-03:scarcity_rel:rare-earth-magnets",
+      "claim": "underperform",
+      "source": "de-rating"
+    },
+    {
+      "date": "2026-06-03",
+      "type": "scarcity_rel",
+      "subject": "rl-data",
+      "proxies": [
+        "(private: Scale, Surge, Mercor)",
+        "RDDT"
+      ],
+      "complex_tickers": [
+        "PAVE",
+        "GRID",
+        "FIW",
+        "SHLD",
+        "SMH",
+        "COPX",
+        "NUKZ",
+        "ROBO",
+        "UFO"
+      ],
+      "basket_at": 168.1300048828125,
+      "complex_at": 152.4558096991645,
+      "basket_prices": {
+        "RDDT": 168.1300048828125
+      },
+      "complex_prices": {
+        "PAVE": 57.310001373291016,
+        "GRID": 197.66209411621094,
+        "FIW": 104.2699966430664,
+        "SHLD": 63.564998626708984,
+        "SMH": 639.0405883789062,
+        "COPX": 90.72000122070312,
+        "NUKZ": 72.12460327148438,
+        "ROBO": 89.41000366210938,
+        "UFO": 58
+      },
+      "horizon_days": 42,
+      "resolve_on": "2026-07-15",
+      "id": "2026-06-03:scarcity_rel:opp:rl-data",
+      "claim": "outperform",
+      "source": "opportunity",
+      "opportunity": 84
     }
   ],
   "scorecard": {

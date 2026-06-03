@@ -3287,6 +3287,14 @@
       "hits": 0
     },
     "hit_rate": null,
-    "by_signal": {}
-  }
+    "by_signal": {},
+    "kill": {
+      "matured": 0,
+      "survived": 0,
+      "killed": 0,
+      "needs_review": 0,
+      "pending": 0
+    }
+  },
+  "kills_resolved": []
 }

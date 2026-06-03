@@ -223,7 +223,7 @@ brakes are on).
 
 **Regime instruments panel.** Under the posture, a small table shows the daily technicals the timing layer
 actually reads on the **QQQ** complex — **QQQ** (the regime's reference underlying) plus **TQQQ / SQQQ** (the
-3× long / 3× short proxies, the actionable risk-on / brake instruments): **price, RSI-14, % vs the 200-DMA
+3× long / 3× short proxies, the actionable risk-on / brake instruments): **price, RSI-14 & RSI-10 (Wilder; >70 overbought / <30 oversold — the shorter RSI-10 is more responsive), % vs the 200-DMA
 (green above / red below), % off the 52-week high, 12-month & 1-month momentum, and realized vol**, refreshed
 every scan. RSI > 70 reads overbought, < 30 oversold. **TQQQ/SQQQ are leveraged — tactical only, their value
 decays over time; they are not buy-and-hold.** It's its own card beneath the posture. Technicals are computed

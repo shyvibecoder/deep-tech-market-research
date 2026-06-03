@@ -63,7 +63,7 @@ export function computeTechnicals(dates, closes, { currency = null, source = "db
   const empty = {
     price: null, high52: null, pct_off_high: null, ytd: null, ma50: null, ma200: null, ma20: null,
     pct_vs_ma50: null, pct_vs_ma200: null, above_ma200: null, above_ma20: null, asof: null,
-    mom_12m: null, mom_1m: null, rsi_14: null, vol_3m: null, vol_1y: null, currency, source,
+    mom_12m: null, mom_1m: null, rsi_14: null, rsi_10: null, vol_3m: null, vol_1y: null, currency, source,
   };
   if (!Array.isArray(closes) || !closes.length) return empty;
   const price = closes[closes.length - 1];
@@ -96,7 +96,7 @@ export function computeTechnicals(dates, closes, { currency = null, source = "db
     pct_vs_ma200: ma200 ? (price - ma200) / ma200 : null,
     above_ma200: ma200 != null ? price >= ma200 : null,
     above_ma20: ma20 != null ? price >= ma20 : null,
-    asof, mom_12m, mom_1m, rsi_14: rsi(closes, 14),
+    asof, mom_12m, mom_1m, rsi_14: rsi(closes, 14), rsi_10: rsi(closes, 10),
     vol_3m: realizedVol(closes, 63), vol_1y: realizedVol(closes, 252),
     currency, source,
   };

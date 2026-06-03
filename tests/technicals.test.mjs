@@ -17,10 +17,13 @@ describe("technicals: Wilder RSI-14", () => {
     const r = rsi(c);
     assert.ok(r > 30 && r < 70, `RSI ${r} should be mid-range`);
   });
-  it("computeTechnicals surfaces rsi_14", () => {
+  it("computeTechnicals surfaces rsi_14 and rsi_10", () => {
     const closes = Array.from({ length: 260 }, (_, i) => 100 + i * 0.1);
     const dates = closes.map((_, i) => `2025-${String(1 + (i % 12)).padStart(2, "0")}-01`);
-    assert.ok(Number.isFinite(computeTechnicals(dates, closes).rsi_14));
+    const t = computeTechnicals(dates, closes);
+    assert.ok(Number.isFinite(t.rsi_14) && Number.isFinite(t.rsi_10));
+    // shorter lookback is more responsive: on a steady uptrend both are high (100 here)
+    assert.equal(t.rsi_10, rsi(closes, 10));
   });
 });
 

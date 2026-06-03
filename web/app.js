@@ -302,7 +302,8 @@ function renderRegimeInstruments() {
   const pct = (x) => (x == null ? null : `${x >= 0 ? "+" : ""}${(x * 100).toFixed(0)}%`);
   const cols = [
     { h: "Price", get: (q) => (q.price != null ? "$" + q.price.toFixed(2) : null) },
-    { h: "RSI", get: (q) => q.rsi_14, cls: (q) => (q.rsi_14 >= 70 ? "neg" : q.rsi_14 <= 30 ? "pos" : "") },
+    { h: "RSI-14", get: (q) => q.rsi_14, cls: (q) => (q.rsi_14 >= 70 ? "neg" : q.rsi_14 <= 30 ? "pos" : "") },
+    { h: "RSI-10", get: (q) => q.rsi_10, cls: (q) => (q.rsi_10 >= 70 ? "neg" : q.rsi_10 <= 30 ? "pos" : "") },
     { h: "vs&nbsp;200d", get: (q) => pct(q.pct_vs_ma200), cls: (q) => (q.above_ma200 ? "pos" : "neg") },
     { h: "off&nbsp;high", get: (q) => pct(q.pct_off_high) },
     { h: "12m", get: (q) => pct(q.mom_12m) },

@@ -23,12 +23,12 @@ describe("regime v2: exit-only macro-stress overlay", () => {
 });
 
 describe("regime v2: fast re-entry (20-DMA breadth) override", () => {
-  it("upgrades a defensive base by one notch when 20-DMA breadth is strong", () => {
-    // base is bearish, but most names have reclaimed their 20-DMA → re-risk one step
+  it("a breadth thrust clears a defensive base to NEUTRAL (not just one notch — works from defensive)", () => {
+    // base is bearish, but most names have reclaimed their 20-DMA → broad thrust clears the brake
     const reclaim = { T0: q(-0.15, -0.3, -0.30, 1.2, false, true), T1: q(-0.18, -0.35, -0.32, 1.2, false, true) };
     const r = computeRegime(reclaim, holds(2));
     assert.equal(r.fast_reentry, true);
-    assert.notEqual(r.posture, "defensive"); // bumped up out of defensive
+    assert.equal(r.posture, "neutral"); // cleared the deploy-brake, but capped at neutral (no acceleration)
   });
   it("macro stress beats fast re-entry (brakes win)", () => {
     const reclaim = { T0: q(-0.15, -0.3, -0.30, 1.2, false, true), T1: q(-0.18, -0.35, -0.32, 1.2, false, true) };

@@ -59,8 +59,8 @@ decline. It is real and worth having — but:
   per instrument — *does it cut max drawdown* and *does it improve Calmar* — plus a per-crash table
   flagging where the brake **whipsawed** (⚠, fast V-bottoms) rather than helped (slow bears). Read
   the dial's tail claim off that block, not off faith.
-- The **fast-entry** side of the dial is tested too. The live regime re-risks one notch when
-  **≥60% of names reclaim their 20-DMA** (`fast_reentry`, `regime.mjs`). `fastReentryProof()` puts
+- The **fast-entry** side of the dial is tested too. The live regime **clears a braked posture to
+  neutral** on a broad **≥60% 20-DMA breadth thrust** (`fast_reentry`, `regime.mjs`). `fastReentryProof()` puts
   that to a falsifiable test on the book's own deep history: a plain 200-DMA brake vs. brake +
   fast-reentry, reporting whether re-entering on breadth captures more recovery (CAGR / time-in-
   market) **without giving the drawdown protection back** (Calmar) — surfaced as the **"Fast

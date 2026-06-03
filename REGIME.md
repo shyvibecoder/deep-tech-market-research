@@ -76,8 +76,9 @@ cautions about what does **not** port to a thematic single-stock basket.
 **Status:** an on-basket backtest now ships (`scripts/lib/backtest.mjs`, surfaced in the Objective scorecard): it tests whether a moving-average brake cut drawdown vs. buy-and-hold on the strategy basket, no look-ahead — turning the dial's premise from asserted to evidenced (caveat: trailing-~1y window for now, grows with history). Items 1–2 below are **implemented** (Timing v2, `scripts/lib/macro.mjs` + the overlays in
 `computeRegime`, TDD-tested). Concrete thresholds (coarse, economically-motivated, *not* fitted):
 macro-stress = **VIX/VIX3M ≥ 1.0** (inverted) **AND HYG 1-month ≤ −3%**; fast re-entry = **≥60% of
-holdings above their 20-DMA** (re-risk one posture notch). The macro brake is exit-only and always wins
-over re-entry. Items 3–4 (clean-composite signal, per-name TSMOM sizing) remain queued.
+holdings above their 20-DMA** — a broad thrust that **clears a braked posture to neutral** (works even out
+of defensive; capped at neutral so it lifts the deploy-brake without triggering position acceleration). The
+macro brake is exit-only and always wins over re-entry. Items 3–4 (clean-composite signal, per-name TSMOM sizing) remain queued.
 
 **Architecture worth adopting (→ Timing v2 in TODO):**
 1. **Exit-only, AND-gated macro-stress overlay.** It flips defensive only when *two independent* stress

@@ -233,9 +233,11 @@ calls out any instrument still on the 1-year fetch. QQQ (already in the DB) show
   together** — the **VIX term-structure inverts** (front VIX ≥ VIX3M) **AND high-yield credit widens
   fast** (HYG ~1-month return ≤ −3%). Requiring both makes false alarms rare; being exit-only means it
   can only de-risk, never add. When it's on, the posture note shows **MACRO-STRESS**.
-- **20-DMA fast re-entry.** When ≥60% of holdings reclaim their 20-day average, the posture **re-risks
-  one notch** — so you don't stay in cash too long after a V-shaped bottom (the momentum-crash fix). The
-  macro brake always wins over re-entry.
+- **20-DMA fast re-entry.** When ≥60% of holdings reclaim their 20-day average — a broad thrust — it
+  **clears the deploy-brake to neutral**, even out of a deep *defensive* regime, so you don't stay in cash
+  through a V-shaped bottom (the momentum-crash fix). It's **capped at neutral**: it lifts the brake (deploy
+  pace) without triggering position *acceleration* — re-risk, not lever up. The macro-stress brake always
+  wins over it.
 
 ### 4.1a Dislocation timing + V2.3 cross-check
 Just under the posture, the **Dislocation timing** card answers a single question: *when should I take

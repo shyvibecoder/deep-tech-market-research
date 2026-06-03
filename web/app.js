@@ -280,7 +280,7 @@ function renderRegime() {
     + `${c.breadth_above_200dma != null ? `, breadth ${esc(c.breadth_above_200dma)}% &gt;200-DMA` : ""} → `
     + `${brakesOn ? `<strong class="neg">brakes on</strong>` : `<strong class="pos">clear</strong>`}`
     + ` &nbsp;·&nbsp; Fast re-entry: breadth ${c.breadth_above_20dma != null ? `${esc(c.breadth_above_20dma)}%` : "n/a"} vs 60% trigger → `
-    + `${r.fast_reentry ? `<strong class="pos">armed${reFired ? " · re-risked one notch ↑" : ""}</strong>` : `<span style="color:var(--mut)">not armed</span>`}`
+    + `${r.fast_reentry ? `<strong class="pos">armed${reFired ? " · cleared the brake to neutral ↑" : ""}</strong>` : `<span style="color:var(--mut)">not armed</span>`}`
     + ` &nbsp;·&nbsp; Macro: ${r.macro_stressed ? `<strong class="neg">STRESS</strong>` : (r.macro_available ? "clear" : "⚠ unavailable")}</div>`;
   box.innerHTML = `<div><strong>Timing posture: ${lbl}${r.risk_score != null ? ` · risk ${esc(r.risk_score)}/100${r.confidence ? ` (${esc(r.confidence)} conf)` : ""}` : ""}${r.version ? ` · v${esc(r.version)}` : ""} <button class="help" data-help="regime">?</button></strong>
       <span>${esc(r.action || "")}</span></div>
@@ -1279,7 +1279,7 @@ const HELP = {
     <li>⚪ <strong>neutral</strong> — stick to the DCA calendar.</li>
     <li>🟠 <strong>caution</strong> — tap the brakes, build dry powder.</li>
     <li>🔴 <strong>defensive</strong> — favor cash; deploy only into the drawdown trigger.</li></ul>
-    <p>Two overlays sit on top (Timing v2): a <strong>macro-stress brake</strong> that forces defensive only when the <strong>VIX term-structure is inverted AND high-yield credit is widening fast</strong> (a rare, leading combined signal — exit-only, it can only de-risk), and a <strong>20-DMA fast re-entry</strong> that re-risks one notch when most names reclaim their 20-day average (so you don't stay defensive too long after a bottom).</p>
+    <p>Two overlays sit on top (Timing v2): a <strong>macro-stress brake</strong> that forces defensive only when the <strong>VIX term-structure is inverted AND high-yield credit is widening fast</strong> (a rare, leading combined signal — exit-only, it can only de-risk), and a <strong>20-DMA fast re-entry</strong> that <strong>clears the deploy-brake to neutral</strong> when ≥60% of names reclaim their 20-day average — a broad thrust that works even out of a deep <em>defensive</em> regime (so you don't stay in cash through a V-shaped bottom), capped at neutral so it lifts the brake without levering up.</p>
     <p><strong>v2</strong> refinements: the signal is computed on the <em>theme ETFs</em> (a cleaner composite than averaging 19 noisy single names); it's <strong>account-aware</strong> — the posture drives your <strong>IRA/Roth</strong> (tactical, tax-free turnover) while <strong>taxable</strong> stays buy-and-hold anchors; and it carries a <strong>per-name TSMOM tilt</strong> (which names to lean into vs. trim).</p>
     <p>It's a risk dial that paces your DCA, not an all-in/all-out switch. Full detail: REGIME.md.</p>` },
   myholdings: { title: "Your holdings (live)", body: `

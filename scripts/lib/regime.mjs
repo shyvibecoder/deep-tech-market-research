@@ -25,7 +25,6 @@ const mean = (a) => (a.length ? a.reduce((x, y) => x + y, 0) / a.length : null);
 
 import { suggestOptionStructure } from "./options.mjs";
 
-const LADDER = ["defensive", "caution", "neutral", "risk-on"]; // for one-step nudges
 export const REGIME_VERSION = 2;
 
 // Clean-composite: aggregate the regime signal over the theme ETFs (themselves
@@ -118,12 +117,17 @@ export function computeRegime(quotes, holdings, { macro, securities = {} } = {})
   else if (risk < 25) { posture = "defensive"; action = "Brakes on — favor cash/dry powder; deploy only into the drawdown trigger."; }
   else if (risk < 45) { posture = "caution"; action = "Tap the brakes — slow deploys, build dry powder, wait for trend/vol to confirm."; }
 
-  // --- Overlays (order matters): fast re-entry can RE-RISK one notch; macro stress
-  // is exit-only and ALWAYS wins (forces defensive). ---
+  // --- Overlays (order matters): a broad fast-re-entry thrust CLEARS the deploy-brake; macro
+  // stress is exit-only and ALWAYS wins (forces defensive, overriding the thrust below). ---
+  // DESIGN (iterated): when ≥60% of names reclaim their 20-DMA — a broad thrust that is strong evidence
+  // the downtrend has broken — clear a braked posture to NEUTRAL (not just one ladder notch, which left a
+  // thrust out of a DEFENSIVE regime still braked → inert in exactly the sharp V-recoveries this is for).
+  // Capped at neutral: it lifts the deploy-brake (pace) but never reaches risk-on, so it does NOT trigger
+  // the overweight ACCELERATION in sizing (regimeFactor) — re-risk, not lever up.
   const fast_reentry = breadth20 != null && breadth20 >= 0.6;
   if (fast_reentry && (posture === "defensive" || posture === "caution")) {
-    posture = LADDER[Math.min(LADDER.indexOf(posture) + 1, LADDER.length - 1)];
-    action = `Fast re-entry: ≥60% of names reclaimed their 20-DMA — re-risk one notch. ${action}`;
+    posture = "neutral";
+    action = `Fast re-entry: ≥60% of names reclaimed their 20-DMA — breadth thrust clears the brake to neutral. ${action}`;
   }
   const macroStressed = !!macro?.stressed;
   const macroAvailable = macro != null; // R1: was the exit-only brake actually computed?

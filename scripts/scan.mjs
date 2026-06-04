@@ -60,6 +60,21 @@ const dataUrl = (p) => new URL(`../web/data/${p}`, import.meta.url);
 // Series source for metrics/backtest/V2.3: prefer the ACCUMULATED, cross-checked, adjusted DB
 // history (deep → meaningful multi-year metrics, resilient to Yahoo outages); fall back to a live
 // fetch when the DB isn't configured or lacks the ticker. Returns { ticker, dates, closes, src }.
+
+// Align two {dates,closes} series onto their COMMON trading days (intersection, in order). Returns
+// { a, b } as equal-length, date-matched closes arrays (or nulls if either is missing) — so positional
+// comparisons (e.g. the VIX/VIX3M term-structure check) are guaranteed same-session.
+function alignTwoSeries(sA, sB) {
+  if (!sA?.dates?.length || !sB?.dates?.length) return { a: null, b: null };
+  const mapB = new Map(sB.dates.map((d, i) => [d, sB.closes[i]]));
+  const a = [], b = [];
+  for (let i = 0; i < sA.dates.length; i++) {
+    const bv = mapB.get(sA.dates[i]);
+    if (bv != null) { a.push(sA.closes[i]); b.push(bv); }
+  }
+  return { a, b };
+}
+
 let _dbHits = 0, _liveHits = 0;
 async function seriesFor(ticker, { liveRange = "1y", years } = {}) {
   if (supabaseConfigured()) {
@@ -509,6 +524,7 @@ if (!OFFLINE && supabaseConfigured()) {
 // composite-stress overlay below AND the QQQ cross-check later, so the overlay is CURRENT, the
 // portfolio brake == the cross-check overlay by construction, and we don't double-hit providers. ---
 let qqqS = null, vixS = null, vix3mS = null, hygS = null;
+let vixAligned = null, vix3mAligned = null; // VIX/VIX3M closes on their COMMON trading days (shared by overlay + cross-check)
 let macro = null;
 if (!OFFLINE) {
   try {
@@ -518,9 +534,13 @@ if (!OFFLINE) {
     for (const t of ["QLD", "SGOV"]) {
       try { const q = await fetchYahoo(t); if (q && q.price > 0 && q.asof) v23LatestBars.push({ ticker: t, d: q.asof, close: q.price, source: q.source || "yahoo" }); } catch { /* ignore */ }
     }
+    // DATE-ALIGN VIX & VIX3M on their common trading days before the VTS term-structure check, so the
+    // "last 3 days" are truly the same 3 sessions (a missing/extra bar in one series must not make the
+    // overlay compare stale, mismatched bars). HYG is a single series (percentile) → no alignment.
+    ({ a: vixAligned, b: vix3mAligned } = alignTwoSeries(vixS, vix3mS));
     // EXACT V2.3 composite-stress: VTS (VIX/VIX3M ≥ 1.0 ×3 consecutive days) AND HV (20-day −log(HYG)
-    // velocity in the top 5% of its trailing 252-day distribution) — computed from the deep closes.
-    const m = macroStress({ vixCloses: vixS?.closes, vix3mCloses: vix3mS?.closes, hygCloses: hygS?.closes });
+    // velocity in the top 5% of its trailing 252-day distribution) — computed from the aligned/deep closes.
+    const m = macroStress({ vixCloses: vixAligned, vix3mCloses: vix3mAligned, hygCloses: hygS?.closes });
     // Helm #1: the brake needs ALL inputs. If ANY leg is uncomputable it's SUPPRESSED — leave macro=null
     // so the regime marks the exit-only overlay UNAVAILABLE instead of silently showing "calm".
     if (!m.available) errors.push(`macro: overlay suppressed — missing ${m.missing.join("/")} this run`);
@@ -712,9 +732,9 @@ try {
 let v23 = { state: "UNAVAILABLE", reasons: ["offline run"], basis: "needs QQQ/VIX/HYG history" };
 if (!OFFLINE) {
   try {
-    // Reuse the deep QQQ/VIX/VIX3M/HYG series already fetched for the macro overlay above (one source
-    // of truth → the cross-check's overlay is the SAME exact rule that brakes the portfolio).
-    const stress = compositeStress({ vixCloses: vixS?.closes, vix3mCloses: vix3mS?.closes, hygCloses: hygS?.closes });
+    // Reuse the deep, DATE-ALIGNED QQQ/VIX/VIX3M/HYG series already fetched for the macro overlay above
+    // (one source of truth → the cross-check's overlay is the SAME exact rule that brakes the portfolio).
+    const stress = compositeStress({ vixCloses: vixAligned, vix3mCloses: vix3mAligned, hygCloses: hygS?.closes });
     v23 = v23State(qqqS?.closes || null, { compositeStress: stress });
     console.log(`V2.3 cross-check: ${v23.state} (${v23.rule}${v23.overlay_applied ? "+overlay" : ""}); stress ${stress == null ? "suppressed" : stress}; src qqq=${qqqS?.src || "?"}/hyg=${hygS?.src || "?"}`);
   } catch (e) { errors.push(`v23: ${e.message}`); }

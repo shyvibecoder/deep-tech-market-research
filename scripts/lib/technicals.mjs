@@ -10,7 +10,23 @@
 const SESSIONS_1Y = 252;
 const SESSIONS_1M = 22;
 
-const sma = (a, n) => (a.length >= n ? a.slice(-n).reduce((x, y) => x + y, 0) / n : null);
+// Canonical trailing point-SMA (the ONE definition; imported by v23.mjs et al. so the live regime,
+// backtest and cross-check can't drift). Returns null without n bars. Pure.
+export const sma = (a, n) => (a.length >= n ? a.slice(-n).reduce((x, y) => x + y, 0) / n : null);
+
+// Canonical annualized realized vol from the last `n` daily LOG-returns (the ONE definition, reused by
+// realizedVol below AND v23.mjs's crash gate). Requires the FULL window (n+1 closes) so a "1-year vol"
+// is never silently computed from ~20 bars (audit M3); `minObs` keeps the estimate stable. Pure.
+export function annualizedVol(closes, n, { minObs = 20 } = {}) {
+  if (!Array.isArray(closes) || closes.length < n + 1) return null;
+  const c = closes.slice(-(n + 1));
+  if (c.length < Math.max(minObs, 2)) return null;
+  const rets = [];
+  for (let i = 1; i < c.length; i++) rets.push(Math.log(c[i] / c[i - 1]));
+  const mean = rets.reduce((a, b) => a + b, 0) / rets.length;
+  const varr = rets.reduce((a, b) => a + (b - mean) ** 2, 0) / (rets.length - 1);
+  return Math.sqrt(varr * 252);
+}
 
 // Wilder's RSI over `period` (default 14): seed avg gain/loss with the first `period` changes, then
 // Wilder-smooth through the rest. Returns 0..100, or null without enough history. Pure.
@@ -30,16 +46,9 @@ export function rsi(closes, period = 14) {
   return +(100 - 100 / (1 + rs)).toFixed(1);
 }
 
-// Annualized realized vol from the last n daily log-returns.
-function realizedVol(closes, n) {
-  const c = closes.slice(-(n + 1));
-  if (c.length < 20) return null;
-  const rets = [];
-  for (let i = 1; i < c.length; i++) rets.push(Math.log(c[i] / c[i - 1]));
-  const mean = rets.reduce((a, b) => a + b, 0) / rets.length;
-  const varr = rets.reduce((a, b) => a + (b - mean) ** 2, 0) / (rets.length - 1);
-  return Math.sqrt(varr) * Math.sqrt(252);
-}
+// vol_3m / vol_1y delegate to the canonical annualizedVol (requires the full n+1 window — no more
+// short-window mislabeling). Kept as a thin alias so call sites read clearly.
+const realizedVol = (closes, n) => annualizedVol(closes, n);
 
 // Read-side helper: combine a deep DB series with TODAY's (already-corroborated) price, then
 // compute windowed technicals. Appends today only if it's newer than the series' last bar (so a

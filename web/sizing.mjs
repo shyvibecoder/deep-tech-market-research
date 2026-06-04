@@ -63,6 +63,9 @@ export function regimeFactor(tilt, posture, { cap = 0.15 } = {}) {
 // Which sleeve (axis) a holding belongs to — by explicit axis tag or its role. The deep-tech build-out is
 // the default; diversifiers (the 2nd axis) are detected so the rebalance keeps each sleeve in its own lane.
 export const sleeveAxis = (h) => (h?.axis === "diversifier" || /diversifier|de-correlator/i.test(h?.role || "")) ? "diversifier" : "deep-tech";
+// THE canonical "is this holding a diversifier?" predicate — import this everywhere instead of re-typing
+// the axis/role test, so the classification can't drift across modules (audit C4).
+export const isDiversifierHolding = (h) => sleeveAxis(h) === "diversifier";
 
 // Target-weight vector, normalized PER (account × axis) CELL — so the diversifier sleeve is held to its
 // own budget and can't drift into/out of the build-out under the inverse-vol/opportunity tilts. Diversifiers

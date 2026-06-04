@@ -40,9 +40,9 @@ function evaluate() {
   const atmIv = SIG.quotes?.[($("#oTicker").value || "").toUpperCase()]?.atm_iv;
   const atmRow = atmIv ? `<tr><td>Market ATM IV (Yahoo)</td><td>${(atmIv * 100).toFixed(1)}%</td><td>your option IV</td><td>${e.implied_vol == null ? "—" : e.implied_vol + "%"}</td></tr>` : "";
   const posture = SIG.regime?.posture;
-  const sug = suggestOptionStructure(posture, { macroStressed: !!SIG.regime?.macro_stressed });
-  const suggest = sug.stance === "none" ? "" :
-    `Timing posture <strong>${esc(posture)}</strong> → <strong>${esc(sug.stance)}</strong>: ${esc(sug.structures.join("; "))} (${esc(sug.dte)}, ${esc(sug.delta)}) — ${esc(sug.rationale)}. Defined-risk only.`;
+  const sug = suggestOptionStructure(posture, { macroStressed: !!SIG.regime?.macro_stressed, vix: SIG.regime?.macro?.vix ?? null });
+  const suggest = sug.stance === "none" && !sug.iv_note ? "" :
+    `Timing posture <strong>${esc(posture)}</strong> → <strong>${esc(sug.stance)}</strong>: ${esc(sug.structures.join("; "))} (${esc(sug.dte)}, ${esc(sug.delta)}) — ${esc(sug.rationale)}.${sug.iv_note ? ` <strong>${esc(sug.iv_note)}</strong>` : ""} Defined-risk only.`;
   const taxWarn = taxableHedgeWarning(sug);
   out.innerHTML = `
     <div class="optcard">
@@ -57,7 +57,7 @@ function evaluate() {
       </table>
       ${e.notes?.length ? `<p class="foot">⚠ ${esc(e.notes.join("; "))}</p>` : ""}
       ${suggest ? `<p class="foot">${suggest}</p>` : ""}
-      ${taxWarn ? `<p class="foot" style="color:#b45309">${esc(taxWarn)}</p>` : ""}
+      ${taxWarn ? `<p class="foot" style="color:var(--y27)">${esc(taxWarn)}</p>` : ""}
       <p class="foot">Sanity check only — realized vol is backward-looking; options also carry event/skew/term premia. <strong>Defined-risk only, no naked options.</strong> Not financial advice.</p>
     </div>`;
 }

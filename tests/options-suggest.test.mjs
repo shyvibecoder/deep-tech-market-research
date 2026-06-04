@@ -48,3 +48,22 @@ describe("options: taxable hedge tax-warning gate", () => {
     assert.equal(taxableHedgeWarning({}), null);
   });
 });
+
+describe("options: IV-aware suggestion (C-H1)", () => {
+  it("rich IV (high VIX) → favors debit spreads over outright long premium, with a note", () => {
+    const r = suggestOptionStructure("risk-on", { vix: 30 });
+    assert.equal(r.iv_band, "rich");
+    assert.ok(/debit spread/i.test(r.structures.join(" ")), "risk-on + rich IV suggests a call debit spread");
+    assert.ok(/RICH/.test(r.iv_note));
+  });
+  it("cheap IV (low VIX) → outright long premium is fine", () => {
+    const r = suggestOptionStructure("risk-on", { vix: 12 });
+    assert.equal(r.iv_band, "cheap");
+    assert.ok(/LEAPS|long call/i.test(r.structures.join(" ")));
+  });
+  it("no VIX → behaves exactly as before (no iv fields)", () => {
+    const r = suggestOptionStructure("risk-on");
+    assert.equal(r.iv_band, undefined);
+    assert.equal(r.stance, "accelerate");
+  });
+});

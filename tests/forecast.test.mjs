@@ -263,3 +263,63 @@ describe("forecast: G3 sizing-tilt grading", () => {
     assert.ok(Math.abs(r - 0.1) < 1e-9); // only A resolves → +10%, weight renormalized to 1
   });
 });
+
+describe("forecast: C-1 external-benchmark (vs-QQQ) alpha leg — records BOTH", () => {
+  const today = "2026-06-04";
+  // basket = {A,B}; complex (sibling themes) = {C}; external market = {QQQ}.
+  const quotes = {
+    A: { price: 100 }, B: { price: 100 }, C: { price: 100 }, QQQ: { price: 100 },
+  };
+  const scarcities = [{ id: "s1", tickers: ["A", "B"] }];
+  const signals = { quotes, scarcity_signals: { s1: { flag: "inflecting" } } };
+
+  it("anchors an external market_prices snapshot alongside the complex", () => {
+    const [f] = makeScarcityForecasts(scarcities, signals, today, 42, ["C"], ["QQQ"]);
+    assert.equal(f.claim, "outperform");
+    assert.deepEqual(f.market_tickers, ["QQQ"]);
+    assert.equal(f.market_prices.QQQ, 100);
+    assert.equal(f.complex_prices.C, 100);
+  });
+
+  it("grades intra-complex AND vs-market independently; scorecard tracks both", () => {
+    const [f] = makeScarcityForecasts(scarcities, signals, today, 42, ["C"], ["QQQ"]);
+    // At resolution: basket +20% (A,B→120), complex +25% (C→125), market/QQQ +10% (QQQ→110).
+    const now = { A: { price: 120 }, B: { price: 120 }, C: { price: 125 }, QQQ: { price: 110 } };
+    const { resolved } = resolveDue([{ ...f, resolve_on: today }], now, today);
+    const r = resolved[0];
+    assert.equal(r.correct, false);          // claimed outperform vs complex, but basket (+20%) < complex (+25%)
+    assert.equal(r.correct_vs_market, true); // basket (+20%) DID beat the market QQQ (+10%)
+    const sc = updateScorecard(null, resolved);
+    assert.equal(sc.by_signal.outperform.n, 1);
+    assert.equal(sc.alpha_ext.n, 1);
+    assert.equal(sc.alpha_ext.hits, 1);
+    assert.equal(sc.alpha_ext_hit_rate, 1);
+  });
+
+  it("a divergence-flagged anchor price is NOT used (C-H3)", () => {
+    const poisoned = { ...signals, quotes: { ...quotes, A: { price: 100, corroboration: { ok: false } } } };
+    const [f] = makeScarcityForecasts(scarcities, poisoned, today, 42, ["C"], ["QQQ"]);
+    assert.ok(!("A" in f.basket_prices), "the flagged ticker A is excluded from the anchor");
+    assert.equal(f.basket_prices.B, 100);
+  });
+});
+
+describe("forecast: F1 — external leg unresolvable is TALLIED, not silently dropped", () => {
+  const today = "2026-06-04";
+  it("when QQQ is absent at resolution, intra leg resolves but alpha_ext.unresolved is counted", () => {
+    const f = {
+      id: "x", date: today, type: "scarcity_rel", subject: "s1", claim: "outperform",
+      basket_prices: { A: 100 }, complex_prices: { C: 100 }, market_prices: { QQQ: 100 },
+      resolve_on: today,
+    };
+    const now = { A: { price: 120 }, C: { price: 110 } }; // QQQ missing this day
+    const { resolved } = resolveDue([f], now, today);
+    const r = resolved[0];
+    assert.equal(typeof r.correct, "boolean");        // intra leg still resolved
+    assert.equal(r.correct_vs_market, undefined);     // external leg could not resolve
+    assert.equal(r.market_unresolved, true);
+    const sc = updateScorecard(null, resolved);
+    assert.equal(sc.alpha_ext.unresolved, 1);
+    assert.equal(sc.alpha_ext.n, 0);                  // not counted as a resolved external observation
+  });
+});

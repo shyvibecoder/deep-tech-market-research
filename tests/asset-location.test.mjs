@@ -154,6 +154,16 @@ describe("asset-location: 3-way placement (Roth ← growth, Traditional ← inco
   it("deploys the whole sleeve", () => {
     assert.ok(Math.abs(r.rows.reduce((s, x) => s + x.value, 0) - sleeveUsd) < 5);
   });
+  it("[H1] folds pre-tax IRA capacity into Traditional in 3-way mode (doesn't drop it)", () => {
+    // Roth+Traditional+IRA all supplied → threeWay; the IRA room must be usable, not lost to overflow.
+    const rIra = locateAssets(holds, { capacities: { roth: 100_000, traditional: 50_000, ira: 450_000, taxable: 0 }, sleeveUsd, horizonYears: 20 });
+    assert.equal(rIra.three_way, true);
+    const placed = rIra.rows.reduce((s, x) => s + x.value, 0);
+    assert.ok(Math.abs(placed - sleeveUsd) < 5, `whole sleeve placed using IRA room (placed ${placed} of ${sleeveUsd})`);
+    const tradUsed = rIra.rows.filter((x) => x.account === "traditional").reduce((s, x) => s + x.value, 0);
+    assert.ok(tradUsed <= 50_000 + 450_000 + 2, "traditional capacity includes the folded IRA room");
+    assert.ok(tradUsed > 50_000, "the IRA room is actually being used beyond the bare Traditional balance");
+  });
   it("reports a positive after-tax uplift and a positive annual + horizon tax drag avoided", () => {
     assert.ok(r.summary.after_tax_uplift_usd > 0, "optimal location adds after-tax terminal value vs pro-rata");
     assert.ok(r.summary.annual_drag_avoided > 0);

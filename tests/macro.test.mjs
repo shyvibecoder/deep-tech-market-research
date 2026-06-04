@@ -76,3 +76,28 @@ describe("macro: suppress on any missing/short input", () => {
     assert.equal(macroStress({ ...p, hygCloses: hyg({ drop: 0.08 }) }).available, false);
   });
 });
+
+// Regression: the HV percentile must NOT fire on a degenerate/calm credit tape, and the VTS leg must
+// not compare mismatched-length (unaligned) VIX/VIX3M series.
+describe("macro: HV false-positive + VTS alignment fixes", () => {
+  it("a DEAD-FLAT HYG tape is NOT elevated (no >= tie at threshold 0)", () => {
+    const flat = new Array(300).fill(100);
+    const m = macroStress({ ...vixPair(1.15), hygCloses: flat });
+    assert.equal(m.available, true);   // both legs computable
+    assert.equal(m.hy_stressed, false); // credit not widening → not elevated
+    assert.equal(m.stressed, false);
+  });
+  it("a credit-RALLY-then-flat tape is NOT elevated (all-negative distribution, flat today)", () => {
+    const c = []; for (let i = 0; i < 300; i++) c.push(i < 60 ? 95 : 100); // rallied early, flat since
+    assert.equal(macroStress({ ...vixPair(1.15), hygCloses: c }).hy_stressed, false);
+  });
+  it("a REAL 20-day widening still fires the HV leg", () => {
+    assert.equal(macroStress({ ...vixPair(1.15), hygCloses: hyg({ drop: 0.08 }) }).hy_stressed, true);
+  });
+  it("mismatched-length VIX vs VIX3M is SUPPRESSED, not compared on stale bars", () => {
+    const m = macroStress({ vixCloses: [1.1, 1.1, 1.1, 1.1, 9.9], vix3mCloses: [1, 1, 1, 1], hygCloses: hyg({ drop: 0.08 }) });
+    assert.equal(m.term_inverted, null);
+    assert.equal(m.available, false);
+    assert.equal(m.stressed, false);
+  });
+});

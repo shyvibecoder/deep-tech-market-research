@@ -93,28 +93,51 @@ export function evaluateOption({ type, S, K, daysToExpiry, r = 0.04, marketPrice
   };
 }
 
-// Regime-driven, DEFINED-RISK options suggestion (no naked options, both accounts).
-// Maps the timing posture (+ macro brake) to a structure with delta/DTE bands.
-export function suggestOptionStructure(posture, { macroStressed = false } = {}) {
-  if (macroStressed || posture === "defensive") return {
+// IV-richness band from spot VIX (the free, already-fetched implied-vol proxy). Rich premium argues
+// for DEBIT SPREADS / selling-to-fund over outright long premium; cheap argues the reverse (audit C-H1
+// O3: the structural suggestion must not ignore whether you're overpaying for vol).
+export function ivBand(vix) {
+  if (!Number.isFinite(vix) || vix <= 0) return null;
+  if (vix >= 22) return "rich";
+  if (vix <= 14) return "cheap";
+  return "normal";
+}
+function ivNote(band, vix) {
+  if (!band) return null;
+  const v = `VIX ${vix.toFixed(1)}`;
+  if (band === "rich") return `IV is RICH (${v}) — premium is expensive: prefer DEBIT SPREADS (cap the long leg by selling a further strike) or buying shares over outright long calls/puts; if you sell premium, do it defined-risk.`;
+  if (band === "cheap") return `IV is CHEAP (${v}) — outright long premium (calls/LEAPS or protective puts) is attractively priced vs. spreads.`;
+  return `IV is NORMAL (${v}).`;
+}
+
+// Regime-driven, DEFINED-RISK options suggestion (no naked options, both accounts), now IV-AWARE: the
+// posture sets the stance; spot VIX sets whether to favor outright long premium vs. debit spreads.
+export function suggestOptionStructure(posture, { macroStressed = false, vix = null } = {}) {
+  const band = ivBand(vix);
+  const withIv = (sug) => band ? { ...sug, iv_band: band, vix: +(+vix).toFixed(1), iv_note: ivNote(band, vix) } : sug;
+  if (macroStressed || posture === "defensive") return withIv({
     stance: "hedge",
-    structures: ["protective put or debit put spread, ~5-10% OTM", "collar if you already hold the shares"],
+    structures: band === "rich"
+      ? ["debit put spread ~5-10% OTM (puts are expensive — spread to cut cost)", "collar if you already hold the shares (sell a call to fund the put)"]
+      : ["protective put or debit put spread, ~5-10% OTM", "collar if you already hold the shares"],
     rationale: "cut the left tail without selling the thesis",
     dte: "30-90d", delta: "put ~0.20-0.35",
-  };
-  if (posture === "caution") return {
+  });
+  if (posture === "caution") return withIv({
     stance: "protect",
     structures: ["partial protective put / debit put spread on the most correlated cyclicals"],
     rationale: "tap the brakes, keep upside",
     dte: "30-90d", delta: "put ~0.15-0.25",
-  };
-  if (posture === "risk-on") return {
+  });
+  if (posture === "risk-on") return withIv({
     stance: "accelerate",
-    structures: ["long call / LEAPS for capped-downside leverage"],
+    structures: band === "rich"
+      ? ["call DEBIT SPREAD for defined, cheaper upside (long premium is rich here)", "or simply buy shares vs. paying up for calls"]
+      : ["long call / LEAPS for capped-downside leverage"],
     rationale: "leveraged upside vs. buying more shares, with defined risk",
     dte: "90-365d", delta: "call ~0.25-0.40",
-  };
-  return { stance: "none", structures: ["no options action — follow the DCA calendar"], rationale: "neutral regime", dte: "-", delta: "-" };
+  });
+  return withIv({ stance: "none", structures: ["no options action — follow the DCA calendar"], rationale: "neutral regime", dte: "-", delta: "-" });
 }
 
 // Tax tripwire (NOT a rules engine, NOT tax advice): a collar or short-call overlay on an

@@ -162,6 +162,10 @@ export function fundSleeve({ candidates = [], currentHoldings = [], existingDive
 // diversifier axis at `sleevePct`. (Stage 3 of the pipeline; the human reviews + merges this.)
 export function applyFunding(portfolio, funding) {
   const { newHoldings, buildoutScale, existingDiversifierTickers = [] } = funding;
+  // IDEMPOTENCY (audit C5): if ANY proposed name is already in the plan, this funding was already
+  // applied — re-applying would scale the build-out a SECOND time. Refuse, returning the plan as-is.
+  // Mirrors web/diversifier-review.applyDiversifierFunding's guard (the two had drifted out of sync).
+  if ((newHoldings || []).some((h) => (portfolio.holdings || []).some((ph) => ph.ticker === h.ticker))) return portfolio.holdings || [];
   const newSet = new Set(newHoldings.map((h) => h.ticker));
   const scaled = (portfolio.holdings || []).filter((h) => !newSet.has(h.ticker)).map((h) => {
     if (existingDiversifierTickers.includes(h.ticker)) return { ...h }; // existing diversifier (FIW) untouched — already in the budget

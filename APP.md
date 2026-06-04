@@ -34,7 +34,7 @@ npm run serve                    # static server at http://localhost:3000
 
 ## Turn on the free scanner + agent digest
 1. **(Optional, for the LLM digest)** create a **free** key — Google AI Studio (`GEMINI_API_KEY`) or Groq (`GROQ_API_KEY`) — and add it under **GitHub → Settings → Secrets → Actions**. Without a key the scanner still runs (quotes + auto-triggers); only the narrative digest is skipped.
-2. The `scan` workflow runs weekdays 13:00 UTC, on manual dispatch, and on `repository_dispatch` (the dashboard Refresh button, if you wire a token). It commits `signals.json` and opens a GitHub Issue when a trigger fires.
+2. The `scan` workflow runs weekdays 13:00 UTC, on manual dispatch, and on `repository_dispatch` (the dashboard **⟳ Refresh** button — **keyless** by default via the `/api/refresh` serverless endpoint that holds the dispatch token server-side; falls back to a per-browser token if unconfigured, see SETUP §3a/§3b). It commits `signals.json` and opens a GitHub Issue when a trigger fires.
 
 ## Data model (`web/data/`)
 - `scarcities.json` — the scarcity map (edit to add/retune theses).

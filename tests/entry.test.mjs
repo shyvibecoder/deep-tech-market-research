@@ -31,6 +31,12 @@ describe("entry: per-name entry quality", () => {
     assert.ok(parabola.score < healthy.score, "the parabola is a worse entry than the healthy uptrend");
     assert.ok(parabola.reasons.some((r) => /extended|ran up/.test(r)), "flags the extension in reasons");
   });
+  it("an EXTENDED name (+150% over 12m) is penalized BELOW neutral, worse than a healthy uptrend (audit M1)", () => {
+    const extended = entryQuality({ pctOffHigh: 0, aboveMa200: true, mom12m: 1.5, mom1m: 0.02, relStrength: 0 });
+    const healthy = entryQuality({ pctOffHigh: 0, aboveMa200: true, mom12m: 0.25, mom1m: 0.02, relStrength: 0 });
+    assert.ok(extended.legs.momentum < 0.5, `+150% momentum leg ${extended.legs.momentum} should be below neutral`);
+    assert.ok(extended.legs.momentum < healthy.legs.momentum, "extended must score worse than a healthy uptrend");
+  });
   it("renormalizes over present legs; missing data → n/a, not a crash", () => {
     assert.equal(entryQuality({}).label, "n/a");
     const partial = entryQuality({ aboveMa200: true });

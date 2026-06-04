@@ -35,7 +35,7 @@ If `GH_DISPATCH_TOKEN` isn't set, `/api/refresh` returns *not configured* and th
 2. Tap **⟳ Refresh** and paste it when prompted. It's saved to this browser only and POSTed straight to GitHub.
 - A bad/expired token is auto-cleared so you can re-paste. No token at all? Refresh points you to the manual **Actions → scan → Run workflow**.
 
-## 3b. (Optional) Enable the cost-basis trim rule + live sleeve cap
+## 3e. (Optional) Enable the cost-basis trim rule + live sleeve cap
 Copy `web/data/positions.local.example.json` to **`web/data/positions.local.json`** (this filename is **gitignored — never committed**) and fill in your real `shares` / `cost_basis` per ticker (and `cash_usd` dry powder). The scanner then computes the **trim rule** (a name > 2× cost basis **and** > 50× forward P/E → trim ~⅓) and the **live sleeve-cap** trigger (sleeve value vs the ~$1.72mm cap). `forward_pe` is fetched automatically where a free source allows; set it per position to override.
 
 ## 3c. (Optional) Email alerts when a trigger fires

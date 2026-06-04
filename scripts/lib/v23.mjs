@@ -18,17 +18,10 @@
 // production default; F+C Thrust + this overlay is what's forward-tracked. Puck adds NO leverage:
 // a 2× QLD sleeve would breach the −35% maxDD objective unless gated by full exit to cash.
 
-const sma = (a, n) => (a.length >= n ? a.slice(-n).reduce((x, y) => x + y, 0) / n : null);
-
-// Realized annualized volatility over the last `n` daily log-returns.
-function annVol(closes, n) {
-  if (!closes || closes.length < n + 1) return null;
-  const w = closes.slice(-(n + 1)), rets = [];
-  for (let i = 1; i < w.length; i++) rets.push(Math.log(w[i] / w[i - 1]));
-  const m = rets.reduce((a, b) => a + b, 0) / rets.length;
-  const v = rets.reduce((a, b) => a + (b - m) ** 2, 0) / (rets.length - 1);
-  return Math.sqrt(v * 252);
-}
+// Shared, canonical SMA + annualized-vol (defined ONCE in technicals.mjs) so the live regime, the
+// backtest and this cross-check provably use the same math — no drift across copies (audit C1/C2).
+import { sma, annualizedVol } from "./technicals.mjs";
+const annVol = (closes, n) => annualizedVol(closes, n);
 
 export function v23Signals(closes) {
   if (!Array.isArray(closes) || closes.length < 211) return null; // 200-SMA + a 10-day slope lookback
@@ -56,9 +49,13 @@ export function fcThrustLadder({ trend, crash_off, thrust }) {
 
 // --- V2.3 composite-stress overlay inputs (exit-only) ---
 // VIX/VIX3M ≥ 1.0 for `days` consecutive sessions (term-structure backwardation).
+// REQUIRES the two series to be DATE-ALIGNED (same trading days, equal length) — the caller aligns
+// them (scan.mjs). If they aren't equal-length we can't trust positional comparison, so we SUPPRESS
+// (return null) rather than compare stale bars across mismatched tails (audit: head-alignment bug).
 export function termBackwardation(vixCloses, vix3mCloses, days = 3) {
-  if (!vixCloses || !vix3mCloses) return null;
-  const n = Math.min(vixCloses.length, vix3mCloses.length);
+  if (!Array.isArray(vixCloses) || !Array.isArray(vix3mCloses)) return null;
+  if (vixCloses.length !== vix3mCloses.length) return null; // not aligned → suppress, don't guess
+  const n = vixCloses.length;
   if (n < days) return null;
   for (let i = 0; i < days; i++) {
     const v = vixCloses[n - 1 - i], v3 = vix3mCloses[n - 1 - i];
@@ -81,7 +78,12 @@ export function hyVelocityElevated(hygCloses, { win = 20, lookback = 252, pct = 
   const today = vel[vel.length - 1];
   const sorted = vel.slice(-lookback).sort((a, b) => a - b);
   const threshold = sorted[Math.floor(sorted.length * pct)];
-  return today >= threshold;
+  // Elevated = today is in the top-5% tail AND credit is actually WIDENING (velocity > 0 ⇔ HYG fell
+  // over the 20-day window). The `> 0` floor kills two false positives the bare percentile produced:
+  // (a) a dead-flat tape where threshold == today == 0, and (b) a credit-RALLY-then-flat tape where
+  // the trailing distribution is all-negative so a flat today (0) sits "in the top 5%" but is not
+  // stress at all. "HY credit widening fast" requires real widening, not merely the calmest reading.
+  return today >= threshold && today > 0;
 }
 
 // Composite stress: BOTH conditions. Returns null (suppressed) if either input is uncomputable.

@@ -60,6 +60,21 @@ const dataUrl = (p) => new URL(`../web/data/${p}`, import.meta.url);
 // Series source for metrics/backtest/V2.3: prefer the ACCUMULATED, cross-checked, adjusted DB
 // history (deep → meaningful multi-year metrics, resilient to Yahoo outages); fall back to a live
 // fetch when the DB isn't configured or lacks the ticker. Returns { ticker, dates, closes, src }.
+
+// Align two {dates,closes} series onto their COMMON trading days (intersection, in order). Returns
+// { a, b } as equal-length, date-matched closes arrays (or nulls if either is missing) — so positional
+// comparisons (e.g. the VIX/VIX3M term-structure check) are guaranteed same-session.
+function alignTwoSeries(sA, sB) {
+  if (!sA?.dates?.length || !sB?.dates?.length) return { a: null, b: null };
+  const mapB = new Map(sB.dates.map((d, i) => [d, sB.closes[i]]));
+  const a = [], b = [];
+  for (let i = 0; i < sA.dates.length; i++) {
+    const bv = mapB.get(sA.dates[i]);
+    if (bv != null) { a.push(sA.closes[i]); b.push(bv); }
+  }
+  return { a, b };
+}
+
 let _dbHits = 0, _liveHits = 0;
 async function seriesFor(ticker, { liveRange = "1y", years } = {}) {
   if (supabaseConfigured()) {
@@ -143,8 +158,12 @@ for (const [tk, q] of Object.entries(quotes)) {
 // Crowding score 0-100 from YTD + distance from 52w high (higher = more crowded/priced-in).
 function crowding(q) {
   if (!q || q.error || q.ytd == null) return null;
+  // A BAD-DATA quote (cross-source divergence / >35% jump / consensus-swapped) has an untrustworthy
+  // ytd/pct_off_high → don't emit a confident crowding score from it (audit M3); it would otherwise flow
+  // into the live-gate / opportunity ranking / forced-flow. Single-source (uncorroborated) is fine.
+  if (q.flags?.some((f) => /divergence|jump|consensus/.test(f))) return null;
   const ytdScore = Math.max(0, Math.min(60, (q.ytd ?? 0) * 100)); // +60% ytd -> ~60
-  const nearHigh = q.pct_off_high == null ? 0 : Math.max(0, 40 * (1 + q.pct_off_high / 0.25)); // at high -> 40
+  const nearHigh = q.pct_off_high == null ? 0 : Math.max(0, Math.min(40, 40 * (1 + q.pct_off_high / 0.25))); // at/above high -> 40 (capped)
   return Math.round(Math.max(0, Math.min(100, ytdScore + nearHigh)));
 }
 
@@ -402,6 +421,17 @@ if (!OFFLINE) {
       if (!supabaseConfigured()) await new Promise((r) => setTimeout(r, 120)); // throttle only when live-fetching
     }
     const idx = basketIndex(series, weights);
+    // D6: basketIndex aligns on the DATE-INTERSECTION of all members, so one shallow ticker (a DB miss
+    // falling back to a 1-yr live fetch) silently truncates the WHOLE composite — incl. the series the
+    // live brake runs on. Surface it instead of letting metrics/regime quietly run on a short window.
+    {
+      const lens = Object.entries(series).map(([t, s]) => [t, s?.closes?.length || 0]);
+      const deepest = lens.reduce((m, [, n]) => Math.max(m, n), 0);
+      if (idx.values.length && deepest && idx.values.length < deepest * 0.6) {
+        const shallow = lens.filter(([, n]) => n > 0).sort((a, b) => a[1] - b[1])[0];
+        errors.push(`metrics: composite truncated to ${idx.values.length} bars (deepest member ${deepest}) — shallow ticker ${shallow?.[0]} (${shallow?.[1]} bars) shrinks the date-intersection; metrics + regime composite run SHORT this scan`);
+      }
+    }
     if (idx.values.length > 60) {
       const years = ((Date.parse(idx.dates[idx.dates.length - 1]) - Date.parse(idx.dates[0])) / (365.25 * 86400000)).toFixed(1);
       metrics = { ...portfolioMetrics(idx.values), basis: Object.keys(series), window: `${idx.dates[0]}..${idx.dates[idx.dates.length - 1]}`, source: fromDb ? `accumulated DB (${fromDb}/${Object.keys(series).length} tickers)` : "live", note: `trailing ~${years}y, target-weighted strategy basket${fromDb ? " (from accumulated history)" : ""}` };
@@ -509,6 +539,7 @@ if (!OFFLINE && supabaseConfigured()) {
 // composite-stress overlay below AND the QQQ cross-check later, so the overlay is CURRENT, the
 // portfolio brake == the cross-check overlay by construction, and we don't double-hit providers. ---
 let qqqS = null, vixS = null, vix3mS = null, hygS = null;
+let vixAligned = null, vix3mAligned = null; // VIX/VIX3M closes on their COMMON trading days (shared by overlay + cross-check)
 let macro = null;
 if (!OFFLINE) {
   try {
@@ -518,9 +549,13 @@ if (!OFFLINE) {
     for (const t of ["QLD", "SGOV"]) {
       try { const q = await fetchYahoo(t); if (q && q.price > 0 && q.asof) v23LatestBars.push({ ticker: t, d: q.asof, close: q.price, source: q.source || "yahoo" }); } catch { /* ignore */ }
     }
+    // DATE-ALIGN VIX & VIX3M on their common trading days before the VTS term-structure check, so the
+    // "last 3 days" are truly the same 3 sessions (a missing/extra bar in one series must not make the
+    // overlay compare stale, mismatched bars). HYG is a single series (percentile) → no alignment.
+    ({ a: vixAligned, b: vix3mAligned } = alignTwoSeries(vixS, vix3mS));
     // EXACT V2.3 composite-stress: VTS (VIX/VIX3M ≥ 1.0 ×3 consecutive days) AND HV (20-day −log(HYG)
-    // velocity in the top 5% of its trailing 252-day distribution) — computed from the deep closes.
-    const m = macroStress({ vixCloses: vixS?.closes, vix3mCloses: vix3mS?.closes, hygCloses: hygS?.closes });
+    // velocity in the top 5% of its trailing 252-day distribution) — computed from the aligned/deep closes.
+    const m = macroStress({ vixCloses: vixAligned, vix3mCloses: vix3mAligned, hygCloses: hygS?.closes });
     // Helm #1: the brake needs ALL inputs. If ANY leg is uncomputable it's SUPPRESSED — leave macro=null
     // so the regime marks the exit-only overlay UNAVAILABLE instead of silently showing "calm".
     if (!m.available) errors.push(`macro: overlay suppressed — missing ${m.missing.join("/")} this run`);
@@ -712,9 +747,9 @@ try {
 let v23 = { state: "UNAVAILABLE", reasons: ["offline run"], basis: "needs QQQ/VIX/HYG history" };
 if (!OFFLINE) {
   try {
-    // Reuse the deep QQQ/VIX/VIX3M/HYG series already fetched for the macro overlay above (one source
-    // of truth → the cross-check's overlay is the SAME exact rule that brakes the portfolio).
-    const stress = compositeStress({ vixCloses: vixS?.closes, vix3mCloses: vix3mS?.closes, hygCloses: hygS?.closes });
+    // Reuse the deep, DATE-ALIGNED QQQ/VIX/VIX3M/HYG series already fetched for the macro overlay above
+    // (one source of truth → the cross-check's overlay is the SAME exact rule that brakes the portfolio).
+    const stress = compositeStress({ vixCloses: vixAligned, vix3mCloses: vix3mAligned, hygCloses: hygS?.closes });
     v23 = v23State(qqqS?.closes || null, { compositeStress: stress });
     console.log(`V2.3 cross-check: ${v23.state} (${v23.rule}${v23.overlay_applied ? "+overlay" : ""}); stress ${stress == null ? "suppressed" : stress}; src qqq=${qqqS?.src || "?"}/hyg=${hygS?.src || "?"}`);
   } catch (e) { errors.push(`v23: ${e.message}`); }
@@ -765,7 +800,16 @@ let scorecard = null;
     store = { schema_version: SCHEMA_VERSION, open: [], scorecard: updateScorecard(null, []) };
   }
   const scarcityIds = new Set(scarcities.scarcities.map((s) => s.id)); // for kill-criterion survived/killed
-  const { resolved, stillOpen } = resolveDue(store.open, enriched, TODAY, { scarcityIds });
+  // EXTERNAL benchmark for the alpha referee: inject QQQ's price (the cleanest liquid market proxy for
+  // this book) so scarcity_rel calls can be graded vs the MARKET, not only vs their sibling themes
+  // (VISION's "load-bearing flaw"). QQQ is computed every scan in regime_instruments (DB-first), so it
+  // resolves reliably over time. enriched is the universe; fQuotes = universe + QQQ.
+  // Only inject the bare QQQ benchmark if QQQ isn't ALREADY a real (rich) enriched quote — a bare
+  // { price } must never clobber a corroborated quote's technicals/flags (F2 fragility guard).
+  const benchQuote = (!enriched.QQQ && regime_instruments?.QQQ && !regime_instruments.QQQ.error && regime_instruments.QQQ.price > 0)
+    ? { QQQ: { price: regime_instruments.QQQ.price } } : {};
+  const fQuotes = { ...enriched, ...benchQuote };
+  const { resolved, stillOpen } = resolveDue(store.open, fQuotes, TODAY, { scarcityIds });
   store.scorecard = updateScorecard(store.scorecard, resolved);
   // kill-criteria carry a STABLE id (kill:<scarcity>:<by_date>) and resolve once at their deadline —
   // remember resolved ones so the next scan can't re-register and double-count them.
@@ -774,16 +818,30 @@ let scorecard = null;
   // alpha calls are graded RELATIVE to it (does the flagged basket really under/out-perform?).
   const complexTickers = portfolio.holdings
     .filter((h) => securities[h.ticker]?.type === "etf").map((h) => h.ticker);
+  // ACTION-INTEGRITY (audit C-H2): do NOT anchor new price-based claims on a DEGRADED run — a poisoned/
+  // uncorroborated tape would silently seed bogus hits/misses into the moat. Resolution + the deadline-
+  // based kill-criteria still run (they don't anchor on today's possibly-bad prices). `?:42` is the
+  // external-benchmark arg → QQQ.
   const fresh = [
-    ...makeForecasts({ regime, quotes: enriched }, TODAY),
-    ...makeScarcityForecasts(buildoutScarcities, { quotes: enriched, scarcity_signals }, TODAY, 42, complexTickers),
-    ...makeSizingForecast(rebalance, enriched, TODAY), // CRITICAL-2: grade the G3 tilt vs the research baseline
+    ...(degraded ? [] : [
+      ...makeForecasts({ regime, quotes: fQuotes }, TODAY),
+      ...makeScarcityForecasts(buildoutScarcities, { quotes: fQuotes, scarcity_signals }, TODAY, 42, complexTickers, ["QQQ"]),
+      ...makeSizingForecast(rebalance, fQuotes, TODAY), // CRITICAL-2: grade the G3 tilt vs the research baseline
+    ]),
     ...makeKillForecasts(scarcities.scarcities, TODAY), // close the loop: deadline-track each committee kill-criterion
   ];
+  if (degraded && !OFFLINE) console.log("Forecasts: degraded run — skipped recording new price-anchored claims (resolve + kill-criteria still ran)");
   const seen = new Set([...stillOpen.map((f) => f.id), ...(store.kills_resolved || [])]);
   const merged = [...stillOpen, ...fresh.filter((f) => !seen.has(f.id))];
   store.open = pruneStale(merged, TODAY); // drop unresolvable (>180d overdue) so the ledger can't grow unbounded
-  if (store.open.length < merged.length) console.log(`Forecasts: pruned ${merged.length - store.open.length} unresolvable (>180d overdue)`);
+  const prunedN = merged.length - store.open.length;
+  if (prunedN > 0) {
+    // SURVIVORSHIP HONESTY (audit M5): unresolvable claims that expire ungraded must be TALLIED, not
+    // silently vanish — otherwise the hit-rate denominator flatters itself by dropping every call that
+    // couldn't be scored (e.g. a delisted name). Surfaced in the scorecard as expired_unresolved.
+    if (store.scorecard) store.scorecard.expired_unresolved = (store.scorecard.expired_unresolved || 0) + prunedN;
+    console.log(`Forecasts: pruned ${prunedN} unresolvable (>180d overdue) — tallied as expired_unresolved`);
+  }
   store.updated = TODAY;
   // Surface pending (registered, deadline not yet reached) kill-criteria alongside the matured tally.
   const pendingKills = store.open.filter((f) => f.type === "kill_criterion").length;

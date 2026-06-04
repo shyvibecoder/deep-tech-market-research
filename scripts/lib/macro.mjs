@@ -23,15 +23,16 @@ export function macroStress({ vixCloses, vix3mCloses, hygCloses } = {}) {
     hy == null && "HYG(≥273 bars)",
   ].filter(Boolean);
 
-  // Today's term ratio, for display only (best-effort; null if unavailable).
+  // Today's term ratio + spot VIX (the latter is the IV-richness proxy the options suggestion reads).
   const a = Array.isArray(vixCloses) ? vixCloses[vixCloses.length - 1] : null;
   const b = Array.isArray(vix3mCloses) ? vix3mCloses[vix3mCloses.length - 1] : null;
   const vix_term = a != null && b > 0 ? +(a / b).toFixed(3) : null;
+  const vix = a != null && a > 0 ? +(+a).toFixed(2) : null;
 
   if (term == null || hy == null) {
     return {
       stressed: false, available: false, suppressed: true, missing,
-      term_inverted: term, hy_stressed: hy, vix_term,
+      term_inverted: term, hy_stressed: hy, vix_term, vix,
       reasons: [`macro overlay suppressed — missing/short input(s): ${missing.join(", ")}`],
     };
   }
@@ -41,7 +42,7 @@ export function macroStress({ vixCloses, vix3mCloses, hygCloses } = {}) {
   return {
     stressed: term && hy, // AND gate — the V2.3 conjunction
     available: true, suppressed: false, missing: [],
-    term_inverted: term, hy_stressed: hy, vix_term,
+    term_inverted: term, hy_stressed: hy, vix_term, vix,
     reasons,
   };
 }

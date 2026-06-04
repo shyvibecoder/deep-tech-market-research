@@ -90,18 +90,6 @@ export async function fetchTiingoHistory(ticker, { key = process.env.TIINGO_API_
   return out;
 }
 
-const sma = (arr, n) => (arr.length >= n ? arr.slice(-n).reduce((a, b) => a + b, 0) / n : null);
-// Annualized realized volatility from daily log returns over the last n sessions.
-const realizedVol = (closes, n) => {
-  const c = closes.slice(-(n + 1));
-  if (c.length < 20) return null;
-  const rets = [];
-  for (let i = 1; i < c.length; i++) rets.push(Math.log(c[i] / c[i - 1]));
-  const mean = rets.reduce((a, b) => a + b, 0) / rets.length;
-  const varr = rets.reduce((a, b) => a + (b - mean) ** 2, 0) / (rets.length - 1);
-  return Math.sqrt(varr) * Math.sqrt(252);
-};
-
 export async function fetchYahoo(ticker) {
   // 1y daily history -> price + 52w high + YTD + moving averages + currency. Technicals are
   // computed by the shared (windowed, unit-tested) computeTechnicals so the live and DB paths

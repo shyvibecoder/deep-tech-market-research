@@ -31,7 +31,11 @@ export function corroborate(prices, divergence = DIVERGENCE) {
   const median = trueMedian(vals);
   const spread = median ? (vals[vals.length - 1] - vals[0]) / median : Infinity;
   const kept = vals.filter((v) => median && Math.abs(v / median - 1) <= divergence);
-  const used = kept.length ? +(kept.reduce((a, b) => a + b, 0) / kept.length).toFixed(4) : median;
+  // `used` must be a REAL observed price, never a fabricated midpoint. With exactly 2 divergent sources
+  // the median IS their mean (a price that exists nowhere) and exclusion empties `kept` — so fall back to
+  // the PRIMARY source's actual print (names[0] = Yahoo when present) and let getQuote's C2 swap decide
+  // which to trust. (Audit M1: averaging a good+bad print 50/50 was silently poisoning `used`.)
+  const used = kept.length ? +(kept.reduce((a, b) => a + b, 0) / kept.length).toFixed(4) : +(+prices[names[0]]).toFixed(4);
   return { sources: names, n: names.length, median: +median.toFixed(4), used, spread: +spread.toFixed(4), ok: names.length < 2 ? null : spread <= divergence };
 }
 
@@ -131,7 +135,10 @@ export function dataQualityGate(quotes, { offline = false } = {}) {
   const nUncorrob = corr.filter((q) => q.corroboration.ok === null).length;
   const errRate = vals.length ? nErr / vals.length : 1;
   const corrobRate = corr.length ? nCorrob / corr.length : 0;
-  const degraded = offline || errRate > 0.3 || (nOk > 0 && nBadData / nOk > 0.25) || (corr.length >= 5 && corrobRate < 0.5);
+  // Corroboration-COLLAPSE: most quotes lost their cross-check (e.g. Stooq fully down → single-source
+  // everywhere). Threshold lowered 5→3 (audit M2) so a small universe that goes uncorroborated still
+  // trips degraded instead of firing auto-triggers off a wholly uncorroborated tape.
+  const degraded = offline || errRate > 0.3 || (nOk > 0 && nBadData / nOk > 0.25) || (corr.length >= 3 && corrobRate < 0.5);
   return {
     ok: !degraded, degraded, ok_quotes: nOk, errored: nErr, flagged: nFlagged, bad_data: nBadData,
     uncorroborated: nUncorrob, corroborated: nCorrob, corroborated_of: corr.length,

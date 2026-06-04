@@ -93,12 +93,12 @@ export function computeRegime(quotes, holdings, { macro, securities = {}, compos
     action = "Timing needs the composite price history (built in the scan) — fall back to the DCA calendar.";
   } else {
     fast_reentry_armed = fc.thrust; // a rising-20-DMA reclaim is in progress
-    if (fc.crash_off) { posture = "defensive"; action = "CRASH_OFF (Faber-Crash): trailing 252-day return negative AND 60-day vol > 25% — brakes: raise cash, deploy only into the drawdown trigger."; }
-    else if (fc.trend) { posture = "risk-on"; action = "TREND (Faber): the composite is above its 200-DMA — deploy on schedule / accelerate low-regret anchors."; }
-    else if (fc.thrust) { posture = "neutral"; fast_reentry = true; action = "THRUST (fast re-entry): the composite reclaimed a RISING 20-DMA while still below its 200-DMA — re-risk to neutral, resume deploys."; }
-    else { posture = "defensive"; action = "Below the 200-DMA with no thrust and no crash — brakes: favor cash / dry powder."; }
+    if (fc.crash_off) { posture = "defensive"; action = "Brakes on — raise cash, deploy only into the drawdown trigger (CRASH_OFF: trailing 252-day return negative AND 60-day vol > 25%)."; }
+    else if (fc.trend) { posture = "risk-on"; action = "Deploy on schedule / accelerate low-regret anchors (TREND: the composite is above its 200-DMA)."; }
+    else if (fc.thrust) { posture = "neutral"; fast_reentry = true; action = "Re-risk to neutral, resume deploys (THRUST fast re-entry: the composite reclaimed a RISING 20-DMA while still below its 200-DMA)."; }
+    else { posture = "defensive"; action = "Brakes on — favor cash / dry powder (below the 200-DMA with no thrust and no crash)."; }
     // V2.3 composite-stress overlay (exit-only) — always wins, forces a full brake.
-    if (macroStressed) { posture = "defensive"; fast_reentry = false; action = `Composite-stress overlay ON (${(macro.reasons || []).join("; ")}) — exit-only brake: raise cash, deploy only into the drawdown trigger.`; }
+    if (macroStressed) { posture = "defensive"; fast_reentry = false; action = `Brakes on — raise cash, deploy only into the drawdown trigger (composite-stress overlay ON: ${(macro.reasons || []).join("; ")}).`; }
   }
 
   const confidence = !fc ? "low" : (qs.length >= 6 ? "high" : qs.length >= 3 ? "medium" : "low");
@@ -115,7 +115,7 @@ export function computeRegime(quotes, holdings, { macro, securities = {}, compos
       breadth_above_20dma: breadth20 == null ? null : +(breadth20 * 100).toFixed(0),
     },
     macro: macro || null,
-    options_suggestion: suggestOptionStructure(posture, { macroStressed }),
+    options_suggestion: suggestOptionStructure(posture, { macroStressed, vix: macro?.vix ?? null }),
     action,
     basis: "F+C Thrust ladder (Faber 200-DMA trend + Daniel-Moskowitz 252d-return/60d-vol crash + rising-20-DMA thrust re-entry) on the composite, + exit-only composite-stress overlay — see v23.mjs / FABER-CRASH-STRATEGY.md",
     note: fc

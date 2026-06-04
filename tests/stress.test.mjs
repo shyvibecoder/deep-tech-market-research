@@ -26,4 +26,11 @@ describe("stress: apply shock to the sleeve", () => {
     const r = applyShock({ A: { shares: 0 }, Z: { shares: 5, price: null } }, px, SCENARIOS[0]);
     assert.equal(r.before, 0);
   });
+  it("honors per-name betas when supplied (high-beta name hit harder than the uniform default)", () => {
+    const pos = { A: { shares: 10 }, B: { shares: 10 } }; // A=1000, B=500
+    const r = applyShock(pos, px, { id: "x", name: "x", market: -0.1, beta: 1.0 }, { betas: { A: 2.0, B: 0.0 } });
+    const a = r.per_name.find((x) => x.ticker === "A"), b = r.per_name.find((x) => x.ticker === "B");
+    assert.equal(a.change, -0.2); // 2.0 beta × −10%
+    assert.equal(b.change, 0);    // 0.0 beta → unaffected
+  });
 });

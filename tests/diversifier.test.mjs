@@ -156,6 +156,12 @@ describe("diversifier-review (browser mirror): matches node applyFunding + idemp
     const web = applyDiversifierFunding(portfolio, funding).holdings;
     assert.deepEqual(wkey(web), wkey(applyFunding(portfolio, funding)));
   });
+  it("[C5] node applyFunding is ALSO idempotent — re-applying to a funded plan is a no-op (no double-scaling)", () => {
+    const funded = applyFunding(portfolio, funding);                 // build-out scaled to 0.85
+    const again = applyFunding({ ...portfolio, holdings: funded }, funding); // must refuse (a new name already present)
+    assert.deepEqual(wkey(again), wkey(funded));
+    assert.ok(Math.abs(again.reduce((a, x) => a + x.weight, 0) - 1.0) < 1e-3, "still sums to 1.0");
+  });
   it("the proposed plan sums to ~1.0", () => {
     const h = applyDiversifierFunding(portfolio, funding).holdings;
     assert.ok(Math.abs(h.reduce((a, x) => a + x.weight, 0) - 1.0) < 1e-3);

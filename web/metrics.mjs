@@ -68,7 +68,9 @@ export function portfolioMetrics(values, { periodsPerYear = 252, maxDdLimit = 0.
     sortino: round(sortino(rets, periodsPerYear)),
     sharpe: round(sharpe(rets, periodsPerYear)),
     vol: round(annualVol(rets, periodsPerYear)),
-    breaches_35: mdd > maxDdLimit,
+    // The mandate is STRICT "maxDD < 35%", so exactly 35% IS a breach (>=). Matches stress.mjs
+    // (drawdown <= −0.35) — the two modules must answer the system's headline threshold identically.
+    breaches_35: mdd >= maxDdLimit,
     n: values.length,
   };
 }

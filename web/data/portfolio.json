@@ -34,7 +34,8 @@
       "target_usd": 105000,
       "weight": 0.07,
       "tier": "A",
-      "role": "Anchor — non-build-out de-correlator"
+      "role": "Anchor — non-build-out de-correlator",
+      "axis": "diversifier"
     },
     {
       "ticker": "SHLD",
@@ -189,7 +190,8 @@
       "tier": "C",
       "role": "Diversifier (2nd axis) — Defensive health demand (pharma / devices)",
       "conviction": 0.87,
-      "sleeve": "health-defensive"
+      "sleeve": "health-defensive",
+      "axis": "diversifier"
     },
     {
       "ticker": "WMT",
@@ -200,7 +202,8 @@
       "tier": "C",
       "role": "Diversifier (2nd axis) — Consumer staples (inelastic demand)",
       "conviction": 0.87,
-      "sleeve": "consumer-staples"
+      "sleeve": "consumer-staples",
+      "axis": "diversifier"
     },
     {
       "ticker": "KO",
@@ -211,7 +214,8 @@
       "tier": "C",
       "role": "Diversifier (2nd axis) — Consumer staples (inelastic demand)",
       "conviction": 0.86,
-      "sleeve": "consumer-staples"
+      "sleeve": "consumer-staples",
+      "axis": "diversifier"
     },
     {
       "ticker": "PEP",
@@ -222,7 +226,8 @@
       "tier": "C",
       "role": "Diversifier (2nd axis) — Consumer staples (inelastic demand)",
       "conviction": 0.85,
-      "sleeve": "consumer-staples"
+      "sleeve": "consumer-staples",
+      "axis": "diversifier"
     },
     {
       "ticker": "MRK",
@@ -233,7 +238,8 @@
       "tier": "C",
       "role": "Diversifier (2nd axis) — Defensive health demand (pharma / devices)",
       "conviction": 0.84,
-      "sleeve": "health-defensive"
+      "sleeve": "health-defensive",
+      "axis": "diversifier"
     },
     {
       "ticker": "PG",
@@ -244,7 +250,8 @@
       "tier": "C",
       "role": "Diversifier (2nd axis) — Consumer staples (inelastic demand)",
       "conviction": 0.837,
-      "sleeve": "consumer-staples"
+      "sleeve": "consumer-staples",
+      "axis": "diversifier"
     }
   ],
   "tiers": {

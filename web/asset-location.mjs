@@ -143,7 +143,10 @@ export function optimizeLocation(items, capacities) {
 export function locateAssets(holdings, { capacities = {}, tax = DEFAULT_TAX, horizonYears = 20, quotes = {}, overrides = {}, sleeveUsd = 0 } = {}) {
   const cap = { roth: +capacities.roth || 0, traditional: +capacities.traditional || 0, taxable: +capacities.taxable || 0, ira: +capacities.ira || 0 };
   const threeWay = cap.roth > 0 && cap.traditional > 0; // need BOTH split out for a Roth-vs-Traditional decision
-  const capOf = threeWay ? { roth: cap.roth, traditional: cap.traditional, taxable: cap.taxable } : { "tax-advantaged": cap.roth + cap.traditional + cap.ira, taxable: cap.taxable };
+  // A pre-tax IRA shares Traditional's (1−ordinary) treatment, so its capacity joins `traditional` in
+  // 3-way mode — NOT dropped (audit H1: a {roth, traditional, taxable, ira} caller previously lost the
+  // entire IRA balance, spilling names to needs_new_cash). Matches rebalanceLocated's normAcct mapping.
+  const capOf = threeWay ? { roth: cap.roth, traditional: cap.traditional + cap.ira, taxable: cap.taxable } : { "tax-advantaged": cap.roth + cap.traditional + cap.ira, taxable: cap.taxable };
   const accts = Object.keys(capOf);
 
   const items = (holdings || [])
@@ -196,7 +199,9 @@ export function locateAssets(holdings, { capacities = {}, tax = DEFAULT_TAX, hor
 export function rebalanceLocated(holdings, { held = {}, capacities = {}, tax = DEFAULT_TAX, horizonYears = 20, taxableAnchorTrimOk = [], quotes = {}, overrides = {} } = {}) {
   const cap = { roth: +capacities.roth || 0, traditional: +capacities.traditional || 0, taxable: +capacities.taxable || 0, ira: +capacities.ira || 0 };
   const threeWay = cap.roth > 0 && cap.traditional > 0;
-  const capOf = threeWay ? { roth: cap.roth, traditional: cap.traditional, taxable: cap.taxable } : { "tax-advantaged": cap.roth + cap.traditional + cap.ira, taxable: cap.taxable };
+  // Pre-tax IRA capacity joins `traditional` in 3-way mode (consistent with normAcct's held ira→traditional
+  // mapping below) — not dropped (audit H1).
+  const capOf = threeWay ? { roth: cap.roth, traditional: cap.traditional + cap.ira, taxable: cap.taxable } : { "tax-advantaged": cap.roth + cap.traditional + cap.ira, taxable: cap.taxable };
   const accts = Object.keys(capOf);
   const bookTotal = accts.reduce((a, k) => a + capOf[k], 0);
   const normAcct = (k) => k === "taxable" ? "taxable" : (threeWay ? (k === "ira" ? "traditional" : k) : "tax-advantaged");

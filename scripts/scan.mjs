@@ -804,7 +804,9 @@ let scorecard = null;
   // this book) so scarcity_rel calls can be graded vs the MARKET, not only vs their sibling themes
   // (VISION's "load-bearing flaw"). QQQ is computed every scan in regime_instruments (DB-first), so it
   // resolves reliably over time. enriched is the universe; fQuotes = universe + QQQ.
-  const benchQuote = (regime_instruments?.QQQ && !regime_instruments.QQQ.error && regime_instruments.QQQ.price > 0)
+  // Only inject the bare QQQ benchmark if QQQ isn't ALREADY a real (rich) enriched quote — a bare
+  // { price } must never clobber a corroborated quote's technicals/flags (F2 fragility guard).
+  const benchQuote = (!enriched.QQQ && regime_instruments?.QQQ && !regime_instruments.QQQ.error && regime_instruments.QQQ.price > 0)
     ? { QQQ: { price: regime_instruments.QQQ.price } } : {};
   const fQuotes = { ...enriched, ...benchQuote };
   const { resolved, stillOpen } = resolveDue(store.open, fQuotes, TODAY, { scarcityIds });

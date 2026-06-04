@@ -13,10 +13,10 @@
 // The numbers use explicit assumptions (below) you can override — guidance, not a guaranteed optimum, and
 // it does NOT model your exact bracket arbitrage, RMDs, contributions, or estate plan.
 
+import { isDiversifierHolding as isDiv } from "./sizing.mjs"; // canonical diversifier predicate (audit C4 — single source)
+
 export const DEFAULT_TAX = { ordinary: 0.35, qualified: 0.15, ltcg: 0.15 }; // marginal rates (overridable)
 export const TURNOVER_REALIZED = 0.08; // fraction of a tactical sleeve's value realized as gains per year
-
-const isDiv = (h) => h?.axis === "diversifier" || /diversifier|de-correlator/i.test(h?.role || "");
 
 // Per-name tax character. Uses live data where present (dividend_yield), else documented per-axis defaults:
 // diversifiers are dividend-heavy + low-growth + low-turnover; the build-out is low-yield + higher-growth,

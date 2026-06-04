@@ -2,7 +2,7 @@
 // reviewable portfolio.json edit — `cut` drops the name, `trim` reduces it by a third — then renormalize the
 // plan to sum to 1. PURE (no DOM); app.js opens the PR with the admin token. F9: the bot never edits your
 // plan or trades — this only DRAFTS a PR you review and merge.
-const isDiv = (h) => h?.axis === "diversifier" || /diversifier|de-correlator/i.test(h?.role || "");
+import { isDiversifierHolding as isDiv } from "./sizing.mjs"; // canonical diversifier predicate (audit C4 — single source)
 
 export function applyCatalystEdit(portfolioDoc, { affects = [], edit = null } = {}) {
   if (!portfolioDoc?.holdings || !edit || !affects.length) return portfolioDoc;

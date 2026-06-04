@@ -341,8 +341,10 @@ Rules that tell you to act. Each shows a state — **armed** (active), **monitor
 (the first time a condition is met it shows *pending — needs a 2nd confirming scan*), so a single bad
 print or one-day spike can't fire an action:
 - **Drawdown** (auto): complex down ≥20–25% from highs → deploy dry powder.
-- **Trim rule** (auto): a name >2× cost basis **and** >50× forward P/E → trim ⅓ (needs your cost basis
-  from Settings).
+- **Trim rule** (auto): a name >2× cost basis **and** >50× **forward** P/E → trim ⅓. Forward P/E is a
+  *best-effort keyless* fetch (Yahoo increasingly gates it, so it's often unavailable) — to guarantee this
+  rule can evaluate, set `forward_pe` per position in `positions.local.json`. It also needs your cost basis.
+  **Without a forward-P/E value the P/E condition simply isn't met (no trim)** — there is no trailing-P/E fallback for this trigger.
 - **Sleeve cap** (auto): sleeve value > ~$1.72mm → trim back (needs your holdings from Settings).
 - **Policy triggers** (manual): e.g. rare-earth/uranium policy shifts.
 

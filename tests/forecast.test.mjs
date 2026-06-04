@@ -303,3 +303,23 @@ describe("forecast: C-1 external-benchmark (vs-QQQ) alpha leg — records BOTH",
     assert.equal(f.basket_prices.B, 100);
   });
 });
+
+describe("forecast: F1 — external leg unresolvable is TALLIED, not silently dropped", () => {
+  const today = "2026-06-04";
+  it("when QQQ is absent at resolution, intra leg resolves but alpha_ext.unresolved is counted", () => {
+    const f = {
+      id: "x", date: today, type: "scarcity_rel", subject: "s1", claim: "outperform",
+      basket_prices: { A: 100 }, complex_prices: { C: 100 }, market_prices: { QQQ: 100 },
+      resolve_on: today,
+    };
+    const now = { A: { price: 120 }, C: { price: 110 } }; // QQQ missing this day
+    const { resolved } = resolveDue([f], now, today);
+    const r = resolved[0];
+    assert.equal(typeof r.correct, "boolean");        // intra leg still resolved
+    assert.equal(r.correct_vs_market, undefined);     // external leg could not resolve
+    assert.equal(r.market_unresolved, true);
+    const sc = updateScorecard(null, resolved);
+    assert.equal(sc.alpha_ext.unresolved, 1);
+    assert.equal(sc.alpha_ext.n, 0);                  // not counted as a resolved external observation
+  });
+});

@@ -10,6 +10,7 @@ import { readFileSync, writeFileSync } from "node:fs";
 import { fetchSeries, fetchStooqHistory, fetchTiingoHistory } from "./lib/quotes.mjs";
 import { reconcileSeries } from "./lib/history-reconcile.mjs";
 import { basketStats } from "./lib/axis.mjs";
+import { isDiversifierHolding } from "./lib/sizing.mjs"; // canonical diversifier predicate (audit C4 — single source)
 import { DIVERSIFIER_UNIVERSE, screenDiversifiers, convictionCommittee, fundSleeve } from "./lib/diversifier.mjs";
 import { availableProviders, planCommittee, seatCaller } from "./lib/llm.mjs";
 
@@ -45,7 +46,7 @@ async function loadSeries(tickers) {
 (async () => {
   const portfolio = JSON.parse(readFileSync(new URL("../web/data/portfolio.json", import.meta.url)));
   const planTickers = (portfolio.holdings || []).map((h) => h.ticker);
-  const existingDiversifierTickers = (portfolio.holdings || []).filter((h) => h.axis === "diversifier" || /de-correlator|diversifier/i.test(h.role || "")).map((h) => h.ticker);
+  const existingDiversifierTickers = (portfolio.holdings || []).filter(isDiversifierHolding).map((h) => h.ticker);
   const sleeveUsd = portfolio.sleeve_usd || 0;
 
   console.log(`Fetching market ${MARKET.join(",")} | complex ${COMPLEX.join(",")} | ${DIVERSIFIER_UNIVERSE.length} candidate sleeves | ${planTickers.length} plan tickers`);

@@ -86,11 +86,16 @@ export function resolveDue(open, currentPrices, today, { scarcityIds = null } = 
       const r = { ...f, resolved_on: today, rel: +rel.toFixed(4), correct: f.claim === "underperform" ? rel < 0 : rel > 0 };
       // C-1 EXTERNAL leg: basket vs the MARKET (QQQ). This is the referee that can detect "the book is
       // just beta" — recorded ALONGSIDE the intra-complex `correct` (we grade BOTH, never lose either).
-      const mRet = f.market_prices ? basketReturn(f.market_prices, currentPrices) : null;
+      const mRet = (f.market_prices && Object.keys(f.market_prices).length) ? basketReturn(f.market_prices, currentPrices) : null;
       if (mRet != null) {
         const relMkt = bRet - mRet;
         r.market_return = +mRet.toFixed(4); r.rel_market = +relMkt.toFixed(4);
         r.correct_vs_market = f.claim === "underperform" ? relMkt < 0 : relMkt > 0;
+      } else if (f.market_prices && Object.keys(f.market_prices).length) {
+        // F1: the external (vs-market) anchor existed but QQQ couldn't be priced on the resolution day, so
+        // the alpha leg is unresolvable for this claim. The intra-complex leg still resolves (above) — but
+        // TALLY the lost external observation instead of silently shrinking the alpha_ext denominator.
+        r.market_unresolved = true;
       }
       resolved.push(r);
     } else if (f.type === "sizing_tilt") {
@@ -171,6 +176,10 @@ export function updateScorecard(sc, resolved) {
         s.alpha_ext.n++; if (r.correct_vs_market) s.alpha_ext.hits++;
         s.by_signal[r.claim].n_ext = (s.by_signal[r.claim].n_ext || 0) + 1;
         if (r.correct_vs_market) s.by_signal[r.claim].hits_ext = (s.by_signal[r.claim].hits_ext || 0) + 1;
+      } else if (r.market_unresolved) {
+        // F1: surfaced so the external denominator's coverage gap is visible, not silent survivorship.
+        s.alpha_ext ||= { n: 0, hits: 0 };
+        s.alpha_ext.unresolved = (s.alpha_ext.unresolved || 0) + 1;
       }
     } else if (r.type === "sizing_tilt") {
       (s.by_signal.sizing_tilt ||= { n: 0, hits: 0 }); s.by_signal.sizing_tilt.n++; if (r.correct) s.by_signal.sizing_tilt.hits++;

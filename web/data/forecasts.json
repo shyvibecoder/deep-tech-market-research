@@ -4347,7 +4347,8 @@
       "killed": 0,
       "needs_review": 0,
       "pending": 0
-    }
+    },
+    "alpha_ext_hit_rate": null
   },
   "kills_resolved": []
 }

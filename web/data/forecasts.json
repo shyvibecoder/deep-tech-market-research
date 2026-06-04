@@ -4322,6 +4322,17 @@
         "ROBO": 89.63999938964844,
         "UFO": 57.7400016784668
       }
+    },
+    {
+      "id": "2026-06-04:tsmom_tilt:FIW",
+      "date": "2026-06-04",
+      "type": "tsmom_tilt",
+      "subject": "FIW",
+      "claim": "down",
+      "horizon_days": 21,
+      "price_at": 104.9749984741211,
+      "resolve_on": "2026-06-25",
+      "basis": "underweight"
     }
   ],
   "scorecard": {

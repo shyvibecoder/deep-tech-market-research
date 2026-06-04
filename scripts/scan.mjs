@@ -158,8 +158,12 @@ for (const [tk, q] of Object.entries(quotes)) {
 // Crowding score 0-100 from YTD + distance from 52w high (higher = more crowded/priced-in).
 function crowding(q) {
   if (!q || q.error || q.ytd == null) return null;
+  // A BAD-DATA quote (cross-source divergence / >35% jump / consensus-swapped) has an untrustworthy
+  // ytd/pct_off_high → don't emit a confident crowding score from it (audit M3); it would otherwise flow
+  // into the live-gate / opportunity ranking / forced-flow. Single-source (uncorroborated) is fine.
+  if (q.flags?.some((f) => /divergence|jump|consensus/.test(f))) return null;
   const ytdScore = Math.max(0, Math.min(60, (q.ytd ?? 0) * 100)); // +60% ytd -> ~60
-  const nearHigh = q.pct_off_high == null ? 0 : Math.max(0, 40 * (1 + q.pct_off_high / 0.25)); // at high -> 40
+  const nearHigh = q.pct_off_high == null ? 0 : Math.max(0, Math.min(40, 40 * (1 + q.pct_off_high / 0.25))); // at/above high -> 40 (capped)
   return Math.round(Math.max(0, Math.min(100, ytdScore + nearHigh)));
 }
 
@@ -785,7 +789,14 @@ let scorecard = null;
     store = { schema_version: SCHEMA_VERSION, open: [], scorecard: updateScorecard(null, []) };
   }
   const scarcityIds = new Set(scarcities.scarcities.map((s) => s.id)); // for kill-criterion survived/killed
-  const { resolved, stillOpen } = resolveDue(store.open, enriched, TODAY, { scarcityIds });
+  // EXTERNAL benchmark for the alpha referee: inject QQQ's price (the cleanest liquid market proxy for
+  // this book) so scarcity_rel calls can be graded vs the MARKET, not only vs their sibling themes
+  // (VISION's "load-bearing flaw"). QQQ is computed every scan in regime_instruments (DB-first), so it
+  // resolves reliably over time. enriched is the universe; fQuotes = universe + QQQ.
+  const benchQuote = (regime_instruments?.QQQ && !regime_instruments.QQQ.error && regime_instruments.QQQ.price > 0)
+    ? { QQQ: { price: regime_instruments.QQQ.price } } : {};
+  const fQuotes = { ...enriched, ...benchQuote };
+  const { resolved, stillOpen } = resolveDue(store.open, fQuotes, TODAY, { scarcityIds });
   store.scorecard = updateScorecard(store.scorecard, resolved);
   // kill-criteria carry a STABLE id (kill:<scarcity>:<by_date>) and resolve once at their deadline —
   // remember resolved ones so the next scan can't re-register and double-count them.
@@ -794,16 +805,30 @@ let scorecard = null;
   // alpha calls are graded RELATIVE to it (does the flagged basket really under/out-perform?).
   const complexTickers = portfolio.holdings
     .filter((h) => securities[h.ticker]?.type === "etf").map((h) => h.ticker);
+  // ACTION-INTEGRITY (audit C-H2): do NOT anchor new price-based claims on a DEGRADED run — a poisoned/
+  // uncorroborated tape would silently seed bogus hits/misses into the moat. Resolution + the deadline-
+  // based kill-criteria still run (they don't anchor on today's possibly-bad prices). `?:42` is the
+  // external-benchmark arg → QQQ.
   const fresh = [
-    ...makeForecasts({ regime, quotes: enriched }, TODAY),
-    ...makeScarcityForecasts(buildoutScarcities, { quotes: enriched, scarcity_signals }, TODAY, 42, complexTickers),
-    ...makeSizingForecast(rebalance, enriched, TODAY), // CRITICAL-2: grade the G3 tilt vs the research baseline
+    ...(degraded ? [] : [
+      ...makeForecasts({ regime, quotes: fQuotes }, TODAY),
+      ...makeScarcityForecasts(buildoutScarcities, { quotes: fQuotes, scarcity_signals }, TODAY, 42, complexTickers, ["QQQ"]),
+      ...makeSizingForecast(rebalance, fQuotes, TODAY), // CRITICAL-2: grade the G3 tilt vs the research baseline
+    ]),
     ...makeKillForecasts(scarcities.scarcities, TODAY), // close the loop: deadline-track each committee kill-criterion
   ];
+  if (degraded && !OFFLINE) console.log("Forecasts: degraded run — skipped recording new price-anchored claims (resolve + kill-criteria still ran)");
   const seen = new Set([...stillOpen.map((f) => f.id), ...(store.kills_resolved || [])]);
   const merged = [...stillOpen, ...fresh.filter((f) => !seen.has(f.id))];
   store.open = pruneStale(merged, TODAY); // drop unresolvable (>180d overdue) so the ledger can't grow unbounded
-  if (store.open.length < merged.length) console.log(`Forecasts: pruned ${merged.length - store.open.length} unresolvable (>180d overdue)`);
+  const prunedN = merged.length - store.open.length;
+  if (prunedN > 0) {
+    // SURVIVORSHIP HONESTY (audit M5): unresolvable claims that expire ungraded must be TALLIED, not
+    // silently vanish — otherwise the hit-rate denominator flatters itself by dropping every call that
+    // couldn't be scored (e.g. a delisted name). Surfaced in the scorecard as expired_unresolved.
+    if (store.scorecard) store.scorecard.expired_unresolved = (store.scorecard.expired_unresolved || 0) + prunedN;
+    console.log(`Forecasts: pruned ${prunedN} unresolvable (>180d overdue) — tallied as expired_unresolved`);
+  }
   store.updated = TODAY;
   // Surface pending (registered, deadline not yet reached) kill-criteria alongside the matured tally.
   const pendingKills = store.open.filter((f) => f.type === "kill_criterion").length;

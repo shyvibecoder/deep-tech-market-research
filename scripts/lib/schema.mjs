@@ -77,6 +77,7 @@ export function validateScarcities(s, errors = []) {
     oneOf(errors, x.durability, DURABILITY, `${at}: durability`);
     oneOf(errors, x.substitution_risk, SUBST, `${at}: substitution_risk`);
     check(errors, isArr(x.tickers), `${at}: tickers must be an array`);
+    if (isArr(x.tickers)) check(errors, x.tickers.every(isStr), `${at}: tickers must all be non-empty strings`); // M4: catch garbage that silently makes a scarcity invisible to scoring
     check(errors, isBool(x.non_consensus), `${at}: non_consensus must be a boolean`);
     check(errors, isStr(x.thesis), `${at}: thesis required`);
     if ("axis" in x) oneOf(errors, x.axis, AXIS, `${at}: axis`);
@@ -101,9 +102,16 @@ export function validateTriggers(t, errors = []) {
     oneOf(errors, x.type, TRIGGER_TYPES, `${at}: type`);
     oneOf(errors, x.status, TRIGGER_STATUS, `${at}: status`);
     check(errors, isStr(x.action), `${at}: action required`);
+    // M4: `threshold` drives the drawdown/sleeve-cap fire level (scan.mjs reads dd?.threshold). A
+    // non-numeric threshold silently fell through to a DEFAULT → the trigger fired at the wrong level.
+    if ("threshold" in x && x.threshold != null) check(errors, isNum(x.threshold), `${at}: threshold must be a number`);
   });
   return errors;
 }
+
+// Postures the regime can emit (UI + options suggestion key off this). M4: a wrong enum silently
+// mis-drove the account policy / options structure.
+const POSTURES = ["risk-on", "neutral", "defensive", "unknown"];
 
 // The generated output. Each quote must be either resolved (numeric price) or
 // errored explicitly (error string), or null (a known non-tradeable placeholder).
@@ -119,7 +127,12 @@ export function validateSignals(s, errors = []) {
   check(errors, isArr(s.errors), `${w}: errors must be an array`);
   if ("filings" in s) check(errors, isArr(s.filings), `${w}: filings must be an array`);
   if ("news" in s) check(errors, isArr(s.news), `${w}: news must be an array`);
-  if ("regime" in s) check(errors, isObj(s.regime), `${w}: regime must be an object`);
+  if ("regime" in s) {
+    check(errors, isObj(s.regime), `${w}: regime must be an object`);
+    if (isObj(s.regime) && s.regime.posture != null) oneOf(errors, s.regime.posture, POSTURES, `${w}: regime.posture`);
+  }
+  if ("opportunities" in s) check(errors, isArr(s.opportunities), `${w}: opportunities must be an array`);
+  if ("rebalance" in s && s.rebalance !== null) check(errors, isObj(s.rebalance), `${w}: rebalance must be an object or null`);
   if ("dca" in s) check(errors, isObj(s.dca), `${w}: dca must be an object`);
   if ("scarcity_drift" in s) check(errors, isObj(s.scarcity_drift), `${w}: scarcity_drift must be an object`);
   if ("data_quality" in s) check(errors, isObj(s.data_quality), `${w}: data_quality must be an object`);

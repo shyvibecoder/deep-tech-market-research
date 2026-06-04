@@ -20,6 +20,7 @@ export function makeForecasts(signals, today, horizon = 21) {
     const q = quotes[t.ticker];
     const price = q && !q.error ? q.price : null;
     if (!(price > 0)) continue;
+    if (q?.corroboration?.ok === false) continue; // audit C-H3: don't anchor a graded claim on a divergence-flagged price
     out.push({
       id: `${today}:tsmom_tilt:${t.ticker}`, date: today, type: "tsmom_tilt", subject: t.ticker,
       claim: t.tilt === "overweight" ? "up" : "down", horizon_days: horizon,
@@ -82,7 +83,16 @@ export function resolveDue(open, currentPrices, today, { scarcityIds = null } = 
       }
       if (bRet == null || cRet == null) { stillOpen.push(f); continue; }
       const rel = bRet - cRet;
-      resolved.push({ ...f, resolved_on: today, rel: +rel.toFixed(4), correct: f.claim === "underperform" ? rel < 0 : rel > 0 });
+      const r = { ...f, resolved_on: today, rel: +rel.toFixed(4), correct: f.claim === "underperform" ? rel < 0 : rel > 0 };
+      // C-1 EXTERNAL leg: basket vs the MARKET (QQQ). This is the referee that can detect "the book is
+      // just beta" — recorded ALONGSIDE the intra-complex `correct` (we grade BOTH, never lose either).
+      const mRet = f.market_prices ? basketReturn(f.market_prices, currentPrices) : null;
+      if (mRet != null) {
+        const relMkt = bRet - mRet;
+        r.market_return = +mRet.toFixed(4); r.rel_market = +relMkt.toFixed(4);
+        r.correct_vs_market = f.claim === "underperform" ? relMkt < 0 : relMkt > 0;
+      }
+      resolved.push(r);
     } else if (f.type === "sizing_tilt") {
       // CRITICAL-2 grading: did the signal tilt beat the research baseline over the horizon?
       const sRet = weightedReturn(f.signal_weights, f.prices, currentPrices);
@@ -154,6 +164,14 @@ export function updateScorecard(sc, resolved) {
     s.total.n++; if (r.correct) s.total.hits++;
     if (r.type === "scarcity_rel") {
       (s.by_signal[r.claim] ||= { n: 0, hits: 0 }); s.by_signal[r.claim].n++; if (r.correct) s.by_signal[r.claim].hits++;
+      // C-1: the EXTERNAL (vs-market/QQQ) ledger — the alpha referee. Tracked both per-claim and overall
+      // so the scorecard can say "X% beat the complex, but only Y% beat QQQ → mostly beta".
+      if (typeof r.correct_vs_market === "boolean") {
+        s.alpha_ext ||= { n: 0, hits: 0 };
+        s.alpha_ext.n++; if (r.correct_vs_market) s.alpha_ext.hits++;
+        s.by_signal[r.claim].n_ext = (s.by_signal[r.claim].n_ext || 0) + 1;
+        if (r.correct_vs_market) s.by_signal[r.claim].hits_ext = (s.by_signal[r.claim].hits_ext || 0) + 1;
+      }
     } else if (r.type === "sizing_tilt") {
       (s.by_signal.sizing_tilt ||= { n: 0, hits: 0 }); s.by_signal.sizing_tilt.n++; if (r.correct) s.by_signal.sizing_tilt.hits++;
     } else {
@@ -161,13 +179,20 @@ export function updateScorecard(sc, resolved) {
     }
   }
   s.hit_rate = s.total.n ? +(s.total.hits / s.total.n).toFixed(3) : null;
+  // The external alpha hit-rate (basket vs QQQ): the honest "is this actually alpha?" number. Reads
+  // ~0.5 when the book is just beta — exactly the signal VISION wanted the referee to be able to send.
+  s.alpha_ext_hit_rate = s.alpha_ext && s.alpha_ext.n ? +(s.alpha_ext.hits / s.alpha_ext.n).toFixed(3) : null;
   return s;
 }
 
 // --- Grade the ALPHA signal (de-rating/inflecting) on a RELATIVE basis: does a
 // flagged scarcity basket under/out-perform the deep-tech build-out complex over the horizon? ---
+// Anchorable = a present, non-errored, positive price that is NOT cross-source-divergence-flagged
+// (corroboration.ok === false). ok === null (legit single-source/foreign) and true both anchor. C-H3.
+const anchorable = (q) => q && !q.error && q.price > 0 && q.corroboration?.ok !== false;
+
 export function meanPrice(quotes, tickers) {
-  const ps = (tickers || []).map((t) => quotes?.[t]).filter((q) => q && !q.error && q.price > 0).map((q) => q.price);
+  const ps = (tickers || []).map((t) => quotes?.[t]).filter(anchorable).map((q) => q.price);
   return ps.length ? ps.reduce((a, b) => a + b, 0) / ps.length : null;
 }
 
@@ -177,7 +202,7 @@ export function meanPrice(quotes, tickers) {
 // basketReturn averages each anchored ticker's OWN return, using only those that resolve (intersection).
 export function priceMap(quotes, tickers) {
   const m = {};
-  for (const t of (tickers || [])) { const q = quotes?.[t]; if (q && !q.error && q.price > 0) m[t] = q.price; }
+  for (const t of (tickers || [])) { const q = quotes?.[t]; if (anchorable(q)) m[t] = q.price; }
   return m;
 }
 export function basketReturn(anchorPrices, currentQuotes) {
@@ -193,10 +218,11 @@ export function basketReturn(anchorPrices, currentQuotes) {
 // not yet priced → it should outperform the complex. Grade it even when the tape is quiet.
 export const OPPORTUNITY_FORECAST_THRESHOLD = 60;
 
-export function makeScarcityForecasts(scarcities, signals, today, horizon = 42, complexTickers = []) {
+export function makeScarcityForecasts(scarcities, signals, today, horizon = 42, complexTickers = [], marketTickers = []) {
   const quotes = signals?.quotes || {}, sigs = signals?.scarcity_signals || {};
   const complex_at = meanPrice(quotes, complexTickers);
   const complex_prices = priceMap(quotes, complexTickers);   // P4: per-ticker anchor for equal-weight resolution
+  const market_prices = priceMap(quotes, marketTickers);     // C-1: EXTERNAL benchmark (QQQ) anchor — the real alpha referee
   if (complex_at == null) return [];
   const out = [];
   for (const s of scarcities || []) {
@@ -205,6 +231,7 @@ export function makeScarcityForecasts(scarcities, signals, today, horizon = 42, 
     if (basket_at == null) continue;
     const base = { date: today, type: "scarcity_rel", subject: s.id, proxies: s.tickers,
       complex_tickers: complexTickers, basket_at, complex_at, basket_prices: priceMap(quotes, s.tickers), complex_prices,
+      market_tickers: marketTickers, market_prices, // record BOTH benchmarks so we grade intra-complex AND vs-market
       horizon_days: horizon, resolve_on: addDays(today, horizon) };
     if (sig.flag === "de-rating" || sig.flag === "inflecting") {
       // The tape is moving: crowded de-rates (underperform), under-priced inflects (outperform).

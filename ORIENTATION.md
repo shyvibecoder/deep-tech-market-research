@@ -66,7 +66,7 @@ Live tracker of what's done/next: **`TODO.md`**.
 **v1 — harden what's live (do first)** ✅ _shipped_
 - [x] Add a tiny test/CI: `node scripts/scan.mjs --offline` in a GitHub Action on PR, asserting `signals.json` is valid JSON and every portfolio ticker resolved (or errored explicitly). → `.github/workflows/ci.yml` + `scripts/selfcheck.mjs` (`npm test`).
 - [x] Make the dashboard "stale data" aware: show a banner if `scanned_at` is older than ~3 days. → `#staleBanner` in `web/`.
-- [x] Wire the dashboard **Refresh** button to `repository_dispatch` (needs a fine-grained token; document it, don't hardcode). → token in `localStorage`; see SETUP.md §3.
+- [x] Wire the dashboard **Refresh** button to `repository_dispatch` — **keyless** by default (the `/api/refresh` serverless endpoint holds the dispatch token server-side); per-browser token fallback if unconfigured. → see SETUP.md §3a/§3b.
 - [x] Add `web/data/schema` validation in the scanner (fail loudly on malformed data files). → `scripts/lib/schema.mjs` (validates inputs + generated output).
 
 **v2 — make the scanner smarter (free sources)**

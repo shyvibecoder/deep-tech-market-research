@@ -41,10 +41,14 @@ footer a{color:var(--y30)}code{background:#0d1117;padding:1px 5px;border-radius:
 #news .item{margin-bottom:10px;line-height:1.7}#news{margin-top:6px}
 #catalysts h3 .foot{font-weight:400}
 .posture{font-size:12px;font-weight:700;padding:1px 8px;border-radius:999px;border:1px solid var(--line)}
-.posture.risk-on{color:var(--good)}.posture.caution{color:var(--y27)}.posture.defensive{color:var(--now)}
+.posture.risk-on{color:var(--good)}.posture.neutral{color:var(--y30)}.posture.defensive{color:var(--now)}
 .regime{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;background:var(--panel);border:1px solid var(--line);border-left:4px solid var(--mut);border-radius:10px;padding:12px 16px;margin:10px 0}
-.regime.risk-on{border-left-color:var(--good)}.regime.caution{border-left-color:var(--y27)}.regime.defensive{border-left-color:var(--now)}.regime.neutral{border-left-color:var(--y30)}
+.regime.risk-on{border-left-color:var(--good)}.regime.defensive{border-left-color:var(--now)}.regime.neutral{border-left-color:var(--y30)}
 .regime strong{display:block}.regime span{color:var(--mut);font-size:13px}
+.regime .rhead{flex-basis:100%}
+.regime .raction{color:var(--ink);font-size:14px;font-weight:600;margin:4px 0 0}
+.macrobadge{flex-basis:100%;font-size:13px;font-weight:700;padding:6px 10px;border-radius:8px;background:#3a1620;border:1px solid var(--now)}
+.macrobadge.neg{color:var(--now)}
 .regime .rnote{color:var(--mut);font-size:11px;text-align:right;max-width:48%}
 .acctpol{display:flex;flex-direction:column;gap:2px;font-size:12px;color:var(--mut);margin-top:6px;flex-basis:100%}
 .acctpol strong{color:var(--ink)}
@@ -118,7 +122,9 @@ table.cfg{font-size:12.5px;margin:8px 0}table.cfg td{padding:3px 8px;border-bott
 table.cfg th{text-align:left;color:var(--y30);padding:8px 8px 3px;border-bottom:1px solid var(--line)}
 table.cfg code{font-size:11px}#adminStatus a{color:var(--y30)}
 /* Wide tables scroll horizontally instead of overflowing the page (mobile-safe). */
-.tscroll,#myHoldings,#dcaProgress,#optResult,#adminStatus,#rebalanceBox,#diversifierReview,#researchReview,#scoutReview,#objMetrics,#stressTest{overflow-x:auto;-webkit-overflow-scrolling:touch;max-width:100%}
+.tscroll,#myHoldings,#dcaProgress,#optResult,#adminStatus,#rebalanceBox,#diversifierReview,#researchReview,#scoutReview,#objMetrics,#stressTest{overflow-x:auto;-webkit-overflow-scrolling:touch;max-width:100%;scrollbar-width:thin}
+/* Scroll affordance: a soft right-edge fade hints that wide tables have more columns off-screen (mobile). */
+.tscroll{background:linear-gradient(to left,rgba(116,192,252,.10),transparent 24px);background-attachment:local}
 @media(max-width:800px){.tcol{grid-template-columns:1fr}}
 @media(max-width:760px){
   body{font-size:14px}

@@ -277,13 +277,19 @@ function renderRegime() {
     : fc.trend ? `<strong class="pos">risk-on — TREND</strong>`
     : fc.thrust ? `<strong class="pos">fast re-entry — THRUST→neutral</strong>`
     : `<strong class="neg">brakes — below trend</strong>`;
+  // A regime-OVERRIDING composite-stress brake is surfaced as a top-level badge, not buried mid-sentence.
+  const macroBadge = r.macro_stressed
+    ? `<div class="macrobadge neg">⚠ Composite-stress overlay ON — forced DEFENSIVE (VIX-term inversion + HY-velocity top-5%)</div>`
+    : "";
+  // The jargon ladder (TREND/CRASH_OFF/THRUST) is secondary CONTEXT — shown small, below the verdict.
   const overlay = `<div class="rnote"><strong>F+C Thrust ladder:</strong> `
     + (fc
       ? `TREND ${fc.trend ? "✓" : "✗"} · CRASH_OFF ${fc.crash_off ? "ON" : "off"} · THRUST ${fc.thrust ? "✓" : "✗"} → ${decision}`
       : `awaiting composite price history`)
-    + ` &nbsp;·&nbsp; Macro overlay: ${r.macro_stressed ? `<strong class="neg">STRESS — forced defensive</strong>` : (r.macro_available ? "clear" : "⚠ unavailable")}</div>`;
-  box.innerHTML = `<div><strong>Timing posture: ${lbl}${r.confidence ? ` · ${esc(r.confidence)} conf` : ""}${r.version ? ` · v${esc(r.version)}` : ""} <button class="help" data-help="regime">?</button></strong>
-      <span>${esc(r.action || "")}</span></div>
+    + ` &nbsp;·&nbsp; Macro overlay: ${r.macro_stressed ? `<strong class="neg">STRESS</strong>` : (r.macro_available ? "clear" : "⚠ unavailable")}</div>`;
+  box.innerHTML = `<div class="rhead"><strong>Timing posture: ${lbl}${r.confidence ? ` · ${esc(r.confidence)} conf` : ""}${r.version ? ` · v${esc(r.version)}` : ""} <button class="help" data-help="regime">?</button></strong>
+      <p class="raction">${esc(r.action || "")}</p></div>
+    ${macroBadge}
     ${apHtml}
     ${overlay}
     <div class="rnote">${esc(r.note || "")}<br><em>Alpha = scarcity thesis · timing = trend+momentum+vol+drawdown+macro overlay, on the ETF composite${r.composite_basis?.length ? ` (${esc(r.composite_basis.join(", "))})` : ""}. ${esc(r.basis || "")}. ${r.confidence_note ? "⚠ " + esc(r.confidence_note) + ". " : ""}Not advice.</em></div>`;
@@ -526,13 +532,13 @@ function renderAssetLocation() {
     const buy = rs.filter((r) => r.action === "buy" && !iraBraked(r)).reduce((a, r) => a + r.amount, 0);
     const braked = rs.filter(iraBraked).reduce((a, r) => a + r.amount, 0);
     const sell = rs.filter((r) => !r.blocked && r.action !== "buy").reduce((a, r) => a + r.amount, 0);
-    return `<tr class="hgroup"><td colspan="4">${esc(label)} — buy ${fmtUsd(buy)}${braked ? ` · <span style="color:#b45309">⏳ ${fmtUsd(braked)} on-trigger (brakes on)</span>` : ""}${sell ? ` · sell ${fmtUsd(sell)}` : ""} of ${fmtUsd(bal)}</td></tr>` +
+    return `<tr class="hgroup"><td colspan="4">${esc(label)} — buy ${fmtUsd(buy)}${braked ? ` · <span style="color:var(--y27)">⏳ ${fmtUsd(braked)} on-trigger (brakes on)</span>` : ""}${sell ? ` · sell ${fmtUsd(sell)}` : ""} of ${fmtUsd(bal)}</td></tr>` +
       (rs.length ? rs.map((r) => {
         const onTrig = iraBraked(r);
         const isBuy = r.action === "buy" && !onTrig;
         const e = isBuy ? entryFor(r.ticker) : null;
         const st = isBuy ? stageOf(r.ticker, r.amount) : null;
-        const tag = onTrig ? ` <span class="foot" style="color:#b45309">⏳ on-trigger (brakes on)</span>`
+        const tag = onTrig ? ` <span class="foot" style="color:var(--y27)">⏳ on-trigger (brakes on)</span>`
           : isBuy ? entryPill(e) : ` <span class="${r.blocked ? "foot" : "neg"}">${esc(r.action)}</span>`;
         const amtCell = onTrig ? `<span class="foot">hold ${fmtUsd(r.amount)}</span>`
           : isBuy ? (st && st.dca > 0 ? `${fmtUsd(st.now)} <span class="foot">now · DCA ${fmtUsd(st.dca)}</span>` : fmtUsd(r.amount))
@@ -546,7 +552,7 @@ function renderAssetLocation() {
   const regimeBanner = reg && reg.posture && reg.posture !== "unknown" ? `<p class="foot">Timing overlay on this plan (F+C Thrust): posture <strong>${esc(reg.posture)}</strong> → <strong class="${brakesOn ? "neg" : "pos"}">${brakesOn ? "brakes on — IRA deploys held for the drawdown trigger" : "clear — deploy on schedule"}</strong>${reg.fast_reentry ? ` · <span class="pos">⚡ THRUST fast re-entry (rising 20-DMA reclaimed below trend)</span>` : ""}. Buy weights are <strong>regime-tilted</strong> (overweights accelerate only in TREND; trims bite in any posture); when braked, the tactical <strong>IRA/Roth</strong> sleeve stops deploying (⏳ on-trigger) while <strong>taxable</strong> stays buy-and-hold. <button class="help" data-help="regime">?</button></p>` : "";
   const buyNow = Math.max(0, (sm.buy_usd || 0) - onTrigger);
   box.innerHTML = head + regimeBanner + inputs + `
-    <p class="foot">${hasHeld ? "Rebalancing your book toward" : "Deploying <strong>" + fmtUsd(deployTotal) + "</strong> cash into"} the plan${sigTot > 0 ? ", <strong>committee- and regime-adjusted</strong> (a crowded downgrade or a braked posture shrinks the buy)" : ""}, tax-located (Roth ← highest after-tax growth · Traditional ← income · taxable ← tax-efficient)${excl.size ? ` · <strong>excluding ${esc([...excl].join(", "))}</strong> (held elsewhere)` : ""}. Buy <strong>${fmtUsd(buyNow)}</strong>${dcaLater > 0 ? ` (<strong>${fmtUsd(deployNow)}</strong> now · <strong>${fmtUsd(dcaLater)}</strong> DCA'd — stretched entries staged)` : ""}${onTrigger ? ` · <span style="color:#b45309">⏳ ${fmtUsd(onTrigger)} IRA held by the brake (deploy on the drawdown trigger)</span>` : ""}${sm.sell_usd ? ` · sell <strong>${fmtUsd(sm.sell_usd)}</strong>` : ""}${sm.blocked_usd ? ` · <span class="foot">${fmtUsd(sm.blocked_usd)} held (taxable anchor — trim bar not met)</span>` : ""}${sm.needs_new_cash_usd ? ` · <span class="neg">needs ${fmtUsd(sm.needs_new_cash_usd)} more cash</span>` : ""} · shelters <strong>$${(sm.annual_drag_avoided || 0).toLocaleString()}/yr</strong> of tax drag.</p>
+    <p class="foot">${hasHeld ? "Rebalancing your book toward" : "Deploying <strong>" + fmtUsd(deployTotal) + "</strong> cash into"} the plan${sigTot > 0 ? ", <strong>committee- and regime-adjusted</strong> (a crowded downgrade or a braked posture shrinks the buy)" : ""}, tax-located (Roth ← highest after-tax growth · Traditional ← income · taxable ← tax-efficient)${excl.size ? ` · <strong>excluding ${esc([...excl].join(", "))}</strong> (held elsewhere)` : ""}. Buy <strong>${fmtUsd(buyNow)}</strong>${dcaLater > 0 ? ` (<strong>${fmtUsd(deployNow)}</strong> now · <strong>${fmtUsd(dcaLater)}</strong> DCA'd — stretched entries staged)` : ""}${onTrigger ? ` · <span style="color:var(--y27)">⏳ ${fmtUsd(onTrigger)} IRA held by the brake (deploy on the drawdown trigger)</span>` : ""}${sm.sell_usd ? ` · sell <strong>${fmtUsd(sm.sell_usd)}</strong>` : ""}${sm.blocked_usd ? ` · <span class="foot">${fmtUsd(sm.blocked_usd)} held (taxable anchor — trim bar not met)</span>` : ""}${sm.needs_new_cash_usd ? ` · <span class="neg">needs ${fmtUsd(sm.needs_new_cash_usd)} more cash</span>` : ""} · shelters <strong>$${(sm.annual_drag_avoided || 0).toLocaleString()}/yr</strong> of tax drag.</p>
     ${legend}
     <div class="tscroll"><table class="mine"><thead><tr><th>Trade</th><th>Amount</th><th>Yield</th><th>Tax shelter / note</th></tr></thead><tbody>${tbody}</tbody></table></div>
     <p class="foot">${hasHeld ? "Position-aware: net buys + tax-aware sells vs your held lots (taxable lots are buy-and-hold unless the scan's trim bar is met). " : "All-cash deploy — once you add holdings in Settings, this nets sells too. "}Advisory — not tax advice; doesn't model exact bracket arbitrage, RMDs, or estate plan.</p>`;
@@ -1343,7 +1349,7 @@ const HELP = {
   triggers: { title: "Deploy / exit triggers", body: `
     <p>Rules that tell you to act. Each shows a state: <strong>armed</strong> (active, watching), <strong>monitor</strong> (manual watch), or <strong>fired</strong> (condition met).</p>
     <ul><li><strong>Drawdown</strong> (auto) — complex down ≥20–25% from highs → deploy dry powder.</li>
-    <li><strong>Trim rule</strong> (auto) — a name &gt;2× cost basis AND &gt;50× forward P/E → trim ⅓ (needs your cost basis from Settings).</li>
+    <li><strong>Trim rule</strong> (auto) — a name &gt;2× cost basis AND richly valued (&gt;50× P/E) → trim ⅓. <em>Forward P/E isn't available keyless</em>, so this uses <strong>trailing P/E</strong> unless you set <code>forward_pe</code> per position (Settings → holdings); without your cost basis it can't fire at all.</li>
     <li><strong>Sleeve cap</strong> (auto) — sleeve value &gt; ~$1.72mm → trim back (needs your holdings from Settings).</li>
     <li><strong>Policy triggers</strong> (manual) — e.g. rare-earth/uranium policy shifts.</li></ul>
     <p><strong>Catalyst watch (auto-monitored manual triggers).</strong> Each policy trigger is now watched for you: every scan the committee judges its condition from fresh <strong>news + SEC filings</strong> and sets a status — <strong>monitoring → approaching → likely-met → fired</strong> — with a confidence, the <strong>evidence</strong> it used, and a drafted <strong>⇒ suggested action</strong> (portfolio- and tax-aware). It only reaches <em>fired</em> when corroborated (a filing or multiple sources, never one headline) <em>and</em> confirmed on two consecutive scans — the same anti-noise discipline as the auto triggers.</p>
@@ -1366,7 +1372,8 @@ const HELP = {
     <ul><li><strong>cheap</strong> — IV below realized vol.</li>
     <li><strong>fair</strong> — IV within a normal variance-risk premium (≈0.95–1.35× realized).</li>
     <li><strong>rich</strong> — IV well above realized; you're paying up.</li></ul>
-    <p><strong>How to use:</strong> pick the underlying (S &amp; realized vol auto-fill), enter type/strike/days-to-expiry/option price → Evaluate. You get IV, fair value at realized vol, the edge vs that, a verdict, and greeks (delta/vega/theta).</p>
+    <p><strong>How to use:</strong> pick the underlying (S &amp; realized vol auto-fill), enter type/strike/days-to-expiry/option price → Evaluate. You get IV, fair value at realized vol, the edge vs that, a verdict, greeks (delta/vega/theta), and the <strong>market ATM IV (Yahoo)</strong> for comparison.</p>
+    <p>It also shows a <strong>posture-driven structure suggestion</strong> (e.g. risk-on → call/debit-spread; defensive → protective put/collar) that's now <strong>IV-aware</strong> — when premium is rich (high VIX) it steers you to <em>debit spreads</em> over outright long premium. On a <strong>taxable</strong> account a short-call/collar on a low-basis lot raises an <strong>IRC §1259 constructive-sale / QDI tax warning</strong>.</p>
     <p><strong>Defined-risk only — no naked options.</strong> Use long calls/puts, debit spreads, collars, covered calls, cash-secured puts. Caveats: realized vol is backward-looking and options also carry event/skew premia, so treat this as a sanity check, not a price oracle. Not advice.</p>` },
   digest: { title: "Agent digest", body: `
     <p>An optional <strong>analyst + red-team</strong> read of <em>what changed this scan</em> for the <strong>deep-tech build-out</strong> sleeve: fresh quotes (incl. forward P/E), recent SEC filings (8-K/10-Q items — backlog, capacity, guidance, pricing), news headlines, and whether any deploy/exit <strong>trigger</strong> looks closer.</p>
@@ -1400,7 +1407,7 @@ const HELP = {
   scout: { title: "Scout — finding NEW scarcities", body: `
     <p>The Research tab re-scores the <em>known</em> scarcities; the <strong>Scout</strong> hunts for <em>new</em> ones. It is deliberately <strong>not</strong> a trend-finder — by the time something reads as a trend it's already priced, and <strong>ALPHA.md</strong> says there's no edge in what's priced. Instead it looks for the <strong>fingerprint of a binding constraint</strong> before anyone names it.</p>
     <p><strong>How (constraint-shadow):</strong> a real shortage shows up first as downstream companies <em>complaining</em> in their SEC filings — "lead times extended", "unable to secure allocation", "qualified a second source". The scout searches that complaint language across all filers, then <strong>clusters which companies are under broad supply stress</strong>, and infers the candidate chokepoint from the <em>pattern of who's complaining</em> — not from a headline.</p>
-    <p><strong>Then the same committee vets it.</strong> Each lead is synthesized into a draft scarcity and run through the identical <strong>Bull / Bear / Skeptic → CIO + CRO</strong> committee that scores the known 24. Only candidates that survive that adversarial scrutiny appear here — so you review <em>vetted</em> ideas, not raw noise. Candidates already discussed widely in financial media are down-weighted (the edge is being early, not loud).</p>
+    <p><strong>Then the same committee vets it.</strong> Each lead is synthesized into a draft scarcity and run through the identical <strong>Bull / Bear / Skeptic → CIO + CRO</strong> committee that scores the existing watchlist. Only candidates that survive that adversarial scrutiny appear here — so you review <em>vetted</em> ideas, not raw noise. Candidates already discussed widely in financial media are down-weighted (the edge is being early, not loud).</p>
     <p>Each card shows the inferred scarcity, the <strong>filer that flagged it</strong> + the constraint phrases that fired, the proposed fields, and the committee's confidence. <strong>Accept</strong> opens a pull request that <em>adds</em> the new scarcity to the watchlist (needs a token in Settings → Admin); you merge it. The scout never edits the watchlist itself (F9) — it only proposes. Runs weekly. Not advice; every candidate is a lead to investigate.</p>` },
   datakeys: { title: "Market-data keys", body: `
     <p>Keyless <strong>Yahoo</strong> (rich history) + <strong>Stooq</strong> (EOD) always run. Adding free keys gives <em>independent cross-check sources</em> so a single bad or synthetic price can't pass silently — when sources disagree &gt;3% the quote is flagged.</p>
@@ -1409,7 +1416,7 @@ const HELP = {
     <p>Keys typed here are stored only in this browser. For the <em>automated</em> scanner, also add each as a GitHub repo secret using the exact name shown (e.g. <code>FINNHUB_API_KEY</code>).</p>` },
   dataquality: { title: "Data quality &amp; integrity", body: `
     <p>Every quote is fetched over HTTPS and must be a plausible number, or it's marked errored (never silently filled). The scanner <strong>cross-checks</strong> prices across sources (Yahoo/Stooq + any free keys), flags <strong>⚠</strong> on source divergence &gt;3%, big jumps vs the last scan (&gt;35%), or stale/halted bars.</p>
-    <p><strong>Fail-safe:</strong> on a degraded run (too many errors/flags) the auto-triggers (drawdown, sleeve cap) are <em>held</em> — they won't fire on bad data. Add free market-data keys (Settings §3) for stronger corroboration.</p>` },
+    <p><strong>Fail-safe:</strong> on a degraded run (too many errors/flags) the auto-triggers (drawdown, sleeve cap) are <em>held</em> — they won't fire on bad data. Add free market-data keys (⚙ Settings → Admin) for stronger corroboration.</p>` },
   admin: { title: "Admin — credentials &amp; configuration", body: `
     <p>One place for every credential. Two tiers:</p>
     <ul><li><strong>Browser keys</strong> (Gemini/Groq/Finnhub/… + dispatch token) — stored only in this browser; power the in-browser digest, live price check, and Refresh.</li>

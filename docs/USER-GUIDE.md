@@ -583,7 +583,7 @@ Filers already explained by a known scarcity are dropped (novelty filter); candi
 widely in financial media are down-weighted (the edge is being early, not loud).
 
 **The same committee vets it — fully.** Each lead is synthesized into a draft scarcity and run through
-the identical pipeline that scores the known 24: **Bull / Bear / Skeptic → CIO**, then the **deterministic
+the identical pipeline that scores the existing watchlist: **Bull / Bear / Skeptic → CIO**, then the **deterministic
 verification gate** (thin-evidence / ticker-sanity checks) and the **CRO risk review** (which catches
 hallucinated or misattributed tickers — important, since the scout's tickers come from fuzzy filing
 discovery). So you only ever review *adversarially-vetted* candidates, never raw noise. Each card also
@@ -638,7 +638,9 @@ volatility (IV)** from its market price (Black-Scholes) and compares it to the u
 **What you get:** IV, realized vol, **IV ÷ realized**, the **model floor @ realized vol**, the **market −
 floor**, a **verdict**, and the greeks (delta/vega/theta). When the scan has it, the result also shows
 the underlying's **market ATM implied vol** (from the free Yahoo options chain) next to your option's IV —
-a quick check of whether your contract is priced rich/cheap vs the at-the-money market.
+a quick check of whether your contract is priced rich/cheap vs the at-the-money market. The **posture-driven
+structure suggestion** is now **IV-aware**: when premium is rich (high VIX) it steers you toward **debit
+spreads** (or buying shares) instead of outright long calls/puts, and toward outright long premium when IV is cheap.
 
 > The realized-vol value is a **floor, not the price you'll pay** — for out-of-the-money puts (the
 > tail-hedge case) real premiums trade *richer* than realized vol implies (downside skew + variance
@@ -680,7 +682,7 @@ instead of silently producing nothing.
 
 - **Automated:** set `GEMINI_API_KEY` (and optionally `GROQ_API_KEY`) as GitHub repo secrets; the daily
   scan writes the digest.
-- **In-browser, on demand:** add a Gemini key in Settings and click **✦ Generate digest in browser**.
+- **In-browser, on demand:** add a Gemini key in Settings and click **✦ Digest in browser**.
 
 ---
 

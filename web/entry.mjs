@@ -25,13 +25,14 @@ function legs(inp) {
   // Trend acts as a GATE, not a reward: above the 200-DMA is just "fine" (neutral) — it shouldn't make a
   // name AT its highs look like a great entry; below it is a downtrend = a worse entry (falling knife).
   if (typeof inp.aboveMa200 === "boolean") L.trend = inp.aboveMa200 ? 0.55 : 0.2;
-  // Momentum is an INVERTED-U: a healthy uptrend is a good entry, but BOTH a downtrend (no momentum) AND a
-  // PARABOLIC blow-off (overbought → mean-reversion risk, e.g. a name that doubled in a month / 10×'d in a
-  // year) are WORSE entries. Peaks ~+30% over 12m, decays past ~+50% — so an extended name reads "don't chase
-  // the top", which is also robust to a data glitch (an absurd value just lands at the overbought floor).
+  // Momentum is an INVERTED-U: a healthy uptrend is a good entry, but BOTH a downtrend (no momentum) AND an
+  // EXTENDED/PARABOLIC run (overbought → mean-reversion risk) are WORSE entries. Peaks ~+40% over 12m, then
+  // decays steeply so an EXTENDED name reads "don't chase the top": +90% ≈ neutral (0.5), +100% drops BELOW
+  // neutral, ~+140% bottoms out — and an absurd glitch just lands at the overbought floor. (The old slope of
+  // 0.25 was far too shallow — a name up +250% scored like a flat one; audit M1.)
   if (Number.isFinite(inp.mom12m)) {
     const m = inp.mom12m;
-    let s = m <= 0.5 ? clamp01(0.5 + m) : clamp01(1 - (m - 0.5) * 0.25); // rise to +50%, then decay (overbought)
+    let s = m <= 0.4 ? clamp01(0.6 + m) : clamp01(1 - (m - 0.4)); // rise to +40%, then decay ~1:1 (overbought)
     if (Number.isFinite(inp.mom1m) && inp.mom1m > 0.15) s *= 0.7; // just ran up hard in a month → worse entry
     L.momentum = clamp01(s);
   }

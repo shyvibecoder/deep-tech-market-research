@@ -8,7 +8,7 @@ export const SCENARIOS = [
   { id: "china-re-peace", name: "China rare-earth 'peace'", market: 0, beta: 1.0, targeted: { MP: -0.5, LYC: -0.5 }, note: "subsidy-floor RE names re-rate down" },
 ];
 
-export function applyShock(positions, quotes, scenario, { betaDefault = 1.2 } = {}) {
+export function applyShock(positions, quotes, scenario, { betaDefault = 1.2, betas = {} } = {}) {
   const beta0 = scenario.beta ?? betaDefault;
   let before = 0, after = 0; const per = [];
   for (const [t, p] of Object.entries(positions || {})) {
@@ -16,7 +16,10 @@ export function applyShock(positions, quotes, scenario, { betaDefault = 1.2 } = 
     const price = q && !q.error ? q.price : null;
     if (!(price > 0) || !(p?.shares > 0)) continue;
     const mv = price * p.shares;
-    const change = scenario.targeted?.[t] != null ? scenario.targeted[t] : scenario.market * beta0;
+    // Per-name beta when supplied (so "long-duration/high-beta hit hardest" is real, not just a label);
+    // otherwise the scenario's uniform beta (the conservative ~1.0-internal-correlation assumption).
+    const beta = Number.isFinite(betas[t]) && betas[t] >= 0 ? betas[t] : beta0;
+    const change = scenario.targeted?.[t] != null ? scenario.targeted[t] : scenario.market * beta;
     before += mv; after += mv * (1 + change);
     per.push({ ticker: t, before: Math.round(mv), after: Math.round(mv * (1 + change)), change: +change.toFixed(3) });
   }

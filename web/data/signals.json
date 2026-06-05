@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "scanned_at": "2026-06-05T20:47:08.025Z",
+  "scanned_at": "2026-06-05T20:50:30.811Z",
   "source": "scripts/scan.mjs",
   "universe_count": 64,
   "quotes": {
@@ -30,11 +30,11 @@
         "sources": [
           "yahoo"
         ],
-        "n": 1,
+        "n": 2,
         "median": 56.68,
         "used": 56.68,
         "spread": 0,
-        "ok": null
+        "ok": true
       },
       "flags": [
         "single-source (yahoo) — uncorroborated"
@@ -68,15 +68,12 @@
         "sources": [
           "yahoo"
         ],
-        "n": 1,
+        "n": 2,
         "median": 187.56,
         "used": 187.56,
         "spread": 0,
-        "ok": null
+        "ok": true
       },
-      "flags": [
-        "single-source (yahoo) — uncorroborated"
-      ],
       "technicals_src": "db",
       "crowding": 51
     },
@@ -104,17 +101,15 @@
       "source": "yahoo",
       "corroboration": {
         "sources": [
-          "yahoo"
+          "yahoo",
+          "stooq"
         ],
-        "n": 1,
-        "median": 104.31,
-        "used": 104.31,
-        "spread": 0,
-        "ok": null
+        "n": 2,
+        "median": 104.3225,
+        "used": 104.3225,
+        "spread": 0.0002,
+        "ok": true
       },
-      "flags": [
-        "single-source (yahoo) — uncorroborated"
-      ],
       "technicals_src": "db",
       "crowding": 24
     },
@@ -142,17 +137,15 @@
       "source": "yahoo",
       "corroboration": {
         "sources": [
-          "yahoo"
+          "yahoo",
+          "stooq"
         ],
-        "n": 1,
-        "median": 63.05,
-        "used": 63.05,
-        "spread": 0,
-        "ok": null
+        "n": 2,
+        "median": 63.055,
+        "used": 63.055,
+        "spread": 0.0002,
+        "ok": true
       },
-      "flags": [
-        "single-source (yahoo) — uncorroborated"
-      ],
       "technicals_src": "db",
       "crowding": 9
     },
@@ -180,13 +173,14 @@
       "source": "yahoo",
       "corroboration": {
         "sources": [
-          "yahoo"
+          "yahoo",
+          "stooq"
         ],
-        "n": 1,
-        "median": 1641.74,
-        "used": 1641.74,
-        "spread": 0,
-        "ok": null
+        "n": 2,
+        "median": 1641.325,
+        "used": 1641.325,
+        "spread": 0.0005,
+        "ok": true
       },
       "flags": [
         "single-source (yahoo) — uncorroborated"
@@ -225,11 +219,11 @@
         "sources": [
           "yahoo"
         ],
-        "n": 1,
-        "median": 569.69,
-        "used": 569.69,
-        "spread": 0,
-        "ok": null
+        "n": 2,
+        "median": 569.71,
+        "used": 569.71,
+        "spread": 0.0001,
+        "ok": true
       },
       "flags": [
         "single-source (yahoo) — uncorroborated"
@@ -263,11 +257,11 @@
         "sources": [
           "yahoo"
         ],
-        "n": 1,
-        "median": 80.64,
-        "used": 80.64,
-        "spread": 0,
-        "ok": null
+        "n": 2,
+        "median": 80.635,
+        "used": 80.635,
+        "spread": 0.0001,
+        "ok": true
       },
       "flags": [
         "single-source (yahoo) — uncorroborated"
@@ -302,11 +296,11 @@
         "sources": [
           "yahoo"
         ],
-        "n": 1,
-        "median": 68.28,
-        "used": 68.28,
-        "spread": 0,
-        "ok": null
+        "n": 2,
+        "median": 68.155,
+        "used": 68.155,
+        "spread": 0.0037,
+        "ok": true
       },
       "flags": [
         "single-source (yahoo) — uncorroborated"
@@ -340,11 +334,11 @@
         "sources": [
           "yahoo"
         ],
-        "n": 1,
-        "median": 864.01,
-        "used": 864.01,
-        "spread": 0,
-        "ok": null
+        "n": 2,
+        "median": 864.2333,
+        "used": 864.2333,
+        "spread": 0.0005,
+        "ok": true
       },
       "flags": [
         "single-source (yahoo) — uncorroborated"
@@ -393,11 +387,11 @@
         "sources": [
           "yahoo"
         ],
-        "n": 1,
+        "n": 2,
         "median": 933.61,
         "used": 933.61,
         "spread": 0,
-        "ok": null
+        "ok": true
       },
       "flags": [
         "single-source (yahoo) — uncorroborated"
@@ -446,11 +440,11 @@
         "sources": [
           "yahoo"
         ],
-        "n": 1,
+        "n": 2,
         "median": 254.83,
         "used": 254.83,
         "spread": 0,
-        "ok": null
+        "ok": true
       },
       "flags": [
         "single-source (yahoo) — uncorroborated"
@@ -499,11 +493,11 @@
         "sources": [
           "yahoo"
         ],
-        "n": 1,
+        "n": 2,
         "median": 817.44,
         "used": 817.44,
         "spread": 0,
-        "ok": null
+        "ok": true
       },
       "flags": [
         "single-source (yahoo) — uncorroborated"
@@ -552,11 +546,11 @@
         "sources": [
           "yahoo"
         ],
-        "n": 1,
+        "n": 2,
         "median": 59.18,
         "used": 59.18,
         "spread": 0,
-        "ok": null
+        "ok": true
       },
       "flags": [
         "single-source (yahoo) — uncorroborated"
@@ -600,11 +594,11 @@
         "sources": [
           "yahoo"
         ],
-        "n": 1,
+        "n": 2,
         "median": 161.78,
         "used": 161.78,
         "spread": 0,
-        "ok": null
+        "ok": true
       },
       "flags": [
         "single-source (yahoo) — uncorroborated"
@@ -653,15 +647,12 @@
         "sources": [
           "yahoo"
         ],
-        "n": 1,
-        "median": 83.38,
-        "used": 83.38,
-        "spread": 0,
-        "ok": null
+        "n": 2,
+        "median": 83.37,
+        "used": 83.37,
+        "spread": 0.0002,
+        "ok": true
       },
-      "flags": [
-        "single-source (yahoo) — uncorroborated"
-      ],
       "technicals_src": "db",
       "crowding": 46
     },
@@ -689,13 +680,14 @@
       "source": "yahoo",
       "corroboration": {
         "sources": [
-          "yahoo"
+          "yahoo",
+          "stooq"
         ],
-        "n": 1,
-        "median": 54.71,
-        "used": 54.71,
-        "spread": 0,
-        "ok": null
+        "n": 2,
+        "median": 54.685,
+        "used": 54.685,
+        "spread": 0.0009,
+        "ok": true
       },
       "flags": [
         "single-source (yahoo) — uncorroborated"
@@ -729,11 +721,11 @@
         "sources": [
           "yahoo"
         ],
-        "n": 1,
+        "n": 2,
         "median": 232.77,
         "used": 232.77,
         "spread": 0,
-        "ok": null
+        "ok": true
       },
       "flags": [
         "single-source (yahoo) — uncorroborated"
@@ -781,11 +773,11 @@
         "sources": [
           "yahoo"
         ],
-        "n": 1,
-        "median": 118.88,
-        "used": 118.88,
-        "spread": 0,
-        "ok": null
+        "n": 2,
+        "median": 118.89,
+        "used": 118.89,
+        "spread": 0.0002,
+        "ok": true
       },
       "flags": [
         "single-source (yahoo) — uncorroborated"
@@ -833,11 +825,11 @@
         "sources": [
           "yahoo"
         ],
-        "n": 1,
+        "n": 2,
         "median": 79.48,
         "used": 79.48,
         "spread": 0,
-        "ok": null
+        "ok": true
       },
       "flags": [
         "single-source (yahoo) — uncorroborated"
@@ -885,11 +877,11 @@
         "sources": [
           "yahoo"
         ],
-        "n": 1,
+        "n": 2,
         "median": 141.92,
         "used": 141.92,
         "spread": 0,
-        "ok": null
+        "ok": true
       },
       "flags": [
         "single-source (yahoo) — uncorroborated"
@@ -937,11 +929,11 @@
         "sources": [
           "yahoo"
         ],
-        "n": 1,
+        "n": 2,
         "median": 120.79,
         "used": 120.79,
         "spread": 0,
-        "ok": null
+        "ok": true
       },
       "flags": [
         "single-source (yahoo) — uncorroborated"
@@ -989,11 +981,11 @@
         "sources": [
           "yahoo"
         ],
-        "n": 1,
+        "n": 2,
         "median": 146.54,
         "used": 146.54,
         "spread": 0,
-        "ok": null
+        "ok": true
       },
       "flags": [
         "single-source (yahoo) — uncorroborated"
@@ -1041,11 +1033,11 @@
         "sources": [
           "yahoo"
         ],
-        "n": 1,
+        "n": 2,
         "median": 148.76,
         "used": 148.76,
         "spread": 0,
-        "ok": null
+        "ok": true
       },
       "flags": [
         "single-source (yahoo) — uncorroborated"
@@ -1080,11 +1072,11 @@
         "sources": [
           "yahoo"
         ],
-        "n": 1,
-        "median": 364.74,
-        "used": 364.74,
-        "spread": 0,
-        "ok": null
+        "n": 2,
+        "median": 364.79,
+        "used": 364.79,
+        "spread": 0.0003,
+        "ok": true
       },
       "flags": [
         "single-source (yahoo) — uncorroborated"
@@ -1119,11 +1111,11 @@
         "sources": [
           "yahoo"
         ],
-        "n": 1,
+        "n": 2,
         "median": 395.94,
         "used": 395.94,
         "spread": 0,
-        "ok": null
+        "ok": true
       },
       "flags": [
         "single-source (yahoo) — uncorroborated"
@@ -1158,11 +1150,11 @@
         "sources": [
           "yahoo"
         ],
-        "n": 1,
+        "n": 2,
         "median": 695.11,
         "used": 695.11,
         "spread": 0,
-        "ok": null
+        "ok": true
       },
       "flags": [
         "single-source (yahoo) — uncorroborated"
@@ -1197,15 +1189,12 @@
         "sources": [
           "yahoo"
         ],
-        "n": 1,
-        "median": 1843.9399,
-        "used": 1843.9399,
+        "n": 2,
+        "median": 1843.94,
+        "used": 1843.94,
         "spread": 0,
-        "ok": null
+        "ok": true
       },
-      "flags": [
-        "single-source (yahoo) — uncorroborated"
-      ],
       "technicals_src": "db",
       "crowding": 85,
       "rel_strength": -0.0851
@@ -1234,13 +1223,14 @@
       "source": "yahoo",
       "corroboration": {
         "sources": [
-          "yahoo"
+          "yahoo",
+          "stooq"
         ],
-        "n": 1,
+        "n": 2,
         "median": 445.66,
         "used": 445.66,
         "spread": 0,
-        "ok": null
+        "ok": true
       },
       "flags": [
         "single-source (yahoo) — uncorroborated"
@@ -1351,17 +1341,15 @@
       "source": "yahoo",
       "corroboration": {
         "sources": [
-          "yahoo"
+          "yahoo",
+          "stooq"
         ],
-        "n": 1,
+        "n": 2,
         "median": 103.44,
         "used": 103.44,
         "spread": 0,
-        "ok": null
+        "ok": true
       },
-      "flags": [
-        "single-source (yahoo) — uncorroborated"
-      ],
       "technicals_src": "db",
       "crowding": 8,
       "rel_strength": -0.1142
@@ -1429,17 +1417,15 @@
       "source": "yahoo",
       "corroboration": {
         "sources": [
-          "yahoo"
+          "yahoo",
+          "stooq"
         ],
-        "n": 1,
+        "n": 2,
         "median": 63.37,
         "used": 63.37,
         "spread": 0,
-        "ok": null
+        "ok": true
       },
-      "flags": [
-        "single-source (yahoo) — uncorroborated"
-      ],
       "technicals_src": "db",
       "crowding": 44,
       "rel_strength": 0.0552
@@ -1468,17 +1454,15 @@
       "source": "yahoo",
       "corroboration": {
         "sources": [
-          "yahoo"
+          "yahoo",
+          "stooq"
         ],
-        "n": 1,
+        "n": 2,
         "median": 61.67,
         "used": 61.67,
         "spread": 0,
-        "ok": null
+        "ok": true
       },
-      "flags": [
-        "single-source (yahoo) — uncorroborated"
-      ],
       "technicals_src": "db",
       "crowding": 48,
       "rel_strength": 0.0552
@@ -1587,15 +1571,12 @@
         "sources": [
           "yahoo"
         ],
-        "n": 1,
+        "n": 2,
         "median": 55.06,
         "used": 55.06,
         "spread": 0,
-        "ok": null
+        "ok": true
       },
-      "flags": [
-        "single-source (yahoo) — uncorroborated"
-      ],
       "technicals_src": "db",
       "crowding": 60,
       "rel_strength": 0.3159
@@ -1624,13 +1605,14 @@
       "source": "yahoo",
       "corroboration": {
         "sources": [
-          "yahoo"
+          "yahoo",
+          "stooq"
         ],
-        "n": 1,
+        "n": 2,
         "median": 25.08,
         "used": 25.08,
         "spread": 0,
-        "ok": null
+        "ok": true
       },
       "flags": [
         "single-source (yahoo) — uncorroborated"
@@ -1665,11 +1647,11 @@
         "sources": [
           "yahoo"
         ],
-        "n": 1,
-        "median": 98.28,
-        "used": 98.28,
-        "spread": 0,
-        "ok": null
+        "n": 2,
+        "median": 98.285,
+        "used": 98.285,
+        "spread": 0.0001,
+        "ok": true
       },
       "flags": [
         "single-source (yahoo) — uncorroborated"
@@ -1743,11 +1725,11 @@
         "sources": [
           "yahoo"
         ],
-        "n": 1,
+        "n": 2,
         "median": 0.6043,
         "used": 0.6043,
         "spread": 0,
-        "ok": null
+        "ok": true
       },
       "flags": [
         "single-source (yahoo) — uncorroborated"
@@ -1782,11 +1764,11 @@
         "sources": [
           "yahoo"
         ],
-        "n": 1,
+        "n": 2,
         "median": 415.17,
         "used": 415.17,
         "spread": 0,
-        "ok": null
+        "ok": true
       },
       "flags": [
         "single-source (yahoo) — uncorroborated"
@@ -1821,11 +1803,11 @@
         "sources": [
           "yahoo"
         ],
-        "n": 1,
+        "n": 2,
         "median": 376.99,
         "used": 376.99,
         "spread": 0,
-        "ok": null
+        "ok": true
       },
       "flags": [
         "single-source (yahoo) — uncorroborated"
@@ -1860,11 +1842,11 @@
         "sources": [
           "yahoo"
         ],
-        "n": 1,
-        "median": 863.66,
-        "used": 863.66,
-        "spread": 0,
-        "ok": null
+        "n": 2,
+        "median": 863.58,
+        "used": 863.58,
+        "spread": 0.0002,
+        "ok": true
       },
       "flags": [
         "single-source (yahoo) — uncorroborated"
@@ -1899,11 +1881,11 @@
         "sources": [
           "yahoo"
         ],
-        "n": 1,
+        "n": 2,
         "median": 385.73,
         "used": 385.73,
         "spread": 0,
-        "ok": null
+        "ok": true
       },
       "flags": [
         "single-source (yahoo) — uncorroborated"
@@ -1981,11 +1963,11 @@
         "sources": [
           "yahoo"
         ],
-        "n": 1,
+        "n": 2,
         "median": 300.51,
         "used": 300.51,
         "spread": 0,
-        "ok": null
+        "ok": true
       },
       "flags": [
         "single-source (yahoo) — uncorroborated"
@@ -2020,11 +2002,11 @@
         "sources": [
           "yahoo"
         ],
-        "n": 1,
+        "n": 2,
         "median": 276.51,
         "used": 276.51,
         "spread": 0,
-        "ok": null
+        "ok": true
       },
       "flags": [
         "single-source (yahoo) — uncorroborated"
@@ -2059,11 +2041,11 @@
         "sources": [
           "yahoo"
         ],
-        "n": 1,
+        "n": 2,
         "median": 162.86,
         "used": 162.86,
         "spread": 0,
-        "ok": null
+        "ok": true
       },
       "flags": [
         "single-source (yahoo) — uncorroborated"
@@ -2176,11 +2158,11 @@
         "sources": [
           "yahoo"
         ],
-        "n": 1,
+        "n": 2,
         "median": 110.08,
         "used": 110.08,
         "spread": 0,
-        "ok": null
+        "ok": true
       },
       "flags": [
         "single-source (yahoo) — uncorroborated"
@@ -2254,11 +2236,11 @@
         "sources": [
           "yahoo"
         ],
-        "n": 1,
+        "n": 2,
         "median": 184.3,
         "used": 184.3,
         "spread": 0,
-        "ok": null
+        "ok": true
       },
       "flags": [
         "single-source (yahoo) — uncorroborated"
@@ -2293,11 +2275,11 @@
         "sources": [
           "yahoo"
         ],
-        "n": 1,
+        "n": 2,
         "median": 472.8,
         "used": 472.8,
         "spread": 0,
-        "ok": null
+        "ok": true
       },
       "flags": [
         "single-source (yahoo) — uncorroborated"
@@ -2332,11 +2314,11 @@
         "sources": [
           "yahoo"
         ],
-        "n": 1,
+        "n": 2,
         "median": 173.45,
         "used": 173.45,
         "spread": 0,
-        "ok": null
+        "ok": true
       },
       "flags": [
         "single-source (yahoo) — uncorroborated"
@@ -2371,11 +2353,11 @@
         "sources": [
           "yahoo"
         ],
-        "n": 1,
+        "n": 2,
         "median": 26.04,
         "used": 26.04,
         "spread": 0,
-        "ok": null
+        "ok": true
       },
       "flags": [
         "single-source (yahoo) — uncorroborated"
@@ -2409,11 +2391,11 @@
         "sources": [
           "yahoo"
         ],
-        "n": 1,
+        "n": 2,
         "median": 91.07,
         "used": 91.07,
         "spread": 0,
-        "ok": null
+        "ok": true
       },
       "flags": [
         "single-source (yahoo) — uncorroborated"
@@ -2447,11 +2429,11 @@
         "sources": [
           "yahoo"
         ],
-        "n": 1,
+        "n": 2,
         "median": 81.67,
         "used": 81.67,
         "spread": 0,
-        "ok": null
+        "ok": true
       },
       "flags": [
         "single-source (yahoo) — uncorroborated"
@@ -2485,11 +2467,11 @@
         "sources": [
           "yahoo"
         ],
-        "n": 1,
+        "n": 2,
         "median": 66.39,
         "used": 66.39,
         "spread": 0,
-        "ok": null
+        "ok": true
       },
       "flags": [
         "single-source (yahoo) — uncorroborated"
@@ -2523,11 +2505,11 @@
         "sources": [
           "yahoo"
         ],
-        "n": 1,
+        "n": 2,
         "median": 124.47,
         "used": 124.47,
         "spread": 0,
-        "ok": null
+        "ok": true
       },
       "flags": [
         "single-source (yahoo) — uncorroborated"
@@ -2561,11 +2543,11 @@
         "sources": [
           "yahoo"
         ],
-        "n": 1,
+        "n": 2,
         "median": 37.36,
         "used": 37.36,
         "spread": 0,
-        "ok": null
+        "ok": true
       },
       "flags": [
         "single-source (yahoo) — uncorroborated"
@@ -2695,10 +2677,10 @@
     },
     {
       "scarcity": "transformers",
-      "title": "Transformers in 2026: Shortage, Scramble, or Self-Inflicted Crisis? - POWER Magazine",
-      "link": "https://news.google.com/rss/articles/CBMikwFBVV95cUxOcm55Rl8xTUZKenlHTl95c191TzBMTVhOdHAtZTFaYWctTDdfQ1F4WVA3aUdvWURlcFJMSEZXVlVVdFpLNHhQXzN3T2c3U3hPS0ZHN2VmQUlWTXZhamNBSDF4VDVlS3NiampHaVFYdFlicVBtQTdCZHNyRWRUcFJvN0N4dUlPck1ZQ0xNMFl5SEVrelU?oc=5",
-      "date": "2026-01-02",
-      "is_new": true
+      "title": "US transformer shortage deepens - Transformer Magazine",
+      "link": "https://news.google.com/rss/articles/CBMiekFVX3lxTE44QXQ5Ujl2S1ZHN0g0bExJQzc3V0h4V3dOQXZJUHV0aGVwNy1USFpjanQxVWJPOUFYaEJMajB5dlFDS2dSd09HRFQzTjZqNzFjT1EwVzdfWFE1NlU1REJydXJHWU9nT3k5R1Fsc1NJT2M0ZXVNZlFVbm1B?oc=5",
+      "date": "2026-05-12",
+      "is_new": false
     },
     {
       "scarcity": "turbines",
@@ -2793,10 +2775,10 @@
     },
     {
       "scarcity": "rare-earth-magnets",
-      "title": "Rare Earths in 2026: Navigating Geopolitical Tensions and Supply Chain Shifts - Investing News Network",
-      "link": "https://news.google.com/rss/articles/CBMiW0FVX3lxTE1QX2E2R2l4TmJBMWRUcHJQMUlHaWwxYmdhRzNFOUlhdWZPWm1vdWNYbUlrM2Y1WlNDT1ZOUGZCQ0RQZGdfbVhIRGlFUElQOFlVM3lTV0pnbFlweGM?oc=5",
-      "date": "2026-04-20",
-      "is_new": true
+      "title": "The Perth Critical Minerals Report (04.30.2026): Dysprosium’s Price Drop Is a Mirage — Control of Supply Is Tightening - InvestorNews",
+      "link": "https://news.google.com/rss/articles/CBMi6AFBVV95cUxPclBwbWtwRGhQd1V5MDBVN1ZzQ2dKV1JiamhoYWxYSElGMlZHck5lS3lCZWJ2d0k1QW5PZ0E3SHM0RV84cXEyekduLWNmUTdOVTdqcEpLZXF0dkJmYnE1Rzd3WG9SY21Bd3A1UHNDUkRUMkpRSHJXbUlwZWlXb0xWYjNuMUVnZWlSUXBqdHVNbDNMbEVBU2hVMWkzQWJpelpTVVpEYmV5SmotNkpGTlJITHZST3dwSDlPTTE3NEUteWxYTG52aUNfVTNhN1JWdi1Bc1BDZ1M3TmNyVG44MXZBRDNxbktQU2Jj?oc=5",
+      "date": "2026-04-30",
+      "is_new": false
     },
     {
       "scarcity": "gallium",
@@ -2887,9 +2869,7 @@
       "status": "monitoring",
       "confidence": 0,
       "met": false,
-      "citations": [
-        "REalloys Locks In Western Hemisphere's First Commercial Heavy Rare Earth Supply, Targeting 2027 Defense Deadline - Tech Times"
-      ],
+      "citations": [],
       "evidence": {
         "headlines": [
           {
@@ -3157,11 +3137,11 @@
       "crash_off": false,
       "thrust": false,
       "detail": {
-        "price": 216.33952739882022,
-        "sma200": 186.33,
-        "sma20": 218.5,
-        "ret252": 0.5618,
-        "vol60": 0.301
+        "price": 211.97997704260132,
+        "sma200": 186.31,
+        "sma20": 218.28,
+        "ret252": 0.5303,
+        "vol60": 0.316
       }
     },
     "components": {
@@ -3179,8 +3159,8 @@
       "missing": [],
       "term_inverted": false,
       "hy_stressed": false,
-      "vix_term": 0.85,
-      "vix": 16.94,
+      "vix_term": 0.986,
+      "vix": 21.51,
       "reasons": []
     },
     "options_suggestion": {
@@ -3192,8 +3172,8 @@
       "dte": "90-365d",
       "delta": "call ~0.25-0.40",
       "iv_band": "normal",
-      "vix": 16.9,
-      "iv_note": "IV is NORMAL (VIX 16.9)."
+      "vix": 21.5,
+      "iv_note": "IV is NORMAL (VIX 21.5)."
     },
     "action": "Deploy on schedule / accelerate low-regret anchors (TREND: the composite is above its 200-DMA).",
     "basis": "F+C Thrust ladder (Faber 200-DMA trend + Daniel-Moskowitz 252d-return/60d-vol crash + rising-20-DMA thrust re-entry) on the composite, + exit-only composite-stress overlay — see v23.mjs / FABER-CRASH-STRATEGY.md",
@@ -3313,12 +3293,12 @@
     }
   },
   "metrics": {
-    "cagr": 0.3881,
+    "cagr": 0.3761,
     "max_drawdown": 0.2187,
-    "calmar": 1.7744,
-    "sortino": 2.3226,
-    "sharpe": 1.5593,
-    "vol": 0.2269,
+    "calmar": 1.7198,
+    "sortino": 2.2295,
+    "sharpe": 1.5107,
+    "vol": 0.2288,
     "breaches_35": false,
     "n": 594,
     "basis": [
@@ -3342,38 +3322,38 @@
       "switches": 8,
       "turnover_cost_bps": 80,
       "buyhold": {
-        "cagr": 0.3845,
+        "cagr": 0.366,
         "max_drawdown": 0.2183,
-        "calmar": 1.7615,
-        "sortino": 2.1603,
-        "sharpe": 1.4445,
-        "vol": 0.2463,
+        "calmar": 1.6769,
+        "sortino": 2.0354,
+        "sharpe": 1.3778,
+        "vol": 0.2489,
         "breaches_35": false,
         "n": 383
       },
       "fc_thrust": {
-        "cagr": 0.3081,
+        "cagr": 0.2906,
         "max_drawdown": 0.1458,
-        "calmar": 2.1134,
-        "sortino": 2.0582,
-        "sharpe": 1.4114,
-        "vol": 0.2053,
+        "calmar": 1.9937,
+        "sortino": 1.9071,
+        "sharpe": 1.3287,
+        "vol": 0.2085,
         "breaches_35": false,
         "n": 383
       },
       "realistic": {
-        "cagr": 0.3482,
+        "cagr": 0.3302,
         "max_drawdown": 0.1801,
-        "calmar": 1.9336,
-        "sortino": 2.1828,
-        "sharpe": 1.4877,
-        "vol": 0.2167,
+        "calmar": 1.8338,
+        "sortino": 2.0376,
+        "sharpe": 1.4092,
+        "vol": 0.2197,
         "breaches_35": false,
         "n": 383
       },
       "timeable_frac": 0.48,
       "max_dd_reduction": 0.0725,
-      "cagr_cost": 0.0764,
+      "cagr_cost": 0.0754,
       "breach_35": {
         "buyhold": false,
         "fc_thrust": false,
@@ -3457,22 +3437,22 @@
         "switches": 164,
         "turnover_cost_bps": 1640,
         "buyhold": {
-          "cagr": 0.0891,
+          "cagr": 0.0882,
           "max_drawdown": 0.8297,
-          "calmar": 0.1074,
-          "sortino": 0.6485,
-          "sharpe": 0.4539,
-          "vol": 0.2658,
+          "calmar": 0.1063,
+          "sortino": 0.6435,
+          "sharpe": 0.4507,
+          "vol": 0.2659,
           "breaches_35": true,
           "n": 6642
         },
         "fc_thrust": {
-          "cagr": 0.1,
+          "cagr": 0.0991,
           "max_drawdown": 0.369,
-          "calmar": 0.271,
-          "sortino": 0.9265,
-          "sharpe": 0.6642,
-          "vol": 0.1638,
+          "calmar": 0.2685,
+          "sortino": 0.9175,
+          "sharpe": 0.6585,
+          "vol": 0.164,
           "breaches_35": true,
           "n": 6642
         },
@@ -5200,11 +5180,11 @@
       "thrust": false
     },
     "detail": {
-      "price": 721.030029296875,
-      "sma200": 620.93,
-      "sma20": 722.81,
-      "ret252": 0.3702,
-      "vol60": 0.196
+      "price": 705.059997558594,
+      "sma200": 620.85,
+      "sma20": 722.01,
+      "ret252": 0.3399,
+      "vol60": 0.215
     },
     "reasons": [
       "TREND: QQQ above its 200-DMA — QLD (2×)"
@@ -5731,6 +5711,7 @@
   "errors": [
     "SMNEY: no quote from any source",
     "4185.T: no quote from any source",
-    "metrics: composite truncated to 594 bars (deepest member 2766) — shallow ticker NUKZ (594 bars) shrinks the date-intersection; metrics + regime composite run SHORT this scan"
+    "metrics: composite truncated to 594 bars (deepest member 2766) — shallow ticker NUKZ (594 bars) shrinks the date-intersection; metrics + regime composite run SHORT this scan",
+    "llm: gemini gemini-3.5-flash HTTP 429: {\n  \"error\": {\n    \"code\": 429,\n    \"message\": \"You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-a"
   ]
 }

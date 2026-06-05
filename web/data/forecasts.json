@@ -5385,6 +5385,104 @@
       "claim": "outperform",
       "source": "opportunity",
       "opportunity": 84
+    },
+    {
+      "date": "2026-06-05",
+      "type": "scarcity_rel",
+      "subject": "optical",
+      "proxies": [
+        "COHR",
+        "LITE",
+        "AVGO"
+      ],
+      "complex_tickers": [
+        "PAVE",
+        "GRID",
+        "FIW",
+        "SHLD",
+        "SMH",
+        "COPX",
+        "NUKZ",
+        "ROBO",
+        "UFO"
+      ],
+      "basket_at": 542.1266581217448,
+      "complex_at": 140.92222128974066,
+      "basket_prices": {
+        "COHR": 376.989990234375,
+        "LITE": 863.6599731445312,
+        "AVGO": 385.7300109863281
+      },
+      "complex_prices": {
+        "PAVE": 56.68000030517578,
+        "GRID": 187.55999755859375,
+        "FIW": 104.30999755859375,
+        "SHLD": 63.04999923706055,
+        "SMH": 569.6900024414062,
+        "COPX": 80.63999938964844,
+        "NUKZ": 68.27999877929688,
+        "ROBO": 83.37999725341797,
+        "UFO": 54.709999084472656
+      },
+      "market_tickers": [
+        "QQQ"
+      ],
+      "market_prices": {
+        "QQQ": 705.0599975585938
+      },
+      "horizon_days": 42,
+      "resolve_on": "2026-07-17",
+      "id": "2026-06-05:scarcity_rel:optical",
+      "claim": "underperform",
+      "source": "de-rating"
+    },
+    {
+      "date": "2026-06-05",
+      "type": "scarcity_rel",
+      "subject": "bio-data",
+      "proxies": [
+        "DHR",
+        "TMO"
+      ],
+      "complex_tickers": [
+        "PAVE",
+        "GRID",
+        "FIW",
+        "SHLD",
+        "SMH",
+        "COPX",
+        "NUKZ",
+        "ROBO",
+        "UFO"
+      ],
+      "basket_at": 328.5499954223633,
+      "complex_at": 140.92222128974066,
+      "basket_prices": {
+        "DHR": 184.3000030517578,
+        "TMO": 472.79998779296875
+      },
+      "complex_prices": {
+        "PAVE": 56.68000030517578,
+        "GRID": 187.55999755859375,
+        "FIW": 104.30999755859375,
+        "SHLD": 63.04999923706055,
+        "SMH": 569.6900024414062,
+        "COPX": 80.63999938964844,
+        "NUKZ": 68.27999877929688,
+        "ROBO": 83.37999725341797,
+        "UFO": 54.709999084472656
+      },
+      "market_tickers": [
+        "QQQ"
+      ],
+      "market_prices": {
+        "QQQ": 705.0599975585938
+      },
+      "horizon_days": 42,
+      "resolve_on": "2026-07-17",
+      "id": "2026-06-05:scarcity_rel:bio-data",
+      "claim": "outperform",
+      "source": "de-rating"
     }
   ],
   "scorecard": {

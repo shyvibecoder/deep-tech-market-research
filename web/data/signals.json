@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "scanned_at": "2026-06-05T20:50:30.811Z",
+  "scanned_at": "2026-06-06T02:08:38.612Z",
   "source": "scripts/scan.mjs",
   "universe_count": 64,
   "quotes": {
@@ -30,11 +30,11 @@
         "sources": [
           "yahoo"
         ],
-        "n": 2,
+        "n": 1,
         "median": 56.68,
         "used": 56.68,
         "spread": 0,
-        "ok": true
+        "ok": null
       },
       "flags": [
         "single-source (yahoo) — uncorroborated"
@@ -68,12 +68,15 @@
         "sources": [
           "yahoo"
         ],
-        "n": 2,
+        "n": 1,
         "median": 187.56,
         "used": 187.56,
         "spread": 0,
-        "ok": true
+        "ok": null
       },
+      "flags": [
+        "single-source (yahoo) — uncorroborated"
+      ],
       "technicals_src": "db",
       "crowding": 51
     },
@@ -101,15 +104,17 @@
       "source": "yahoo",
       "corroboration": {
         "sources": [
-          "yahoo",
-          "stooq"
+          "yahoo"
         ],
-        "n": 2,
-        "median": 104.3225,
-        "used": 104.3225,
-        "spread": 0.0002,
-        "ok": true
+        "n": 1,
+        "median": 104.31,
+        "used": 104.31,
+        "spread": 0,
+        "ok": null
       },
+      "flags": [
+        "single-source (yahoo) — uncorroborated"
+      ],
       "technicals_src": "db",
       "crowding": 24
     },
@@ -137,15 +142,17 @@
       "source": "yahoo",
       "corroboration": {
         "sources": [
-          "yahoo",
-          "stooq"
+          "yahoo"
         ],
-        "n": 2,
-        "median": 63.055,
-        "used": 63.055,
-        "spread": 0.0002,
-        "ok": true
+        "n": 1,
+        "median": 63.05,
+        "used": 63.05,
+        "spread": 0,
+        "ok": null
       },
+      "flags": [
+        "single-source (yahoo) — uncorroborated"
+      ],
       "technicals_src": "db",
       "crowding": 9
     },
@@ -173,14 +180,13 @@
       "source": "yahoo",
       "corroboration": {
         "sources": [
-          "yahoo",
-          "stooq"
+          "yahoo"
         ],
-        "n": 2,
-        "median": 1641.325,
-        "used": 1641.325,
-        "spread": 0.0005,
-        "ok": true
+        "n": 1,
+        "median": 1641.74,
+        "used": 1641.74,
+        "spread": 0,
+        "ok": null
       },
       "flags": [
         "single-source (yahoo) — uncorroborated"
@@ -219,11 +225,11 @@
         "sources": [
           "yahoo"
         ],
-        "n": 2,
-        "median": 569.71,
-        "used": 569.71,
-        "spread": 0.0001,
-        "ok": true
+        "n": 1,
+        "median": 569.69,
+        "used": 569.69,
+        "spread": 0,
+        "ok": null
       },
       "flags": [
         "single-source (yahoo) — uncorroborated"
@@ -257,11 +263,11 @@
         "sources": [
           "yahoo"
         ],
-        "n": 2,
-        "median": 80.635,
-        "used": 80.635,
-        "spread": 0.0001,
-        "ok": true
+        "n": 1,
+        "median": 80.64,
+        "used": 80.64,
+        "spread": 0,
+        "ok": null
       },
       "flags": [
         "single-source (yahoo) — uncorroborated"
@@ -296,11 +302,11 @@
         "sources": [
           "yahoo"
         ],
-        "n": 2,
-        "median": 68.155,
-        "used": 68.155,
-        "spread": 0.0037,
-        "ok": true
+        "n": 1,
+        "median": 68.28,
+        "used": 68.28,
+        "spread": 0,
+        "ok": null
       },
       "flags": [
         "single-source (yahoo) — uncorroborated"
@@ -334,11 +340,11 @@
         "sources": [
           "yahoo"
         ],
-        "n": 2,
-        "median": 864.2333,
-        "used": 864.2333,
-        "spread": 0.0005,
-        "ok": true
+        "n": 1,
+        "median": 864.01,
+        "used": 864.01,
+        "spread": 0,
+        "ok": null
       },
       "flags": [
         "single-source (yahoo) — uncorroborated"
@@ -357,7 +363,7 @@
         "revenue_yoy": 0.489,
         "net_margin": 0.228,
         "tag": "fair",
-        "label": "43.7x trailing · 1.58× peers (rich on trailing, but +49% rev → forward lower)"
+        "label": "43.7x trailing · 1.43× peers (rich on trailing, but +49% rev → forward lower)"
       },
       "rel_strength": 0.3481
     },
@@ -387,11 +393,11 @@
         "sources": [
           "yahoo"
         ],
-        "n": 2,
+        "n": 1,
         "median": 933.61,
         "used": 933.61,
         "spread": 0,
-        "ok": true
+        "ok": null
       },
       "flags": [
         "single-source (yahoo) — uncorroborated"
@@ -410,7 +416,7 @@
         "revenue_yoy": 0.09,
         "net_margin": 0.128,
         "tag": "rich",
-        "label": "rich (42.7x trailing · 1.55× peers)"
+        "label": "rich (42.7x trailing · 1.40× peers)"
       },
       "rel_strength": -0.1206
     },
@@ -440,11 +446,11 @@
         "sources": [
           "yahoo"
         ],
-        "n": 2,
+        "n": 1,
         "median": 254.83,
         "used": 254.83,
         "spread": 0,
-        "ok": true
+        "ok": null
       },
       "flags": [
         "single-source (yahoo) — uncorroborated"
@@ -462,8 +468,8 @@
         "single_source": true,
         "revenue_yoy": 0.195,
         "net_margin": 0.102,
-        "tag": "fair",
-        "label": "fair (24.2x trailing · 0.88× peers)"
+        "tag": "cheap",
+        "label": "cheap (24.2x trailing · 0.79× peers)"
       },
       "rel_strength": -0.1205
     },
@@ -493,11 +499,11 @@
         "sources": [
           "yahoo"
         ],
-        "n": 2,
+        "n": 1,
         "median": 817.44,
         "used": 817.44,
         "spread": 0,
-        "ok": true
+        "ok": null
       },
       "flags": [
         "single-source (yahoo) — uncorroborated"
@@ -516,7 +522,7 @@
         "revenue_yoy": null,
         "net_margin": null,
         "tag": "fair",
-        "label": "fair (32.2x trailing · 1.17× peers)"
+        "label": "fair (32.2x trailing · 1.06× peers)"
       },
       "rel_strength": -0.0851
     },
@@ -546,11 +552,11 @@
         "sources": [
           "yahoo"
         ],
-        "n": 2,
+        "n": 1,
         "median": 59.18,
         "used": 59.18,
         "spread": 0,
-        "ok": true
+        "ok": null
       },
       "flags": [
         "single-source (yahoo) — uncorroborated"
@@ -594,11 +600,11 @@
         "sources": [
           "yahoo"
         ],
-        "n": 2,
+        "n": 1,
         "median": 161.78,
         "used": 161.78,
         "spread": 0,
-        "ok": true
+        "ok": null
       },
       "flags": [
         "single-source (yahoo) — uncorroborated"
@@ -617,7 +623,7 @@
         "revenue_yoy": 0.015,
         "net_margin": 0.173,
         "tag": "rich",
-        "label": "rich (42.2x trailing · 1.53× peers)"
+        "label": "rich (42.2x trailing · 1.38× peers)"
       },
       "rel_strength": -0.1571
     },
@@ -647,12 +653,15 @@
         "sources": [
           "yahoo"
         ],
-        "n": 2,
-        "median": 83.37,
-        "used": 83.37,
-        "spread": 0.0002,
-        "ok": true
+        "n": 1,
+        "median": 83.38,
+        "used": 83.38,
+        "spread": 0,
+        "ok": null
       },
+      "flags": [
+        "single-source (yahoo) — uncorroborated"
+      ],
       "technicals_src": "db",
       "crowding": 46
     },
@@ -680,14 +689,13 @@
       "source": "yahoo",
       "corroboration": {
         "sources": [
-          "yahoo",
-          "stooq"
+          "yahoo"
         ],
-        "n": 2,
-        "median": 54.685,
-        "used": 54.685,
-        "spread": 0.0009,
-        "ok": true
+        "n": 1,
+        "median": 54.71,
+        "used": 54.71,
+        "spread": 0,
+        "ok": null
       },
       "flags": [
         "single-source (yahoo) — uncorroborated"
@@ -721,11 +729,11 @@
         "sources": [
           "yahoo"
         ],
-        "n": 2,
+        "n": 1,
         "median": 232.77,
         "used": 232.77,
         "spread": 0,
-        "ok": true
+        "ok": null
       },
       "flags": [
         "single-source (yahoo) — uncorroborated"
@@ -733,18 +741,19 @@
       "technicals_src": "db",
       "crowding": 44,
       "valuation": {
-        "pe": 21,
+        "pe": 23.85,
         "sources": [
-          "edgar"
+          "edgar",
+          "tiingo"
         ],
-        "n": 1,
-        "spread": 0,
-        "ok": null,
-        "single_source": true,
+        "n": 2,
+        "spread": 0.239,
+        "ok": false,
+        "single_source": false,
         "revenue_yoy": 0.06,
         "net_margin": 0.285,
         "tag": "cheap",
-        "label": "cheap (21x trailing · 0.76× peers)"
+        "label": "cheap (23.85x trailing · 0.78× peers)"
       }
     },
     "WMT": {
@@ -773,11 +782,11 @@
         "sources": [
           "yahoo"
         ],
-        "n": 2,
-        "median": 118.89,
-        "used": 118.89,
-        "spread": 0.0002,
-        "ok": true
+        "n": 1,
+        "median": 118.88,
+        "used": 118.88,
+        "spread": 0,
+        "ok": null
       },
       "flags": [
         "single-source (yahoo) — uncorroborated"
@@ -785,18 +794,19 @@
       "technicals_src": "db",
       "crowding": 28,
       "valuation": {
-        "pe": 41.3,
+        "pe": 41.5,
         "sources": [
-          "edgar"
+          "edgar",
+          "tiingo"
         ],
-        "n": 1,
-        "spread": 0,
-        "ok": null,
-        "single_source": true,
+        "n": 2,
+        "spread": 0.0096,
+        "ok": true,
+        "single_source": false,
         "revenue_yoy": 0.047,
         "net_margin": 0.031,
         "tag": "rich",
-        "label": "rich (41.3x trailing · 1.50× peers)"
+        "label": "rich (41.5x trailing · 1.36× peers)"
       }
     },
     "KO": {
@@ -825,11 +835,11 @@
         "sources": [
           "yahoo"
         ],
-        "n": 2,
+        "n": 1,
         "median": 79.48,
         "used": 79.48,
         "spread": 0,
-        "ok": true
+        "ok": null
       },
       "flags": [
         "single-source (yahoo) — uncorroborated"
@@ -837,18 +847,19 @@
       "technicals_src": "db",
       "crowding": 51,
       "valuation": {
-        "pe": 23.2,
+        "pe": 24.05,
         "sources": [
-          "edgar"
+          "edgar",
+          "tiingo"
         ],
-        "n": 1,
-        "spread": 0,
-        "ok": null,
-        "single_source": true,
+        "n": 2,
+        "spread": 0.0707,
+        "ok": true,
+        "single_source": false,
         "revenue_yoy": 0.019,
         "net_margin": 0.273,
-        "tag": "fair",
-        "label": "fair (23.2x trailing · 0.84× peers)"
+        "tag": "cheap",
+        "label": "cheap (24.05x trailing · 0.79× peers)"
       }
     },
     "PEP": {
@@ -877,11 +888,11 @@
         "sources": [
           "yahoo"
         ],
-        "n": 2,
+        "n": 1,
         "median": 141.92,
         "used": 141.92,
         "spread": 0,
-        "ok": true
+        "ok": null
       },
       "flags": [
         "single-source (yahoo) — uncorroborated"
@@ -899,8 +910,8 @@
         "single_source": true,
         "revenue_yoy": 0.023,
         "net_margin": 0.088,
-        "tag": "fair",
-        "label": "fair (24.3x trailing · 0.88× peers)"
+        "tag": "cheap",
+        "label": "cheap (24.3x trailing · 0.80× peers)"
       }
     },
     "MRK": {
@@ -929,11 +940,11 @@
         "sources": [
           "yahoo"
         ],
-        "n": 2,
+        "n": 1,
         "median": 120.79,
         "used": 120.79,
         "spread": 0,
-        "ok": true
+        "ok": null
       },
       "flags": [
         "single-source (yahoo) — uncorroborated"
@@ -941,18 +952,19 @@
       "technicals_src": "db",
       "crowding": 51,
       "valuation": {
-        "pe": 27.6,
+        "pe": 30.5,
         "sources": [
-          "edgar"
+          "edgar",
+          "tiingo"
         ],
-        "n": 1,
-        "spread": 0,
-        "ok": null,
-        "single_source": true,
+        "n": 2,
+        "spread": 0.1902,
+        "ok": false,
+        "single_source": false,
         "revenue_yoy": 0.013,
         "net_margin": 0.281,
         "tag": "fair",
-        "label": "fair (27.6x trailing · 1.00× peers)"
+        "label": "fair (30.5x trailing · 1.00× peers)"
       }
     },
     "PG": {
@@ -981,11 +993,11 @@
         "sources": [
           "yahoo"
         ],
-        "n": 2,
+        "n": 1,
         "median": 146.54,
         "used": 146.54,
         "spread": 0,
-        "ok": true
+        "ok": null
       },
       "flags": [
         "single-source (yahoo) — uncorroborated"
@@ -993,18 +1005,19 @@
       "technicals_src": "db",
       "crowding": 26,
       "valuation": {
-        "pe": 21.2,
+        "pe": 20.85,
         "sources": [
-          "edgar"
+          "edgar",
+          "tiingo"
         ],
-        "n": 1,
-        "spread": 0,
-        "ok": null,
-        "single_source": true,
+        "n": 2,
+        "spread": 0.0336,
+        "ok": true,
+        "single_source": false,
         "revenue_yoy": 0.003,
         "net_margin": 0.19,
         "tag": "cheap",
-        "label": "cheap (21.2x trailing · 0.77× peers)"
+        "label": "cheap (20.85x trailing · 0.68× peers)"
       }
     },
     "VST": {
@@ -1033,11 +1046,11 @@
         "sources": [
           "yahoo"
         ],
-        "n": 2,
+        "n": 1,
         "median": 148.76,
         "used": 148.76,
         "spread": 0,
-        "ok": true
+        "ok": null
       },
       "flags": [
         "single-source (yahoo) — uncorroborated"
@@ -1072,11 +1085,11 @@
         "sources": [
           "yahoo"
         ],
-        "n": 2,
-        "median": 364.79,
-        "used": 364.79,
-        "spread": 0.0003,
-        "ok": true
+        "n": 1,
+        "median": 364.74,
+        "used": 364.74,
+        "spread": 0,
+        "ok": null
       },
       "flags": [
         "single-source (yahoo) — uncorroborated"
@@ -1111,11 +1124,11 @@
         "sources": [
           "yahoo"
         ],
-        "n": 2,
+        "n": 1,
         "median": 395.94,
         "used": 395.94,
         "spread": 0,
-        "ok": true
+        "ok": null
       },
       "flags": [
         "single-source (yahoo) — uncorroborated"
@@ -1150,11 +1163,11 @@
         "sources": [
           "yahoo"
         ],
-        "n": 2,
+        "n": 1,
         "median": 695.11,
         "used": 695.11,
         "spread": 0,
-        "ok": true
+        "ok": null
       },
       "flags": [
         "single-source (yahoo) — uncorroborated"
@@ -1189,12 +1202,15 @@
         "sources": [
           "yahoo"
         ],
-        "n": 2,
-        "median": 1843.94,
-        "used": 1843.94,
+        "n": 1,
+        "median": 1843.9399,
+        "used": 1843.9399,
         "spread": 0,
-        "ok": true
+        "ok": null
       },
+      "flags": [
+        "single-source (yahoo) — uncorroborated"
+      ],
       "technicals_src": "db",
       "crowding": 85,
       "rel_strength": -0.0851
@@ -1223,14 +1239,13 @@
       "source": "yahoo",
       "corroboration": {
         "sources": [
-          "yahoo",
-          "stooq"
+          "yahoo"
         ],
-        "n": 2,
+        "n": 1,
         "median": 445.66,
         "used": 445.66,
         "spread": 0,
-        "ok": true
+        "ok": null
       },
       "flags": [
         "single-source (yahoo) — uncorroborated"
@@ -1341,15 +1356,17 @@
       "source": "yahoo",
       "corroboration": {
         "sources": [
-          "yahoo",
-          "stooq"
+          "yahoo"
         ],
-        "n": 2,
+        "n": 1,
         "median": 103.44,
         "used": 103.44,
         "spread": 0,
-        "ok": true
+        "ok": null
       },
+      "flags": [
+        "single-source (yahoo) — uncorroborated"
+      ],
       "technicals_src": "db",
       "crowding": 8,
       "rel_strength": -0.1142
@@ -1417,15 +1434,17 @@
       "source": "yahoo",
       "corroboration": {
         "sources": [
-          "yahoo",
-          "stooq"
+          "yahoo"
         ],
-        "n": 2,
+        "n": 1,
         "median": 63.37,
         "used": 63.37,
         "spread": 0,
-        "ok": true
+        "ok": null
       },
+      "flags": [
+        "single-source (yahoo) — uncorroborated"
+      ],
       "technicals_src": "db",
       "crowding": 44,
       "rel_strength": 0.0552
@@ -1454,15 +1473,17 @@
       "source": "yahoo",
       "corroboration": {
         "sources": [
-          "yahoo",
-          "stooq"
+          "yahoo"
         ],
-        "n": 2,
+        "n": 1,
         "median": 61.67,
         "used": 61.67,
         "spread": 0,
-        "ok": true
+        "ok": null
       },
+      "flags": [
+        "single-source (yahoo) — uncorroborated"
+      ],
       "technicals_src": "db",
       "crowding": 48,
       "rel_strength": 0.0552
@@ -1571,12 +1592,15 @@
         "sources": [
           "yahoo"
         ],
-        "n": 2,
+        "n": 1,
         "median": 55.06,
         "used": 55.06,
         "spread": 0,
-        "ok": true
+        "ok": null
       },
+      "flags": [
+        "single-source (yahoo) — uncorroborated"
+      ],
       "technicals_src": "db",
       "crowding": 60,
       "rel_strength": 0.3159
@@ -1605,14 +1629,13 @@
       "source": "yahoo",
       "corroboration": {
         "sources": [
-          "yahoo",
-          "stooq"
+          "yahoo"
         ],
-        "n": 2,
+        "n": 1,
         "median": 25.08,
         "used": 25.08,
         "spread": 0,
-        "ok": true
+        "ok": null
       },
       "flags": [
         "single-source (yahoo) — uncorroborated"
@@ -1647,11 +1670,11 @@
         "sources": [
           "yahoo"
         ],
-        "n": 2,
-        "median": 98.285,
-        "used": 98.285,
-        "spread": 0.0001,
-        "ok": true
+        "n": 1,
+        "median": 98.28,
+        "used": 98.28,
+        "spread": 0,
+        "ok": null
       },
       "flags": [
         "single-source (yahoo) — uncorroborated"
@@ -1725,11 +1748,11 @@
         "sources": [
           "yahoo"
         ],
-        "n": 2,
+        "n": 1,
         "median": 0.6043,
         "used": 0.6043,
         "spread": 0,
-        "ok": true
+        "ok": null
       },
       "flags": [
         "single-source (yahoo) — uncorroborated"
@@ -1764,11 +1787,11 @@
         "sources": [
           "yahoo"
         ],
-        "n": 2,
+        "n": 1,
         "median": 415.17,
         "used": 415.17,
         "spread": 0,
-        "ok": true
+        "ok": null
       },
       "flags": [
         "single-source (yahoo) — uncorroborated"
@@ -1803,11 +1826,11 @@
         "sources": [
           "yahoo"
         ],
-        "n": 2,
+        "n": 1,
         "median": 376.99,
         "used": 376.99,
         "spread": 0,
-        "ok": true
+        "ok": null
       },
       "flags": [
         "single-source (yahoo) — uncorroborated"
@@ -1842,11 +1865,11 @@
         "sources": [
           "yahoo"
         ],
-        "n": 2,
-        "median": 863.58,
-        "used": 863.58,
-        "spread": 0.0002,
-        "ok": true
+        "n": 1,
+        "median": 863.66,
+        "used": 863.66,
+        "spread": 0,
+        "ok": null
       },
       "flags": [
         "single-source (yahoo) — uncorroborated"
@@ -1881,11 +1904,11 @@
         "sources": [
           "yahoo"
         ],
-        "n": 2,
+        "n": 1,
         "median": 385.73,
         "used": 385.73,
         "spread": 0,
-        "ok": true
+        "ok": null
       },
       "flags": [
         "single-source (yahoo) — uncorroborated"
@@ -1963,11 +1986,11 @@
         "sources": [
           "yahoo"
         ],
-        "n": 2,
+        "n": 1,
         "median": 300.51,
         "used": 300.51,
         "spread": 0,
-        "ok": true
+        "ok": null
       },
       "flags": [
         "single-source (yahoo) — uncorroborated"
@@ -2002,11 +2025,11 @@
         "sources": [
           "yahoo"
         ],
-        "n": 2,
+        "n": 1,
         "median": 276.51,
         "used": 276.51,
         "spread": 0,
-        "ok": true
+        "ok": null
       },
       "flags": [
         "single-source (yahoo) — uncorroborated"
@@ -2041,11 +2064,11 @@
         "sources": [
           "yahoo"
         ],
-        "n": 2,
+        "n": 1,
         "median": 162.86,
         "used": 162.86,
         "spread": 0,
-        "ok": true
+        "ok": null
       },
       "flags": [
         "single-source (yahoo) — uncorroborated"
@@ -2158,11 +2181,11 @@
         "sources": [
           "yahoo"
         ],
-        "n": 2,
+        "n": 1,
         "median": 110.08,
         "used": 110.08,
         "spread": 0,
-        "ok": true
+        "ok": null
       },
       "flags": [
         "single-source (yahoo) — uncorroborated"
@@ -2236,11 +2259,11 @@
         "sources": [
           "yahoo"
         ],
-        "n": 2,
+        "n": 1,
         "median": 184.3,
         "used": 184.3,
         "spread": 0,
-        "ok": true
+        "ok": null
       },
       "flags": [
         "single-source (yahoo) — uncorroborated"
@@ -2275,11 +2298,11 @@
         "sources": [
           "yahoo"
         ],
-        "n": 2,
+        "n": 1,
         "median": 472.8,
         "used": 472.8,
         "spread": 0,
-        "ok": true
+        "ok": null
       },
       "flags": [
         "single-source (yahoo) — uncorroborated"
@@ -2314,11 +2337,11 @@
         "sources": [
           "yahoo"
         ],
-        "n": 2,
+        "n": 1,
         "median": 173.45,
         "used": 173.45,
         "spread": 0,
-        "ok": true
+        "ok": null
       },
       "flags": [
         "single-source (yahoo) — uncorroborated"
@@ -2353,11 +2376,11 @@
         "sources": [
           "yahoo"
         ],
-        "n": 2,
+        "n": 1,
         "median": 26.04,
         "used": 26.04,
         "spread": 0,
-        "ok": true
+        "ok": null
       },
       "flags": [
         "single-source (yahoo) — uncorroborated"
@@ -2391,11 +2414,11 @@
         "sources": [
           "yahoo"
         ],
-        "n": 2,
+        "n": 1,
         "median": 91.07,
         "used": 91.07,
         "spread": 0,
-        "ok": true
+        "ok": null
       },
       "flags": [
         "single-source (yahoo) — uncorroborated"
@@ -2429,11 +2452,11 @@
         "sources": [
           "yahoo"
         ],
-        "n": 2,
+        "n": 1,
         "median": 81.67,
         "used": 81.67,
         "spread": 0,
-        "ok": true
+        "ok": null
       },
       "flags": [
         "single-source (yahoo) — uncorroborated"
@@ -2467,11 +2490,11 @@
         "sources": [
           "yahoo"
         ],
-        "n": 2,
+        "n": 1,
         "median": 66.39,
         "used": 66.39,
         "spread": 0,
-        "ok": true
+        "ok": null
       },
       "flags": [
         "single-source (yahoo) — uncorroborated"
@@ -2505,11 +2528,11 @@
         "sources": [
           "yahoo"
         ],
-        "n": 2,
+        "n": 1,
         "median": 124.47,
         "used": 124.47,
         "spread": 0,
-        "ok": true
+        "ok": null
       },
       "flags": [
         "single-source (yahoo) — uncorroborated"
@@ -2543,11 +2566,11 @@
         "sources": [
           "yahoo"
         ],
-        "n": 2,
+        "n": 1,
         "median": 37.36,
         "used": 37.36,
         "spread": 0,
-        "ok": true
+        "ok": null
       },
       "flags": [
         "single-source (yahoo) — uncorroborated"
@@ -2567,7 +2590,7 @@
         "9.01"
       ],
       "url": "https://www.sec.gov/Archives/edgar/data/104169/000010416926000111/wmt-20260604.htm",
-      "is_new": true
+      "is_new": false
     },
     {
       "ticker": "EME",
@@ -2656,17 +2679,17 @@
   "news": [
     {
       "scarcity": "electrons",
+      "title": "IPPs face competition from distributed power in race to energize data centers - S&P Global",
+      "link": "https://news.google.com/rss/articles/CBMi9wFBVV95cUxQblBjdTdIZ1l1akhUX0NNTmQtb1hPSFM0YlA5MkJYUlVBSS1EVG52OUJCaE1fMDdvblJfaHpNM2hvNTRDNU9rN2V1dnVmQXZiY2RnZGgtUjZnZlBKTmZlMWdDVE1WTy1HRWZleUhXZXR5ZDZDR1hybmFjV3BDMWVjVkVIZHlPSDdmbnpEVkIwaDRHV2trbXVPdmdIV3pBX1RFRHVJbUpkbHkzb0o1eFlQb2NNbC1QMDdFRkdpWThCdm1nWUhndE1rRk5pOUpidFg5U0Fud3VrTkpCMks5d3dHUG9EQUxuSTdIUE1kSy1tRmFhNjdFZGow?oc=5",
+      "date": "2026-01-06",
+      "is_new": true
+    },
+    {
+      "scarcity": "electrons",
       "title": "The Crowd Is Dumping Vistra. Here's Why I'd Be Buying the Stock Down 25%. - The Globe and Mail",
       "link": "https://news.google.com/rss/articles/CBMi7AFBVV95cUxQY2hUTGV2eGhCOXNmSnVOdFBYSTlPNlNXbnl6WHFHekoxb2dxTmdTQjNXZGFyS0poRmRSN09TaE10eUVsVTB5UWl2d2ttUnJ5SW9JbkdtTVZxVGd0S3QwSVpHQnBvblowaXp3ZGoxNzhMWWdxd3JuNGEwMW45aHZNSWdRV29QaDkzcnQxaVVFYVRhX19KM1RicXlZeFh5WURLMUtQSWUwdVZMbUpPMUloTm5PTEhBdWNpZGcwZjRNV21VLVFPZ2NfTjNEUFVxdlVEUGE2QUhrdlNOMGNaQlFJc1hmYTN4SkpJNktjdA?oc=5",
       "date": "2026-04-18",
       "is_new": false
-    },
-    {
-      "scarcity": "electrons",
-      "title": "Who controls power in the AI era? - Latitude Media",
-      "link": "https://news.google.com/rss/articles/CBMiiAFBVV95cUxPNUkydUxHTTRpU0FhRGpFbHYwOEVGR093eXY3S3VzczA5TnpMakxCSXRXMERoSm9vUmprZld3U2Q0dTBnaDNOWEMzTFVWSU01Z0QtUGt5VE5obmlmQmRhcXlOUTNTT0xoWHNGUGFGWXk1dTlEaXNOUHRIYXlKcjZ5OGhxb0dYYXk4?oc=5",
-      "date": "2026-01-09",
-      "is_new": true
     },
     {
       "scarcity": "transformers",
@@ -2677,9 +2700,9 @@
     },
     {
       "scarcity": "transformers",
-      "title": "US transformer shortage deepens - Transformer Magazine",
-      "link": "https://news.google.com/rss/articles/CBMiekFVX3lxTE44QXQ5Ujl2S1ZHN0g0bExJQzc3V0h4V3dOQXZJUHV0aGVwNy1USFpjanQxVWJPOUFYaEJMajB5dlFDS2dSd09HRFQzTjZqNzFjT1EwVzdfWFE1NlU1REJydXJHWU9nT3k5R1Fsc1NJT2M0ZXVNZlFVbm1B?oc=5",
-      "date": "2026-05-12",
+      "title": "US power transformer buyers scramble for imports, factory slots - Reuters",
+      "link": "https://news.google.com/rss/articles/CBMiuAFBVV95cUxQSmRQTFc5NzNfTWxxN1BMck9qdXQ1UC1jNkh4NEVhNl9jVjkwV1AtZ3RUdHF3Z1dMLVptVGFha2RvVDg1ZnZZRVBBcW1wZE9qOV84SDRBeU5CLWR1SkNZZkJfNlppVUlkeV91RmhVdXpPdGNXSVhQY0wwSFdRT3NrZUNjc2swcXlvVHBtckRVaWJyTGRlZnQ2YXNyQ24tMkltaGo5MXZDM0Y2b01oU01TbmV6MW1oa0E2?oc=5",
+      "date": "2026-05-11",
       "is_new": false
     },
     {
@@ -2768,16 +2791,16 @@
     },
     {
       "scarcity": "rare-earth-magnets",
-      "title": "REalloys Locks In Western Hemisphere's First Commercial Heavy Rare Earth Supply, Targeting 2027 Defense Deadline - Tech Times",
-      "link": "https://news.google.com/rss/articles/CBMi3gFBVV95cUxNaGVfT1Q1TVlVVUJYUFk3TU10R3ladjNHUW9YZ3NCRnZKVVdVZDl6TjNqUWhjdEpNMGwtdWg2Ni1nSEZIWEtEa1ZhM2J2T3huaDJ0R0RTQkw0TWNNMkJDdGtlakpES0ZzQVpBaUJmWWEtUlRvTThlY1BEMDUzekZSZzJpMnp6UVNpUG51TGtmeDZ3dk9peU5waThsUFUzMkpQbzBBeXBOcm5GMjRFRDFoZE9RNVFzcEdycU1PemltNm9QdWRCUVhkSHZyN3gySlc2RThQQ2hNT0h5RDA4T1E?oc=5",
-      "date": "2026-05-28",
+      "title": "China Keeps Rare Earth Pressure on Washington After Trump Summit - Crude Oil Prices Today | OilPrice.com",
+      "link": "https://news.google.com/rss/articles/CBMisgFBVV95cUxPZ0xZbTRxY29qam9LN1NQTTRqdkoyMl9qS2lwRW5TRUlFRURlS05GdzkwSVdLZkhnblpfRy13RmNuTlM0QUd6dF9MZTU5M1Z2QjZvTjJfZUpwb2pyNkRjVUdlX1hRV185a1NDZzZYNkdKRlRRMXY4NG5ablFkd0NzTmk2S2ZZM01LTXhEQWNLU1VjYXZKUWZJMlNoLXd1S1FCYXhNdEROUWIxMVZjenMwM1VR0gG3AUFVX3lxTE5YblpkbExjbEgzUHVjVG5EOG1IT0hEc1NpdDBrR29xeHFHSmJtelI4cHl3ZzZPTWFIYnU1ZVFjNGNYc2NvTm12WlV3aHllZ0lEODY0dGFwZ0U3NEU4Y2lkb1lkbk1YcDgxN3cyVFJnYkd0aXcyblFZdFhvWDZaOG9rcG9nVHFMMFZFaE1jMFFycnU3NmJTNmNnMEtoN3kyN3lwdkV2QjIta1V4UWRQZ3VVeEZza1hGNA?oc=5",
+      "date": "2026-05-27",
       "is_new": false
     },
     {
       "scarcity": "rare-earth-magnets",
-      "title": "The Perth Critical Minerals Report (04.30.2026): Dysprosium’s Price Drop Is a Mirage — Control of Supply Is Tightening - InvestorNews",
-      "link": "https://news.google.com/rss/articles/CBMi6AFBVV95cUxPclBwbWtwRGhQd1V5MDBVN1ZzQ2dKV1JiamhoYWxYSElGMlZHck5lS3lCZWJ2d0k1QW5PZ0E3SHM0RV84cXEyekduLWNmUTdOVTdqcEpLZXF0dkJmYnE1Rzd3WG9SY21Bd3A1UHNDUkRUMkpRSHJXbUlwZWlXb0xWYjNuMUVnZWlSUXBqdHVNbDNMbEVBU2hVMWkzQWJpelpTVVpEYmV5SmotNkpGTlJITHZST3dwSDlPTTE3NEUteWxYTG52aUNfVTNhN1JWdi1Bc1BDZ1M3TmNyVG44MXZBRDNxbktQU2Jj?oc=5",
-      "date": "2026-04-30",
+      "title": "REalloys Locks In Western Hemisphere's First Commercial Heavy Rare Earth Supply, Targeting 2027 Defense Deadline - Tech Times",
+      "link": "https://news.google.com/rss/articles/CBMi3gFBVV95cUxNaGVfT1Q1TVlVVUJYUFk3TU10R3ladjNHUW9YZ3NCRnZKVVdVZDl6TjNqUWhjdEpNMGwtdWg2Ni1nSEZIWEtEa1ZhM2J2T3huaDJ0R0RTQkw0TWNNMkJDdGtlakpES0ZzQVpBaUJmWWEtUlRvTThlY1BEMDUzekZSZzJpMnp6UVNpUG51TGtmeDZ3dk9peU5waThsUFUzMkpQbzBBeXBOcm5GMjRFRDFoZE9RNVFzcEdycU1PemltNm9QdWRCUVhkSHZyN3gySlc2RThQQ2hNT0h5RDA4T1E?oc=5",
+      "date": "2026-05-28",
       "is_new": false
     },
     {
@@ -2810,17 +2833,17 @@
     },
     {
       "scarcity": "hbm",
-      "title": "Micron’s HBM4 Certification With Nvidia Puts AI Memory Margins In Focus - Yahoo Finance",
-      "link": "https://news.google.com/rss/articles/CBMipAFBVV95cUxQTFo2WE05YjN1VjFpbXd1cnZpTEdRNnZGTVM5TkNsTnhsVEhGajRPSWRPUW9aMTdSMlBveHgycnNrNnExRWhjMjY4cDFDM0VEandQWWJUajFndlkySmV2azhRMF9RRTRETTNLd0piSmJWLXRWYXY4bFBnTzItTzR4OGwwX3Iwc25KVkRXNmVvTVhsNkd4c3lyR3o5WnRLX0FjejhKcg?oc=5",
-      "date": "2026-06-05",
-      "is_new": true
+      "title": "Micron and SK Hynix Cross $1 Trillion Valuations as Chip Shortage Fuels AI Boom - 24/7 Wall St.",
+      "link": "https://news.google.com/rss/articles/CBMivwFBVV95cUxNenBJeVp2bUxISmVNYjRNWm1IRlU3c0ZMeXNyRFpOdGpjY2VpSkVGMmM0ZlRFczhJVFFyc0xRTkJjRHVqeld3elBMRmlMS1pnaTZmbHF4Y1hpNFVrSlB2RVAxdEpWSnR5N2VjRGJnX05Fbm15TFRMWDBCcWhjUjJ3ckM5VzVpb2NyZk9rRkYyTE9HbnpCSm5kMVFZRHF1aThaVDhEeldsc0JtdE51MGFqWGFQSS02azQ5MTAyVWFKYw?oc=5",
+      "date": "2026-06-02",
+      "is_new": false
     },
     {
       "scarcity": "hbm",
-      "title": "Micron Gets Memory-Chip Approval From Nvidia. Why the Stock Is Falling. - Barron's",
-      "link": "https://news.google.com/rss/articles/CBMie0FVX3lxTE9QOWlqUWJWWWdnVExmVmlzY2FjWVZfc2dFNlF6TmU5WnN2NjNlWjVrUVZrZWhMd3hOcnlYLWRId3pfU2tJdU9ublR3RkV5Uk5zdWpzZkZiS2FXZXUxTFhmdDRFSXc5Q1BwXzg1MlpCRlFPYnltbzBOc1BXTQ?oc=5",
-      "date": "2026-06-05",
-      "is_new": true
+      "title": "2 AI Memory Stocks Outperforming NVIDIA With Big Upside Ahead - TradingView",
+      "link": "https://news.google.com/rss/articles/CBMiuAFBVV95cUxOa3dycEFBNVJNa2RBZ3ZYd1RCQ3JyMHZIXzgwNk9DVVRjS05JQ3BnZFVBQ0J5eFNteEs0RUw2enJuWGEtanBaNDR4ODZPQ2NoYlFDaDIyY3NpTndRUkdqR3ROdTFlVFBTaERpUU1hb3QtTWJYZk43VmtOYU9nWFFHR2tTS0syV1pjbmpQdWRRT1RvdnhxT3N3dWVieFdNN3JFa3pZWjFfeHUwYTgyRElMdDZhcEJRS0FT?oc=5",
+      "date": "2026-06-01",
+      "is_new": false
     }
   ],
   "trigger_status": {
@@ -2848,7 +2871,10 @@
       "status": "monitoring",
       "confidence": 0,
       "met": false,
-      "citations": [],
+      "citations": [
+        "Natural Gas Turbines Aren't ‘Gating’ Data Center Buildouts, GE Vernova Says - Natural Gas Intelligence",
+        "Data center rush worsens shortages of power, grid workers - Reuters"
+      ],
       "evidence": {
         "headlines": [
           {
@@ -2863,24 +2889,30 @@
         "filings": []
       },
       "suggested_action": null,
-      "as_of": "2026-06-05"
+      "as_of": "2026-06-06"
     },
     "mp_policy": {
       "status": "monitoring",
       "confidence": 0,
       "met": false,
-      "citations": [],
+      "citations": [
+        "China Keeps Rare Earth Pressure on Washington After Trump Summit - Crude Oil Prices Today | OilPrice.com"
+      ],
       "evidence": {
         "headlines": [
           {
             "title": "REalloys Locks In Western Hemisphere's First Commercial Heavy Rare Earth Supply, Targeting 2027 Defense Deadline - Tech Times",
             "date": "2026-05-28"
+          },
+          {
+            "title": "China Keeps Rare Earth Pressure on Washington After Trump Summit - Crude Oil Prices Today | OilPrice.com",
+            "date": "2026-05-27"
           }
         ],
         "filings": []
       },
       "suggested_action": null,
-      "as_of": "2026-06-05"
+      "as_of": "2026-06-06"
     },
     "leu_policy": {
       "status": "monitoring",
@@ -2892,7 +2924,7 @@
         "filings": []
       },
       "suggested_action": null,
-      "as_of": "2026-06-05"
+      "as_of": "2026-06-06"
     },
     "turbine_rollover": {
       "status": "monitoring",
@@ -2911,7 +2943,7 @@
         "filings": []
       },
       "suggested_action": null,
-      "as_of": "2026-06-05"
+      "as_of": "2026-06-06"
     },
     "memory_rollover": {
       "status": "monitoring",
@@ -2923,7 +2955,7 @@
         "filings": []
       },
       "suggested_action": null,
-      "as_of": "2026-06-05"
+      "as_of": "2026-06-06"
     }
   },
   "alerts": {
@@ -3699,12 +3731,12 @@
     }
   },
   "signal_backtest": {
-    "n": 1754,
-    "ic": 0.039,
-    "hit_rate": 0.523,
+    "n": 1650,
+    "ic": 0.03,
+    "hit_rate": 0.518,
     "hit_rate_ci95": [
-      0.499,
-      0.546
+      0.494,
+      0.542
     ],
     "horizon": 42,
     "lookback": 63,
@@ -5707,11 +5739,10 @@
       ]
     }
   },
-  "digest": "_Analyst: groq:openai/gpt-oss-120b · Red-team: gemini:gemini-3.5-flash (cross-model adversarial review)_\n\n## Analyst\n- **EME (electricians scarcity)** – 8‑K 06/04 disclosed a 15% backlog increase and $250 M of new EPC contracts; 2026 EBITDA‑margin guidance lifted to 12% (Item 5.07). With data‑center construction surging, the entry trigger for electrician‑constrained firms moves markedly closer.  \n\n- **GEV (transformers & turbines scarcity)** – 8‑K 05/22 reported the start‑up of a second 1.2 GW turbine line and a $300 M transformer order book, pushing 2026 capacity utilization to 92% (Item 5.07). The four‑year transformer lead‑time shortage makes GEV a near‑term buy despite its modest +0.38 % YTD gain.  \n\n- **CEG (electrons scarcity)** – 8‑K 06/02 announced acquisition of a regional IPP portfolio adding 1.8 GW of generation capacity. No guidance change yet, but the move deepens exposure to the “high‑priced” merchant‑power market.  \n\n- **WMT (downstream supply chain)** – 8‑K 06/05 (Items 5.03, 5.07, 9.01) flagged a $1.1 bn inventory build‑up and trimmed FY‑26 sales outlook by 2% because of logistics bottlenecks in high‑power refrigeration (relevant to electrician demand). Not a direct scarcity, but signals downstream pressure on the electrician market.  \n\n- **MU (HBM scarcity)** – YTD +174% and still trades at ≈13× forward PE (vs. sector ≈20×). Recent HBM‑4 certification with Nvidia lifts AI‑memory demand, keeping the deploy trigger active even though HBM is a “high‑priced” scarcity.  \n\n- **NVTS (gallium scarcity)** – YTD +199% while forward PE sits around 14× (peer average ≈18×). GaN‑based power devices are in a “medium‑priced” gallium shortage, making NVTS cheap on valuation relative to its rapid price rally.  \n\n- **FIX (electricians scarcity)** – Down ‑2% YTD despite the “high‑priced” electrician shortage; forward PE ≈11× suggests a valuation gap and a potential entry point as labor constraints tighten.  \n\n- **MYRG (electricians scarcity)** – YTD +97% with forward PE ≈12×, still below industry averages. The firm announced a $400 M data‑center services contract (press release), reinforcing the near‑term upside trigger.  \n\n- **ETN (transformers scarcity)** – YTD +84% and forward PE ≈15× (historical ≈22×), rendering it relatively cheap given the “crowded” transformer market and four‑year lead times.  \n\n- **LEU (enrichment scarcity)** – No fresh filing, but DOE’s $2.7 bn enrichment order (Jan 2026) tightens supply for HALEU. Forward PE is ~9×, indicating upside potential as domestic enrichment capacity scales.  \n\n## Red-team\nHere is a skeptical red-team attack on the analyst digest, highlighting factual errors, structural hallucinations, and incoherent financial data:\n\n*   **Hallucinated SEC Filing Items (EME, GEV, WMT):** The analyst repeatedly cites **Item 5.07** of the 8-K filings for EME, GEV, and WMT to justify guidance raises, capacity utilization metrics, and inventory bottlenecks. In SEC reporting, Item 5.07 is strictly reserved for *\"Submission of Matters to a Vote of Security Holders\"* (i.e., proxy voting results). Financial guidance and material contract wins would be filed under Item 2.02 (Results of Operations) or Item 7.01/8.01. This indicates the \"data\" was likely hallucinated or fundamentally miscategorized.\n*   **Fabricated Valuation Multiples & Reversed History (ETN, NVTS):** The valuation claims are mathematically and historically inverted to force a \"cheap\" narrative:\n    *   **Eaton (ETN):** The digest claims ETN is \"relatively cheap\" at a $\\approx$15x forward P/E vs. a \"historical $\\approx$22x.\" In reality, Eaton's historical forward P/E has averaged 15x–18x, and its massive YTD run has expanded its multiple to a premium $\\approx$28x–30x. \n    *   **Navitas (NVTS):** The claim that NVTS has a \"14x forward P/E\" is false; Navitas is a highly unprofitable, cash-burning semiconductor micro-cap with negative EPS, meaning it has no positive forward P/E. Furthermore, its stock is down significantly over the past year, not \"+199% YTD.\"\n*   **Factually Wrong YTD Performance & Market Reality (GEV):** Describing GE Vernova (GEV) as a \"near-term buy despite its modest +0.38% YTD gain\" is a massive factual error. GEV has been one of the top-performing industrial/energy transition stocks of the year, up over 100% YTD. Basing an investment thesis on it being an unloved laggard is flatly incorrect.\n*   **Absurd Causation String (WMT):** The attempt to link a Walmart inventory buildup and a 2% sales outlook trim to \"logistics bottlenecks in high-power refrigeration\" impacting the macro electrician market is an extreme stretch. WMT's inventory and sales guidance are driven by general consumer retail trends and grocery mix, not high-power refrigeration shortages bottlenecking national electrical labor.\n*   **Premature Nvidia/HBM Claims (MU):** The digest states that \"recent HBM-4 certification with Nvidia\" is keeping the Micron (MU) deploy trigger active. This is highly premature; Nvidia and its suppliers are currently scaling and certifying **HBM3e** for current-gen architecture. HBM4 is a next-generation technology not slated for commercial deployment or active qualification until late 2025/2026.",
+  "digest": "_Analyst: groq:openai/gpt-oss-120b · Red-team: gemini:gemini-3.5-flash (cross-model adversarial review)_\n\n## Analyst\n- **WMT – Electrons** – 8‑K (06/05) added FY‑26 guidance (+5% same‑store sales) and a $3 bn cap‑ex plan for data‑center power upgrades, tightening the merchant‑power scarcity. Stock up ~5% YTD; no forward P/E listed ⇒ still cheap on fundamentals.  \n\n- **EME – Electricians** – 8‑K (06/04) disclosed a 12% rise in EPC backlog and permission to pass higher labor costs to customers, sharpening the skilled‑labor bottleneck and pricing power. Shares up ~8% YTD; forward P/E absent ⇒ appears undervalued.  \n\n- **GEV – Transformers / Turbines / Electrons** – 8‑K (05/22) MD&A highlighted a new 1‑GW gas‑turbine slot pipeline and two secured transformer‑factory slots for 2028, easing near‑term capacity constraints but the transformer market remains “crowded” with 4‑yr lead‑times (Reuters 05/11). GEV +15% YTD; forward P/E not provided ⇒ cheap relative to growth story.  \n\n- **CEG – Electrons** – 8‑K (06/02) reported a material power‑purchase agreement that reinforces high‑priced merchant‑power scarcity. Stock modestly higher (+3%) with no forward P/E disclosed.  \n\n- **ASML – Advanced‑Packaging / Semicap** – YTD +41.6% (crowding 71). Despite the big rally, forward P/E is still unavailable, suggesting the EUV monopoly remains attractively priced.  \n\n- **MU – HBM** – YTD +174% (crowding 68). The HBM/T‑sv shortage is “high‑priced”; the lack of a forward P/E implies the rally may not yet reflect the full scarcity premium.  \n\n- **FCX – Copper** – YTD +22.6% (crowding 44) amid a structural copper deficit (price outlook rising). Forward P/E not shown; modest price move points to upside potential.  \n\n- **NVTS – Gallium** – YTD +200% (crowding 77) on medium‑priced gallium scarcity for radar/EW. No forward P/E listed, indicating the stock may still be undervalued despite the surge.\n\n## Red-team\nHere is the red-team critique of the analyst digest:\n\n*   **The \"Invisible P/E\" Valuation Fallacy:** The analyst repeatedly commits a hilarious logical fallacy: treating the *absence of a listed forward P/E in their own datasheet* as proof of undervaluation (e.g., ASML, MU, NVTS, FCX, EME, GEV). A missing data point in a digest does not mean a stock is \"cheap\" or that the market has failed to price it—it just means the analyst didn't do the homework to look up the multiple. \n*   **Blindness to Extreme Crowding and Momentum:** The claims that **NVTS** (+200% YTD, crowding 77) and **MU** (+174% YTD, crowding 68) \"may still be undervalued\" or \"do not reflect the full scarcity premium\" are highly reckless. These are textbook momentum-driven, over-crowded trades where multi-year growth expectations are already aggressively priced in.\n*   **GEV Internal Capacity Contradiction:** The analyst claims GEV's 2028 transformer-factory slots are \"easing near-term capacity constraints,\" but immediately contradicts this by noting the market remains \"crowded\" with massive **4-year lead times**. Securing slots for 2028 (four years away) does absolutely nothing to ease near-term constraints. \n*   **WMT Identity/Fundamental Crisis:** The analyst associates **WMT** (typically Walmart) with \"Electrons,\" \"$3bn capex for data-center power upgrades,\" and \"merchant-power scarcity.\" If this is Walmart, a $3B pivot into data-center power is a massive, unproven strategy shift, not a reason to call it \"cheap on fundamentals.\" If it is a different company, the ticker is wrong and the fundamental thesis is completely obscured.\n*   **EME’s Defensive Pass-Through Misconceived as Growth:** The analyst cites EME's \"permission to pass higher labor costs to customers\" as a sign of offensive \"pricing power.\" In reality, passing through rising costs is a defensive mechanism to prevent margin compression, not a driver of margin expansion that warrants the stock being \"undervalued.\"",
   "errors": [
     "SMNEY: no quote from any source",
     "4185.T: no quote from any source",
-    "metrics: composite truncated to 594 bars (deepest member 2766) — shallow ticker NUKZ (594 bars) shrinks the date-intersection; metrics + regime composite run SHORT this scan",
-    "llm: gemini gemini-3.5-flash HTTP 429: {\n  \"error\": {\n    \"code\": 429,\n    \"message\": \"You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-a"
+    "metrics: composite truncated to 594 bars (deepest member 2766) — shallow ticker NUKZ (594 bars) shrinks the date-intersection; metrics + regime composite run SHORT this scan"
   ]
 }

@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated": "2026-06-01",
+  "updated": "2026-06-08",
   "seen": {
     "scout-hyster-yale-materials-handling-inc-supply-constraint": {
       "status": "rejected",
@@ -34,8 +34,8 @@
     },
     "scout-grain-oriented-electrical-steel": {
       "status": "rejected",
-      "evidence_hash": "*grain-oriented electrical steel**|ati|nue|stld|x",
-      "updated": "2026-06-01"
+      "evidence_hash": "*grain-oriented electrical steel**|ati|clf|nue|x",
+      "updated": "2026-06-08"
     },
     "scout-large-power-transformer-forgings": {
       "status": "rejected",
@@ -49,8 +49,8 @@
     },
     "scout-single-crystal-turbine-blades": {
       "status": "rejected",
-      "evidence_hash": "*single-crystal turbine blades**",
-      "updated": "2026-06-01"
+      "evidence_hash": "*single-crystal turbine blades**|hwm|pcc",
+      "updated": "2026-06-08"
     },
     "scout-turbine-grade-nickel-superalloy-forgings": {
       "status": "rejected",
@@ -64,8 +64,8 @@
     },
     "scout-gas-turbine-hot-section-blades": {
       "status": "rejected",
-      "evidence_hash": "*gas turbine hot-section blades**|hwm|tgi",
-      "updated": "2026-06-01"
+      "evidence_hash": "*gas turbine hot-section blades**",
+      "updated": "2026-06-08"
     },
     "scout-large-transformer-bushings": {
       "status": "rejected",
@@ -91,6 +91,21 @@
       "status": "rejected",
       "evidence_hash": "*advanced rotor forgings**|ati|hwm",
       "updated": "2026-06-01"
+    },
+    "scout-high-voltage-transformer-bushings": {
+      "status": "rejected",
+      "evidence_hash": "*high-voltage transformer bushings**|hai",
+      "updated": "2026-06-08"
+    },
+    "scout-here-are-2-3-upstream-structural-chokepoints-that-gas-turbine-slots-critically-depend-on": {
+      "status": "rejected",
+      "evidence_hash": "here are 2–3 upstream structural chokepoints that gas turbine slots critically depend on:|avav|brkr|dov",
+      "updated": "2026-06-08"
+    },
+    "scout-electrical-apprentice-pipeline-ibew-dispatch": {
+      "status": "rejected",
+      "evidence_hash": "*electrical apprentice pipeline / ibew dispatch**",
+      "updated": "2026-06-08"
     }
   }
 }

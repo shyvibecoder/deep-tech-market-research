@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated": "2026-06-01",
+  "generated": "2026-06-08",
   "chair": "anthropic",
   "health": {
     "engines": [
@@ -16,55 +16,54 @@
   "candidates": [],
   "considered": [
     {
-      "id": "scout-large-industrial-gas-turbines",
-      "tickers": [
-        "WWD"
-      ],
+      "id": "scout-gas-turbine-hot-section-blades",
+      "tickers": [],
       "engine": "bom-ladder",
-      "reason": "low committee confidence (0.33)"
-    },
-    {
-      "id": "scout-high-voltage-power-transformers",
-      "tickers": [
-        "HBTE",
-        "GE"
-      ],
-      "engine": "bom-ladder",
-      "reason": "low committee confidence (0.33)"
+      "reason": "low committee confidence (0.38)"
     },
     {
       "id": "scout-grain-oriented-electrical-steel",
       "tickers": [
+        "CLF",
         "NUE",
-        "STLD",
         "ATI",
         "X"
       ],
       "engine": "bom-ladder",
-      "reason": "CRO veto: HALLUCINATION + MISATTRIBUTION: NUE (Nucor), STLD (Steel Dynamics), and X (US Steel) do not produce grain-oriented electrical steel. ATI produces specialty alloys but not GOES to power-transformer spec. AK Steel (now Cleveland-Cliffs, CLF) is the sole US GOES producer. Citing wrong tickers is an automatic veto."
+      "reason": "low committee confidence (0.27)"
+    },
+    {
+      "id": "scout-high-voltage-transformer-bushings",
+      "tickers": [
+        "HAI"
+      ],
+      "engine": "bom-ladder",
+      "reason": "CRO veto: HAI (Hallmark Financial Services) is an insurance holding company — it has no connection to high-voltage transformer bushings. This is a textbook misattribution hallucination. The ticker fails the hallucination check outright. No legitimate bushing-exposure equity has been identified; the entire thesis is built on a fabricated ticker attribution."
+    },
+    {
+      "id": "scout-here-are-2-3-upstream-structural-chokepoints-that-gas-turbine-slots-critically-depend-on",
+      "tickers": [
+        "AVAV",
+        "DOV",
+        "BRKR"
+      ],
+      "engine": "bom-ladder",
+      "reason": "low committee confidence (0.26)"
     },
     {
       "id": "scout-single-crystal-turbine-blades",
-      "tickers": [],
+      "tickers": [
+        "HWM",
+        "PCC"
+      ],
       "engine": "bom-ladder",
       "reason": "low committee confidence (0.33)"
     },
     {
-      "id": "scout-advanced-rotor-forgings",
-      "tickers": [
-        "HWM",
-        "ATI"
-      ],
+      "id": "scout-electrical-apprentice-pipeline-ibew-dispatch",
+      "tickers": [],
       "engine": "bom-ladder",
-      "reason": "below threshold after CRO (0.35)"
-    },
-    {
-      "id": "scout-high-voltage-power-transformers",
-      "tickers": [
-        "GE"
-      ],
-      "engine": "bom-ladder",
-      "reason": "below threshold after CRO (0.35)"
+      "reason": "low committee confidence (0.18)"
     }
   ]
 }

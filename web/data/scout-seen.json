@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated": "2026-06-08",
+  "updated": "2026-06-15",
   "seen": {
     "scout-hyster-yale-materials-handling-inc-supply-constraint": {
       "status": "rejected",
@@ -34,8 +34,8 @@
     },
     "scout-grain-oriented-electrical-steel": {
       "status": "rejected",
-      "evidence_hash": "*grain-oriented electrical steel**|ati|clf|nue|x",
-      "updated": "2026-06-08"
+      "evidence_hash": "*grain-oriented electrical steel**|ati|x",
+      "updated": "2026-06-15"
     },
     "scout-large-power-transformer-forgings": {
       "status": "rejected",
@@ -49,8 +49,8 @@
     },
     "scout-single-crystal-turbine-blades": {
       "status": "rejected",
-      "evidence_hash": "*single-crystal turbine blades**|hwm|pcc",
-      "updated": "2026-06-08"
+      "evidence_hash": "*single-crystal turbine blades**",
+      "updated": "2026-06-15"
     },
     "scout-turbine-grade-nickel-superalloy-forgings": {
       "status": "rejected",
@@ -94,8 +94,8 @@
     },
     "scout-high-voltage-transformer-bushings": {
       "status": "rejected",
-      "evidence_hash": "*high-voltage transformer bushings**|hai",
-      "updated": "2026-06-08"
+      "evidence_hash": "*high-voltage transformer bushings**",
+      "updated": "2026-06-15"
     },
     "scout-here-are-2-3-upstream-structural-chokepoints-that-gas-turbine-slots-critically-depend-on": {
       "status": "rejected",
@@ -106,6 +106,21 @@
       "status": "rejected",
       "evidence_hash": "*electrical apprentice pipeline / ibew dispatch**",
       "updated": "2026-06-08"
+    },
+    "scout-gas-turbine-hot-section-components": {
+      "status": "rejected",
+      "evidence_hash": "*gas turbine hot-section components**",
+      "updated": "2026-06-15"
+    },
+    "scout-vacuum-grade-nickel-superalloy": {
+      "status": "rejected",
+      "evidence_hash": "*vacuum-grade nickel superalloy**",
+      "updated": "2026-06-15"
+    },
+    "scout-electrical-apprentice-pipeline-ibew-training-infrastructure": {
+      "status": "rejected",
+      "evidence_hash": "*electrical apprentice pipeline / ibew training infrastructure**",
+      "updated": "2026-06-15"
     }
   }
 }

@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated": "2026-06-08",
+  "generated": "2026-06-15",
   "chair": "anthropic",
   "health": {
     "engines": [
@@ -16,54 +16,43 @@
   "candidates": [],
   "considered": [
     {
-      "id": "scout-gas-turbine-hot-section-blades",
+      "id": "scout-gas-turbine-hot-section-components",
       "tickers": [],
       "engine": "bom-ladder",
-      "reason": "low committee confidence (0.38)"
+      "reason": "CRO veto: HALLUCINATION: TGT is Target Corporation (retail), not a gas turbine supply-chain proxy. Citing it as a GE Vernova supply-chain exposure is a material misattribution. Automatic veto per policy. HWM (Howmet) is legitimate, but the corrupted ticker poisons the proposal's factual foundation."
     },
     {
       "id": "scout-grain-oriented-electrical-steel",
       "tickers": [
-        "CLF",
-        "NUE",
         "ATI",
         "X"
       ],
       "engine": "bom-ladder",
-      "reason": "low committee confidence (0.27)"
+      "reason": "low committee confidence (0.16)"
     },
     {
       "id": "scout-high-voltage-transformer-bushings",
-      "tickers": [
-        "HAI"
-      ],
+      "tickers": [],
       "engine": "bom-ladder",
-      "reason": "CRO veto: HAI (Hallmark Financial Services) is an insurance holding company — it has no connection to high-voltage transformer bushings. This is a textbook misattribution hallucination. The ticker fails the hallucination check outright. No legitimate bushing-exposure equity has been identified; the entire thesis is built on a fabricated ticker attribution."
-    },
-    {
-      "id": "scout-here-are-2-3-upstream-structural-chokepoints-that-gas-turbine-slots-critically-depend-on",
-      "tickers": [
-        "AVAV",
-        "DOV",
-        "BRKR"
-      ],
-      "engine": "bom-ladder",
-      "reason": "low committee confidence (0.26)"
+      "reason": "low committee confidence (0)"
     },
     {
       "id": "scout-single-crystal-turbine-blades",
-      "tickers": [
-        "HWM",
-        "PCC"
-      ],
+      "tickers": [],
       "engine": "bom-ladder",
       "reason": "low committee confidence (0.33)"
     },
     {
-      "id": "scout-electrical-apprentice-pipeline-ibew-dispatch",
+      "id": "scout-vacuum-grade-nickel-superalloy",
       "tickers": [],
       "engine": "bom-ladder",
-      "reason": "low committee confidence (0.18)"
+      "reason": "low committee confidence (0.28)"
+    },
+    {
+      "id": "scout-electrical-apprentice-pipeline-ibew-training-infrastructure",
+      "tickers": [],
+      "engine": "bom-ladder",
+      "reason": "low committee confidence (0.38)"
     }
   ]
 }

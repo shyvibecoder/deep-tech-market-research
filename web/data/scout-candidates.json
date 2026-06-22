@@ -1,58 +1,73 @@
 {
   "schema_version": 1,
-  "generated": "2026-06-15",
+  "generated": "2026-06-22",
   "chair": "anthropic",
   "health": {
     "engines": [
       "constraint-shadow",
       "bom-ladder"
     ],
-    "leads": 14,
+    "leads": 13,
     "suppressed": 3,
-    "candidates": 14,
+    "candidates": 13,
     "proposals": 0,
     "errors": 0
   },
   "candidates": [],
   "considered": [
     {
-      "id": "scout-gas-turbine-hot-section-components",
-      "tickers": [],
+      "id": "scout-large-gas-turbine-hot-section-components",
+      "tickers": [
+        "SIEGY"
+      ],
       "engine": "bom-ladder",
-      "reason": "CRO veto: HALLUCINATION: TGT is Target Corporation (retail), not a gas turbine supply-chain proxy. Citing it as a GE Vernova supply-chain exposure is a material misattribution. Automatic veto per policy. HWM (Howmet) is legitimate, but the corrupted ticker poisons the proposal's factual foundation."
+      "reason": "CRO veto: HALLUCINATION: SIEGY is Siemens Energy AG, a real ticker, but the proposal cites a 'SIEGY 10-K 2020-03-12' — Siemens Energy did not exist as an independent public company until September 2020; no 10-K filing from March 2020 exists. Fabricated citation is an automatic veto."
     },
     {
       "id": "scout-grain-oriented-electrical-steel",
       "tickers": [
+        "CLF",
+        "NUE",
         "ATI",
         "X"
       ],
       "engine": "bom-ladder",
-      "reason": "low committee confidence (0.16)"
+      "reason": "low committee confidence (0.28)"
     },
     {
-      "id": "scout-high-voltage-transformer-bushings",
-      "tickers": [],
-      "engine": "bom-ladder",
-      "reason": "low committee confidence (0)"
-    },
-    {
-      "id": "scout-single-crystal-turbine-blades",
-      "tickers": [],
+      "id": "scout-large-transformer-bushings",
+      "tickers": [
+        "SIEGY"
+      ],
       "engine": "bom-ladder",
       "reason": "low committee confidence (0.33)"
     },
     {
-      "id": "scout-vacuum-grade-nickel-superalloy",
-      "tickers": [],
+      "id": "scout-single-crystal-turbine-blades",
+      "tickers": [
+        "HWM"
+      ],
       "engine": "bom-ladder",
-      "reason": "low committee confidence (0.28)"
+      "reason": "below threshold after CRO (0.34)"
     },
     {
-      "id": "scout-electrical-apprentice-pipeline-ibew-training-infrastructure",
-      "tickers": [],
+      "id": "scout-advanced-superalloy-forgings",
+      "tickers": [
+        "HWM",
+        "ATI"
+      ],
       "engine": "bom-ladder",
-      "reason": "low committee confidence (0.38)"
+      "reason": "low committee confidence (0.37)"
+    },
+    {
+      "id": "scout-electrical-power-transformers",
+      "tickers": [
+        "HTHIY",
+        "X",
+        "ESP"
+      ],
+      "engine": "bom-ladder",
+      "reason": "CRO veto: HALLUCINATION: Tickers 'X' (United States Steel) and 'ESP' (Espey Mfg, defense electronics) are not electrical power transformer companies. 'HTHIY' (Hitachi) is plausible but unverified for this segment. Two of three cited tickers are materially misattributed. Automatic veto per protocol."
     }
   ]
 }

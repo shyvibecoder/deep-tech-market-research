@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated": "2026-06-15",
+  "updated": "2026-06-22",
   "seen": {
     "scout-hyster-yale-materials-handling-inc-supply-constraint": {
       "status": "rejected",
@@ -34,8 +34,8 @@
     },
     "scout-grain-oriented-electrical-steel": {
       "status": "rejected",
-      "evidence_hash": "*grain-oriented electrical steel**|ati|x",
-      "updated": "2026-06-15"
+      "evidence_hash": "*grain-oriented electrical steel**|ati|clf|nue|x",
+      "updated": "2026-06-22"
     },
     "scout-large-power-transformer-forgings": {
       "status": "rejected",
@@ -49,8 +49,8 @@
     },
     "scout-single-crystal-turbine-blades": {
       "status": "rejected",
-      "evidence_hash": "*single-crystal turbine blades**",
-      "updated": "2026-06-15"
+      "evidence_hash": "*single-crystal turbine blades**|hwm",
+      "updated": "2026-06-22"
     },
     "scout-turbine-grade-nickel-superalloy-forgings": {
       "status": "rejected",
@@ -69,8 +69,8 @@
     },
     "scout-large-transformer-bushings": {
       "status": "rejected",
-      "evidence_hash": "*large transformer bushings**",
-      "updated": "2026-06-01"
+      "evidence_hash": "*large transformer bushings**|siegy",
+      "updated": "2026-06-22"
     },
     "scout-vacuum-melted-superalloy-billet": {
       "status": "rejected",
@@ -121,6 +121,21 @@
       "status": "rejected",
       "evidence_hash": "*electrical apprentice pipeline / ibew training infrastructure**",
       "updated": "2026-06-15"
+    },
+    "scout-large-gas-turbine-hot-section-components": {
+      "status": "rejected",
+      "evidence_hash": "*large gas turbine hot-section components**|siegy",
+      "updated": "2026-06-22"
+    },
+    "scout-advanced-superalloy-forgings": {
+      "status": "rejected",
+      "evidence_hash": "*advanced superalloy forgings**|ati|hwm",
+      "updated": "2026-06-22"
+    },
+    "scout-electrical-power-transformers": {
+      "status": "rejected",
+      "evidence_hash": "*electrical power transformers**|esp|hthiy|x",
+      "updated": "2026-06-22"
     }
   }
 }

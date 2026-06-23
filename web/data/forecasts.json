@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated": "2026-06-22",
+  "updated": "2026-06-23",
   "open": [
     {
       "date": "2026-05-31",
@@ -1091,160 +1091,6 @@
       "source": "de-rating"
     },
     {
-      "id": "2026-06-02:tsmom_tilt:PAVE",
-      "date": "2026-06-02",
-      "type": "tsmom_tilt",
-      "subject": "PAVE",
-      "claim": "up",
-      "horizon_days": 21,
-      "price_at": 55.97999954223633,
-      "resolve_on": "2026-06-23",
-      "basis": "overweight"
-    },
-    {
-      "id": "2026-06-02:tsmom_tilt:GRID",
-      "date": "2026-06-02",
-      "type": "tsmom_tilt",
-      "subject": "GRID",
-      "claim": "up",
-      "horizon_days": 21,
-      "price_at": 193.3699951171875,
-      "resolve_on": "2026-06-23",
-      "basis": "overweight"
-    },
-    {
-      "id": "2026-06-02:tsmom_tilt:FIW",
-      "date": "2026-06-02",
-      "type": "tsmom_tilt",
-      "subject": "FIW",
-      "claim": "down",
-      "horizon_days": 21,
-      "price_at": 103.58000183105469,
-      "resolve_on": "2026-06-23",
-      "basis": "underweight"
-    },
-    {
-      "id": "2026-06-02:tsmom_tilt:ASML",
-      "date": "2026-06-02",
-      "type": "tsmom_tilt",
-      "subject": "ASML",
-      "claim": "up",
-      "horizon_days": 21,
-      "price_at": 1628.5699462890625,
-      "resolve_on": "2026-06-23",
-      "basis": "overweight"
-    },
-    {
-      "id": "2026-06-02:tsmom_tilt:SMH",
-      "date": "2026-06-02",
-      "type": "tsmom_tilt",
-      "subject": "SMH",
-      "claim": "up",
-      "horizon_days": 21,
-      "price_at": 607.8099975585938,
-      "resolve_on": "2026-06-23",
-      "basis": "overweight"
-    },
-    {
-      "id": "2026-06-02:tsmom_tilt:COPX",
-      "date": "2026-06-02",
-      "type": "tsmom_tilt",
-      "subject": "COPX",
-      "claim": "up",
-      "horizon_days": 21,
-      "price_at": 90.05999755859375,
-      "resolve_on": "2026-06-23",
-      "basis": "overweight"
-    },
-    {
-      "id": "2026-06-02:tsmom_tilt:NUKZ",
-      "date": "2026-06-02",
-      "type": "tsmom_tilt",
-      "subject": "NUKZ",
-      "claim": "up",
-      "horizon_days": 21,
-      "price_at": 72.25,
-      "resolve_on": "2026-06-23",
-      "basis": "overweight"
-    },
-    {
-      "id": "2026-06-02:tsmom_tilt:MU",
-      "date": "2026-06-02",
-      "type": "tsmom_tilt",
-      "subject": "MU",
-      "claim": "up",
-      "horizon_days": 21,
-      "price_at": 1035.5,
-      "resolve_on": "2026-06-23",
-      "basis": "overweight"
-    },
-    {
-      "id": "2026-06-02:tsmom_tilt:GEV",
-      "date": "2026-06-02",
-      "type": "tsmom_tilt",
-      "subject": "GEV",
-      "claim": "up",
-      "horizon_days": 21,
-      "price_at": 950.5399780273438,
-      "resolve_on": "2026-06-23",
-      "basis": "overweight"
-    },
-    {
-      "id": "2026-06-02:tsmom_tilt:CEG",
-      "date": "2026-06-02",
-      "type": "tsmom_tilt",
-      "subject": "CEG",
-      "claim": "down",
-      "horizon_days": 21,
-      "price_at": 265.70001220703125,
-      "resolve_on": "2026-06-23",
-      "basis": "underweight"
-    },
-    {
-      "id": "2026-06-02:tsmom_tilt:EME",
-      "date": "2026-06-02",
-      "type": "tsmom_tilt",
-      "subject": "EME",
-      "claim": "up",
-      "horizon_days": 21,
-      "price_at": 830.9500122070312,
-      "resolve_on": "2026-06-23",
-      "basis": "overweight"
-    },
-    {
-      "id": "2026-06-02:tsmom_tilt:MP",
-      "date": "2026-06-02",
-      "type": "tsmom_tilt",
-      "subject": "MP",
-      "claim": "up",
-      "horizon_days": 21,
-      "price_at": 69.29000091552734,
-      "resolve_on": "2026-06-23",
-      "basis": "overweight"
-    },
-    {
-      "id": "2026-06-02:tsmom_tilt:ROBO",
-      "date": "2026-06-02",
-      "type": "tsmom_tilt",
-      "subject": "ROBO",
-      "claim": "up",
-      "horizon_days": 21,
-      "price_at": 89.56999969482422,
-      "resolve_on": "2026-06-23",
-      "basis": "overweight"
-    },
-    {
-      "id": "2026-06-02:tsmom_tilt:UFO",
-      "date": "2026-06-02",
-      "type": "tsmom_tilt",
-      "subject": "UFO",
-      "claim": "up",
-      "horizon_days": 21,
-      "price_at": 61.08000183105469,
-      "resolve_on": "2026-06-23",
-      "basis": "overweight"
-    },
-    {
       "date": "2026-06-02",
       "type": "scarcity_rel",
       "subject": "electrons",
@@ -2002,50 +1848,6 @@
       "id": "2026-06-02:scarcity_rel:rare-earth-magnets",
       "claim": "underperform",
       "source": "de-rating"
-    },
-    {
-      "id": "2026-06-02:tsmom_tilt:JNJ",
-      "date": "2026-06-02",
-      "type": "tsmom_tilt",
-      "subject": "JNJ",
-      "claim": "up",
-      "horizon_days": 21,
-      "price_at": 223.24000549316406,
-      "resolve_on": "2026-06-23",
-      "basis": "overweight"
-    },
-    {
-      "id": "2026-06-02:tsmom_tilt:KO",
-      "date": "2026-06-02",
-      "type": "tsmom_tilt",
-      "subject": "KO",
-      "claim": "up",
-      "horizon_days": 21,
-      "price_at": 78.41999816894531,
-      "resolve_on": "2026-06-23",
-      "basis": "overweight"
-    },
-    {
-      "id": "2026-06-02:tsmom_tilt:MRK",
-      "date": "2026-06-02",
-      "type": "tsmom_tilt",
-      "subject": "MRK",
-      "claim": "up",
-      "horizon_days": 21,
-      "price_at": 115.55000305175781,
-      "resolve_on": "2026-06-23",
-      "basis": "overweight"
-    },
-    {
-      "id": "2026-06-02:tsmom_tilt:PG",
-      "date": "2026-06-02",
-      "type": "tsmom_tilt",
-      "subject": "PG",
-      "claim": "down",
-      "horizon_days": 21,
-      "price_at": 139.22000122070312,
-      "resolve_on": "2026-06-23",
-      "basis": "underweight"
     },
     {
       "id": "2026-06-03:tsmom_tilt:PAVE",
@@ -5180,19 +4982,19 @@
   "scorecard": {
     "by_tilt": {
       "overweight": {
-        "n": 24,
-        "hits": 14
+        "n": 39,
+        "hits": 23
       },
       "underweight": {
-        "n": 4,
+        "n": 7,
         "hits": 1
       }
     },
     "total": {
-      "n": 28,
-      "hits": 15
+      "n": 46,
+      "hits": 24
     },
-    "hit_rate": 0.536,
+    "hit_rate": 0.522,
     "by_signal": {},
     "kill": {
       "matured": 0,

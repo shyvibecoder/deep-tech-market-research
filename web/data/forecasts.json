@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated": "2026-06-23",
+  "updated": "2026-06-24",
   "open": [
     {
       "date": "2026-05-31",
@@ -1850,204 +1850,6 @@
       "source": "de-rating"
     },
     {
-      "id": "2026-06-03:tsmom_tilt:PAVE",
-      "date": "2026-06-03",
-      "type": "tsmom_tilt",
-      "subject": "PAVE",
-      "claim": "up",
-      "horizon_days": 21,
-      "price_at": 56.88999938964844,
-      "resolve_on": "2026-06-24",
-      "basis": "overweight"
-    },
-    {
-      "id": "2026-06-03:tsmom_tilt:GRID",
-      "date": "2026-06-03",
-      "type": "tsmom_tilt",
-      "subject": "GRID",
-      "claim": "up",
-      "horizon_days": 21,
-      "price_at": 197.47999572753906,
-      "resolve_on": "2026-06-24",
-      "basis": "overweight"
-    },
-    {
-      "id": "2026-06-03:tsmom_tilt:FIW",
-      "date": "2026-06-03",
-      "type": "tsmom_tilt",
-      "subject": "FIW",
-      "claim": "down",
-      "horizon_days": 21,
-      "price_at": 104.05000305175781,
-      "resolve_on": "2026-06-24",
-      "basis": "underweight"
-    },
-    {
-      "id": "2026-06-03:tsmom_tilt:ASML",
-      "date": "2026-06-03",
-      "type": "tsmom_tilt",
-      "subject": "ASML",
-      "claim": "up",
-      "horizon_days": 21,
-      "price_at": 1705.3699951171875,
-      "resolve_on": "2026-06-24",
-      "basis": "overweight"
-    },
-    {
-      "id": "2026-06-03:tsmom_tilt:SMH",
-      "date": "2026-06-03",
-      "type": "tsmom_tilt",
-      "subject": "SMH",
-      "claim": "up",
-      "horizon_days": 21,
-      "price_at": 632.2100219726562,
-      "resolve_on": "2026-06-24",
-      "basis": "overweight"
-    },
-    {
-      "id": "2026-06-03:tsmom_tilt:COPX",
-      "date": "2026-06-03",
-      "type": "tsmom_tilt",
-      "subject": "COPX",
-      "claim": "up",
-      "horizon_days": 21,
-      "price_at": 93.66000366210938,
-      "resolve_on": "2026-06-24",
-      "basis": "overweight"
-    },
-    {
-      "id": "2026-06-03:tsmom_tilt:NUKZ",
-      "date": "2026-06-03",
-      "type": "tsmom_tilt",
-      "subject": "NUKZ",
-      "claim": "up",
-      "horizon_days": 21,
-      "price_at": 73.86000061035156,
-      "resolve_on": "2026-06-24",
-      "basis": "overweight"
-    },
-    {
-      "id": "2026-06-03:tsmom_tilt:MU",
-      "date": "2026-06-03",
-      "type": "tsmom_tilt",
-      "subject": "MU",
-      "claim": "up",
-      "horizon_days": 21,
-      "price_at": 1064.0999755859375,
-      "resolve_on": "2026-06-24",
-      "basis": "overweight"
-    },
-    {
-      "id": "2026-06-03:tsmom_tilt:GEV",
-      "date": "2026-06-03",
-      "type": "tsmom_tilt",
-      "subject": "GEV",
-      "claim": "up",
-      "horizon_days": 21,
-      "price_at": 969.6699829101562,
-      "resolve_on": "2026-06-24",
-      "basis": "overweight"
-    },
-    {
-      "id": "2026-06-03:tsmom_tilt:CEG",
-      "date": "2026-06-03",
-      "type": "tsmom_tilt",
-      "subject": "CEG",
-      "claim": "down",
-      "horizon_days": 21,
-      "price_at": 272.6499938964844,
-      "resolve_on": "2026-06-24",
-      "basis": "underweight"
-    },
-    {
-      "id": "2026-06-03:tsmom_tilt:EME",
-      "date": "2026-06-03",
-      "type": "tsmom_tilt",
-      "subject": "EME",
-      "claim": "up",
-      "horizon_days": 21,
-      "price_at": 827.280029296875,
-      "resolve_on": "2026-06-24",
-      "basis": "overweight"
-    },
-    {
-      "id": "2026-06-03:tsmom_tilt:MP",
-      "date": "2026-06-03",
-      "type": "tsmom_tilt",
-      "subject": "MP",
-      "claim": "up",
-      "horizon_days": 21,
-      "price_at": 72.23999786376953,
-      "resolve_on": "2026-06-24",
-      "basis": "overweight"
-    },
-    {
-      "id": "2026-06-03:tsmom_tilt:ROBO",
-      "date": "2026-06-03",
-      "type": "tsmom_tilt",
-      "subject": "ROBO",
-      "claim": "up",
-      "horizon_days": 21,
-      "price_at": 90.33999633789062,
-      "resolve_on": "2026-06-24",
-      "basis": "overweight"
-    },
-    {
-      "id": "2026-06-03:tsmom_tilt:UFO",
-      "date": "2026-06-03",
-      "type": "tsmom_tilt",
-      "subject": "UFO",
-      "claim": "up",
-      "horizon_days": 21,
-      "price_at": 61.220001220703125,
-      "resolve_on": "2026-06-24",
-      "basis": "overweight"
-    },
-    {
-      "id": "2026-06-03:tsmom_tilt:JNJ",
-      "date": "2026-06-03",
-      "type": "tsmom_tilt",
-      "subject": "JNJ",
-      "claim": "up",
-      "horizon_days": 21,
-      "price_at": 222.88999938964844,
-      "resolve_on": "2026-06-24",
-      "basis": "overweight"
-    },
-    {
-      "id": "2026-06-03:tsmom_tilt:KO",
-      "date": "2026-06-03",
-      "type": "tsmom_tilt",
-      "subject": "KO",
-      "claim": "up",
-      "horizon_days": 21,
-      "price_at": 78.41000366210938,
-      "resolve_on": "2026-06-24",
-      "basis": "overweight"
-    },
-    {
-      "id": "2026-06-03:tsmom_tilt:MRK",
-      "date": "2026-06-03",
-      "type": "tsmom_tilt",
-      "subject": "MRK",
-      "claim": "up",
-      "horizon_days": 21,
-      "price_at": 115.6500015258789,
-      "resolve_on": "2026-06-24",
-      "basis": "overweight"
-    },
-    {
-      "id": "2026-06-03:tsmom_tilt:PG",
-      "date": "2026-06-03",
-      "type": "tsmom_tilt",
-      "subject": "PG",
-      "claim": "down",
-      "horizon_days": 21,
-      "price_at": 140.82000732421875,
-      "resolve_on": "2026-06-24",
-      "basis": "underweight"
-    },
-    {
       "date": "2026-06-03",
       "type": "scarcity_rel",
       "subject": "electrons",
@@ -2763,17 +2565,6 @@
         "ROBO": 90.33999633789062,
         "UFO": 61.220001220703125
       }
-    },
-    {
-      "id": "2026-06-03:tsmom_tilt:WMT",
-      "date": "2026-06-03",
-      "type": "tsmom_tilt",
-      "subject": "WMT",
-      "claim": "up",
-      "horizon_days": 21,
-      "price_at": 116.30000305175781,
-      "resolve_on": "2026-06-24",
-      "basis": "overweight"
     },
     {
       "date": "2026-06-03",
@@ -4982,19 +4773,19 @@
   "scorecard": {
     "by_tilt": {
       "overweight": {
-        "n": 39,
-        "hits": 23
+        "n": 55,
+        "hits": 31
       },
       "underweight": {
-        "n": 7,
+        "n": 10,
         "hits": 1
       }
     },
     "total": {
-      "n": 46,
-      "hits": 24
+      "n": 65,
+      "hits": 32
     },
-    "hit_rate": 0.522,
+    "hit_rate": 0.492,
     "by_signal": {},
     "kill": {
       "matured": 0,

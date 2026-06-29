@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated": "2026-06-22",
+  "updated": "2026-06-29",
   "seen": {
     "scout-hyster-yale-materials-handling-inc-supply-constraint": {
       "status": "rejected",
@@ -49,8 +49,8 @@
     },
     "scout-single-crystal-turbine-blades": {
       "status": "rejected",
-      "evidence_hash": "*single-crystal turbine blades**|hwm",
-      "updated": "2026-06-22"
+      "evidence_hash": "*single-crystal turbine blades**|hwm|pcc",
+      "updated": "2026-06-29"
     },
     "scout-turbine-grade-nickel-superalloy-forgings": {
       "status": "rejected",
@@ -69,8 +69,8 @@
     },
     "scout-large-transformer-bushings": {
       "status": "rejected",
-      "evidence_hash": "*large transformer bushings**|siegy",
-      "updated": "2026-06-22"
+      "evidence_hash": "*large transformer bushings**|hltef",
+      "updated": "2026-06-29"
     },
     "scout-vacuum-melted-superalloy-billet": {
       "status": "rejected",
@@ -136,6 +136,26 @@
       "status": "rejected",
       "evidence_hash": "*electrical power transformers**|esp|hthiy|x",
       "updated": "2026-06-22"
+    },
+    "scout-high-voltage-generator-step-up-transformers": {
+      "status": "rejected",
+      "evidence_hash": "*high-voltage generator step-up transformers**",
+      "updated": "2026-06-29"
+    },
+    "scout-large-industrial-forgings": {
+      "status": "rejected",
+      "evidence_hash": "*large industrial forgings**",
+      "updated": "2026-06-29"
+    },
+    "scout-power-transformer-cores": {
+      "status": "rejected",
+      "evidence_hash": "*power transformer cores**|clf|nue",
+      "updated": "2026-06-29"
+    },
+    "scout-medium-voltage-switchgear": {
+      "status": "rejected",
+      "evidence_hash": "*medium-voltage switchgear**|powl|ppsi|slng",
+      "updated": "2026-06-29"
     }
   }
 }

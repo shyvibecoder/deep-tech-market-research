@@ -1,73 +1,67 @@
 {
   "schema_version": 1,
-  "generated": "2026-06-22",
+  "generated": "2026-06-29",
   "chair": "anthropic",
   "health": {
     "engines": [
       "constraint-shadow",
       "bom-ladder"
     ],
-    "leads": 13,
-    "suppressed": 3,
-    "candidates": 13,
+    "leads": 14,
+    "suppressed": 4,
+    "candidates": 14,
     "proposals": 0,
     "errors": 0
   },
   "candidates": [],
   "considered": [
     {
-      "id": "scout-large-gas-turbine-hot-section-components",
-      "tickers": [
-        "SIEGY"
-      ],
+      "id": "scout-high-voltage-generator-step-up-transformers",
+      "tickers": [],
       "engine": "bom-ladder",
-      "reason": "CRO veto: HALLUCINATION: SIEGY is Siemens Energy AG, a real ticker, but the proposal cites a 'SIEGY 10-K 2020-03-12' — Siemens Energy did not exist as an independent public company until September 2020; no 10-K filing from March 2020 exists. Fabricated citation is an automatic veto."
+      "reason": "low committee confidence (0.23)"
     },
     {
-      "id": "scout-grain-oriented-electrical-steel",
+      "id": "scout-large-transformer-bushings",
       "tickers": [
-        "CLF",
-        "NUE",
-        "ATI",
-        "X"
+        "HLTEF"
       ],
       "engine": "bom-ladder",
       "reason": "low committee confidence (0.28)"
     },
     {
-      "id": "scout-large-transformer-bushings",
-      "tickers": [
-        "SIEGY"
-      ],
-      "engine": "bom-ladder",
-      "reason": "low committee confidence (0.33)"
-    },
-    {
       "id": "scout-single-crystal-turbine-blades",
       "tickers": [
-        "HWM"
-      ],
-      "engine": "bom-ladder",
-      "reason": "below threshold after CRO (0.34)"
-    },
-    {
-      "id": "scout-advanced-superalloy-forgings",
-      "tickers": [
         "HWM",
-        "ATI"
+        "PCC"
       ],
       "engine": "bom-ladder",
-      "reason": "low committee confidence (0.37)"
+      "reason": "low committee confidence (0.28)"
     },
     {
-      "id": "scout-electrical-power-transformers",
+      "id": "scout-large-industrial-forgings",
+      "tickers": [],
+      "engine": "bom-ladder",
+      "reason": "below threshold after CRO (0.33)"
+    },
+    {
+      "id": "scout-power-transformer-cores",
       "tickers": [
-        "HTHIY",
-        "X",
-        "ESP"
+        "NUE",
+        "CLF"
       ],
       "engine": "bom-ladder",
-      "reason": "CRO veto: HALLUCINATION: Tickers 'X' (United States Steel) and 'ESP' (Espey Mfg, defense electronics) are not electrical power transformer companies. 'HTHIY' (Hitachi) is plausible but unverified for this segment. Two of three cited tickers are materially misattributed. Automatic veto per protocol."
+      "reason": "low committee confidence (0.38)"
+    },
+    {
+      "id": "scout-medium-voltage-switchgear",
+      "tickers": [
+        "POWL",
+        "PPSI",
+        "SLNG"
+      ],
+      "engine": "bom-ladder",
+      "reason": "low committee confidence (0.23)"
     }
   ]
 }

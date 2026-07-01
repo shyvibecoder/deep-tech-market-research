@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated": "2026-06-02",
+  "generated": "2026-07-01",
   "sleeve_pct": 0.15,
   "market": [
     "SPY"
@@ -23,22 +23,22 @@
         "AEP"
       ],
       "years": 31.4,
-      "cagr": 0.1136,
+      "cagr": 0.1157,
       "maxDD": 0.3683,
-      "sharpe": 0.662,
-      "marketBeta": 0.543,
-      "mktBeta": 0.543,
-      "buildoutBeta": -0.296,
-      "buildoutT": -24.27,
+      "sharpe": 0.6722,
+      "marketBeta": 0.541,
+      "mktBeta": 0.541,
+      "buildoutBeta": -0.298,
+      "buildoutT": -24.55,
       "heldOverlap": [],
-      "planMaxDD": 0.2535,
-      "blendedMaxDD": 0.1517,
-      "ddReduction": 0.1018,
+      "planMaxDD": 0.2167,
+      "blendedMaxDD": 0.1286,
+      "ddReduction": 0.0881,
       "gate": {
         "pass": true,
         "axis": "diversifier",
-        "buildoutBeta": -0.296,
-        "reason": "diversifier: build-out β -0.296 ≤ 0.3 (does not amplify deep-tech build-out)"
+        "buildoutBeta": -0.298,
+        "reason": "diversifier: build-out β -0.298 ≤ 0.3 (does not amplify deep-tech build-out)"
       },
       "qualifies": true,
       "reason": "qualifies — low-beta, non-amplifying, lowers the plan's drawdown"
@@ -52,23 +52,23 @@
         "AWK",
         "WTRG"
       ],
-      "years": 18.1,
-      "cagr": 0.1001,
+      "years": 18.2,
+      "cagr": 0.1038,
       "maxDD": 0.3376,
-      "sharpe": 0.5581,
-      "marketBeta": 0.702,
-      "mktBeta": 0.702,
-      "buildoutBeta": -0.306,
-      "buildoutT": -18.18,
+      "sharpe": 0.5743,
+      "marketBeta": 0.699,
+      "mktBeta": 0.699,
+      "buildoutBeta": -0.312,
+      "buildoutT": -18.79,
       "heldOverlap": [],
-      "planMaxDD": 0.2535,
-      "blendedMaxDD": 0.1565,
-      "ddReduction": 0.097,
+      "planMaxDD": 0.2167,
+      "blendedMaxDD": 0.1347,
+      "ddReduction": 0.082,
       "gate": {
         "pass": true,
         "axis": "diversifier",
-        "buildoutBeta": -0.306,
-        "reason": "diversifier: build-out β -0.306 ≤ 0.3 (does not amplify deep-tech build-out)"
+        "buildoutBeta": -0.312,
+        "reason": "diversifier: build-out β -0.312 ≤ 0.3 (does not amplify deep-tech build-out)"
       },
       "qualifies": true,
       "reason": "qualifies — low-beta, non-amplifying, lowers the plan's drawdown"
@@ -82,23 +82,23 @@
         "DLTR",
         "TJX"
       ],
-      "years": 16.5,
-      "cagr": 0.154,
+      "years": 16.6,
+      "cagr": 0.1547,
       "maxDD": 0.3169,
-      "sharpe": 0.7829,
-      "marketBeta": 0.68,
-      "mktBeta": 0.68,
-      "buildoutBeta": -0.222,
-      "buildoutT": -8.28,
+      "sharpe": 0.7849,
+      "marketBeta": 0.677,
+      "mktBeta": 0.677,
+      "buildoutBeta": -0.223,
+      "buildoutT": -8.48,
       "heldOverlap": [],
-      "planMaxDD": 0.2535,
-      "blendedMaxDD": 0.1642,
-      "ddReduction": 0.0893,
+      "planMaxDD": 0.2167,
+      "blendedMaxDD": 0.1378,
+      "ddReduction": 0.0789,
       "gate": {
         "pass": true,
         "axis": "diversifier",
-        "buildoutBeta": -0.222,
-        "reason": "diversifier: build-out β -0.222 ≤ 0.3 (does not amplify deep-tech build-out)"
+        "buildoutBeta": -0.223,
+        "reason": "diversifier: build-out β -0.223 ≤ 0.3 (does not amplify deep-tech build-out)"
       },
       "qualifies": true,
       "reason": "qualifies — low-beta, non-amplifying, lowers the plan's drawdown"
@@ -115,25 +115,28 @@
         "MDT"
       ],
       "years": 31.4,
-      "cagr": 0.1026,
+      "cagr": 0.1049,
       "maxDD": 0.4323,
-      "sharpe": 0.6142,
-      "marketBeta": 0.625,
-      "mktBeta": 0.625,
-      "buildoutBeta": -0.264,
-      "buildoutT": -28.48,
-      "heldOverlap": [],
-      "planMaxDD": 0.2535,
-      "blendedMaxDD": 0.1787,
-      "ddReduction": 0.0748,
+      "sharpe": 0.6252,
+      "marketBeta": 0.622,
+      "mktBeta": 0.622,
+      "buildoutBeta": -0.268,
+      "buildoutT": -28.95,
+      "heldOverlap": [
+        "JNJ",
+        "MRK"
+      ],
+      "planMaxDD": 0.2167,
+      "blendedMaxDD": 0.1567,
+      "ddReduction": 0.06,
       "gate": {
         "pass": true,
         "axis": "diversifier",
-        "buildoutBeta": -0.264,
-        "reason": "diversifier: build-out β -0.264 ≤ 0.3 (does not amplify deep-tech build-out)"
+        "buildoutBeta": -0.268,
+        "reason": "diversifier: build-out β -0.268 ≤ 0.3 (does not amplify deep-tech build-out)"
       },
       "qualifies": true,
-      "reason": "qualifies — low-beta, non-amplifying, lowers the plan's drawdown"
+      "reason": "qualifies, but overlaps planned holdings (JNJ, MRK) — net the overlap before sizing"
     },
     {
       "id": "consumer-staples",
@@ -147,25 +150,30 @@
         "WMT"
       ],
       "years": 31.4,
-      "cagr": 0.1428,
+      "cagr": 0.1422,
       "maxDD": 0.366,
-      "sharpe": 0.8044,
-      "marketBeta": 0.569,
-      "mktBeta": 0.569,
-      "buildoutBeta": -0.167,
-      "buildoutT": -20.04,
-      "heldOverlap": [],
-      "planMaxDD": 0.2535,
-      "blendedMaxDD": 0.1998,
-      "ddReduction": 0.0537,
+      "sharpe": 0.8016,
+      "marketBeta": 0.567,
+      "mktBeta": 0.567,
+      "buildoutBeta": -0.172,
+      "buildoutT": -20.63,
+      "heldOverlap": [
+        "PG",
+        "KO",
+        "PEP",
+        "WMT"
+      ],
+      "planMaxDD": 0.2167,
+      "blendedMaxDD": 0.1818,
+      "ddReduction": 0.0349,
       "gate": {
         "pass": true,
         "axis": "diversifier",
-        "buildoutBeta": -0.167,
-        "reason": "diversifier: build-out β -0.167 ≤ 0.3 (does not amplify deep-tech build-out)"
+        "buildoutBeta": -0.172,
+        "reason": "diversifier: build-out β -0.172 ≤ 0.3 (does not amplify deep-tech build-out)"
       },
       "qualifies": true,
-      "reason": "qualifies — low-beta, non-amplifying, lowers the plan's drawdown"
+      "reason": "qualifies, but overlaps planned holdings (PG, KO, PEP, WMT) — net the overlap before sizing"
     },
     {
       "id": "waste-environmental",
@@ -177,103 +185,42 @@
         "WCN"
       ],
       "years": 27.9,
-      "cagr": 0.1257,
+      "cagr": 0.129,
       "maxDD": 0.6598,
-      "sharpe": 0.6253,
-      "marketBeta": 0.646,
-      "mktBeta": 0.646,
-      "buildoutBeta": -0.188,
-      "buildoutT": -15.85,
+      "sharpe": 0.6376,
+      "marketBeta": 0.642,
+      "mktBeta": 0.642,
+      "buildoutBeta": -0.194,
+      "buildoutT": -16.44,
       "heldOverlap": [],
-      "planMaxDD": 0.2535,
-      "blendedMaxDD": 0.1548,
-      "ddReduction": 0.0987,
+      "planMaxDD": 0.2167,
+      "blendedMaxDD": 0.1308,
+      "ddReduction": 0.0859,
       "gate": {
         "pass": true,
         "axis": "diversifier",
-        "buildoutBeta": -0.188,
-        "reason": "diversifier: build-out β -0.188 ≤ 0.3 (does not amplify deep-tech build-out)"
+        "buildoutBeta": -0.194,
+        "reason": "diversifier: build-out β -0.194 ≤ 0.3 (does not amplify deep-tech build-out)"
       },
       "qualifies": false,
       "reason": "maxDD 66% > 50% cap"
     }
   ],
   "funding": {
-    "newHoldings": [
-      {
-        "ticker": "JNJ",
-        "name": "JNJ",
-        "account": "taxable",
-        "weight": 0.0152,
-        "target_usd": 22800,
-        "tier": "C",
-        "role": "Diversifier (2nd axis) — Defensive health demand (pharma / devices)",
-        "conviction": 0.87,
-        "sleeve": "health-defensive"
-      },
-      {
-        "ticker": "WMT",
-        "name": "WMT",
-        "account": "taxable",
-        "weight": 0.0123,
-        "target_usd": 18450,
-        "tier": "C",
-        "role": "Diversifier (2nd axis) — Consumer staples (inelastic demand)",
-        "conviction": 0.87,
-        "sleeve": "consumer-staples"
-      },
-      {
-        "ticker": "KO",
-        "name": "KO",
-        "account": "taxable",
-        "weight": 0.0142,
-        "target_usd": 21300,
-        "tier": "C",
-        "role": "Diversifier (2nd axis) — Consumer staples (inelastic demand)",
-        "conviction": 0.86,
-        "sleeve": "consumer-staples"
-      },
-      {
-        "ticker": "PEP",
-        "name": "PEP",
-        "account": "taxable",
-        "weight": 0.0135,
-        "target_usd": 20250,
-        "tier": "C",
-        "role": "Diversifier (2nd axis) — Consumer staples (inelastic demand)",
-        "conviction": 0.85,
-        "sleeve": "consumer-staples"
-      },
-      {
-        "ticker": "MRK",
-        "name": "MRK",
-        "account": "taxable",
-        "weight": 0.0112,
-        "target_usd": 16800,
-        "tier": "C",
-        "role": "Diversifier (2nd axis) — Defensive health demand (pharma / devices)",
-        "conviction": 0.84,
-        "sleeve": "health-defensive"
-      },
-      {
-        "ticker": "PG",
-        "name": "PG",
-        "account": "taxable",
-        "weight": 0.0136,
-        "target_usd": 20400,
-        "tier": "C",
-        "role": "Diversifier (2nd axis) — Consumer staples (inelastic demand)",
-        "conviction": 0.837,
-        "sleeve": "consumer-staples"
-      }
-    ],
-    "budget": 0.08,
-    "existingDivWeight": 0.07,
+    "newHoldings": [],
+    "budget": 0,
+    "existingDivWeight": 0.15,
     "finalDivWeight": 0.15,
-    "buildoutScale": 0.914,
+    "buildoutScale": 1,
     "sleevePct": 0.15,
     "existingDiversifierTickers": [
-      "FIW"
+      "FIW",
+      "JNJ",
+      "WMT",
+      "KO",
+      "PEP",
+      "MRK",
+      "PG"
     ]
   }
 }

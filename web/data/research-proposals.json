@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "generated": "2026-06-02",
-  "prompt_version": null,
+  "generated": "2026-07-01",
+  "prompt_version": 5,
   "roster": {
     "providers": [
       "Anthropic",
@@ -28,9 +28,29 @@
       "skeptic": 25
     },
     "errors": [
-      "Unexpected end of JSON input"
+      "The operation was aborted due to timeout"
     ],
     "degraded": false
   },
-  "proposals": []
+  "proposals": [
+    {
+      "id": "electricians",
+      "priced_in": "high",
+      "bind_window": "now",
+      "non_consensus": false,
+      "confidence": 0.54,
+      "rationale": "Moderate seat dispersion (0.67) with all three readers converging on 'high' or 'crowded' pricing — the committee agrees the scarcity thesis is real but disagrees on degree of mispricing. Bull argues duration underpricing; Bear and Skeptic argue the stocks have already captured it. Weighing seats equally, the preponderance of evidence supports 'high' (not 'crowded') because the crowded read requires a cleaner mean-reversion signal than the filings currently provide — the SEC documents cited (HNRG safety order, director board seats) are peripheral and do not constitute macro bottleneck evidence.",
+      "variant_view": "What consensus misses is not existence of the shortage but its institutional stickiness: union apprenticeship pipelines run 4-5 years, journeyman hours requirements cannot be compressed, and prefab/modular offsets address civil work but not energized termination and commissioning — the highest-value, least-substitutable labor. The re-rate catalyst would be sequential, cross-company disclosure of project-delay charges or explicit wage-escalation pass-throughs in backlog guidance from EME or PWR earnings (Q2/Q3 2026), which would validate duration pricing that the market has not yet underwritten",
+      "bear_case": "The steelmanned bear: at current multiples, these equities are pricing in a 5-7 year scarcity duration with no supply response — a heroic assumption. Historically, a 30-40% real wage premium (which electricians are now commanding in high-demand markets) has reliably triggered a vocational enrollment surge within 2-3 years and union local scaling within 4. Simultaneously, hyperscalers are actively funding prefab electrical skid programs and poaching international licensed electricians via visa pathways. If data-center permitting slows due to grid interconnection queues (FERC data shows 2-5 year",
+      "kill_criterion": {
+        "condition": "Any two of the four core names (EME, PWR, FIX, MYRG) report sequential backlog decline OR gross margin compression >150bps attributed to labor cost without offsetting revenue escalation clauses, OR FIX or MYRG sustains a drawdown >30% from 52-week high on fundamental (not macro) news — indicating th",
+        "by_date": "2026-12"
+      },
+      "dispersion": {
+        "level": "moderate",
+        "agreement": 0.67
+      },
+      "prompt_version": 5
+    }
+  ]
 }

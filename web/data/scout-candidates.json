@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated": "2026-06-29",
+  "generated": "2026-07-06",
   "chair": "anthropic",
   "health": {
     "engines": [
@@ -8,7 +8,7 @@
       "bom-ladder"
     ],
     "leads": 14,
-    "suppressed": 4,
+    "suppressed": 3,
     "candidates": 14,
     "proposals": 0,
     "errors": 0
@@ -16,52 +16,54 @@
   "candidates": [],
   "considered": [
     {
-      "id": "scout-high-voltage-generator-step-up-transformers",
-      "tickers": [],
-      "engine": "bom-ladder",
-      "reason": "low committee confidence (0.23)"
-    },
-    {
-      "id": "scout-large-transformer-bushings",
+      "id": "scout-large-power-transformers",
       "tickers": [
-        "HLTEF"
+        "HITZF",
+        "NMGX",
+        "SPXC",
+        "AMSC"
       ],
       "engine": "bom-ladder",
-      "reason": "low committee confidence (0.28)"
+      "reason": "low committee confidence (0.33)"
+    },
+    {
+      "id": "scout-heavy-duty-gas-turbine-blades",
+      "tickers": [],
+      "engine": "bom-ladder",
+      "reason": "low committee confidence (0.38)"
+    },
+    {
+      "id": "scout-grain-oriented-electrical-steel",
+      "tickers": [
+        "ATI",
+        "X"
+      ],
+      "engine": "bom-ladder",
+      "reason": "low committee confidence (0.31)"
     },
     {
       "id": "scout-single-crystal-turbine-blades",
       "tickers": [
         "HWM",
-        "PCC"
-      ],
-      "engine": "bom-ladder",
-      "reason": "low committee confidence (0.28)"
-    },
-    {
-      "id": "scout-large-industrial-forgings",
-      "tickers": [],
-      "engine": "bom-ladder",
-      "reason": "below threshold after CRO (0.33)"
-    },
-    {
-      "id": "scout-power-transformer-cores",
-      "tickers": [
-        "NUE",
-        "CLF"
-      ],
-      "engine": "bom-ladder",
-      "reason": "low committee confidence (0.38)"
-    },
-    {
-      "id": "scout-medium-voltage-switchgear",
-      "tickers": [
-        "POWL",
-        "PPSI",
-        "SLNG"
+        "TGI"
       ],
       "engine": "bom-ladder",
       "reason": "low committee confidence (0.23)"
+    },
+    {
+      "id": "scout-nickel-superalloy-billet-powder",
+      "tickers": [
+        "ATI",
+        "CRS"
+      ],
+      "engine": "bom-ladder",
+      "reason": "low committee confidence (0.08)"
+    },
+    {
+      "id": "scout-electrical-apprentice-pipeline",
+      "tickers": [],
+      "engine": "bom-ladder",
+      "reason": "low committee confidence (0.38)"
     }
   ]
 }

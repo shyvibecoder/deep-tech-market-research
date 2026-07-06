@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated": "2026-06-29",
+  "updated": "2026-07-06",
   "seen": {
     "scout-hyster-yale-materials-handling-inc-supply-constraint": {
       "status": "rejected",
@@ -34,8 +34,8 @@
     },
     "scout-grain-oriented-electrical-steel": {
       "status": "rejected",
-      "evidence_hash": "*grain-oriented electrical steel**|ati|clf|nue|x",
-      "updated": "2026-06-22"
+      "evidence_hash": "*grain-oriented electrical steel**|ati|x",
+      "updated": "2026-07-06"
     },
     "scout-large-power-transformer-forgings": {
       "status": "rejected",
@@ -49,8 +49,8 @@
     },
     "scout-single-crystal-turbine-blades": {
       "status": "rejected",
-      "evidence_hash": "*single-crystal turbine blades**|hwm|pcc",
-      "updated": "2026-06-29"
+      "evidence_hash": "*single-crystal turbine blades**|hwm|tgi",
+      "updated": "2026-07-06"
     },
     "scout-turbine-grade-nickel-superalloy-forgings": {
       "status": "rejected",
@@ -59,8 +59,8 @@
     },
     "scout-large-power-transformers": {
       "status": "rejected",
-      "evidence_hash": "*large power transformers**|amsc|nmgx|spxc",
-      "updated": "2026-06-01"
+      "evidence_hash": "*large power transformers**|amsc|hitzf|nmgx|spxc",
+      "updated": "2026-07-06"
     },
     "scout-gas-turbine-hot-section-blades": {
       "status": "rejected",
@@ -156,6 +156,21 @@
       "status": "rejected",
       "evidence_hash": "*medium-voltage switchgear**|powl|ppsi|slng",
       "updated": "2026-06-29"
+    },
+    "scout-heavy-duty-gas-turbine-blades": {
+      "status": "rejected",
+      "evidence_hash": "*heavy-duty gas turbine blades**",
+      "updated": "2026-07-06"
+    },
+    "scout-nickel-superalloy-billet-powder": {
+      "status": "rejected",
+      "evidence_hash": "*nickel superalloy billet/powder**|ati|crs",
+      "updated": "2026-07-06"
+    },
+    "scout-electrical-apprentice-pipeline": {
+      "status": "rejected",
+      "evidence_hash": "*electrical apprentice pipeline**",
+      "updated": "2026-07-06"
     }
   }
 }

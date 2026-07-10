@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated": "2026-07-09",
+  "updated": "2026-07-10",
   "note": "Planned DCA schedule derived from portfolio tiers (A/D=100% now; B=50% now+m1-3; C=25% now+m1-9; DRY=held). Deployed side comes from positions.local.json (v4 view).",
   "holdings": {
     "PAVE": {

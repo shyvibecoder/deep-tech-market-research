@@ -1,69 +1,62 @@
 {
   "schema_version": 1,
-  "generated": "2026-07-06",
+  "generated": "2026-07-13",
   "chair": "anthropic",
   "health": {
     "engines": [
       "constraint-shadow",
       "bom-ladder"
     ],
-    "leads": 14,
-    "suppressed": 3,
-    "candidates": 14,
+    "leads": 13,
+    "suppressed": 4,
+    "candidates": 13,
     "proposals": 0,
     "errors": 0
   },
   "candidates": [],
   "considered": [
     {
-      "id": "scout-large-power-transformers",
+      "id": "scout-large-forged-steel-rotors",
+      "tickers": [],
+      "engine": "bom-ladder",
+      "reason": "low committee confidence (0.38)"
+    },
+    {
+      "id": "scout-high-voltage-transformer-bushings",
       "tickers": [
-        "HITZF",
-        "NMGX",
-        "SPXC",
-        "AMSC"
+        "SIEGY",
+        "HLTOY"
       ],
+      "engine": "bom-ladder",
+      "reason": "low committee confidence (0.28)"
+    },
+    {
+      "id": "scout-single-crystal-turbine-blades",
+      "tickers": [],
       "engine": "bom-ladder",
       "reason": "low committee confidence (0.33)"
     },
     {
-      "id": "scout-heavy-duty-gas-turbine-blades",
-      "tickers": [],
-      "engine": "bom-ladder",
-      "reason": "low committee confidence (0.38)"
-    },
-    {
-      "id": "scout-grain-oriented-electrical-steel",
+      "id": "scout-nickel-superalloy-vacuum-melt-stock",
       "tickers": [
         "ATI",
-        "X"
-      ],
-      "engine": "bom-ladder",
-      "reason": "low committee confidence (0.31)"
-    },
-    {
-      "id": "scout-single-crystal-turbine-blades",
-      "tickers": [
         "HWM",
-        "TGI"
+        "VLLVF"
       ],
       "engine": "bom-ladder",
-      "reason": "low committee confidence (0.23)"
+      "reason": "low committee confidence (0.28)"
     },
     {
-      "id": "scout-nickel-superalloy-billet-powder",
-      "tickers": [
-        "ATI",
-        "CRS"
-      ],
+      "id": "scout-electrical-engineering-graduates",
+      "tickers": [],
       "engine": "bom-ladder",
       "reason": "low committee confidence (0.08)"
     },
     {
-      "id": "scout-electrical-apprentice-pipeline",
+      "id": "scout-power-transformer-cores",
       "tickers": [],
       "engine": "bom-ladder",
-      "reason": "low committee confidence (0.38)"
+      "reason": "low committee confidence (0.32)"
     }
   ]
 }

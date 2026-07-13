@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated": "2026-07-06",
+  "updated": "2026-07-13",
   "seen": {
     "scout-hyster-yale-materials-handling-inc-supply-constraint": {
       "status": "rejected",
@@ -49,8 +49,8 @@
     },
     "scout-single-crystal-turbine-blades": {
       "status": "rejected",
-      "evidence_hash": "*single-crystal turbine blades**|hwm|tgi",
-      "updated": "2026-07-06"
+      "evidence_hash": "*single-crystal turbine blades**",
+      "updated": "2026-07-13"
     },
     "scout-turbine-grade-nickel-superalloy-forgings": {
       "status": "rejected",
@@ -94,8 +94,8 @@
     },
     "scout-high-voltage-transformer-bushings": {
       "status": "rejected",
-      "evidence_hash": "*high-voltage transformer bushings**",
-      "updated": "2026-06-15"
+      "evidence_hash": "*high-voltage transformer bushings**|hltoy|siegy",
+      "updated": "2026-07-13"
     },
     "scout-here-are-2-3-upstream-structural-chokepoints-that-gas-turbine-slots-critically-depend-on": {
       "status": "rejected",
@@ -149,8 +149,8 @@
     },
     "scout-power-transformer-cores": {
       "status": "rejected",
-      "evidence_hash": "*power transformer cores**|clf|nue",
-      "updated": "2026-06-29"
+      "evidence_hash": "*power transformer cores**",
+      "updated": "2026-07-13"
     },
     "scout-medium-voltage-switchgear": {
       "status": "rejected",
@@ -171,6 +171,21 @@
       "status": "rejected",
       "evidence_hash": "*electrical apprentice pipeline**",
       "updated": "2026-07-06"
+    },
+    "scout-large-forged-steel-rotors": {
+      "status": "rejected",
+      "evidence_hash": "*large forged steel rotors**",
+      "updated": "2026-07-13"
+    },
+    "scout-nickel-superalloy-vacuum-melt-stock": {
+      "status": "rejected",
+      "evidence_hash": "*nickel superalloy vacuum melt stock**|ati|hwm|vllvf",
+      "updated": "2026-07-13"
+    },
+    "scout-electrical-engineering-graduates": {
+      "status": "rejected",
+      "evidence_hash": "*electrical engineering graduates**",
+      "updated": "2026-07-13"
     }
   }
 }

@@ -1,62 +1,79 @@
 {
   "schema_version": 1,
-  "generated": "2026-07-13",
+  "generated": "2026-07-20",
   "chair": "anthropic",
   "health": {
     "engines": [
       "constraint-shadow",
       "bom-ladder"
     ],
-    "leads": 13,
-    "suppressed": 4,
-    "candidates": 13,
+    "leads": 14,
+    "suppressed": 2,
+    "candidates": 14,
     "proposals": 0,
     "errors": 0
   },
   "candidates": [],
   "considered": [
     {
-      "id": "scout-large-forged-steel-rotors",
-      "tickers": [],
+      "id": "scout-large-power-transformers",
+      "tickers": [
+        "ABB",
+        "NMGX",
+        "SPXC",
+        "AMSC"
+      ],
       "engine": "bom-ladder",
       "reason": "low committee confidence (0.38)"
     },
     {
-      "id": "scout-high-voltage-transformer-bushings",
+      "id": "scout-large-gas-turbines",
       "tickers": [
         "SIEGY",
-        "HLTOY"
+        "MHVYF",
+        "GE",
+        "WWD"
       ],
       "engine": "bom-ladder",
-      "reason": "low committee confidence (0.28)"
+      "reason": "low committee confidence (0.37)"
+    },
+    {
+      "id": "scout-grain-oriented-electrical-steel",
+      "tickers": [
+        "CLF",
+        "NUE",
+        "ATI",
+        "X"
+      ],
+      "engine": "bom-ladder",
+      "reason": "low committee confidence (0.32)"
+    },
+    {
+      "id": "scout-high-voltage-bushings",
+      "tickers": [
+        "HUBB",
+        "PPSI",
+        "TXNM"
+      ],
+      "engine": "bom-ladder",
+      "reason": "CRO veto: HALLUCINATION: TXNM (PNM Resources/electricity utility) and PPSI (Pioneer Power Solutions, small transformers/switchgear) have no meaningful high-voltage bushing exposure. Neither manufactures nor primarily supplies HV bushings. Misattributed tickers constitute automatic veto per standing rules. SMNEY/Hitachi Energy vehicle also unverified as flagged."
     },
     {
       "id": "scout-single-crystal-turbine-blades",
-      "tickers": [],
-      "engine": "bom-ladder",
-      "reason": "low committee confidence (0.33)"
-    },
-    {
-      "id": "scout-nickel-superalloy-vacuum-melt-stock",
       "tickers": [
-        "ATI",
         "HWM",
-        "VLLVF"
+        "TGI"
       ],
       "engine": "bom-ladder",
-      "reason": "low committee confidence (0.28)"
+      "reason": "low committee confidence (0.23)"
     },
     {
-      "id": "scout-electrical-engineering-graduates",
-      "tickers": [],
+      "id": "scout-large-industrial-forgings",
+      "tickers": [
+        "HWM"
+      ],
       "engine": "bom-ladder",
-      "reason": "low committee confidence (0.08)"
-    },
-    {
-      "id": "scout-power-transformer-cores",
-      "tickers": [],
-      "engine": "bom-ladder",
-      "reason": "low committee confidence (0.32)"
+      "reason": "low committee confidence (0.22)"
     }
   ]
 }

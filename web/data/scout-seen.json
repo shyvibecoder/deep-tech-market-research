@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated": "2026-07-13",
+  "updated": "2026-07-20",
   "seen": {
     "scout-hyster-yale-materials-handling-inc-supply-constraint": {
       "status": "rejected",
@@ -34,8 +34,8 @@
     },
     "scout-grain-oriented-electrical-steel": {
       "status": "rejected",
-      "evidence_hash": "*grain-oriented electrical steel**|ati|x",
-      "updated": "2026-07-06"
+      "evidence_hash": "*grain-oriented electrical steel**|ati|clf|nue|x",
+      "updated": "2026-07-20"
     },
     "scout-large-power-transformer-forgings": {
       "status": "rejected",
@@ -49,8 +49,8 @@
     },
     "scout-single-crystal-turbine-blades": {
       "status": "rejected",
-      "evidence_hash": "*single-crystal turbine blades**",
-      "updated": "2026-07-13"
+      "evidence_hash": "*single-crystal turbine blades**|hwm|tgi",
+      "updated": "2026-07-20"
     },
     "scout-turbine-grade-nickel-superalloy-forgings": {
       "status": "rejected",
@@ -59,8 +59,8 @@
     },
     "scout-large-power-transformers": {
       "status": "rejected",
-      "evidence_hash": "*large power transformers**|amsc|hitzf|nmgx|spxc",
-      "updated": "2026-07-06"
+      "evidence_hash": "*large power transformers**|abb|amsc|nmgx|spxc",
+      "updated": "2026-07-20"
     },
     "scout-gas-turbine-hot-section-blades": {
       "status": "rejected",
@@ -144,8 +144,8 @@
     },
     "scout-large-industrial-forgings": {
       "status": "rejected",
-      "evidence_hash": "*large industrial forgings**",
-      "updated": "2026-06-29"
+      "evidence_hash": "*large industrial forgings**|hwm",
+      "updated": "2026-07-20"
     },
     "scout-power-transformer-cores": {
       "status": "rejected",
@@ -186,6 +186,16 @@
       "status": "rejected",
       "evidence_hash": "*electrical engineering graduates**",
       "updated": "2026-07-13"
+    },
+    "scout-large-gas-turbines": {
+      "status": "rejected",
+      "evidence_hash": "*large gas turbines**|ge|mhvyf|siegy|wwd",
+      "updated": "2026-07-20"
+    },
+    "scout-high-voltage-bushings": {
+      "status": "rejected",
+      "evidence_hash": "*high-voltage bushings**|hubb|ppsi|txnm",
+      "updated": "2026-07-20"
     }
   }
 }

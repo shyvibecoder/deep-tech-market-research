@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated": "2026-07-27",
+  "generated": "2026-08-03",
   "chair": "anthropic",
   "health": {
     "engines": [
@@ -8,7 +8,7 @@
       "bom-ladder"
     ],
     "leads": 14,
-    "suppressed": 3,
+    "suppressed": 4,
     "candidates": 14,
     "proposals": 0,
     "errors": 0
@@ -16,51 +16,52 @@
   "candidates": [],
   "considered": [
     {
-      "id": "scout-large-industrial-gas-turbines",
+      "id": "scout-large-power-transformers",
       "tickers": [
-        "GE",
-        "SIEGY",
-        "MHVYF",
+        "NMGX",
+        "SPXC",
+        "AMSC"
+      ],
+      "engine": "bom-ladder",
+      "reason": "low committee confidence (0.32)"
+    },
+    {
+      "id": "scout-heavy-frame-gas-turbines",
+      "tickers": [
         "WWD"
       ],
       "engine": "bom-ladder",
-      "reason": "CRO veto: WWD (Woodward Inc.) is a fuel-system/actuation-controls supplier, not an industrial gas turbine OEM or primary frame manufacturer. Citing it alongside GE/SIEGY/MHVYF as a large-turbine play is a material misattribution. Per CRO Rule 1, a misattributed ticker is an automatic veto."
+      "reason": "low committee confidence (0.19)"
     },
     {
-      "id": "scout-high-voltage-generator-step-up-transformers",
+      "id": "scout-grain-oriented-electrical-steel",
       "tickers": [
-        "HBMFF",
-        "AMTX"
-      ],
-      "engine": "bom-ladder",
-      "reason": "low committee confidence (0.23)"
-    },
-    {
-      "id": "scout-high-voltage-transformer-bushings",
-      "tickers": [
-        "SIEGY",
-        "HITOY"
+        "ATI",
+        "X"
       ],
       "engine": "bom-ladder",
       "reason": "low committee confidence (0.38)"
     },
     {
-      "id": "scout-single-crystal-turbine-blades",
+      "id": "scout-high-voltage-transformer-bushings",
       "tickers": [],
       "engine": "bom-ladder",
-      "reason": "low committee confidence (0.33)"
+      "reason": "low committee confidence (0.38)"
     },
     {
-      "id": "scout-rotor-grade-nickel-superalloy-forgings",
+      "id": "scout-advanced-turbine-forgings",
       "tickers": [],
       "engine": "bom-ladder",
-      "reason": "low committee confidence (0.32)"
+      "reason": "low committee confidence (0.28)"
     },
     {
-      "id": "scout-electrical-apprenticeship-pipelines",
-      "tickers": [],
+      "id": "scout-high-voltage-power-transformers",
+      "tickers": [
+        "HTEC",
+        "GE"
+      ],
       "engine": "bom-ladder",
-      "reason": "low committee confidence (0.33)"
+      "reason": "low committee confidence (0.23)"
     }
   ]
 }

@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated": "2026-07-27",
+  "updated": "2026-08-03",
   "seen": {
     "scout-hyster-yale-materials-handling-inc-supply-constraint": {
       "status": "rejected",
@@ -34,8 +34,8 @@
     },
     "scout-grain-oriented-electrical-steel": {
       "status": "rejected",
-      "evidence_hash": "*grain-oriented electrical steel**|ati|clf|nue|x",
-      "updated": "2026-07-20"
+      "evidence_hash": "*grain-oriented electrical steel**|ati|x",
+      "updated": "2026-08-03"
     },
     "scout-large-power-transformer-forgings": {
       "status": "rejected",
@@ -59,8 +59,8 @@
     },
     "scout-large-power-transformers": {
       "status": "rejected",
-      "evidence_hash": "*large power transformers**|abb|amsc|nmgx|spxc",
-      "updated": "2026-07-20"
+      "evidence_hash": "*large power transformers**|amsc|nmgx|spxc",
+      "updated": "2026-08-03"
     },
     "scout-gas-turbine-hot-section-blades": {
       "status": "rejected",
@@ -84,8 +84,8 @@
     },
     "scout-high-voltage-power-transformers": {
       "status": "rejected",
-      "evidence_hash": "*high-voltage power transformers**|ge",
-      "updated": "2026-06-01"
+      "evidence_hash": "*high-voltage power transformers**|ge|htec",
+      "updated": "2026-08-03"
     },
     "scout-advanced-rotor-forgings": {
       "status": "rejected",
@@ -94,8 +94,8 @@
     },
     "scout-high-voltage-transformer-bushings": {
       "status": "rejected",
-      "evidence_hash": "*high-voltage transformer bushings**|hitoy|siegy",
-      "updated": "2026-07-27"
+      "evidence_hash": "*high-voltage transformer bushings**",
+      "updated": "2026-08-03"
     },
     "scout-here-are-2-3-upstream-structural-chokepoints-that-gas-turbine-slots-critically-depend-on": {
       "status": "rejected",
@@ -206,6 +206,16 @@
       "status": "rejected",
       "evidence_hash": "*electrical apprenticeship pipelines**",
       "updated": "2026-07-27"
+    },
+    "scout-heavy-frame-gas-turbines": {
+      "status": "rejected",
+      "evidence_hash": "*heavy-frame gas turbines**|wwd",
+      "updated": "2026-08-03"
+    },
+    "scout-advanced-turbine-forgings": {
+      "status": "rejected",
+      "evidence_hash": "*advanced turbine forgings**",
+      "updated": "2026-08-03"
     }
   }
 }

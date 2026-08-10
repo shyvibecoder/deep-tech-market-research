@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated": "2026-08-03",
+  "updated": "2026-08-10",
   "seen": {
     "scout-hyster-yale-materials-handling-inc-supply-constraint": {
       "status": "rejected",
@@ -79,13 +79,13 @@
     },
     "scout-large-industrial-gas-turbines": {
       "status": "rejected",
-      "evidence_hash": "*large industrial gas turbines**|ge|mhvyf|siegy|wwd",
-      "updated": "2026-07-27"
+      "evidence_hash": "*large industrial gas turbines**|wwd",
+      "updated": "2026-08-10"
     },
     "scout-high-voltage-power-transformers": {
       "status": "rejected",
-      "evidence_hash": "*high-voltage power transformers**|ge|htec",
-      "updated": "2026-08-03"
+      "evidence_hash": "*high-voltage power transformers**|amsc|ge|htm",
+      "updated": "2026-08-10"
     },
     "scout-advanced-rotor-forgings": {
       "status": "rejected",
@@ -216,6 +216,26 @@
       "status": "rejected",
       "evidence_hash": "*advanced turbine forgings**",
       "updated": "2026-08-03"
+    },
+    "scout-generator-step-up-transformers": {
+      "status": "rejected",
+      "evidence_hash": "*generator step-up transformers**|hthiy|mgee|nrg|wec",
+      "updated": "2026-08-10"
+    },
+    "scout-lead-alloy-cable-sheaths": {
+      "status": "rejected",
+      "evidence_hash": "*lead-alloy cable sheaths**",
+      "updated": "2026-08-10"
+    },
+    "scout-polypropylene-paper-laminate": {
+      "status": "rejected",
+      "evidence_hash": "*polypropylene paper laminate**",
+      "updated": "2026-08-10"
+    },
+    "scout-nickel-superalloy-powder-billet": {
+      "status": "proposed",
+      "evidence_hash": "*nickel superalloy powder / billet**|ati|crs",
+      "updated": "2026-08-10"
     }
   }
 }

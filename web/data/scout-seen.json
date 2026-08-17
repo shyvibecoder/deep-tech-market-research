@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated": "2026-08-10",
+  "updated": "2026-08-17",
   "seen": {
     "scout-hyster-yale-materials-handling-inc-supply-constraint": {
       "status": "rejected",
@@ -139,8 +139,8 @@
     },
     "scout-high-voltage-generator-step-up-transformers": {
       "status": "rejected",
-      "evidence_hash": "*high-voltage generator step-up transformers**|amtx|hbmff",
-      "updated": "2026-07-27"
+      "evidence_hash": "*high-voltage generator step-up transformers**",
+      "updated": "2026-08-17"
     },
     "scout-large-industrial-forgings": {
       "status": "rejected",
@@ -179,8 +179,8 @@
     },
     "scout-nickel-superalloy-vacuum-melt-stock": {
       "status": "rejected",
-      "evidence_hash": "*nickel superalloy vacuum melt stock**|ati|hwm|vllvf",
-      "updated": "2026-07-13"
+      "evidence_hash": "*nickel superalloy vacuum melt stock**|ati|hayn",
+      "updated": "2026-08-17"
     },
     "scout-electrical-engineering-graduates": {
       "status": "rejected",
@@ -236,6 +236,26 @@
       "status": "proposed",
       "evidence_hash": "*nickel superalloy powder / billet**|ati|crs",
       "updated": "2026-08-10"
+    },
+    "scout-let-me-redo-this-cleanly-per-your-format-rules": {
+      "status": "rejected",
+      "evidence_hash": "let me redo this cleanly per your format rules:",
+      "updated": "2026-08-17"
+    },
+    "scout-epoxy-resin-systems": {
+      "status": "rejected",
+      "evidence_hash": "*epoxy resin systems**|flex|hun|hxl|wlk",
+      "updated": "2026-08-17"
+    },
+    "scout-polypropylene-film-biaxially-oriented-metallized": {
+      "status": "rejected",
+      "evidence_hash": "*polypropylene film (biaxially oriented, metallized)**|hun|tg|xom",
+      "updated": "2026-08-17"
+    },
+    "scout-maraging-steel-rotor-grade": {
+      "status": "rejected",
+      "evidence_hash": "*maraging steel (rotor-grade)**|ati|rs|shpwq",
+      "updated": "2026-08-17"
     }
   }
 }

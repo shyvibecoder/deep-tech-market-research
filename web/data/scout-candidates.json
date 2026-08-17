@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated": "2026-08-10",
+  "generated": "2026-08-17",
   "chair": "anthropic",
   "health": {
     "engines": [
@@ -8,89 +8,64 @@
       "bom-ladder"
     ],
     "leads": 14,
-    "suppressed": 6,
+    "suppressed": 7,
     "candidates": 14,
-    "proposals": 1,
+    "proposals": 0,
     "errors": 0
   },
-  "candidates": [
-    {
-      "priced_in": "low",
-      "bind_window": "2027",
-      "non_consensus": true,
-      "confidence": 0.4,
-      "rationale": "Committee weighted three seats with moderate dispersion (0.67 agreement). Bull and Skeptic converge on 'low' pricing and a post-2027 bind window, while Bear argues scarcity is already reflected in specialty-metals equities. Applying burden-of-proof discipline: (1) No dated filing, contract, or policy document supports pulling bind_window forward from 2027, so timing is held. (2) Bear's 'high' priced_in read is plausible for listed proxies (ATI, CRS) but cannot be verified without backlog/margin filings — Skeptic's null-excerpt observation constrains confidence. (3) Bull's qualification-lag arg",
-      "variant_view": "Consensus treats nickel superalloy powder/billet as a leveraged metals-cycle commodity and discounts it accordingly. What consensus misses: (a) the approved-source list mechanism means demand cannot route to new suppliers even if physical nickel is available — this is a qualification bottleneck, not a price bottleneck; (b) additive manufacturing qualification (Velo3D/Haynes 282) creates parallel demand for certified powder that competes with wrought billet feedstock rather than replacing it; (c) the re-rate catalyst is not a macro commodity squeeze but an OEM design-win conversion wave tied to",
-      "bear_case": "Steelmanned: The qualification-lag moat is real but already reflected in specialty-metals multiples — ATI and Carpenter have traded at premium EV/EBITDA to generic nickel for several years precisely because the market has internalized the approved-source narrative. New entrants (IperionX, ATI's own powder division, Höganäs) are actively pursuing qualification of recycled and alternative-composition superalloy powders with OEM co-development agreements, compressing the supply-side barrier faster than the bull case assumes. Aerospace build rates are near-peak in the current upcycle; if widebody ",
-      "kill_criterion": {
-        "condition": "Two or more of the following occur: (1) A major OEM (GE Aerospace, Pratt & Whitney, Rolls-Royce) publicly announces qualification of a recycled or alternative-composition powder from a net-new approved source at scale (>500 MT/year capacity); (2) ATI or Carpenter Technology reports consecutive quart",
-        "by_date": "2027-06"
-      },
-      "cro_note": "No hallucination detected; ATI and CRS are real specialty-metals producers with verified nickel superalloy operations. Logic is sound but variant_view is truncated mid-sentence twice, undermining coherence. Velo3D/Haynes 282 citation is plausible but unverified against filings. Confidence 0.48 is defensible given zero supporting excerpts.",
-      "scarcity": "Nickel superalloy powder / billet",
-      "dispersion": {
-        "level": "moderate",
-        "agreement": 0.67,
-        "n": 3,
-        "reads": {
-          "low": 2,
-          "high": 1
-        }
-      },
-      "complaining_filer": "ATI",
-      "verify_flags": [],
-      "legibility": "early-contrarian",
-      "id": "scout-nickel-superalloy-powder-billet",
-      "tickers": [
-        "ATI",
-        "CRS"
-      ],
-      "source": "scout",
-      "engine": "bom-ladder",
-      "constraint_phrases": []
-    }
-  ],
+  "candidates": [],
   "considered": [
     {
-      "id": "scout-large-industrial-gas-turbines",
-      "tickers": [
-        "WWD"
-      ],
-      "engine": "bom-ladder",
-      "reason": "low committee confidence (0.32)"
-    },
-    {
-      "id": "scout-generator-step-up-transformers",
-      "tickers": [
-        "HTHIY",
-        "MGEE",
-        "WEC",
-        "NRG"
-      ],
-      "engine": "bom-ladder",
-      "reason": "low committee confidence (0.38)"
-    },
-    {
-      "id": "scout-high-voltage-power-transformers",
-      "tickers": [
-        "HTM",
-        "AMSC",
-        "GE"
-      ],
-      "engine": "bom-ladder",
-      "reason": "low committee confidence (0.37)"
-    },
-    {
-      "id": "scout-lead-alloy-cable-sheaths",
-      "tickers": [],
-      "engine": "bom-ladder",
-      "reason": "low committee confidence (0.28)"
-    },
-    {
-      "id": "scout-polypropylene-paper-laminate",
+      "id": "scout-high-voltage-generator-step-up-transformers",
       "tickers": [],
       "engine": "bom-ladder",
       "reason": "low committee confidence (0.23)"
+    },
+    {
+      "id": "scout-nickel-superalloy-vacuum-melt-stock",
+      "tickers": [
+        "ATI",
+        "HAYN"
+      ],
+      "engine": "bom-ladder",
+      "reason": "low committee confidence (0.34)"
+    },
+    {
+      "id": "scout-let-me-redo-this-cleanly-per-your-format-rules",
+      "tickers": [],
+      "engine": "bom-ladder",
+      "reason": "low committee confidence (0.18)"
+    },
+    {
+      "id": "scout-epoxy-resin-systems",
+      "tickers": [
+        "HUN",
+        "HXL",
+        "WLK",
+        "FLEX"
+      ],
+      "engine": "bom-ladder",
+      "reason": "CRO veto: HALLUCINATION: FLEX (Flex Ltd) is a contract electronics manufacturer — not an epoxy resin systems company. Its inclusion as a qualified HVDC epoxy formulator is a material misattribution and automatic veto. HXL (Hexcel) is carbon-fiber composites, not DC-grade casting resins — also misattributed. Two of four tickers are wrong."
+    },
+    {
+      "id": "scout-polypropylene-film-biaxially-oriented-metallized",
+      "tickers": [
+        "XOM",
+        "HUN",
+        "TG"
+      ],
+      "engine": "bom-ladder",
+      "reason": "low committee confidence (0.23)"
+    },
+    {
+      "id": "scout-maraging-steel-rotor-grade",
+      "tickers": [
+        "ATI",
+        "SHPWQ",
+        "RS"
+      ],
+      "engine": "bom-ladder",
+      "reason": "low committee confidence (0.11)"
     }
   ]
 }

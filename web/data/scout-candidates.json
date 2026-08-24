@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated": "2026-08-17",
+  "generated": "2026-08-24",
   "chair": "anthropic",
   "health": {
     "engines": [
@@ -8,7 +8,7 @@
       "bom-ladder"
     ],
     "leads": 14,
-    "suppressed": 7,
+    "suppressed": 5,
     "candidates": 14,
     "proposals": 0,
     "errors": 0
@@ -16,56 +16,60 @@
   "candidates": [],
   "considered": [
     {
-      "id": "scout-high-voltage-generator-step-up-transformers",
-      "tickers": [],
-      "engine": "bom-ladder",
-      "reason": "low committee confidence (0.23)"
-    },
-    {
-      "id": "scout-nickel-superalloy-vacuum-melt-stock",
+      "id": "scout-grain-oriented-electrical-steel",
       "tickers": [
+        "CLF",
+        "NUE",
         "ATI",
-        "HAYN"
+        "X"
       ],
       "engine": "bom-ladder",
-      "reason": "low committee confidence (0.34)"
+      "reason": "below threshold after CRO (0.35)"
     },
     {
-      "id": "scout-let-me-redo-this-cleanly-per-your-format-rules",
-      "tickers": [],
+      "id": "scout-high-voltage-transformer-bushings",
+      "tickers": [
+        "ENLAY"
+      ],
+      "engine": "bom-ladder",
+      "reason": "low committee confidence (0.28)"
+    },
+    {
+      "id": "scout-single-crystal-turbine-blades",
+      "tickers": [
+        "HWM",
+        "TGI"
+      ],
+      "engine": "bom-ladder",
+      "reason": "low committee confidence (0.33)"
+    },
+    {
+      "id": "scout-nickel-superalloy-billets",
+      "tickers": [
+        "ATI",
+        "CRS"
+      ],
+      "engine": "bom-ladder",
+      "reason": "low committee confidence (0.31)"
+    },
+    {
+      "id": "scout-no-proxies",
+      "tickers": [
+        "ISUNQ",
+        "CYDY",
+        "GBR"
+      ],
       "engine": "bom-ladder",
       "reason": "low committee confidence (0.18)"
     },
     {
-      "id": "scout-epoxy-resin-systems",
+      "id": "scout-polyphenylene-sulfide-resin",
       "tickers": [
-        "HUN",
-        "HXL",
-        "WLK",
-        "FLEX"
+        "TRYIY",
+        "SOLVY"
       ],
       "engine": "bom-ladder",
-      "reason": "CRO veto: HALLUCINATION: FLEX (Flex Ltd) is a contract electronics manufacturer — not an epoxy resin systems company. Its inclusion as a qualified HVDC epoxy formulator is a material misattribution and automatic veto. HXL (Hexcel) is carbon-fiber composites, not DC-grade casting resins — also misattributed. Two of four tickers are wrong."
-    },
-    {
-      "id": "scout-polypropylene-film-biaxially-oriented-metallized",
-      "tickers": [
-        "XOM",
-        "HUN",
-        "TG"
-      ],
-      "engine": "bom-ladder",
-      "reason": "low committee confidence (0.23)"
-    },
-    {
-      "id": "scout-maraging-steel-rotor-grade",
-      "tickers": [
-        "ATI",
-        "SHPWQ",
-        "RS"
-      ],
-      "engine": "bom-ladder",
-      "reason": "low committee confidence (0.11)"
+      "reason": "low committee confidence (0.28)"
     }
   ]
 }

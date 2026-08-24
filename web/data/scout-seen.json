@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated": "2026-08-17",
+  "updated": "2026-08-24",
   "seen": {
     "scout-hyster-yale-materials-handling-inc-supply-constraint": {
       "status": "rejected",
@@ -34,8 +34,8 @@
     },
     "scout-grain-oriented-electrical-steel": {
       "status": "rejected",
-      "evidence_hash": "*grain-oriented electrical steel**|ati|x",
-      "updated": "2026-08-03"
+      "evidence_hash": "*grain-oriented electrical steel**|ati|clf|nue|x",
+      "updated": "2026-08-24"
     },
     "scout-large-power-transformer-forgings": {
       "status": "rejected",
@@ -49,8 +49,8 @@
     },
     "scout-single-crystal-turbine-blades": {
       "status": "rejected",
-      "evidence_hash": "*single-crystal turbine blades**",
-      "updated": "2026-07-27"
+      "evidence_hash": "**single-crystal turbine blades**|hwm|tgi",
+      "updated": "2026-08-24"
     },
     "scout-turbine-grade-nickel-superalloy-forgings": {
       "status": "rejected",
@@ -94,8 +94,8 @@
     },
     "scout-high-voltage-transformer-bushings": {
       "status": "rejected",
-      "evidence_hash": "*high-voltage transformer bushings**",
-      "updated": "2026-08-03"
+      "evidence_hash": "*high-voltage transformer bushings**|enlay",
+      "updated": "2026-08-24"
     },
     "scout-here-are-2-3-upstream-structural-chokepoints-that-gas-turbine-slots-critically-depend-on": {
       "status": "rejected",
@@ -256,6 +256,21 @@
       "status": "rejected",
       "evidence_hash": "*maraging steel (rotor-grade)**|ati|rs|shpwq",
       "updated": "2026-08-17"
+    },
+    "scout-nickel-superalloy-billets": {
+      "status": "rejected",
+      "evidence_hash": "**nickel superalloy billets**|ati|crs",
+      "updated": "2026-08-24"
+    },
+    "scout-no-proxies": {
+      "status": "rejected",
+      "evidence_hash": "(no proxies|cydy|gbr|isunq",
+      "updated": "2026-08-24"
+    },
+    "scout-polyphenylene-sulfide-resin": {
+      "status": "rejected",
+      "evidence_hash": "*polyphenylene sulfide resin**|solvy|tryiy",
+      "updated": "2026-08-24"
     }
   }
 }

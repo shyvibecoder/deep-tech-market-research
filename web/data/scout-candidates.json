@@ -1,75 +1,64 @@
 {
   "schema_version": 1,
-  "generated": "2026-08-24",
+  "generated": "2026-08-31",
   "chair": "anthropic",
   "health": {
     "engines": [
       "constraint-shadow",
       "bom-ladder"
     ],
-    "leads": 14,
-    "suppressed": 5,
-    "candidates": 14,
+    "leads": 13,
+    "suppressed": 4,
+    "candidates": 13,
     "proposals": 0,
     "errors": 0
   },
   "candidates": [],
   "considered": [
     {
+      "id": "scout-large-forgings-rotor-shafts",
+      "tickers": [],
+      "engine": "bom-ladder",
+      "reason": "low committee confidence (0.26)"
+    },
+    {
+      "id": "scout-directional-single-crystal-turbine-blades",
+      "tickers": [],
+      "engine": "bom-ladder",
+      "reason": "low committee confidence (0.32)"
+    },
+    {
       "id": "scout-grain-oriented-electrical-steel",
       "tickers": [
         "CLF",
-        "NUE",
         "ATI",
         "X"
-      ],
-      "engine": "bom-ladder",
-      "reason": "below threshold after CRO (0.35)"
-    },
-    {
-      "id": "scout-high-voltage-transformer-bushings",
-      "tickers": [
-        "ENLAY"
-      ],
-      "engine": "bom-ladder",
-      "reason": "low committee confidence (0.28)"
-    },
-    {
-      "id": "scout-single-crystal-turbine-blades",
-      "tickers": [
-        "HWM",
-        "TGI"
       ],
       "engine": "bom-ladder",
       "reason": "low committee confidence (0.33)"
     },
     {
-      "id": "scout-nickel-superalloy-billets",
+      "id": "scout-single-crystal-turbine-blades",
+      "tickers": [],
+      "engine": "bom-ladder",
+      "reason": "low committee confidence (0.18)"
+    },
+    {
+      "id": "scout-high-temp-nickel-superalloy-powder-billet",
       "tickers": [
-        "ATI",
-        "CRS"
+        "CRS",
+        "ATI"
       ],
       "engine": "bom-ladder",
       "reason": "low committee confidence (0.31)"
     },
     {
-      "id": "scout-no-proxies",
+      "id": "scout-hvdc-grade-xlpe-insulation-compound",
       "tickers": [
-        "ISUNQ",
-        "CYDY",
-        "GBR"
+        "DOW"
       ],
       "engine": "bom-ladder",
-      "reason": "low committee confidence (0.18)"
-    },
-    {
-      "id": "scout-polyphenylene-sulfide-resin",
-      "tickers": [
-        "TRYIY",
-        "SOLVY"
-      ],
-      "engine": "bom-ladder",
-      "reason": "low committee confidence (0.28)"
+      "reason": "low committee confidence (0.33)"
     }
   ]
 }

@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated": "2026-08-24",
+  "updated": "2026-08-31",
   "seen": {
     "scout-hyster-yale-materials-handling-inc-supply-constraint": {
       "status": "rejected",
@@ -34,8 +34,8 @@
     },
     "scout-grain-oriented-electrical-steel": {
       "status": "rejected",
-      "evidence_hash": "*grain-oriented electrical steel**|ati|clf|nue|x",
-      "updated": "2026-08-24"
+      "evidence_hash": "*grain-oriented electrical steel**|ati|clf|x",
+      "updated": "2026-08-31"
     },
     "scout-large-power-transformer-forgings": {
       "status": "rejected",
@@ -49,8 +49,8 @@
     },
     "scout-single-crystal-turbine-blades": {
       "status": "rejected",
-      "evidence_hash": "**single-crystal turbine blades**|hwm|tgi",
-      "updated": "2026-08-24"
+      "evidence_hash": "*single-crystal turbine blades**",
+      "updated": "2026-08-31"
     },
     "scout-turbine-grade-nickel-superalloy-forgings": {
       "status": "rejected",
@@ -271,6 +271,26 @@
       "status": "rejected",
       "evidence_hash": "*polyphenylene sulfide resin**|solvy|tryiy",
       "updated": "2026-08-24"
+    },
+    "scout-large-forgings-rotor-shafts": {
+      "status": "rejected",
+      "evidence_hash": "*large forgings / rotor shafts**",
+      "updated": "2026-08-31"
+    },
+    "scout-directional-single-crystal-turbine-blades": {
+      "status": "rejected",
+      "evidence_hash": "*directional/single-crystal turbine blades**",
+      "updated": "2026-08-31"
+    },
+    "scout-high-temp-nickel-superalloy-powder-billet": {
+      "status": "rejected",
+      "evidence_hash": "*high-temp nickel superalloy powder/billet**|ati|crs",
+      "updated": "2026-08-31"
+    },
+    "scout-hvdc-grade-xlpe-insulation-compound": {
+      "status": "rejected",
+      "evidence_hash": "*hvdc-grade xlpe insulation compound**|dow",
+      "updated": "2026-08-31"
     }
   }
 }

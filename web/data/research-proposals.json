@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated": "2026-08-01",
+  "generated": "2026-09-01",
   "prompt_version": null,
   "roster": {
     "providers": [
@@ -24,12 +24,10 @@
     "scarcities": 26,
     "roleAnswered": {
       "bull": 26,
-      "bear": 25,
+      "bear": 26,
       "skeptic": 26
     },
-    "errors": [
-      "The operation was aborted due to timeout"
-    ],
+    "errors": [],
     "degraded": false
   },
   "proposals": []

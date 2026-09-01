@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated": "2026-08-01",
+  "generated": "2026-09-01",
   "sleeve_pct": 0.15,
   "market": [
     "SPY"
@@ -22,14 +22,14 @@
         "D",
         "AEP"
       ],
-      "years": 31.5,
-      "cagr": 0.1107,
+      "years": 31.6,
+      "cagr": 0.1087,
       "maxDD": 0.3775,
-      "sharpe": 0.6462,
-      "marketBeta": 0.543,
-      "mktBeta": 0.543,
-      "buildoutBeta": -0.297,
-      "buildoutT": -24.85,
+      "sharpe": 0.6369,
+      "marketBeta": 0.542,
+      "mktBeta": 0.542,
+      "buildoutBeta": -0.295,
+      "buildoutT": -24.78,
       "heldOverlap": [],
       "planMaxDD": 0.2167,
       "blendedMaxDD": 0.131,
@@ -37,8 +37,8 @@
       "gate": {
         "pass": true,
         "axis": "diversifier",
-        "buildoutBeta": -0.297,
-        "reason": "diversifier: build-out β -0.297 ≤ 0.3 (does not amplify deep-tech build-out)"
+        "buildoutBeta": -0.295,
+        "reason": "diversifier: build-out β -0.295 ≤ 0.3 (does not amplify deep-tech build-out)"
       },
       "qualifies": true,
       "reason": "qualifies — low-beta, non-amplifying, lowers the plan's drawdown"
@@ -52,14 +52,14 @@
         "AWK",
         "WTRG"
       ],
-      "years": 18.2,
-      "cagr": 0.1047,
+      "years": 18.3,
+      "cagr": 0.1062,
       "maxDD": 0.3376,
-      "sharpe": 0.578,
-      "marketBeta": 0.696,
-      "mktBeta": 0.696,
+      "sharpe": 0.5847,
+      "marketBeta": 0.695,
+      "mktBeta": 0.695,
       "buildoutBeta": -0.32,
-      "buildoutT": -19.45,
+      "buildoutT": -19.58,
       "heldOverlap": [],
       "planMaxDD": 0.2167,
       "blendedMaxDD": 0.1347,
@@ -82,14 +82,14 @@
         "DLTR",
         "TJX"
       ],
-      "years": 16.7,
-      "cagr": 0.1575,
+      "years": 16.8,
+      "cagr": 0.1504,
       "maxDD": 0.3169,
-      "sharpe": 0.796,
+      "sharpe": 0.7672,
       "marketBeta": 0.675,
       "mktBeta": 0.675,
-      "buildoutBeta": -0.24,
-      "buildoutT": -9.27,
+      "buildoutBeta": -0.242,
+      "buildoutT": -9.41,
       "heldOverlap": [],
       "planMaxDD": 0.2167,
       "blendedMaxDD": 0.1378,
@@ -97,8 +97,8 @@
       "gate": {
         "pass": true,
         "axis": "diversifier",
-        "buildoutBeta": -0.24,
-        "reason": "diversifier: build-out β -0.240 ≤ 0.3 (does not amplify deep-tech build-out)"
+        "buildoutBeta": -0.242,
+        "reason": "diversifier: build-out β -0.242 ≤ 0.3 (does not amplify deep-tech build-out)"
       },
       "qualifies": true,
       "reason": "qualifies — low-beta, non-amplifying, lowers the plan's drawdown"
@@ -114,14 +114,14 @@
         "ABT",
         "MDT"
       ],
-      "years": 31.5,
-      "cagr": 0.1068,
+      "years": 31.6,
+      "cagr": 0.1089,
       "maxDD": 0.4323,
-      "sharpe": 0.6336,
+      "sharpe": 0.6437,
       "marketBeta": 0.62,
       "mktBeta": 0.62,
-      "buildoutBeta": -0.272,
-      "buildoutT": -29.48,
+      "buildoutBeta": -0.274,
+      "buildoutT": -29.63,
       "heldOverlap": [
         "JNJ",
         "MRK"
@@ -132,8 +132,8 @@
       "gate": {
         "pass": true,
         "axis": "diversifier",
-        "buildoutBeta": -0.272,
-        "reason": "diversifier: build-out β -0.272 ≤ 0.3 (does not amplify deep-tech build-out)"
+        "buildoutBeta": -0.274,
+        "reason": "diversifier: build-out β -0.274 ≤ 0.3 (does not amplify deep-tech build-out)"
       },
       "qualifies": true,
       "reason": "qualifies, but overlaps planned holdings (JNJ, MRK) — net the overlap before sizing"
@@ -149,14 +149,14 @@
         "COST",
         "WMT"
       ],
-      "years": 31.5,
-      "cagr": 0.1423,
+      "years": 31.6,
+      "cagr": 0.1414,
       "maxDD": 0.366,
-      "sharpe": 0.8017,
+      "sharpe": 0.7977,
       "marketBeta": 0.565,
       "mktBeta": 0.565,
-      "buildoutBeta": -0.177,
-      "buildoutT": -21.24,
+      "buildoutBeta": -0.178,
+      "buildoutT": -21.44,
       "heldOverlap": [
         "PG",
         "KO",
@@ -169,8 +169,8 @@
       "gate": {
         "pass": true,
         "axis": "diversifier",
-        "buildoutBeta": -0.177,
-        "reason": "diversifier: build-out β -0.177 ≤ 0.3 (does not amplify deep-tech build-out)"
+        "buildoutBeta": -0.178,
+        "reason": "diversifier: build-out β -0.178 ≤ 0.3 (does not amplify deep-tech build-out)"
       },
       "qualifies": true,
       "reason": "qualifies, but overlaps planned holdings (PG, KO, PEP, WMT) — net the overlap before sizing"
@@ -184,14 +184,14 @@
         "RSG",
         "WCN"
       ],
-      "years": 28,
-      "cagr": 0.1286,
+      "years": 28.1,
+      "cagr": 0.1282,
       "maxDD": 0.6598,
-      "sharpe": 0.6363,
-      "marketBeta": 0.64,
-      "mktBeta": 0.64,
-      "buildoutBeta": -0.199,
-      "buildoutT": -16.95,
+      "sharpe": 0.6353,
+      "marketBeta": 0.639,
+      "mktBeta": 0.639,
+      "buildoutBeta": -0.201,
+      "buildoutT": -17.08,
       "heldOverlap": [],
       "planMaxDD": 0.2167,
       "blendedMaxDD": 0.1308,
@@ -199,8 +199,8 @@
       "gate": {
         "pass": true,
         "axis": "diversifier",
-        "buildoutBeta": -0.199,
-        "reason": "diversifier: build-out β -0.199 ≤ 0.3 (does not amplify deep-tech build-out)"
+        "buildoutBeta": -0.201,
+        "reason": "diversifier: build-out β -0.201 ≤ 0.3 (does not amplify deep-tech build-out)"
       },
       "qualifies": false,
       "reason": "maxDD 66% > 50% cap"

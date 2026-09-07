@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated": "2026-08-31",
+  "generated": "2026-09-07",
   "chair": "anthropic",
   "health": {
     "engines": [
@@ -8,7 +8,7 @@
       "bom-ladder"
     ],
     "leads": 13,
-    "suppressed": 4,
+    "suppressed": 3,
     "candidates": 13,
     "proposals": 0,
     "errors": 0
@@ -16,49 +16,55 @@
   "candidates": [],
   "considered": [
     {
-      "id": "scout-large-forgings-rotor-shafts",
-      "tickers": [],
-      "engine": "bom-ladder",
-      "reason": "low committee confidence (0.26)"
-    },
-    {
-      "id": "scout-directional-single-crystal-turbine-blades",
-      "tickers": [],
-      "engine": "bom-ladder",
-      "reason": "low committee confidence (0.32)"
-    },
-    {
-      "id": "scout-grain-oriented-electrical-steel",
+      "id": "scout-gas-turbine-hot-section-components",
       "tickers": [
-        "CLF",
-        "ATI",
-        "X"
-      ],
-      "engine": "bom-ladder",
-      "reason": "low committee confidence (0.33)"
-    },
-    {
-      "id": "scout-single-crystal-turbine-blades",
-      "tickers": [],
-      "engine": "bom-ladder",
-      "reason": "low committee confidence (0.18)"
-    },
-    {
-      "id": "scout-high-temp-nickel-superalloy-powder-billet",
-      "tickers": [
-        "CRS",
-        "ATI"
+        "HWM"
       ],
       "engine": "bom-ladder",
       "reason": "low committee confidence (0.31)"
     },
     {
-      "id": "scout-hvdc-grade-xlpe-insulation-compound",
+      "id": "scout-grain-oriented-electrical-steel",
       "tickers": [
-        "DOW"
+        "ATI",
+        "X"
       ],
       "engine": "bom-ladder",
-      "reason": "low committee confidence (0.33)"
+      "reason": "low committee confidence (0.32)"
+    },
+    {
+      "id": "scout-high-voltage-transformer-bushings",
+      "tickers": [],
+      "engine": "bom-ladder",
+      "reason": "CRO veto: HALLUCINATION: 'SMNEY' and 'HITKF' are not pure-play bushing proxies — Siemens Energy and Hitachi Energy parent are massive diversified conglomerates. More critically, the rationale cites specific dated evidence (Trench Charlotte ramp Feb 2026, $60M facility 2026-07-30, Yash fundraise Jun/Sep 2026) with zero sourced excerpts or filings — fabricated specificity on 0 supporting documents is an automatic veto."
+    },
+    {
+      "id": "scout-single-crystal-turbine-blades",
+      "tickers": [
+        "HWM",
+        "PCC"
+      ],
+      "engine": "bom-ladder",
+      "reason": "low committee confidence (0.28)"
+    },
+    {
+      "id": "scout-directionally-solidified-nickel-superalloy",
+      "tickers": [
+        "ATI",
+        "CRS"
+      ],
+      "engine": "bom-ladder",
+      "reason": "low committee confidence (0.16)"
+    },
+    {
+      "id": "scout-high-voltage-power-transformers",
+      "tickers": [
+        "AMSC",
+        "WCC",
+        "GE"
+      ],
+      "engine": "bom-ladder",
+      "reason": "low committee confidence (0.28)"
     }
   ]
 }

@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated": "2026-09-14",
+  "generated": "2026-09-21",
   "chair": "anthropic",
   "health": {
     "engines": [
@@ -8,7 +8,7 @@
       "bom-ladder"
     ],
     "leads": 13,
-    "suppressed": 4,
+    "suppressed": 6,
     "candidates": 13,
     "proposals": 0,
     "errors": 0
@@ -18,51 +18,51 @@
     {
       "id": "scout-grain-oriented-electrical-steel",
       "tickers": [
+        "CLF",
         "NUE",
-        "MT",
         "ATI",
         "X"
       ],
       "engine": "bom-ladder",
-      "reason": "low committee confidence (0.33)"
+      "reason": "CRO veto: HALLUCINATION: 'Flux Steel Ohio retrofit' cited as a dated, sourced fact (Alliance Review, 2026-09-15) but no such company or event is verifiable — 'Flux Steel' does not appear to be a real GOES producer. A fabricated supply-response anchor invalidates the bear/skeptic rebuttal and the entire reassessment rationale."
     },
     {
       "id": "scout-high-voltage-transformer-bushings",
       "tickers": [
-        "HHELY"
+        "HIIQQ"
       ],
       "engine": "bom-ladder",
-      "reason": "low committee confidence (0.36)"
+      "reason": "CRO veto: HALLUCINATION + OVER-REACH: Ticker 'HIIQQ' is Health Insurance Innovations (a defunct health-insurance company), not a bushing or transformer manufacturer. Zero valid tickers support this thesis. Combined with 0 excerpts and 0 filing passages, the entire variant_view rests on fabricated attribution. Automatic veto."
     },
     {
-      "id": "scout-directional-alloy-castings",
+      "id": "scout-here-are-2-3-upstream-inputs-that-gas-turbine-slots-critically-depend-on-which-are-themselves-structural-chokepoints",
+      "tickers": [
+        "AVAV",
+        "DOV",
+        "BRKR"
+      ],
+      "engine": "bom-ladder",
+      "reason": "low committee confidence (0.38)"
+    },
+    {
+      "id": "scout-single-crystal-turbine-blades",
       "tickers": [],
       "engine": "bom-ladder",
-      "reason": "low committee confidence (0.32)"
+      "reason": "low committee confidence (0.09)"
     },
     {
-      "id": "scout-nickel-superalloy-vacuum-melt",
+      "id": "scout-submarine-cable-copper-rod",
+      "tickers": [
+        "SCCO"
+      ],
+      "engine": "bom-ladder",
+      "reason": "low committee confidence (0.12)"
+    },
+    {
+      "id": "scout-maraging-steel-rotor-forgings",
       "tickers": [],
       "engine": "bom-ladder",
-      "reason": "low committee confidence (0.08)"
-    },
-    {
-      "id": "scout-high-voltage-power-transformers",
-      "tickers": [
-        "ABB",
-        "HUBB",
-        "GE"
-      ],
-      "engine": "bom-ladder",
-      "reason": "below threshold after CRO (0.34)"
-    },
-    {
-      "id": "scout-xlpe-insulation-compound",
-      "tickers": [
-        "DOW"
-      ],
-      "engine": "bom-ladder",
-      "reason": "low committee confidence (0.31)"
+      "reason": "low committee confidence (0.29)"
     }
   ]
 }

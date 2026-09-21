@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated": "2026-09-14",
+  "updated": "2026-09-21",
   "seen": {
     "scout-hyster-yale-materials-handling-inc-supply-constraint": {
       "status": "rejected",
@@ -34,8 +34,8 @@
     },
     "scout-grain-oriented-electrical-steel": {
       "status": "rejected",
-      "evidence_hash": "*grain-oriented electrical steel**|ati|mt|nue|x",
-      "updated": "2026-09-14"
+      "evidence_hash": "*grain-oriented electrical steel**|ati|clf|nue|x",
+      "updated": "2026-09-21"
     },
     "scout-large-power-transformer-forgings": {
       "status": "rejected",
@@ -49,8 +49,8 @@
     },
     "scout-single-crystal-turbine-blades": {
       "status": "rejected",
-      "evidence_hash": "*single-crystal turbine blades**|hwm|pcc",
-      "updated": "2026-09-07"
+      "evidence_hash": "*single-crystal turbine blades**",
+      "updated": "2026-09-21"
     },
     "scout-turbine-grade-nickel-superalloy-forgings": {
       "status": "rejected",
@@ -94,8 +94,8 @@
     },
     "scout-high-voltage-transformer-bushings": {
       "status": "rejected",
-      "evidence_hash": "*high-voltage transformer bushings**|hhely",
-      "updated": "2026-09-14"
+      "evidence_hash": "*high-voltage transformer bushings**|hiiqq",
+      "updated": "2026-09-21"
     },
     "scout-here-are-2-3-upstream-structural-chokepoints-that-gas-turbine-slots-critically-depend-on": {
       "status": "rejected",
@@ -311,6 +311,21 @@
       "status": "rejected",
       "evidence_hash": "*xlpe insulation compound**|dow",
       "updated": "2026-09-14"
+    },
+    "scout-here-are-2-3-upstream-inputs-that-gas-turbine-slots-critically-depend-on-which-are-themselves-structural-chokepoints": {
+      "status": "rejected",
+      "evidence_hash": "here are 2–3 upstream inputs that gas turbine slots critically depend on, which are themselves structural chokepoints:|avav|brkr|dov",
+      "updated": "2026-09-21"
+    },
+    "scout-submarine-cable-copper-rod": {
+      "status": "rejected",
+      "evidence_hash": "*submarine cable copper rod**|scco",
+      "updated": "2026-09-21"
+    },
+    "scout-maraging-steel-rotor-forgings": {
+      "status": "rejected",
+      "evidence_hash": "*maraging steel rotor forgings**",
+      "updated": "2026-09-21"
     }
   }
 }

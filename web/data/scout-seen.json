@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated": "2026-09-28",
+  "updated": "2026-10-05",
   "seen": {
     "scout-hyster-yale-materials-handling-inc-supply-constraint": {
       "status": "rejected",
@@ -34,8 +34,8 @@
     },
     "scout-grain-oriented-electrical-steel": {
       "status": "rejected",
-      "evidence_hash": "*grain-oriented electrical steel**|ati|nue|stld|x",
-      "updated": "2026-09-28"
+      "evidence_hash": "*grain-oriented electrical steel**|ati|x",
+      "updated": "2026-10-05"
     },
     "scout-large-power-transformer-forgings": {
       "status": "rejected",
@@ -49,8 +49,8 @@
     },
     "scout-single-crystal-turbine-blades": {
       "status": "rejected",
-      "evidence_hash": "*single-crystal turbine blades**",
-      "updated": "2026-09-21"
+      "evidence_hash": "*single-crystal turbine blades**|hwm|pcc",
+      "updated": "2026-10-05"
     },
     "scout-turbine-grade-nickel-superalloy-forgings": {
       "status": "rejected",
@@ -59,8 +59,8 @@
     },
     "scout-large-power-transformers": {
       "status": "rejected",
-      "evidence_hash": "*large power transformers**|amsc|nmgx|sgief|spxc",
-      "updated": "2026-09-28"
+      "evidence_hash": "*large power transformers**|amsc|hthiy|nmgx|spxc",
+      "updated": "2026-10-05"
     },
     "scout-gas-turbine-hot-section-blades": {
       "status": "rejected",
@@ -94,8 +94,8 @@
     },
     "scout-high-voltage-transformer-bushings": {
       "status": "rejected",
-      "evidence_hash": "*high-voltage transformer bushings**|hiiqq",
-      "updated": "2026-09-21"
+      "evidence_hash": "*high-voltage transformer bushings**",
+      "updated": "2026-10-05"
     },
     "scout-here-are-2-3-upstream-structural-chokepoints-that-gas-turbine-slots-critically-depend-on": {
       "status": "rejected",
@@ -304,8 +304,8 @@
     },
     "scout-nickel-superalloy-vacuum-melt": {
       "status": "rejected",
-      "evidence_hash": "*nickel superalloy vacuum melt**",
-      "updated": "2026-09-14"
+      "evidence_hash": "*nickel superalloy vacuum melt**|ati|hayn",
+      "updated": "2026-10-05"
     },
     "scout-xlpe-insulation-compound": {
       "status": "rejected",

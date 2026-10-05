@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated": "2026-09-28",
+  "generated": "2026-10-05",
   "chair": "anthropic",
   "health": {
     "engines": [
@@ -18,54 +18,56 @@
     {
       "id": "scout-large-power-transformers",
       "tickers": [
-        "SGIEF",
         "NMGX",
         "SPXC",
         "AMSC"
       ],
       "engine": "bom-ladder",
-      "reason": "low committee confidence (0.28)"
-    },
-    {
-      "id": "scout-gas-turbine-hot-section-components",
-      "tickers": [],
-      "engine": "bom-ladder",
-      "reason": "below threshold after legibility penalty (0.3, already-legible)"
+      "reason": "low committee confidence (0.38)"
     },
     {
       "id": "scout-grain-oriented-electrical-steel",
       "tickers": [
-        "NUE",
-        "STLD",
         "ATI",
         "X"
       ],
       "engine": "bom-ladder",
+      "reason": "low committee confidence (0.28)"
+    },
+    {
+      "id": "scout-high-voltage-transformer-bushings",
+      "tickers": [],
+      "engine": "bom-ladder",
       "reason": "low committee confidence (0.23)"
     },
     {
-      "id": "scout-transformer-bushings",
+      "id": "scout-single-crystal-turbine-blades",
       "tickers": [
-        "ABB",
-        "ACFN",
-        "PNW"
+        "HWM",
+        "PCC"
       ],
       "engine": "bom-ladder",
-      "reason": "CRO veto: HALLUCINATION: ACFN (Acuity Brands or AcuFocus — not a transformer bushing supplier) is misattributed. PNW is a utility (Pinnacle West/APS), not a bushing manufacturer. Neither belongs in a bushing-supply thesis. Automatic veto per hallucination rule."
+      "reason": "low committee confidence (0.33)"
     },
     {
-      "id": "scout-large-industrial-forgings",
-      "tickers": [],
-      "engine": "bom-ladder",
-      "reason": "low committee confidence (0.38)"
-    },
-    {
-      "id": "scout-high-voltage-power-transformers",
+      "id": "scout-nickel-superalloy-vacuum-melt",
       "tickers": [
-        "GE"
+        "ATI",
+        "HAYN"
       ],
       "engine": "bom-ladder",
-      "reason": "low committee confidence (0.38)"
+      "reason": "low committee confidence (0.33)"
+    },
+    {
+      "id": "scout-large-power-transformers",
+      "tickers": [
+        "HTHIY",
+        "SPXC",
+        "NMGX",
+        "AMSC"
+      ],
+      "engine": "bom-ladder",
+      "reason": "low committee confidence (0.39)"
     }
   ]
 }

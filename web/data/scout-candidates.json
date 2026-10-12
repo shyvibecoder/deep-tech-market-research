@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated": "2026-10-05",
+  "generated": "2026-10-12",
   "chair": "anthropic",
   "health": {
     "engines": [
@@ -8,7 +8,7 @@
       "bom-ladder"
     ],
     "leads": 14,
-    "suppressed": 4,
+    "suppressed": 7,
     "candidates": 14,
     "proposals": 0,
     "errors": 0
@@ -18,56 +18,58 @@
     {
       "id": "scout-large-power-transformers",
       "tickers": [
+        "ABB",
+        "SGPYY",
         "NMGX",
         "SPXC",
         "AMSC"
       ],
-      "engine": "bom-ladder",
-      "reason": "low committee confidence (0.38)"
-    },
-    {
-      "id": "scout-grain-oriented-electrical-steel",
-      "tickers": [
-        "ATI",
-        "X"
-      ],
-      "engine": "bom-ladder",
-      "reason": "low committee confidence (0.28)"
-    },
-    {
-      "id": "scout-high-voltage-transformer-bushings",
-      "tickers": [],
       "engine": "bom-ladder",
       "reason": "low committee confidence (0.23)"
     },
     {
-      "id": "scout-single-crystal-turbine-blades",
+      "id": "scout-gas-turbine-hot-section-components",
       "tickers": [
-        "HWM",
-        "PCC"
+        "HWM"
       ],
       "engine": "bom-ladder",
-      "reason": "low committee confidence (0.33)"
+      "reason": "low committee confidence (0.18)"
     },
     {
-      "id": "scout-nickel-superalloy-vacuum-melt",
-      "tickers": [
-        "ATI",
-        "HAYN"
-      ],
+      "id": "scout-single-crystal-turbine-blades",
+      "tickers": [],
       "engine": "bom-ladder",
-      "reason": "low committee confidence (0.33)"
+      "reason": "low committee confidence (0.37)"
     },
     {
       "id": "scout-large-power-transformers",
       "tickers": [
+        "ABB",
         "HTHIY",
-        "SPXC",
         "NMGX",
+        "SPXC",
         "AMSC"
       ],
       "engine": "bom-ladder",
-      "reason": "low committee confidence (0.39)"
+      "reason": "CRO veto: HALLUCINATION: NMGX (NovaBay Pharmaceuticals/unrelated biotech) is not a large power transformer company. One fraudulent ticker in the scarcity basket automatically invalidates the proposal. Committee failed basic attribution check. AMSC (American Superconductor) is also peripherally related at best. Basket integrity is compromised; full re-screening required before any reassessment proceeds."
+    },
+    {
+      "id": "scout-medium-voltage-switchgear",
+      "tickers": [
+        "SGBAF",
+        "ABB",
+        "POWL",
+        "PPSI",
+        "SLNG"
+      ],
+      "engine": "bom-ladder",
+      "reason": "low committee confidence (0.33)"
+    },
+    {
+      "id": "scout-mass-impregnated-paper-bushing-high-voltage-bushing-porcelain",
+      "tickers": [],
+      "engine": "bom-ladder",
+      "reason": "low committee confidence (0.16)"
     }
   ]
 }

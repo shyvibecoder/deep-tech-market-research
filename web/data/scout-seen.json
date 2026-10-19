@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated": "2026-10-12",
+  "updated": "2026-10-19",
   "seen": {
     "scout-hyster-yale-materials-handling-inc-supply-constraint": {
       "status": "rejected",
@@ -59,8 +59,8 @@
     },
     "scout-large-power-transformers": {
       "status": "rejected",
-      "evidence_hash": "*large power transformers**|abb|amsc|hthiy|nmgx|spxc",
-      "updated": "2026-10-12"
+      "evidence_hash": "*large power transformers**|amsc|nmgx|spxc",
+      "updated": "2026-10-19"
     },
     "scout-gas-turbine-hot-section-blades": {
       "status": "rejected",
@@ -331,6 +331,31 @@
       "status": "rejected",
       "evidence_hash": "*mass-impregnated paper bushing / high-voltage bushing porcelain**",
       "updated": "2026-10-12"
+    },
+    "scout-high-purity-nickel-superalloy": {
+      "status": "rejected",
+      "evidence_hash": "*high-purity nickel superalloy**|ati",
+      "updated": "2026-10-19"
+    },
+    "scout-electrical-transformer-cores": {
+      "status": "rejected",
+      "evidence_hash": "*electrical transformer cores**|clf|nue|wor",
+      "updated": "2026-10-19"
+    },
+    "scout-high-voltage-switchgear": {
+      "status": "rejected",
+      "evidence_hash": "*high-voltage switchgear**|bfh|eaton|ora|tgen",
+      "updated": "2026-10-19"
+    },
+    "scout-polished-copper-rod": {
+      "status": "rejected",
+      "evidence_hash": "*polished copper rod**|none",
+      "updated": "2026-10-19"
+    },
+    "scout-maraging-steel-high-strength-rotor-steel": {
+      "status": "rejected",
+      "evidence_hash": "*maraging steel / high-strength rotor steel**|crs",
+      "updated": "2026-10-19"
     }
   }
 }

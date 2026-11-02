@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated": "2026-10-26",
+  "updated": "2026-11-02",
   "seen": {
     "scout-hyster-yale-materials-handling-inc-supply-constraint": {
       "status": "rejected",
@@ -49,8 +49,8 @@
     },
     "scout-single-crystal-turbine-blades": {
       "status": "rejected",
-      "evidence_hash": "*single-crystal turbine blades**|hwm|pcc",
-      "updated": "2026-10-26"
+      "evidence_hash": "*single-crystal turbine blades**",
+      "updated": "2026-11-02"
     },
     "scout-turbine-grade-nickel-superalloy-forgings": {
       "status": "rejected",
@@ -79,8 +79,8 @@
     },
     "scout-large-industrial-gas-turbines": {
       "status": "rejected",
-      "evidence_hash": "*large industrial gas turbines**|wwd",
-      "updated": "2026-08-10"
+      "evidence_hash": "*large industrial gas turbines**|ge|mhvyf|siegy|wwd",
+      "updated": "2026-11-02"
     },
     "scout-high-voltage-power-transformers": {
       "status": "rejected",
@@ -94,8 +94,8 @@
     },
     "scout-high-voltage-transformer-bushings": {
       "status": "rejected",
-      "evidence_hash": "*high-voltage transformer bushings**|hthiy|siegy",
-      "updated": "2026-10-26"
+      "evidence_hash": "*high-voltage transformer bushings**|hltoy",
+      "updated": "2026-11-02"
     },
     "scout-here-are-2-3-upstream-structural-chokepoints-that-gas-turbine-slots-critically-depend-on": {
       "status": "rejected",
@@ -139,8 +139,8 @@
     },
     "scout-high-voltage-generator-step-up-transformers": {
       "status": "rejected",
-      "evidence_hash": "*high-voltage generator step-up transformers**",
-      "updated": "2026-08-17"
+      "evidence_hash": "*high-voltage generator step-up transformers**|hthiy|spxc",
+      "updated": "2026-11-02"
     },
     "scout-large-industrial-forgings": {
       "status": "rejected",
@@ -154,8 +154,8 @@
     },
     "scout-medium-voltage-switchgear": {
       "status": "rejected",
-      "evidence_hash": "*medium-voltage switchgear**|hubb|powl|ppsi|slng",
-      "updated": "2026-10-26"
+      "evidence_hash": "*medium-voltage switchgear**|powl|ppsi|slng",
+      "updated": "2026-11-02"
     },
     "scout-heavy-duty-gas-turbine-blades": {
       "status": "rejected",
@@ -366,6 +366,11 @@
       "status": "rejected",
       "evidence_hash": "*maraging steel rotors**",
       "updated": "2026-10-26"
+    },
+    "scout-here-are-2-3-upstream-inputs-that-gas-turbine-slots-critically-depend-on-each-itself-a-structural-chokepoint": {
+      "status": "rejected",
+      "evidence_hash": "here are 2–3 upstream inputs that gas turbine slots critically depend on, each itself a structural chokepoint:|avav|brkr|dov",
+      "updated": "2026-11-02"
     }
   }
 }

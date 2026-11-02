@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated": "2026-10-26",
+  "generated": "2026-11-02",
   "chair": "anthropic",
   "health": {
     "engines": [
@@ -8,7 +8,7 @@
       "bom-ladder"
     ],
     "leads": 14,
-    "suppressed": 7,
+    "suppressed": 4,
     "candidates": 14,
     "proposals": 0,
     "errors": 0
@@ -16,55 +16,58 @@
   "candidates": [],
   "considered": [
     {
-      "id": "scout-high-voltage-power-transformers",
+      "id": "scout-large-industrial-gas-turbines",
       "tickers": [
-        "HBTE",
-        "SPXC",
-        "GE"
+        "GE",
+        "SIEGY",
+        "MHVYF",
+        "WWD"
       ],
       "engine": "bom-ladder",
-      "reason": "low committee confidence (0.38)"
+      "reason": "below threshold after CRO (0.34)"
+    },
+    {
+      "id": "scout-high-voltage-generator-step-up-transformers",
+      "tickers": [
+        "HTHIY",
+        "SPXC"
+      ],
+      "engine": "bom-ladder",
+      "reason": "low committee confidence (0.18)"
     },
     {
       "id": "scout-high-voltage-transformer-bushings",
       "tickers": [
-        "SIEGY",
-        "HTHIY"
-      ],
-      "engine": "bom-ladder",
-      "reason": "low committee confidence (0.38)"
-    },
-    {
-      "id": "scout-single-crystal-turbine-blades",
-      "tickers": [
-        "HWM",
-        "PCC"
-      ],
-      "engine": "bom-ladder",
-      "reason": "low committee confidence (0.38)"
-    },
-    {
-      "id": "scout-medium-voltage-switchgear",
-      "tickers": [
-        "HUBB",
-        "POWL",
-        "PPSI",
-        "SLNG"
+        "HLTOY"
       ],
       "engine": "bom-ladder",
       "reason": "low committee confidence (0.28)"
     },
     {
-      "id": "scout-large-diameter-cable-drums",
-      "tickers": [],
+      "id": "scout-here-are-2-3-upstream-inputs-that-gas-turbine-slots-critically-depend-on-each-itself-a-structural-chokepoint",
+      "tickers": [
+        "AVAV",
+        "DOV",
+        "BRKR"
+      ],
       "engine": "bom-ladder",
-      "reason": "low committee confidence (0.38)"
+      "reason": "low committee confidence (0.23)"
     },
     {
-      "id": "scout-maraging-steel-rotors",
+      "id": "scout-single-crystal-turbine-blades",
       "tickers": [],
       "engine": "bom-ladder",
-      "reason": "low committee confidence (0.11)"
+      "reason": "low committee confidence (0.23)"
+    },
+    {
+      "id": "scout-medium-voltage-switchgear",
+      "tickers": [
+        "POWL",
+        "PPSI",
+        "SLNG"
+      ],
+      "engine": "bom-ladder",
+      "reason": "low committee confidence (0.21)"
     }
   ]
 }

@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-02",
+  "updated": "2026-11-09",
   "seen": {
     "scout-hyster-yale-materials-handling-inc-supply-constraint": {
       "status": "rejected",
@@ -69,8 +69,8 @@
     },
     "scout-large-transformer-bushings": {
       "status": "rejected",
-      "evidence_hash": "*large transformer bushings**|hltef",
-      "updated": "2026-06-29"
+      "evidence_hash": "*large transformer bushings**",
+      "updated": "2026-11-09"
     },
     "scout-vacuum-melted-superalloy-billet": {
       "status": "rejected",
@@ -134,8 +134,8 @@
     },
     "scout-electrical-power-transformers": {
       "status": "rejected",
-      "evidence_hash": "*electrical power transformers**|esp|hthiy|x",
-      "updated": "2026-06-22"
+      "evidence_hash": "*electrical power transformers**|abb|esp|hthiy|x",
+      "updated": "2026-11-09"
     },
     "scout-high-voltage-generator-step-up-transformers": {
       "status": "rejected",
@@ -371,6 +371,26 @@
       "status": "rejected",
       "evidence_hash": "here are 2–3 upstream inputs that gas turbine slots critically depend on, each itself a structural chokepoint:|avav|brkr|dov",
       "updated": "2026-11-02"
+    },
+    "scout-advanced-thermal-barrier-coatings": {
+      "status": "rejected",
+      "evidence_hash": "*advanced thermal barrier coatings**|cw|hwm",
+      "updated": "2026-11-09"
+    },
+    "scout-epc-project-management-software-estimating-platforms": {
+      "status": "rejected",
+      "evidence_hash": "*epc project management software / estimating platforms**",
+      "updated": "2026-11-09"
+    },
+    "scout-electrical-apprenticeship-training-infrastructure": {
+      "status": "rejected",
+      "evidence_hash": "*electrical apprenticeship training infrastructure**",
+      "updated": "2026-11-09"
+    },
+    "scout-maraging-steel-cylinders": {
+      "status": "rejected",
+      "evidence_hash": "*maraging steel cylinders**",
+      "updated": "2026-11-09"
     }
   }
 }

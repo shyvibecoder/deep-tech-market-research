@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated": "2026-11-16",
+  "generated": "2026-11-23",
   "chair": "anthropic",
   "health": {
     "engines": [
@@ -8,7 +8,7 @@
       "bom-ladder"
     ],
     "leads": 13,
-    "suppressed": 5,
+    "suppressed": 6,
     "candidates": 13,
     "proposals": 0,
     "errors": 0
@@ -16,53 +16,61 @@
   "candidates": [],
   "considered": [
     {
-      "id": "scout-gas-turbine-hot-section-components",
-      "tickers": [],
+      "id": "scout-large-industrial-gas-turbines",
+      "tickers": [
+        "WWD"
+      ],
       "engine": "bom-ladder",
-      "reason": "below threshold after CRO (0.34)"
+      "reason": "CRO veto: HALLUCINATION + OVER-REACH: Ticker 'WWD' (Woodward Inc.) makes fuel systems and controls — it is NOT a large industrial gas turbine OEM or qualified large-frame forging supplier. Zero filing excerpts support the thesis. Misattributed ticker is an automatic veto."
+    },
+    {
+      "id": "scout-high-voltage-generator-step-up-transformers",
+      "tickers": [
+        "HTIEF",
+        "SPXC"
+      ],
+      "engine": "bom-ladder",
+      "reason": "low committee confidence (0.21)"
+    },
+    {
+      "id": "scout-grain-oriented-electrical-steel",
+      "tickers": [
+        "NUE",
+        "CLF",
+        "ATI",
+        "X"
+      ],
+      "engine": "bom-ladder",
+      "reason": "low committee confidence (0.28)"
+    },
+    {
+      "id": "scout-medium-voltage-switchgear",
+      "tickers": [
+        "ABB",
+        "SGBAF"
+      ],
+      "engine": "bom-ladder",
+      "reason": "low committee confidence (0.36)"
+    },
+    {
+      "id": "scout-power-transformer-cores-amorphous-goes-wound-cores",
+      "tickers": [
+        "CLF",
+        "TKAMY"
+      ],
+      "engine": "bom-ladder",
+      "reason": "low committee confidence (0.36)"
     },
     {
       "id": "scout-grain-oriented-electrical-steel",
       "tickers": [
         "NUE",
         "STLD",
-        "CLF",
         "ATI",
         "X"
       ],
       "engine": "bom-ladder",
-      "reason": "CRO veto: HALLUCINATION: 'Flux Steel Ohio' appears fabricated — no verifiable commercial GOES greenfield project by that name exists. ATI produces specialty alloys/titanium, not GOES — misattributed ticker. NUE/STLD have negligible Hi-B GOES exposure. Citing a phantom capacity announcement as the thesis's key counter-evidence poisons the entire logical chain."
-    },
-    {
-      "id": "scout-large-transformer-bushings",
-      "tickers": [
-        "HIEEQ"
-      ],
-      "engine": "bom-ladder",
-      "reason": "CRO veto: HALLUCINATION: 'HIEEQ' is the ticker for Emerge Energy Services (bankrupt sand-mining company), not a large transformer bushing manufacturer. No real, correctly attributed publicly traded pure-play bushing supplier is cited. A fabricated or misattributed ticker is an automatic veto per standing CRO rules."
-    },
-    {
-      "id": "scout-large-industrial-forgings",
-      "tickers": [
-        "AMRP",
-        "ATI"
-      ],
-      "engine": "bom-ladder",
-      "reason": "CRO veto: HALLUCINATION: 'AMRP' is not a real, verifiable large-industrial-forgings company. No such ticker maps to that sector. ATI Inc. is real and forgings-adjacent, but AMRP is unverifiable and cannot be attributed to heavy forge press capacity. One fabricated ticker in a two-name thesis is an automatic veto."
-    },
-    {
-      "id": "scout-electrical-apprenticeship-pipeline",
-      "tickers": [],
-      "engine": "bom-ladder",
-      "reason": "low committee confidence (0.39)"
-    },
-    {
-      "id": "scout-xlpe-compound",
-      "tickers": [
-        "DOW"
-      ],
-      "engine": "bom-ladder",
-      "reason": "low committee confidence (0.25)"
+      "reason": "low committee confidence (0.28)"
     }
   ]
 }

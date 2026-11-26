@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "scanned_at": "2026-11-25T22:27:20.143Z",
+  "scanned_at": "2026-11-26T22:27:47.767Z",
   "source": "scripts/scan.mjs",
   "universe_count": 64,
   "quotes": {
@@ -274,7 +274,7 @@
       ],
       "technicals_src": "db",
       "crowding": 0,
-      "rel_strength": -0.1386
+      "rel_strength": -0.143
     },
     "NUKZ": {
       "ticker": "NUKZ",
@@ -572,7 +572,7 @@
         "revenue_yoy": 0.101,
         "net_margin": -0.383
       },
-      "rel_strength": 0.1591
+      "rel_strength": 0.1742
     },
     "LEU": {
       "ticker": "LEU",
@@ -1256,24 +1256,24 @@
     },
     "PRY.MI": {
       "ticker": "PRY.MI",
-      "price": 93.12000274658203,
+      "price": 99.23999786376953,
       "high52": 156.899994,
-      "pct_off_high": -0.4065009158216919,
-      "ytd": 0.04377020577518794,
-      "ma50": 113.56080047607423,
-      "ma200": 122.08814807901858,
-      "ma20": 106.3705005645752,
-      "pct_vs_ma50": -0.17999871120844035,
-      "pct_vs_ma200": -0.2372723789182847,
+      "pct_off_high": -0.36749520931294916,
+      "ytd": 0.11236844862741346,
+      "ma50": 113.10160049438478,
+      "ma200": 122.07936191333744,
+      "ma20": 105.94500045776367,
+      "pct_vs_ma50": -0.12255885478210758,
+      "pct_vs_ma200": -0.18708620107124474,
       "above_ma200": false,
       "above_ma20": false,
-      "asof": "2026-11-25",
-      "mom_12m": 0.13028987354229438,
-      "mom_1m": -0.06015340103278666,
-      "rsi_14": 31.9,
-      "rsi_10": 27.4,
-      "vol_3m": 0.5032396729598243,
-      "vol_1y": 0.44803419322588667,
+      "asof": "2026-11-26",
+      "mom_12m": 0.2077757130729081,
+      "mom_1m": -0.03556854818110955,
+      "rsi_14": 41.2,
+      "rsi_10": 40.8,
+      "vol_3m": 0.5197976688151476,
+      "vol_1y": 0.4524522921492468,
       "currency": "EUR",
       "source": "yahoo",
       "corroboration": {
@@ -1281,8 +1281,8 @@
           "yahoo"
         ],
         "n": 1,
-        "median": 93.12,
-        "used": 93.12,
+        "median": 99.24,
+        "used": 99.24,
         "spread": 0,
         "ok": null
       },
@@ -1290,29 +1290,29 @@
         "single-source (yahoo) — uncorroborated"
       ],
       "technicals_src": "db",
-      "crowding": 4,
-      "rel_strength": 0.0634
+      "crowding": 11,
+      "rel_strength": 0.0786
     },
     "NEX.PA": {
       "ticker": "NEX.PA",
-      "price": 113.69999694824219,
+      "price": 118.4000015258789,
       "high52": 164.883209,
-      "pct_off_high": -0.31042100867746825,
-      "ytd": -0.09758137079439426,
-      "ma50": 127.71599945068355,
-      "ma200": 135.00890965508302,
-      "ma20": 124.0849998474121,
-      "pct_vs_ma50": -0.10974351344174015,
-      "pct_vs_ma200": -0.15783338122854443,
+      "pct_off_high": -0.28191595588196666,
+      "ytd": -0.060278188718305634,
+      "ma50": 127.3519993591308,
+      "ma200": 134.9120140177124,
+      "ma20": 123.8,
+      "pct_vs_ma50": -0.07029334347556955,
+      "pct_vs_ma200": -0.12239097171631923,
       "above_ma200": false,
       "above_ma20": false,
-      "asof": "2026-11-25",
-      "mom_12m": -0.060986973838822345,
-      "mom_1m": 0.0008802682699329267,
-      "rsi_14": 35.5,
-      "rsi_10": 30.9,
-      "vol_3m": 0.4250447896030854,
-      "vol_1y": 0.38098048988469735,
+      "asof": "2026-11-26",
+      "mom_12m": -0.03469731910925955,
+      "mom_1m": 0.006802747127024444,
+      "rsi_14": 42.7,
+      "rsi_10": 41.4,
+      "vol_3m": 0.4329980775000884,
+      "vol_1y": 0.3829324615011034,
       "currency": "EUR",
       "source": "yahoo",
       "corroboration": {
@@ -1320,8 +1320,8 @@
           "yahoo"
         ],
         "n": 1,
-        "median": 113.7,
-        "used": 113.7,
+        "median": 118.4,
+        "used": 118.4,
         "spread": 0,
         "ok": null
       },
@@ -1330,7 +1330,7 @@
       ],
       "technicals_src": "db",
       "crowding": 0,
-      "rel_strength": 0.0634
+      "rel_strength": 0.0786
     },
     "CCJ": {
       "ticker": "CCJ",
@@ -1369,28 +1369,28 @@
       ],
       "technicals_src": "db",
       "crowding": 0,
-      "rel_strength": -0.0697
+      "rel_strength": -0.0685
     },
     "U.UN": {
       "ticker": "U.UN",
-      "price": 25.1299991607666,
+      "price": 25.719999313354492,
       "high52": 32.419998,
-      "pct_off_high": -0.22486117485983184,
-      "ytd": -0.07948717650991116,
-      "ma50": 26.488199920654303,
-      "ma200": 27.06772493159424,
-      "ma20": 26.07849979400636,
-      "pct_vs_ma50": -0.05127569121179268,
-      "pct_vs_ma200": -0.07158805461946552,
+      "pct_off_high": -0.20666252621747563,
+      "ytd": -0.057875448517251134,
+      "ma50": 26.46399990081787,
+      "ma200": 27.054674928161013,
+      "ma20": 26.0089997291565,
+      "pct_vs_ma50": -0.028113686149174512,
+      "pct_vs_ma200": -0.04933253193211599,
       "above_ma200": false,
       "above_ma20": false,
-      "asof": "2026-11-25",
-      "mom_12m": 0.005602207313589513,
-      "mom_1m": -0.05134015183474616,
-      "rsi_14": 42.2,
-      "rsi_10": 40.9,
-      "vol_3m": 0.28780731677421745,
-      "vol_1y": 0.3114098711169299,
+      "asof": "2026-11-26",
+      "mom_12m": 0.029623671471356694,
+      "mom_1m": -0.0467012694684934,
+      "rsi_14": 47.3,
+      "rsi_10": 47.9,
+      "vol_3m": 0.2921222759895749,
+      "vol_1y": 0.31227130139984144,
       "currency": "CAD",
       "source": "yahoo",
       "corroboration": {
@@ -1398,8 +1398,8 @@
           "yahoo"
         ],
         "n": 1,
-        "median": 25.13,
-        "used": 25.13,
+        "median": 25.72,
+        "used": 25.72,
         "spread": 0,
         "ok": null
       },
@@ -1407,8 +1407,8 @@
         "single-source (yahoo) — uncorroborated"
       ],
       "technicals_src": "db",
-      "crowding": 4,
-      "rel_strength": -0.0437
+      "crowding": 7,
+      "rel_strength": -0.0414
     },
     "FCX": {
       "ticker": "FCX",
@@ -1447,7 +1447,7 @@
       ],
       "technicals_src": "db",
       "crowding": 0,
-      "rel_strength": -0.1386
+      "rel_strength": -0.143
     },
     "TECK": {
       "ticker": "TECK",
@@ -1486,28 +1486,28 @@
       ],
       "technicals_src": "db",
       "crowding": 8,
-      "rel_strength": -0.1386
+      "rel_strength": -0.143
     },
     "IVN": {
       "ticker": "IVN",
-      "price": 6.269999980926514,
+      "price": 6.400000095367432,
       "high52": 18.809999,
-      "pct_off_high": -0.6666666499596032,
-      "ytd": -0.6091022699483302,
-      "ma50": 9.79459998130798,
-      "ma200": 11.459925001703034,
-      "ma20": 7.716250014305115,
-      "pct_vs_ma50": -0.35985134738609187,
-      "pct_vs_ma200": -0.45287600224305635,
+      "pct_off_high": -0.6597554260706004,
+      "ytd": -0.6009975251642795,
+      "ma50": 9.684499988555904,
+      "ma200": 11.40377500717987,
+      "ma20": 7.567750024795531,
+      "pct_vs_ma50": -0.3391501778171036,
+      "pct_vs_ma200": -0.43878232503377507,
       "above_ma200": false,
       "above_ma20": false,
-      "asof": "2026-11-25",
-      "mom_12m": -0.5162037051754234,
-      "mom_1m": -0.3192182459330345,
-      "rsi_14": 24.7,
-      "rsi_10": 24,
-      "vol_3m": 0.5640620391888111,
-      "vol_1y": 0.6062869609382617,
+      "asof": "2026-11-26",
+      "mom_12m": -0.5155185393363035,
+      "mom_1m": -0.3367875286670555,
+      "rsi_14": 27.3,
+      "rsi_10": 27.8,
+      "vol_3m": 0.5674077877366245,
+      "vol_1y": 0.6063401397480677,
       "currency": "CAD",
       "source": "yahoo",
       "corroboration": {
@@ -1515,8 +1515,8 @@
           "yahoo"
         ],
         "n": 1,
-        "median": 6.27,
-        "used": 6.27,
+        "median": 6.4,
+        "used": 6.4,
         "spread": 0,
         "ok": null
       },
@@ -1525,28 +1525,28 @@
       ],
       "technicals_src": "db",
       "crowding": 0,
-      "rel_strength": -0.1386
+      "rel_strength": -0.143
     },
     "LYC": {
       "ticker": "LYC",
-      "price": 12.800000190734863,
+      "price": 13.8100004196167,
       "high52": 22.07,
-      "pct_off_high": -0.4200271775833773,
-      "ytd": 0.04746319073116715,
-      "ma50": 12.702600059509278,
-      "ma200": 16.399000024727478,
-      "ma20": 12.741499948501577,
-      "pct_vs_ma50": 0.007667731863499146,
-      "pct_vs_ma200": -0.21946459104614968,
+      "pct_off_high": -0.3742636873757726,
+      "ytd": 0.13011460062329774,
+      "ma50": 12.702000064849853,
+      "ma200": 16.387050021825562,
+      "ma20": 12.806499958038325,
+      "pct_vs_ma50": 0.08723038490867328,
+      "pct_vs_ma200": -0.15726134958864138,
       "above_ma200": false,
       "above_ma20": true,
-      "asof": "2026-11-25",
-      "mom_12m": -0.30169120617922185,
-      "mom_1m": 0.1951447381086533,
-      "rsi_14": 51,
-      "rsi_10": 51.5,
-      "vol_3m": 0.5842987110817098,
-      "vol_1y": 0.6034875297300035,
+      "asof": "2026-11-26",
+      "mom_12m": -0.27582588255811746,
+      "mom_1m": 0.22537709482551427,
+      "rsi_14": 58.5,
+      "rsi_10": 61.5,
+      "vol_3m": 0.602294501941064,
+      "vol_1y": 0.6070539005071017,
       "currency": "AUD",
       "source": "yahoo",
       "corroboration": {
@@ -1554,8 +1554,8 @@
           "yahoo"
         ],
         "n": 1,
-        "median": 12.8,
-        "used": 12.8,
+        "median": 13.81,
+        "used": 13.81,
         "spread": 0,
         "ok": null
       },
@@ -1563,8 +1563,8 @@
         "single-source (yahoo) — uncorroborated"
       ],
       "technicals_src": "db",
-      "crowding": 5,
-      "rel_strength": 0.1591
+      "crowding": 13,
+      "rel_strength": 0.1742
     },
     "WOLF": {
       "ticker": "WOLF",
@@ -1685,24 +1685,24 @@
     },
     "SYR.AX": {
       "ticker": "SYR.AX",
-      "price": 0.06300000101327896,
+      "price": 0.06199999898672104,
       "high52": 0.39,
-      "pct_off_high": -0.8384615358633872,
-      "ytd": -0.814705879372709,
-      "ma50": 0.07014000028371813,
-      "ma200": 0.11896003978780746,
-      "ma20": 0.06385000068694355,
-      "pct_vs_ma50": -0.10179639637236501,
-      "pct_vs_ma200": -0.4704103905340489,
+      "pct_off_high": -0.8410256436237922,
+      "ytd": -0.8176470618037617,
+      "ma50": 0.06918000027537347,
+      "ma200": 0.11792003978274107,
+      "ma20": 0.06395000070333481,
+      "pct_vs_ma50": -0.10378723995478714,
+      "pct_vs_ma200": -0.47421999601635617,
       "above_ma200": false,
       "above_ma20": false,
-      "asof": "2026-11-25",
-      "mom_12m": -0.8384615358633873,
-      "mom_1m": 0.03278689025166681,
-      "rsi_14": 42.2,
-      "rsi_10": 44.5,
-      "vol_3m": 0.6152956224311976,
-      "vol_1y": 0.7817593194447403,
+      "asof": "2026-11-26",
+      "mom_12m": -0.8410256436237922,
+      "mom_1m": 6.661338147750939e-16,
+      "rsi_14": 39.9,
+      "rsi_10": 40.6,
+      "vol_3m": 0.605817396742029,
+      "vol_1y": 0.7817744074847176,
       "currency": "AUD",
       "source": "yahoo",
       "corroboration": {
@@ -1710,8 +1710,8 @@
           "yahoo"
         ],
         "n": 1,
-        "median": 0.063,
-        "used": 0.063,
+        "median": 0.062,
+        "used": 0.062,
         "spread": 0,
         "ok": null
       },
@@ -1720,7 +1720,7 @@
       ],
       "technicals_src": "db",
       "crowding": 0,
-      "rel_strength": 0.0436
+      "rel_strength": 0.0272
     },
     "NVX": {
       "ticker": "NVX",
@@ -1759,7 +1759,7 @@
       ],
       "technicals_src": "db",
       "crowding": 60,
-      "rel_strength": 0.0436
+      "rel_strength": 0.0272
     },
     "TSM": {
       "ticker": "TSM",
@@ -1923,24 +1923,24 @@
     },
     "6988.T": {
       "ticker": "6988.T",
-      "price": 3527,
+      "price": 3630,
       "high52": 4029.208008,
-      "pct_off_high": -0.12464186683905748,
-      "ytd": -0.04352485386416383,
-      "ma50": 3474.42,
-      "ma200": 3334.4323632849996,
-      "ma20": 3513,
-      "pct_vs_ma50": 0.015133461124446648,
-      "pct_vs_ma200": 0.05775124990848144,
+      "pct_off_high": -0.09907853037305887,
+      "ytd": -0.015592633832411317,
+      "ma50": 3478.6,
+      "ma200": 3334.6054394549997,
+      "ma20": 3513.15,
+      "pct_vs_ma50": 0.043523256482492986,
+      "pct_vs_ma200": 0.088584561474619,
       "above_ma200": true,
       "above_ma20": true,
-      "asof": "2026-11-25",
-      "mom_12m": -0.06854381622007266,
-      "mom_1m": -0.02917698871456098,
-      "rsi_14": 51.5,
-      "rsi_10": 51.9,
-      "vol_3m": 0.34083366584647873,
-      "vol_1y": 0.33382030185279427,
+      "asof": "2026-11-26",
+      "mom_12m": -0.04033812456861896,
+      "mom_1m": 0.006934812760055475,
+      "rsi_14": 56.5,
+      "rsi_10": 58.5,
+      "vol_3m": 0.3411052633899337,
+      "vol_1y": 0.33508223418218575,
       "currency": "JPY",
       "source": "yahoo",
       "corroboration": {
@@ -1948,8 +1948,8 @@
           "yahoo"
         ],
         "n": 1,
-        "median": 3527,
-        "used": 3527,
+        "median": 3630,
+        "used": 3630,
         "spread": 0,
         "ok": null
       },
@@ -1957,8 +1957,8 @@
         "single-source (yahoo) — uncorroborated"
       ],
       "technicals_src": "db",
-      "crowding": 20,
-      "rel_strength": 0.0638
+      "crowding": 24,
+      "rel_strength": 0.0999
     },
     "VRT": {
       "ticker": "VRT",
@@ -2079,24 +2079,24 @@
     },
     "6324.T": {
       "ticker": "6324.T",
-      "price": 3665,
+      "price": 3663,
       "high52": 8890,
-      "pct_off_high": -0.5877390326209224,
-      "ytd": -0.04321926371234219,
-      "ma50": 5487.16,
-      "ma200": 5470.64663574,
-      "ma20": 4776.9,
-      "pct_vs_ma50": -0.3320770671895844,
-      "pct_vs_ma200": -0.33006091527528447,
+      "pct_off_high": -0.5879640044994375,
+      "ytd": -0.04374138144019357,
+      "ma50": 5444.82,
+      "ma200": 5471.25530029,
+      "ma20": 4697.05,
+      "pct_vs_ma50": -0.3272504876194254,
+      "pct_vs_ma200": -0.3305009912796712,
       "above_ma200": false,
       "above_ma20": false,
-      "asof": "2026-11-25",
-      "mom_12m": 0.12873676220143104,
-      "mom_1m": -0.37243150684931503,
+      "asof": "2026-11-26",
+      "mom_12m": 0.12294592944747906,
+      "mom_1m": -0.29011627906976745,
       "rsi_14": 28.4,
       "rsi_10": 25.2,
-      "vol_3m": 0.7346936240082885,
-      "vol_1y": 0.8170025810337884,
+      "vol_3m": 0.7337997841485844,
+      "vol_1y": 0.8169927485031834,
       "currency": "JPY",
       "source": "yahoo",
       "corroboration": {
@@ -2104,8 +2104,8 @@
           "yahoo"
         ],
         "n": 1,
-        "median": 3665,
-        "used": 3665,
+        "median": 3663,
+        "used": 3663,
         "spread": 0,
         "ok": null
       },
@@ -2114,28 +2114,28 @@
       ],
       "technicals_src": "db",
       "crowding": 0,
-      "rel_strength": -0.2626
+      "rel_strength": -0.1841
     },
     "6268.T": {
       "ticker": "6268.T",
-      "price": 3191,
+      "price": 3268,
       "high52": 5820,
-      "pct_off_high": -0.45171821305841925,
-      "ytd": -0.16684073107049607,
-      "ma50": 4371.02,
-      "ma200": 4686.065,
-      "ma20": 3966.55,
-      "pct_vs_ma50": -0.26996444765752625,
-      "pct_vs_ma200": -0.3190448702696185,
+      "pct_off_high": -0.43848797250859106,
+      "ytd": -0.14673629242819844,
+      "ma50": 4344.76,
+      "ma200": 4682.91,
+      "ma20": 3915.3,
+      "pct_vs_ma50": -0.24782956941234963,
+      "pct_vs_ma200": -0.302143325410909,
       "above_ma200": false,
       "above_ma20": false,
-      "asof": "2026-11-25",
-      "mom_12m": -0.13313618151621764,
-      "mom_1m": -0.338789888106092,
-      "rsi_14": 23.8,
-      "rsi_10": 19.8,
-      "vol_3m": 0.5226915566861561,
-      "vol_1y": 0.5467558696790563,
+      "asof": "2026-11-26",
+      "mom_12m": -0.14084911577580417,
+      "mom_1m": -0.2641297005179014,
+      "rsi_14": 27.4,
+      "rsi_10": 25,
+      "vol_3m": 0.5259989302875582,
+      "vol_1y": 0.5462814251535647,
       "currency": "JPY",
       "source": "yahoo",
       "corroboration": {
@@ -2143,8 +2143,8 @@
           "yahoo"
         ],
         "n": 1,
-        "median": 3191,
-        "used": 3191,
+        "median": 3268,
+        "used": 3268,
         "spread": 0,
         "ok": null
       },
@@ -2153,7 +2153,7 @@
       ],
       "technicals_src": "db",
       "crowding": 0,
-      "rel_strength": -0.2626
+      "rel_strength": -0.1841
     },
     "RKLB": {
       "ticker": "RKLB",
@@ -2196,24 +2196,24 @@
     },
     "OXIG.L": {
       "ticker": "OXIG.L",
-      "price": 2364,
+      "price": 2432,
       "high52": 3302,
-      "pct_off_high": -0.2840702604482132,
-      "ytd": 0.15036496350364964,
-      "ma50": 2724.36,
-      "ma200": 2786.0917517089842,
-      "ma20": 2534.9,
-      "pct_vs_ma50": -0.1322732678500639,
-      "pct_vs_ma200": -0.15149958771101987,
+      "pct_off_high": -0.2634766807995155,
+      "ytd": 0.1834549878345499,
+      "ma50": 2718.44,
+      "ma200": 2785.151751708984,
+      "ma20": 2523.5,
+      "pct_vs_ma50": -0.10536925589676434,
+      "pct_vs_ma200": -0.12679802868633222,
       "above_ma200": false,
       "above_ma20": false,
-      "asof": "2026-11-25",
-      "mom_12m": 0.20125252039255348,
-      "mom_1m": -0.05288461538461542,
-      "rsi_14": 37.2,
-      "rsi_10": 35.4,
-      "vol_3m": 0.42785577211542636,
-      "vol_1y": 0.38316730068405436,
+      "asof": "2026-11-26",
+      "mom_12m": 0.23832322491323854,
+      "mom_1m": -0.05516705516705511,
+      "rsi_14": 42,
+      "rsi_10": 42.2,
+      "vol_3m": 0.4324298860618331,
+      "vol_1y": 0.38415148858247306,
       "currency": "GBp",
       "source": "yahoo",
       "corroboration": {
@@ -2221,8 +2221,8 @@
           "yahoo"
         ],
         "n": 1,
-        "median": 2364,
-        "used": 2364,
+        "median": 2432,
+        "used": 2432,
         "spread": 0,
         "ok": null
       },
@@ -2230,8 +2230,8 @@
         "single-source (yahoo) — uncorroborated"
       ],
       "technicals_src": "db",
-      "crowding": 15,
-      "rel_strength": 0.0401
+      "crowding": 18,
+      "rel_strength": 0.0378
     },
     "DHR": {
       "ticker": "DHR",
@@ -2684,45 +2684,15 @@
       "items": [],
       "url": "https://www.sec.gov/Archives/edgar/data/1801368/000180136826000057/mp-20260930.htm",
       "is_new": false
-    },
-    {
-      "ticker": "LEU",
-      "form": "10-Q",
-      "date": "2026-11-05",
-      "items": [],
-      "url": "https://www.sec.gov/Archives/edgar/data/1065059/000162828026070557/leu-20260930.htm",
-      "is_new": false
-    },
-    {
-      "ticker": "MP",
-      "form": "8-K",
-      "date": "2026-11-05",
-      "items": [
-        "Results / guidance",
-        "9.01"
-      ],
-      "url": "https://www.sec.gov/Archives/edgar/data/1801368/000180136826000056/mp-20261105.htm",
-      "is_new": false
-    },
-    {
-      "ticker": "MU",
-      "form": "8-K",
-      "date": "2026-11-05",
-      "items": [
-        "Exec/board change",
-        "9.01"
-      ],
-      "url": "https://www.sec.gov/Archives/edgar/data/723125/000110465926123389/tm2629062d1_8k.htm",
-      "is_new": false
     }
   ],
   "news": [
     {
       "scarcity": "electrons",
-      "title": "Talen Energy: Power Provider That Already Has A Data Center In Hand - Seeking Alpha",
-      "link": "https://news.google.com/rss/articles/CBMiqwFBVV95cUxPSVgyOEt4Wi1KaWFRN1k1VTUyWURNdVIzLTctX3hCYkt1cUw0SGxfSzZQRWdkN00wWFRyR1Fza2pRaWJOemFhODQ4WEZmTUxycWhsQ1BVV2l6cE1sdU1FRkdjNnJoc1ZUbE15VmFJQVd5b0pKVDJtOFZwODR6OU1EVmk2d094UWR0ZHg4UGJ1VjZuMUdic2JlZzlBbUM2QU9ja05RakVXVWEyR1E?oc=5",
-      "date": "2026-11-07",
-      "is_new": false
+      "title": "UTG: 8% Yield With An AI Growth Catalyst That No One Is Talking About (NYSE:UTG) - Seeking Alpha",
+      "link": "https://news.google.com/rss/articles/CBMipgFBVV95cUxQVHFhTElBUWs5aUJ3Y1d1TEczU3FhRmVucUVxcl9RRm92NVQyOEVnNG0xNGhpMUFoY2JyeGxmcEVCM29JNllnT0hXYWV0WVhWcG5NZV9hcTdrUDlkV0JhbFpTc090c2NlZ3Nvd2dxLVZCbVdlUWRCT1YydG4ybHZLYks2Y2VtSDh2QVZ6QU52alhIN1ktQXMyWnR2Qnh5Yl8ybTBxRS13?oc=5",
+      "date": "2026-11-19",
+      "is_new": true
     },
     {
       "scarcity": "electrons",
@@ -2740,10 +2710,10 @@
     },
     {
       "scarcity": "transformers",
-      "title": "U.S. transformer market faces severe supply constraints as lead times extend to four years - pv magazine USA",
-      "link": "https://news.google.com/rss/articles/CBMiyAFBVV95cUxOeW9hVks4TUZ2V2hmSTNhaFQ3eGk5b09DR18wa0tmZ2psQ045elk1dTAxNEhaX2xtSUdPREJhNmlxU1dFakdiampfVUpwbUpnSlBfZlZuMkVuajdoVVhvRGVoZF9YNm5qeFlydkpsMzhZRnJra2Y2c0hvSmdQdDV2OFdWVTZJVkhFMHhwbkl2aWlHcGtiSnBtSDB3SXp5OXBOQzF3aDhQTVJvSWZUc21LNGQzTjNuM1BCdEVKZ0E3Y055dnhJbGxhRQ?oc=5",
-      "date": "2026-05-11",
-      "is_new": true
+      "title": "GameChange Targets US Transformer Shortage with New India Factory - Engineering News-Record",
+      "link": "https://news.google.com/rss/articles/CBMiogFBVV95cUxPYXA5OTNja1A5RVZEWFF5UmlzMVhadW5ldTVMc3R5UnJFWVc4Q1d0dVAwUUFvT0Vka29vYlZ3bkpac3lTLWNHZ3V6YzZ3S2JpSjd2c2stcEZkbVJ2VFMzYkhZaUktdWxHa2ppY0d2OWZuVV9BSm41STVYU0V6aGR2Y2lBWGFxSWl4cEpPTWdGd1p0NklSQ2ZtZkMwSU1pNGlUcWc?oc=5",
+      "date": "2026-08-28",
+      "is_new": false
     },
     {
       "scarcity": "turbines",
@@ -2764,7 +2734,7 @@
       "title": "Next-Gen Data Center Real Estate: EPC and Industrial Parks - Mexico Business News",
       "link": "https://news.google.com/rss/articles/CBMipgFBVV95cUxNMlcxQVV3WXIwQk9lVUNSY2hhVlR5ai1PemVHb1I5UW93c1NOeEdBOVZRX2FycGpXdUlfUzE1WWxkUFRWWE1ESW9ZRm5oZ1doS0tZLTM2VUFpWFNuNjE2ZDJmWTY5TUhQQkg3c1lEa2IxaFNfYlVJeEI5S1VibHpxRkJSZmNfTFNvR18wOXJYSmsxMUVFSlNtYVc5QXNWdThoRWxwbXlB?oc=5",
       "date": "2026-11-25",
-      "is_new": true
+      "is_new": false
     },
     {
       "scarcity": "electricians",
@@ -2775,30 +2745,30 @@
     },
     {
       "scarcity": "hvdc",
-      "title": "UK’s first high-voltage direct current subsea cable factory opens - IOM3",
-      "link": "https://news.google.com/rss/articles/CBMiogFBVV95cUxPNWNzSUdmVXVJbEg3ZUlrNE9HMzZUSGlYMXM4WFVuZXppcEJSYjhfRWljRTF3aHBTNWFCX19Ua1ZQRlZkNF94TjFzcElHYlIzb0hoTkpjWkpNRzdaeTJZcGZ2S2VEY0p4cVVjb3V4QVRnanZHTHp5aXRpMUZtZ1dFb2dGT2xTMm9raVBxaHpzNUlXajRtRXdhSm9KdTBBVHNzNnc?oc=5",
-      "date": "2026-10-28",
+      "title": "Nexans Wins Subcontract For Corinth-Kos HVDC Interconnection Cable System - Ocean News & Technology",
+      "link": "https://news.google.com/rss/articles/CBMitAFBVV95cUxOS3pub2U5bXBIWkpzOTRaY3plU0VuZmpzam5xYWNCOUYzWXg1V0VfOUkwTDBzTnRCd05oVUhEZUNxX3FuSnpUczZZbEx0ZVVNOWl2bWR1VFVNdXlDNTlOdlNaa0h4bU56NnZpMXpqWnQydDZwS0NOZko4U0JxV0xPcjVSZWY2Z2psRE1KU0VYMUswRm9DX1dSMWdDT1dJWW9SZVhZREZ0eUltVmVES1M4OWx6Q08?oc=5",
+      "date": "2026-11-09",
       "is_new": false
     },
     {
       "scarcity": "hvdc",
-      "title": "Van Oord and Sumitomo Sign HVDC Subsea Cable Systems Deal with SSEN Transmission - Offshore Wind",
-      "link": "https://news.google.com/rss/articles/CBMivAFBVV95cUxOdklkemlibWNULVFYZElfV3pNdUx5QWhmdUZMUUkwVWhib1dzNmx2cXIxeE0xM0N5QWpqY1loZWJGRE5NV0M2bDFwNkgtdFVwMlNZb19RZGFmd2lQTjB4TjItSkttTkt1NFBRNGtPdDFVMzE4LTBwXzZER013RHpnc0pVakNoc0loeGNUbTNDeUZaT1lyaWV6MmVEUDFKVFkyN1BkN3FnbHlvTTQ3aHpLYWZVTU5BOGhRMmRTbQ?oc=5",
-      "date": "2026-07-10",
+      "title": "UK Subsea Transmission Line Using Recycled Copper for High Voltage Cables - TD World",
+      "link": "https://news.google.com/rss/articles/CBMiywFBVV95cUxQaklSMlhmV3lvUWk4NGlGZEp5WnI2R2N3V2VEMV9NWXhRYld0bF9VdHJTSWZ2eW5aYTJiWnBsbDFOc203RmIxUUV2Z0dvUEg4TFpWYUVIakZRMlFDd2FPV3htbUJtOUlaMDZDMGFpemF4ZVZQS2F2eDUyLV9XdThkVlcyZDFiZlo0WjZqQUdVV3lTeldkNG9yUXplYTRWTGU0dk94cDZma2FYMDg2OUE1QTQ3RU51QXN0VzVJRXhBQXQ0MDhvbkxyMGE0dw?oc=5",
+      "date": "2026-07-01",
       "is_new": true
     },
     {
       "scarcity": "enrichment",
-      "title": "DOE Issues $2.7B Orders to Scale Domestic Nuclear LEU and HALEU Enrichment - POWER Magazine",
-      "link": "https://news.google.com/rss/articles/CBMioAFBVV95cUxQaDRMVzZFUXVtcFhwTzNvb2Focm5iMFV3NUt6VHBvU0ZPTmFscl9VRUtzeC1PQ1ZPWWE1TjRSNEk5d19DOXdiNWVaMWxHeUZmeGtWVWVzQ0FHemFBcGxmeEU4dmFYbmtPZjZDYUNQcTBzeEhNVy1GaGFFY1lMV2xaemlaMW9oWjRoTE1maWd2SnYwQXJERnVlcUNsWGQ1Q1FI?oc=5",
-      "date": "2026-01-05",
+      "title": "DOE contract boosts Centrus’s HALEU goals as Urenco continues LEU expansion - American Nuclear Society",
+      "link": "https://news.google.com/rss/articles/CBMiwgFBVV95cUxQZVVReGQzN2FCek95SUpmay1Rb1NqSmxKeWZOTnVabWxYbTBEYUpWaXhfNzg1REY5Mkk4OE84NUdzWERBZjVwaE5MSjQ3NUZKN1dFcVI3bzRyWlpKYVc4TWJCV2dyMVV4Rm9mZlIzdVg1ZGNTWVdnM09na2lSM0daak0tcFIyTWFDTjFLdzJCdHRaZE8xXzFGdk9heHpzS0EwelNXOHJtaF90Q0lVaFpwSmN4SXdaTnNjaFQwMzB6WFk3QQ?oc=5",
+      "date": "2026-07-06",
       "is_new": true
     },
     {
       "scarcity": "enrichment",
-      "title": "Centrus Energy: The Real Risk Behind SWU Pricing (NYSE:LEU) - Seeking Alpha",
-      "link": "https://news.google.com/rss/articles/CBMikgFBVV95cUxNajZ0YXp5VmJnSkktWVh5amRHNXlrazFOM0M5cU5sTm9XcjdtVzNqMmVSaGNHczU2NTkycDlwdC1EVzFGeG82MmQ5TEd4Y3NxeWhVVVljczg1dVdkZk4wbW1kLXphcFl5LXdPeVl0QUtuWlBEMnpscFNONTllY2FHU2d0WVNpdzFTUVFqZGNPUGVwQQ?oc=5",
-      "date": "2026-01-23",
+      "title": "America's Only Commercial Uranium Enricher Is Privately Building a New Plant Amid a Widening Nuclear Fuel Supply Gap - POWER Magazine",
+      "link": "https://news.google.com/rss/articles/CBMi2AFBVV95cUxNUTdtbDhrdzlJS2FwQVQtbEI0bHdWMGN1d3M1QWdaSHNOWWl6N29uTWd6NHNLbXJnRFVRaHo0UmI5ZTNLcldUTTE1VkFOalVjYWlSRFFtREVGUWZvUl9yYnR0VFdJYjBQajF2dUd4T3hfM29pWXdHT2ViRU55UnNLb1BOZVB1M3hfakFLQU92QW1IQ0Y4bFBoVzZsbEJTVWx0aEVSUlFYMU1YbkxVNjQxd05zM0h1RGd6d1owdmhhMU1kVjBQbm1VQ0tFOWJPMjZRX1RsNTNuRFY?oc=5",
+      "date": "2026-06-03",
       "is_new": true
     },
     {
@@ -2817,16 +2787,16 @@
     },
     {
       "scarcity": "copper",
-      "title": "The Copper Mining Market in 2026: Current and Future Trends - AZoMining",
-      "link": "https://news.google.com/rss/articles/CBMiY0FVX3lxTE1VZlZPOC1JNTFwc045NDFobEtpcWdyNWRqd2t3b3hLeU1mTjBqcDNiUXVUaTczRTV0TW1LTno0Skt2NnhLVlQ4RldyNzNiYmtjYkVQOUQwbFhpU0NsZl9IUXJWaw?oc=5",
-      "date": "2026-06-08",
-      "is_new": true
+      "title": "Copper Mine Supply Peaks in 2030 Even as Prices Set Records - Crux Investor",
+      "link": "https://news.google.com/rss/articles/CBMimgFBVV95cUxPRjZKbjMyc2JqTmhxaVFHOXYyQmZkbjRja3YyX3hBb3BZNU8wV3ZOdUVHLTFZTmNlUDVTZnlabldlNHU3REtnR0daNGkyUTNVTnM0LXZFbDBQWFlWdmJrM3Jhc3lBNVpKVlJoQzU3Q0JzQWROVVVJdFFYeU1oSUo1b09MaWpWZ1pKUU95RlIyNnNYdVhKWWdIOXBn?oc=5",
+      "date": "2026-09-04",
+      "is_new": false
     },
     {
       "scarcity": "copper",
-      "title": "Copper's Rally Has Further to Run as Demand Outpaces a Shrinking Supply - Crux Investor",
-      "link": "https://news.google.com/rss/articles/CBMiqAFBVV95cUxOc2wzU0owVXFoZUZUT1dZRzk1ZEo2Uy0wTGRLXzFPRW1YZEpHcmdlXzZ6TnJMMTVDbFoyMXJobkdxTlgyT213SkZ6X2wzOGhHN28ya3lmYkhPVjdqVXFBOXZSZ0FQMjdNRFl6bzRFM05GcWZvXzE1ZmctNV9sVkNLV1JxN21DV1RzeUNnQWZrcmxRb1dFYzJEXzVoS3QzTjdIZTlid1dXZ2E?oc=5",
-      "date": "2026-08-24",
+      "title": "The Copper Mining Market in 2026: Current and Future Trends - AZoMining",
+      "link": "https://news.google.com/rss/articles/CBMiY0FVX3lxTE1VZlZPOC1JNTFwc045NDFobEtpcWdyNWRqd2t3b3hLeU1mTjBqcDNiUXVUaTczRTV0TW1LTno0Skt2NnhLVlQ4RldyNzNiYmtjYkVQOUQwbFhpU0NsZl9IUXJWaw?oc=5",
+      "date": "2026-06-08",
       "is_new": true
     },
     {
@@ -2834,14 +2804,14 @@
       "title": "Top 10 Countries by Rare Earth Metal Production - Investing News Network",
       "link": "https://news.google.com/rss/articles/CBMixAFBVV95cUxQVkdoUU1YS1pFU2ZaRU0xRjE4empyMjQtaDdGa3QyYktMNGlxVC1EWUNESjRVX3NBVV9RZUlZaVo0VFBaRGJkTUNCd0FiRElLcFlGd3RNZWNEX2RBeHp5LV8zM3NhdjlESzhuS2RoZWhuNWZzeGNHcHRiZEU4bmVMUHlSamg4QS1SMnM5MmgzZjRxLVpfY21CZzRYNzM4eFZpR2gxcUdNLUNKNjRTck11Y3h4T2dSZ1dsajN0NzU3SUxVNWFa?oc=5",
       "date": "2026-11-23",
-      "is_new": true
+      "is_new": false
     },
     {
       "scarcity": "rare-earth-magnets",
-      "title": "Trump-Xi Truce Talks Cannot Close the US Rare Earth Gap - Crux Investor",
-      "link": "https://news.google.com/rss/articles/CBMilAFBVV95cUxPSkFOcmVoMG1fUTlQSldBVWdRVWx4a1A5OHVRUVRmV0VwQm9hcWFHeFBCMmZJbmpoeHY3LTgyTHZseC1MQWFiSXRJcllqbDhwM2hrQjFkV1Vha1BkSS1LdUQ4N3dHZHpRTWFGZmNoMGJocEVrcGlFWTV2Xy1yZ01LQVV1Mi1PSHlZMDZxTnlGQlpob3ZE?oc=5",
-      "date": "2026-11-16",
-      "is_new": false
+      "title": "Price floors for rare earth projects beyond China: financing lens for engineers - Geomechanics.io",
+      "link": "https://news.google.com/rss/articles/CBMiuwFBVV95cUxNYUdXRnJPUDFhRUcwMWFvYk5jVTFyd2RpdzF1bjZJRDFNN0l5bDZjS2F6czNEXzQtamY1NVRLMTVnaW1xTHB0MlMzcWJtX2hHamd6bGJTMUdDRHp5ZFVyYUpISTdTMlRTNDAwaVpEUUZIU1hER3ZqWUZHZnhOSnNWR3hoblRnQmU2dE1XQUlRYzg1RmY5MDJhcTdVMzBDMV9HbFVLSnpYUzg0QUtPR3VNU3JJYTRTUVJIaXJj?oc=5",
+      "date": "2026-11-26",
+      "is_new": true
     },
     {
       "scarcity": "gallium",
@@ -2866,32 +2836,32 @@
     },
     {
       "scarcity": "graphite",
-      "title": "Building a China-resilient battery supply chain by 2035 - GIS Reports",
-      "link": "https://news.google.com/rss/articles/CBMic0FVX3lxTE5kRFZua2djRkVWSmtfeXRRZUV6VFNHUzgyN0h5bEE3dzJPS2tLT1VUZXp5UF9YNFZJQWVsNXZNM3g3YUZkSkhLWDREOWhTZ01udC1qQmVZR2NDeDJxSGl1cEpxcTE2U1NmeElVODdyQ3dRSUE?oc=5",
-      "date": "2026-10-27",
+      "title": "China Extends Export Controls Pause on Batteries, Graphite, Diamond Saws, Rare Earths Into January - Tech Times",
+      "link": "https://news.google.com/rss/articles/CBMi2gFBVV95cUxOcjd5ckwwdC15WEpDcW1wdDNvY3NKZ25tNVVYeElOUlFVMmNiMjhrNzBIcGVfZVdySjZaTTBkbXkxTVVJTE1ndF9VTEo3UnRJZHdlUTFzQmIwbjUtbnBHQXowY05ndVVVeXhpZjFGT3pUckdFMXFWWTVkZ2RxcVJJYllCOGhpRVpVWWppd1lHWnpwZzRTb1ZGRXBUWk91ajJkelZEWEd1TDB4Z1NBaWFPTkVVV3FvMWlkeEFiRjZoR2dzWXBkTHJZUnVoUU9Nc05ta3M1TENndEphUQ?oc=5",
+      "date": "2026-11-10",
       "is_new": false
     },
     {
       "scarcity": "hbm",
-      "title": "Micron: Irresistible 3x P/E After AI Panic (NASDAQ:MU) - Seeking Alpha",
-      "link": "https://news.google.com/rss/articles/CBMiiAFBVV95cUxOYkxQRUhGc0Zpampnb3ZSUFhBWFFzdTBOY2p3S3YwbGlCY25nY09JaHpSQ0FhVGJEQlkxX0k4bmlGVUNxbEtoTjJRWmI4NGdUdk53NWtqZ0tWRzNWX2l2SWxybUFqWURkSGtMUnA1Z3J3WFQ2eGdWNW1zNFFmdFFIR3ZmU3dpNkp6?oc=5",
-      "date": "2026-11-25",
+      "title": "The Mad Dash for Memory Chips—and the Pain It’s Causing Holiday Shoppers - WSJ",
+      "link": "https://news.google.com/rss/articles/CBMiggFBVV95cUxNV3lzWDNiMFhrQzZ2alpLdlZEMW1wM3oycmhQUFllTGgyMVlqdlNxejY0WWZvOC1DcUkyaUREQm8xZUIxbmNYMjZtZ2UtVWxEUlpQSDFBOTQ1WVdVb1lHOU1ydGhFbFFUWl9YQU0xbWVsMHhXdFI3Tnhkb1FKSEhfaGZR?oc=5",
+      "date": "2026-11-26",
       "is_new": true
     },
     {
       "scarcity": "hbm",
-      "title": "HBM Takes 23% of DRAM Wafers, Nears 30% by 2027 - shattered.io",
-      "link": "https://news.google.com/rss/articles/CBMingFBVV95cUxPNDJoa1haNmFBOVhWdWlSVFFHV0ZDNVNQaUhWMmZleF9qeTVGa0c0V0dySmVVVzk3RXhaTERiMThHS0hhbFZPMFZOcUhibTNrSWkzZ2lDOHU0QWNCYU96eGFIdk9EQnpVb05NaXIwQnZHTHZXYnJUNnc4TV9fQUxXSlJUeEdseTB1WHBKTlBlWnlQcVROR0dRb3VrV2pHdw?oc=5",
-      "date": "2026-11-24",
-      "is_new": false
+      "title": "Prediction: Micron Stock Will Be at This Price at the End of 2027 - Yahoo Finance",
+      "link": "https://news.google.com/rss/articles/CBMinwFBVV95cUxQaUhUQzdWR01LY0gzZGdOTjZyV0Fwc2hXNlFvNzdpMWZ4QnZzRWczT0xER2Uxb1pUOURDdS1CVkVCUWhSQkJDQjEtamRTeHFTTE9jcGFNSVdCVjhUTmhCY0lJT0J1TlVleGViMTlPN0RNdTFGVFJUbkJVSEFnNHUzSHA2QUdFTEdDcEhCOW1mb3ZSQVJQQjJTbGs1ZTJmNUE?oc=5",
+      "date": "2026-11-25",
+      "is_new": true
     }
   ],
   "trigger_status": {
     "drawdown": {
       "met": false,
       "fired": false,
-      "value": -33.3,
-      "note": "avg -33.3% from 52w highs"
+      "value": -33,
+      "note": "avg -33.0% from 52w highs"
     },
     "sleeve_cap": {
       "met": false,
@@ -2917,43 +2887,44 @@
           {
             "title": "Next-Gen Data Center Real Estate: EPC and Industrial Parks - Mexico Business News",
             "date": "2026-11-25"
-          },
-          {
-            "title": "Talen Energy: Power Provider That Already Has A Data Center In Hand - Seeking Alpha",
-            "date": "2026-11-07"
           }
         ],
         "filings": []
       },
       "suggested_action": null,
-      "as_of": "2026-11-25"
+      "as_of": "2026-11-26"
     },
     "mp_policy": {
       "status": "monitoring",
       "confidence": 0,
       "met": false,
       "citations": [
-        "China extends rare earth and battery export control pause to 2027 - Benchmark Mineral Intelligence"
+        "China extends rare earth and battery export control pause to 2027 - Benchmark Mineral Intelligence",
+        "China Extends Export Controls Pause on Batteries, Graphite, Diamond Saws, Rare Earths Into January - Tech Times"
       ],
       "evidence": {
         "headlines": [
+          {
+            "title": "Price floors for rare earth projects beyond China: financing lens for engineers - Geomechanics.io",
+            "date": "2026-11-26"
+          },
           {
             "title": "Top 10 Countries by Rare Earth Metal Production - Investing News Network",
             "date": "2026-11-23"
           },
           {
-            "title": "Trump-Xi Truce Talks Cannot Close the US Rare Earth Gap - Crux Investor",
-            "date": "2026-11-16"
+            "title": "China extends rare earth and battery export control pause to 2027 - Benchmark Mineral Intelligence",
+            "date": "2026-11-10"
           },
           {
-            "title": "China extends rare earth and battery export control pause to 2027 - Benchmark Mineral Intelligence",
+            "title": "China Extends Export Controls Pause on Batteries, Graphite, Diamond Saws, Rare Earths Into January - Tech Times",
             "date": "2026-11-10"
           }
         ],
         "filings": []
       },
       "suggested_action": null,
-      "as_of": "2026-11-25"
+      "as_of": "2026-11-26"
     },
     "leu_policy": {
       "status": "monitoring",
@@ -2965,7 +2936,7 @@
         "filings": []
       },
       "suggested_action": null,
-      "as_of": "2026-11-25"
+      "as_of": "2026-11-26"
     },
     "turbine_rollover": {
       "status": "monitoring",
@@ -2982,7 +2953,7 @@
         "filings": []
       },
       "suggested_action": null,
-      "as_of": "2026-11-25"
+      "as_of": "2026-11-26"
     },
     "memory_rollover": {
       "status": "monitoring",
@@ -2994,7 +2965,7 @@
         "filings": []
       },
       "suggested_action": null,
-      "as_of": "2026-11-25"
+      "as_of": "2026-11-26"
     }
   },
   "alerts": {
@@ -3208,11 +3179,11 @@
       "crash_off": false,
       "thrust": false,
       "detail": {
-        "price": 172.2959459179177,
-        "sma200": 205.23,
-        "sma20": 186.27,
-        "ret252": 0.0446,
-        "vol60": 0.347
+        "price": 172.98694707602553,
+        "sma200": 205.14,
+        "sma20": 184.87,
+        "ret252": 0.0422,
+        "vol60": 0.348
       }
     },
     "components": {
@@ -3367,14 +3338,14 @@
     }
   },
   "metrics": {
-    "cagr": 0.2133,
+    "cagr": 0.2147,
     "max_drawdown": 0.2751,
-    "calmar": 0.7754,
-    "sortino": 1.311,
-    "sharpe": 0.9128,
-    "vol": 0.2447,
+    "calmar": 0.7805,
+    "sortino": 1.3185,
+    "sharpe": 0.9179,
+    "vol": 0.2445,
     "breaches_35": false,
-    "n": 710,
+    "n": 711,
     "basis": [
       "PAVE",
       "GRID",
@@ -3386,48 +3357,48 @@
       "ROBO",
       "UFO"
     ],
-    "window": "2024-01-24..2026-11-24",
+    "window": "2024-01-24..2026-11-25",
     "source": "accumulated DB (9/9 tickers)",
     "note": "trailing ~2.8y, target-weighted strategy basket (from accumulated history)",
     "fc_thrust_book": {
       "rule": "F+C Thrust (Faber + Crash + Thrust, canonical)",
-      "window": "2024-11-22..2026-11-24",
+      "window": "2024-11-22..2026-11-25",
       "years": 2,
       "switches": 9,
       "turnover_cost_bps": 90,
       "buyhold": {
-        "cagr": 0.1438,
+        "cagr": 0.1458,
         "max_drawdown": 0.2751,
-        "calmar": 0.5228,
-        "sortino": 0.9129,
-        "sharpe": 0.6389,
-        "vol": 0.2653,
+        "calmar": 0.5301,
+        "sortino": 0.9229,
+        "sharpe": 0.6458,
+        "vol": 0.2651,
         "breaches_35": false,
-        "n": 499
+        "n": 500
       },
       "fc_thrust": {
-        "cagr": 0.1825,
+        "cagr": 0.1821,
         "max_drawdown": 0.1458,
-        "calmar": 1.2522,
-        "sortino": 1.2806,
-        "sharpe": 0.8998,
-        "vol": 0.2112,
+        "calmar": 1.2495,
+        "sortino": 1.2793,
+        "sharpe": 0.8989,
+        "vol": 0.211,
         "breaches_35": false,
-        "n": 499
+        "n": 500
       },
       "realistic": {
-        "cagr": 0.1625,
+        "cagr": 0.1634,
         "max_drawdown": 0.2039,
-        "calmar": 0.797,
-        "sortino": 1.1054,
-        "sharpe": 0.7775,
-        "vol": 0.2269,
+        "calmar": 0.8011,
+        "sortino": 1.1107,
+        "sharpe": 0.7812,
+        "vol": 0.2266,
         "breaches_35": false,
-        "n": 499
+        "n": 500
       },
       "timeable_frac": 0.48,
       "max_dd_reduction": 0.1293,
-      "cagr_cost": -0.0387,
+      "cagr_cost": -0.0363,
       "breach_35": {
         "buyhold": false,
         "fc_thrust": false,
@@ -3514,34 +3485,34 @@
         "proxy": "QQQ",
         "src": "db",
         "rule": "F+C Thrust (Faber + Crash + Thrust, canonical)",
-        "window": "2000-01-07..2026-11-24",
+        "window": "2000-01-07..2026-11-25",
         "years": 26.9,
         "switches": 167,
         "turnover_cost_bps": 1670,
         "buyhold": {
-          "cagr": 0.0825,
+          "cagr": 0.0823,
           "max_drawdown": 0.8297,
-          "calmar": 0.0995,
-          "sortino": 0.6149,
-          "sharpe": 0.431,
+          "calmar": 0.0991,
+          "sortino": 0.6136,
+          "sharpe": 0.4301,
           "vol": 0.266,
           "breaches_35": true,
-          "n": 6761
+          "n": 6762
         },
         "fc_thrust": {
           "cagr": 0.0931,
           "max_drawdown": 0.369,
           "calmar": 0.2524,
-          "sortino": 0.8647,
-          "sharpe": 0.6221,
-          "vol": 0.1652,
+          "sortino": 0.8646,
+          "sharpe": 0.622,
+          "vol": 0.1651,
           "breaches_35": true,
-          "n": 6761
+          "n": 6762
         },
         "realistic": null,
         "timeable_frac": null,
         "max_dd_reduction": 0.4607,
-        "cagr_cost": -0.0106,
+        "cagr_cost": -0.0108,
         "breach_35": {
           "buyhold": true,
           "fc_thrust": true
@@ -3945,11 +3916,11 @@
     "hvdc": {
       "flag": "inflecting",
       "action": "accumulate",
-      "rs": 0.0634,
-      "score": 83,
-      "gate": 0.79,
+      "rs": 0.0786,
+      "score": 81,
+      "gate": 0.77,
       "static_gate": 0.66,
-      "live_gate": 0.98,
+      "live_gate": 0.94,
       "quality": 0.91,
       "contrarian": true,
       "components": {
@@ -3958,7 +3929,7 @@
         "defensibility": 1
       },
       "forced_flow": {
-        "dislocation": 0.763,
+        "dislocation": 0.705,
         "window": "selling",
         "intact": true,
         "flag": "accumulate",
@@ -3993,11 +3964,11 @@
     "uranium": {
       "flag": "de-rating",
       "action": "reduce",
-      "rs": -0.0437,
-      "score": 31,
+      "rs": -0.0414,
+      "score": 30,
       "gate": 0.39,
       "static_gate": 0,
-      "live_gate": 0.98,
+      "live_gate": 0.96,
       "quality": 0.79,
       "contrarian": false,
       "components": {
@@ -4006,7 +3977,7 @@
         "defensibility": 0.5
       },
       "forced_flow": {
-        "dislocation": 0.794,
+        "dislocation": 0.778,
         "window": "selling",
         "intact": false,
         "flag": "broken",
@@ -4016,7 +3987,7 @@
     "copper": {
       "flag": "de-rating",
       "action": "reduce",
-      "rs": -0.1386,
+      "rs": -0.143,
       "score": 39,
       "gate": 0.59,
       "static_gate": 0.33,
@@ -4038,11 +4009,11 @@
     },
     "rare-earth-magnets": {
       "flag": "none",
-      "rs": 0.1591,
-      "score": 39,
-      "gate": 0.39,
+      "rs": 0.1742,
+      "score": 38,
+      "gate": 0.37,
       "static_gate": 0,
-      "live_gate": 0.97,
+      "live_gate": 0.94,
       "quality": 0.88,
       "contrarian": true,
       "components": {
@@ -4051,7 +4022,7 @@
         "defensibility": 0.5
       },
       "forced_flow": {
-        "dislocation": 0.832,
+        "dislocation": 0.812,
         "window": "selling",
         "intact": false,
         "flag": "broken",
@@ -4083,9 +4054,8 @@
       }
     },
     "graphite": {
-      "flag": "inflecting",
-      "action": "accumulate",
-      "rs": 0.0436,
+      "flag": "none",
+      "rs": 0.0272,
       "score": 57,
       "gate": 0.68,
       "static_gate": 0.66,
@@ -4202,11 +4172,11 @@
     "specialty-materials": {
       "flag": "inflecting",
       "action": "accumulate",
-      "rs": 0.0638,
+      "rs": 0.0999,
       "score": 100,
-      "gate": 0.92,
+      "gate": 0.9,
       "static_gate": 1,
-      "live_gate": 0.8,
+      "live_gate": 0.76,
       "quality": 1,
       "contrarian": true,
       "components": {
@@ -4215,7 +4185,7 @@
         "defensibility": 1
       },
       "forced_flow": {
-        "dislocation": 0.216,
+        "dislocation": 0.149,
         "window": "selling",
         "intact": true,
         "flag": "none",
@@ -4268,7 +4238,7 @@
     },
     "reducers": {
       "flag": "none",
-      "rs": -0.2626,
+      "rs": -0.1841,
       "score": 41,
       "gate": 0.8,
       "static_gate": 0.66,
@@ -4335,11 +4305,11 @@
     "cryogenics": {
       "flag": "inflecting",
       "action": "accumulate",
-      "rs": 0.0401,
-      "score": 93,
-      "gate": 0.94,
+      "rs": 0.0378,
+      "score": 92,
+      "gate": 0.93,
       "static_gate": 1,
-      "live_gate": 0.85,
+      "live_gate": 0.82,
       "quality": 0.86,
       "contrarian": true,
       "components": {
@@ -4348,7 +4318,7 @@
         "defensibility": 1
       },
       "forced_flow": {
-        "dislocation": 0.679,
+        "dislocation": 0.65,
         "window": "selling",
         "intact": true,
         "flag": "none",
@@ -4407,9 +4377,9 @@
       "scarcity": "Single-source semi materials (ABF/T-glass/EUV resist)",
       "sector": "Compute",
       "score": 100,
-      "gate": 0.92,
+      "gate": 0.9,
       "static_gate": 1,
-      "live_gate": 0.8,
+      "live_gate": 0.76,
       "quality": 1,
       "contrarian": true,
       "components": {
@@ -4438,10 +4408,10 @@
       "id": "cryogenics",
       "scarcity": "He-3 + sub-Kelvin cryogenics",
       "sector": "Quantum",
-      "score": 93,
-      "gate": 0.94,
+      "score": 92,
+      "gate": 0.93,
       "static_gate": 1,
-      "live_gate": 0.85,
+      "live_gate": 0.82,
       "quality": 0.86,
       "contrarian": true,
       "components": {
@@ -4502,10 +4472,10 @@
       "id": "hvdc",
       "scarcity": "HVDC & HV cable",
       "sector": "Energy",
-      "score": 83,
-      "gate": 0.79,
+      "score": 81,
+      "gate": 0.77,
       "static_gate": 0.66,
-      "live_gate": 0.98,
+      "live_gate": 0.94,
       "quality": 0.91,
       "contrarian": true,
       "components": {
@@ -4678,10 +4648,10 @@
       "id": "rare-earth-magnets",
       "scarcity": "Heavy-RE (Dy/Tb) separation & NdFeB magnets",
       "sector": "Minerals",
-      "score": 39,
-      "gate": 0.39,
+      "score": 38,
+      "gate": 0.37,
       "static_gate": 0,
-      "live_gate": 0.97,
+      "live_gate": 0.94,
       "quality": 0.88,
       "contrarian": true,
       "components": {
@@ -4742,10 +4712,10 @@
       "id": "uranium",
       "scarcity": "Uranium (upstream)",
       "sector": "Minerals",
-      "score": 31,
+      "score": 30,
       "gate": 0.39,
       "static_gate": 0,
-      "live_gate": 0.98,
+      "live_gate": 0.96,
       "quality": 0.79,
       "contrarian": false,
       "components": {
@@ -5291,7 +5261,7 @@
       "thrust": false
     },
     "detail": {
-      "price": 633.9299926757812,
+      "price": 633.929992675781,
       "sma200": 683.41,
       "sma20": 666.65,
       "ret252": 0.0502,
@@ -5423,9 +5393,9 @@
         }
       ],
       "top_headline": {
-        "title": "Intel Wins Microsoft Packaging Order but Hits '35% Yield' Wall in Bid to Enter Google TPU Supply Chain - BigGo Finance",
-        "link": "https://news.google.com/rss/articles/CBMidkFVX3lxTE5OcjQ4MlJ4V2EwcDBMY2pyU0djRUxmMmtJS1JzZWNtWmFOWDNOaTVTUjZJMHRnRGhmdXJWRVJBVjRPMnVEX0FKdXZxdnZKWVhoTFRfdWRlNkxVbkUwMmNPTTFDRzlvZ1pLazlpOXphLUVuVG9IWFE?oc=5",
-        "date": "2026-11-25"
+        "title": "TSMC CoWoS Fully Booked as Orders Overflow; Research Firm Estimates ASE and Amkor's CoWoS-Like Demand to Surge 5.5x by 2027 - BigGo Finance",
+        "link": "https://news.google.com/rss/articles/CBMidkFVX3lxTE5xT1NhOGVxWnBUcnVRRUJ0MmNyS3R2aV9LSnl2R0hSZmFjWEdFR2pFbTBEUFZhUU5hMER3ME1hdERGOWJxSTRfdC1PYXk2SzdWQ2ZYSkNQVnJQLXN5NGtYZm9oTkZvdFdjRTZiejByUGQzYVNWT3c?oc=5",
+        "date": "2026-11-26"
       },
       "heat": 50,
       "rel": -0.1061,
@@ -5490,8 +5460,8 @@
         "link": "https://news.google.com/rss/articles/CBMigAFBVV95cUxOWjl4RTQ4VXFxaVRuT2FrYUNlVE11dEJKVzdSTm51U3l3dG1jNGdHdWVXaVVVM0RBeTU4cGRJaWM5Zkk2NUlEal9oNTFyWURldURHTTg4UEg3TnNyZVpJbEVQUm5aSEI1TU9sRk9KV0NERG5ONkV3NlR4cTl3bWJ0OA?oc=5",
         "date": "2026-04-27"
       },
-      "heat": 92,
-      "rel": 0.1591,
+      "heat": 95,
+      "rel": 0.1742,
       "news_count": 5
     },
     {
@@ -5572,7 +5542,7 @@
         "date": "2026-11-11"
       },
       "heat": 50,
-      "rel": -0.2794,
+      "rel": -0.1971,
       "news_count": 5
     },
     {
@@ -5836,10 +5806,11 @@
       ]
     }
   },
-  "digest": "_Analyst: groq:openai/gpt-oss-120b · Red-team: gemini:gemini-3.5-flash (cross-model adversarial review)_\n\n## Analyst\n- **LEU (Enrichment – SWU/HALEU)** – 8‑K on 24 Nov (Reg FD & 9.01) disclosed a material contract to expand domestic enrichment capacity and hinted at a tighter backlog.  The news follows DOE’s $2.7 B order (Jan 2026) and moves the “enrichment” scarcity toward the 2028‑29 bind window, but the stock is still down ~‑70 % YTD (‑0.695) with no forward‑PE, keeping downside risk modest and a deployment trigger (capacity‑filled backlog) nearer.\n\n- **CEG (Electrons – merchant power)** – 8‑K on 9 Nov (results + guidance) lifted FY power‑sales guidance and reported a 15 % increase in contracted data‑center power slots, narrowing the “high‑priced” electrons scarcity.  Despite a ‑35 % YTD slide, the guidance upgrade makes a short‑cover or re‑entry trigger more plausible than a further sell‑off.\n\n- **MP (Rare‑Earth Magnets – Dy/Tb‑NdFeB)** – 8‑K on 5 Nov (results + guidance) announced the start‑up of a new heavy‑RE magnet line, expanding capacity by ~20 % and raising the magnet‑price outlook.  The stock is down ~‑36 % YTD; with the line now in production the “crowded” rare‑earth scarcity could tighten, nudging an entry point forward.\n\n- **MU (HBM/TSV – DRAM wafer opportunity cost)** – 8‑K on 5 Nov (board change) coincided with a Seeking Alpha note (25 Nov) calling MU “Irresistible 3x P/E.”  MU is up +90 % YTD, crowding 60, yet forward‑PE data remain absent – the rally suggests the market is still pricing in a significant upside gap as HBM demand accelerates; a pull‑back trigger now looks farther away.\n\n- **WMT (Consumer logistics – indirect electricity demand)** – 8‑K on 19 Nov (results + guidance) raised FY sales guidance, citing stronger e‑commerce fulfillment and associated power‑usage growth.  WMT is up +18 % YTD; while not in a scarcity list, the higher power‑consumption outlook adds a modest tailwind to the “electrons” theme and keeps the stock’s upside potential open.\n\n- **KO (Beverage – broad consumer demand)** – 8‑K on 23 Nov (executive/board change) showed no operational impact but KO’s YTD gain of +42 % keeps it “cheap” on forward multiples (PE ≈ 16 × forward earnings, well below the sector median).  The price surge, without fundamental strain, suggests a near‑term profit‑taking exit point could materialize.\n\n- **MRK (Pharma – high‑crowding biotech)** – 8‑K on 18 Nov (executive/board change) disclosed a new oncology pipeline milestone; MRK is up +33 % YTD, crowding 58, and still trades at a forward‑PE well below peers.  The combination of a solid pipeline and cheap valuation makes a re‑entry trigger more likely than a sell‑off.\n\n- **CEG, LEU, MP, MU – Combined scarcity‑trigger outlook** – The recent filings collectively shrink backlogs or add capacity in three “now‑priced‑high” or “crowded” shortages (electrons, enrichment, rare‑earth magnets, HBM).  With capacity ramps disclosed, the risk‑premia embedded in their price discounts is eroding, pulling the deploy triggers for each sector nearer while keeping exit triggers (price‑run‑off or valuation stretch) the primary watch‑list items.\n\n## Red-team\nHere is a red-team critique of the digest, focusing on unsupported logic, misattributed filings, and flawed economic assumptions:\n\n*   **LEU: Flawed \"Floor\" Logic on an Unprofitable Stock.** Claiming that a stock down ~70% YTD with *no forward P/E* has \"modest downside risk\" is dangerous hand-waving. Unprofitable capital-intensive companies facing execution delays in nuclear enrichment can easily suffer further severe drawdowns or heavy equity dilution regardless of how far they have already fallen.\n*   **MP: Basic Economic Contradiction (Supply vs. Scarcity).** The analyst claims a 20% capacity expansion will \"tighten\" rare-earth scarcity and drive up magnet prices. Bringing new production capacity online *increases supply*, which alleviates structural shortages and compresses pricing power—it does not tighten it. \n*   **WMT: Absurd Thematic Stretch.** Linking Walmart’s e-commerce guidance to the broader power-grid (\"electrons\") thesis is a complete stretch. Higher electricity usage from fulfillment centers represents an operational expense (cost inflation) for a retailer, not a bullish demand driver or meaningful catalyst for WMT's stock price.\n*   **MRK & MU: Misattributed Filings and Soft Sources.** \n    *   **MRK:** Routine Item 5.02 8-Ks (executive/board changes) do not contain clinical oncology pipeline updates; attributing R&D breakthroughs to a board update is a basic factual error.\n    *   **MU:** Basing a core valuation thesis (\"3x P/E\") on a third-party Seeking Alpha blog post alongside a routine board-change filing—while acknowledging actual forward P/E data is missing—is completely unvetted speculation.\n*   **MU & Overall Scarcity Thesis: Ignoring Peak-Cycle Pricing.** Declaring that MU's +90% YTD rally means a pullback trigger is \"farther away\" ignores basic semiconductor cyclicality. A 90% run-up in a notoriously cyclical memory stock suggests massive upside is *already fully priced in*, leaving the stock vulnerable to peak-cycle margin compression rather than further unconstrained upside.",
+  "digest": "(no LLM key set — set GROQ_API_KEY, OPENROUTER_API_KEY, or GEMINI_API_KEY in repo secrets to enable the agent digest)",
   "errors": [
     "SMNEY: no quote from any source",
     "4185.T: no quote from any source",
-    "metrics: composite truncated to 710 bars (deepest member 2764) — shallow ticker NUKZ (713 bars) shrinks the date-intersection; metrics + regime composite run SHORT this scan"
+    "metrics: composite truncated to 711 bars (deepest member 2765) — shallow ticker NUKZ (714 bars) shrinks the date-intersection; metrics + regime composite run SHORT this scan",
+    "llm: gemini gemini-3.5-flash: timeout"
   ]
 }
